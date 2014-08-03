@@ -114,7 +114,7 @@ namespace ClearCanvas.ImageViewer
 		/// </summary>
 		/// <param name="frame">The image frame from which a presentation image is to be created.</param>
 		/// <returns>The created presentation image.</returns>
-		protected virtual IPresentationImage CreateImage(Frame frame)
+		public virtual IPresentationImage CreateImage(Frame frame)
 		{
 			if (frame.PhotometricInterpretation == PhotometricInterpretation.Unknown)
 				throw new Exception("Photometric interpretation is unknown.");
@@ -166,6 +166,7 @@ namespace ClearCanvas.ImageViewer
 		protected virtual List<IPresentationImage> CreateImages(KeyObjectSelectionDocumentIod keyObjectDocument)
 		{
 			List<IPresentationImage> images = new List<IPresentationImage>();
+
 			if (_studyTree == null)
 			{
 				Platform.Log(LogLevel.Warn, "Key object document cannot be used to create images because there is no study tree to build from.");
@@ -176,10 +177,17 @@ namespace ClearCanvas.ImageViewer
 				var evidence = new HierarchicalSopInstanceReferenceDictionary(keyObjectDocument.KeyObjectDocument.CurrentRequestedProcedureEvidenceSequence);
 				foreach (IKeyObjectContentItem item in content)
 				{
-					if (item is KeyImageContentItem)
-						images.AddRange(CreateImages((KeyImageContentItem) item, evidence));
-					else
-						Platform.Log(LogLevel.Warn, "Unsupported key object content value type");
+					try
+					{
+						if (item is KeyImageContentItem)
+							images.AddRange(CreateImages((KeyImageContentItem) item, evidence));
+						else
+							Platform.Log(LogLevel.Warn, "Unsupported key object content value type");
+					}
+					catch (Exception ex)
+					{
+						Platform.Log(LogLevel.Warn, ex, SR.MessageKeyObjectDeserializeFailure);
+					}
 				}
 			}
 

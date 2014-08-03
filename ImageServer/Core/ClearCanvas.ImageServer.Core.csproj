@@ -121,6 +121,7 @@
     <Compile Include="PreProcessors.cs" />
     <Compile Include="Process\IInsertExtension.cs" />
     <Compile Include="Process\SopInstanceProcessorContext.cs" />
+    <Compile Include="Process\UpdateSeriesCommand.cs" />
     <Compile Include="Query\IExtendedQueryKeys.cs" />
     <Compile Include="Query\QueryHelper.cs" />
     <Compile Include="Reconcile\StudyMatchingMap.cs" />

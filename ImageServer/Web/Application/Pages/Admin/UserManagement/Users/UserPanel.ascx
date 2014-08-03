@@ -33,25 +33,21 @@
             <asp:Table ID="Table1" runat="server">
                 <asp:TableRow>
                     <asp:TableCell Wrap="false">
-                                <asp:Panel ID="Panel6" runat="server" CssClass="SearchPanelContentWithoutTabs" DefaultButton="SearchButton">
-                                    <table cellpadding="0" cellspacing="0">
-                                        <tr>
-                                            <td align="right" valign="bottom">
-                                            </td>
-                                            <td align="left">
-                                                <asp:Label ID="Label3" runat="server" Text="<%$Resources: SearchFieldLabels, UserID %>" CssClass="SearchTextBoxLabel"></asp:Label><br />
-                                                <ccUI:TextBox ID="UserNameTextBox" runat="server" CssClass="SearchTextBox"></ccUI:TextBox>
-                                            </td>
-                                            <td align="left">
-                                                <asp:Label ID="Label1" runat="server" Text="<%$Resources: SearchFieldLabels, UserName %>" CssClass="SearchTextBoxLabel"></asp:Label><br />
-                                                <ccUI:TextBox ID="DisplayNameTextBox" runat="server" CssClass="SearchTextBox"></ccUI:TextBox>
-                                            </td>
-                                            <td valign="bottom">
-                                                <asp:Panel ID="Panel1" runat="server" CssClass="SearchButtonPanel"><ccUI:ToolbarButton ID="SearchButton" runat="server" SkinID="<%$Image:SearchIcon%>" OnClick="SearchButton_Click"/></asp:Panel>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </asp:Panel>
+                        <asp:Panel ID="Panel6" runat="server" CssClass="SearchPanelContentWithoutTabs" DefaultButton="SearchButton">
+                            <div class="SearchPanelParentDiv">
+                                <div class="SearchPanelChildDiv">
+	                                <asp:Label ID="Label3" runat="server" Text="<%$Resources: SearchFieldLabels, UserID %>" CssClass="SearchTextBoxLabel"/><br />
+	                                <ccUI:TextBox ID="UserNameTextBox" runat="server" CssClass="SearchTextBox"/>
+                                </div>
+                                <div class="SearchPanelChildDiv">
+	                                <asp:Label ID="Label1" runat="server" Text="<%$Resources: SearchFieldLabels, UserName %>" CssClass="SearchTextBoxLabel"/><br />
+	                                <ccUI:TextBox ID="DisplayNameTextBox" runat="server" CssClass="SearchTextBox"/>
+                                </div>
+                                <div class="SearchPanelChildDiv">
+                                    <asp:Panel ID="Panel1" runat="server" CssClass="SearchButtonPanel"><ccUI:ToolbarButton ID="SearchButton" runat="server" SkinID="<%$Image:SearchIcon%>" OnClick="SearchButton_Click"/></asp:Panel>
+                                </div>
+                            </div>
+                        </asp:Panel>
                     </asp:TableCell>
                 </asp:TableRow>
                 <asp:TableRow>
@@ -73,9 +69,9 @@
 
 
                          <asp:Panel ID="Panel2" runat="server"   CssClass="SearchPanelResultContainer">
-                            <table width="100%" cellpadding="0" cellspacing="0">
+                            <table class="SearchPanelResultContainerTable">
                                  <tr><td><ccAsp:GridPager ID="GridPagerTop" runat="server" /></td></tr>                        
-                                <tr><td style="background-color: white;"><localAsp:UserGridPanel ID="UserGridPanel" runat="server" Height="500px" /></td></tr>
+                                <tr><td class="SearchPanelResultContainerTd"><localAsp:UserGridPanel ID="UserGridPanel" runat="server" Height="500px" /></td></tr>
                             </table>                        
                         </asp:Panel>
                          

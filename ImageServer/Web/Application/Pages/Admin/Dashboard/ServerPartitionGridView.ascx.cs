@@ -23,9 +23,11 @@
 #endregion
 
 using System;
+using System.Threading;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Collections.Generic;
+using ClearCanvas.ImageServer.Common.Authentication;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
 using ClearCanvas.ImageServer.Web.Application.Controls;
@@ -110,6 +112,9 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Dashboard
 
             var criteria = new ServerPartitionSelectCriteria();
             criteria.AeTitle.SortAsc(0);
+            if (!Thread.CurrentPrincipal.IsInRole(AuthorityTokens.Vfs.ViewPartitions))
+                criteria.ServerPartitionTypeEnum.EqualTo(ServerPartitionTypeEnum.Standard);
+
             Partitions = _theController.GetPartitions(criteria);
 
             TheGrid = PartitionGridView;

@@ -55,5 +55,10 @@ namespace ClearCanvas.Enterprise.Core
 		/// The version associated with the persistent store.
 		/// </summary>
 		Version Version { get; }
+
+		/// <summary>
+		/// Boolean that can be set on the persistent store to signal that the process is shutting down.
+		/// </summary>
+		bool ShutdownRequested { get; set; }
     }
 }

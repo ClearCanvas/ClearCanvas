@@ -40,15 +40,20 @@ using ClearCanvas.ImageViewer.Mathematics;
 namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 {
 	[Cloneable]
-	internal abstract class DicomSoftcopyPresentationStateBase<T> : DicomSoftcopyPresentationState where T : IDicomPresentationImage
+	internal abstract class DicomSoftcopyPresentationStateBase<T> : DicomSoftcopyPresentationState
+		where T : IDicomPresentationImage
 	{
-		protected DicomSoftcopyPresentationStateBase(SopClass psSopClass) : base(psSopClass) {}
+		protected DicomSoftcopyPresentationStateBase(SopClass psSopClass)
+			: base(psSopClass) {}
 
-		protected DicomSoftcopyPresentationStateBase(SopClass psSopClass, DicomFile dicomFile) : base(psSopClass, dicomFile) {}
+		protected DicomSoftcopyPresentationStateBase(SopClass psSopClass, DicomFile dicomFile)
+			: base(psSopClass, dicomFile) {}
 
-		protected DicomSoftcopyPresentationStateBase(SopClass psSopClass, DicomAttributeCollection dataSource) : base(psSopClass, dataSource) {}
+		protected DicomSoftcopyPresentationStateBase(SopClass psSopClass, DicomAttributeCollection dataSource)
+			: base(psSopClass, dataSource) {}
 
-		protected DicomSoftcopyPresentationStateBase(DicomSoftcopyPresentationStateBase<T> source, ICloningContext context) : base(source, context)
+		protected DicomSoftcopyPresentationStateBase(DicomSoftcopyPresentationStateBase<T> source, ICloningContext context)
+			: base(source, context)
 		{
 			context.CloneFields(source, this);
 		}
@@ -59,19 +64,27 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			if (imageCollection.Count == 0)
 				return;
 
-			this.PerformTypeSpecificSerialization(imageCollection);
+			PerformTypeSpecificSerialization(imageCollection);
 		}
 
 		protected override sealed void PerformDeserialization(IList<IPresentationImage> images)
 		{
-			foreach (PresentationStateRelationshipModuleIod psRelationship in this.RelationshipSets)
+			DicomPresentationImageCollection<T> imageCollection;
+
+			if (!DeserializeIgnoreImageRelationship)
 			{
-				SeriesReferenceDictionary dictionary = new SeriesReferenceDictionary(psRelationship.ReferencedSeriesSequence);
-
-				DicomPresentationImageCollection<T> imageCollection = new DicomPresentationImageCollection<T>(images.OfType<T>().Where(img => dictionary.ReferencesFrame(img.ImageSop.SeriesInstanceUid, img.ImageSop.SopInstanceUid, img.Frame.FrameNumber)));
-
-				this.PerformTypeSpecificDeserialization(imageCollection);
+				imageCollection = new DicomPresentationImageCollection<T>(
+					RelationshipSets.Select(s => new SeriesReferenceDictionary(s.ReferencedSeriesSequence))
+						.Aggregate(Enumerable.Empty<T>(),
+						           (set, rel) => set.Union(images.OfType<T>()
+						                                   	.Where(img => rel.ReferencesFrame(img.ImageSop.SeriesInstanceUid, img.ImageSop.SopInstanceUid, img.Frame.FrameNumber)))));
 			}
+			else
+			{
+				imageCollection = new DicomPresentationImageCollection<T>(images.OfType<T>());
+			}
+
+			PerformTypeSpecificDeserialization(imageCollection);
 		}
 
 		protected abstract void PerformTypeSpecificSerialization(DicomPresentationImageCollection<T> images);
@@ -139,17 +152,13 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 				ImageGraphic imageGraphic = ((IImageGraphicProvider) image).ImageGraphic;
 				Size imageSize = new Size(imageGraphic.Columns, imageGraphic.Rows);
 
-				// compute the visible boundaries of the image as a positive rectangle in screen space
-				RectangleF visibleBounds = imageGraphic.SpatialTransform.ConvertToDestination(new Rectangle(new Point(0, 0), imageSize));
-				visibleBounds = RectangleUtilities.Intersect(visibleBounds, image.ClientRectangle);
-				visibleBounds = RectangleUtilities.ConvertToPositiveRectangle(visibleBounds);
-
 				// compute the visible area of the image as a rectangle oriented positively in screen space
-				RectangleF visibleImageArea = imageGraphic.SpatialTransform.ConvertToSource(visibleBounds);
+				RectangleF visibleImageArea = imageGraphic.SpatialTransform.ConvertToSource(image.ClientRectangle);
+				visibleImageArea = RectangleUtilities.ConvertToPositiveRectangle(visibleImageArea);
 				visibleImageArea = RectangleUtilities.RoundInflate(visibleImageArea);
+				visibleImageArea = RectangleUtilities.Intersect(visibleImageArea, new Rectangle(new Point(0, 0), imageSize));
 
 				// compute the pixel addresses of the visible area by intersecting area with actual pixel addresses available
-				//Rectangle visiblePixels = Rectangle.Truncate(RectangleUtilities.Intersect(visibleImageArea, new RectangleF(_point1, imageSize)));
 				Rectangle visiblePixels = ConvertToPixelAddressRectangle(Rectangle.Truncate(visibleImageArea));
 				displayedArea.DisplayedAreaTopLeftHandCorner = visiblePixels.Location;
 				displayedArea.DisplayedAreaBottomRightHandCorner = visiblePixels.Location + visiblePixels.Size;
@@ -163,7 +172,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 						break;
 					case DisplayAreaSerializationOption.SerializeAsTrueSize:
 						displayedArea.PresentationSizeMode = DisplayedAreaModuleIod.PresentationSizeMode.TrueSize;
-						displayedArea.PresentationPixelSpacing = image.Frame.PixelSpacing;
+						displayedArea.PresentationPixelSpacing = image.Frame.NormalizedPixelSpacing;
 						break;
 					case DisplayAreaSerializationOption.SerializeAsDisplayedArea:
 					default:
@@ -171,12 +180,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 						break;
 				}
 
-				PixelAspectRatio pixelAspectRatio = image.Frame.PixelAspectRatio;
-				if (pixelAspectRatio == null || pixelAspectRatio.IsNull)
-					pixelAspectRatio = PixelAspectRatio.FromString(image.Frame[DicomTags.PixelAspectRatio].ToString());
-				if (pixelAspectRatio == null || pixelAspectRatio.IsNull)
-					pixelAspectRatio = new PixelAspectRatio(1, 1);
-				displayedArea.PresentationPixelAspectRatio = pixelAspectRatio;
+				displayedArea.PresentationPixelAspectRatio = PixelAspectRatio.FromString(image.Frame.NormalizedPixelSpacing.GetPixelAspectRatioString());
 
 				displayedAreas.Add(displayedArea);
 			}
@@ -264,7 +268,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 						foreach (IGraphic graphic in layerGraphic.Graphics)
 						{
 							GraphicAnnotationSequenceItem annotation = new GraphicAnnotationSequenceItem();
-							if (GraphicAnnotationSerializer.SerializeGraphic(graphic, annotation))
+							if (GraphicAnnotationSerializer.SerializeGraphic(graphic, annotation) && AnyContent(annotation))
 							{
 								SetAllSpecificCharacterSets(annotation, DataSet.SpecificCharacterSet);
 								annotation.GraphicLayer = layerGraphic.Id.ToUpperInvariant();
@@ -278,7 +282,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 				foreach (IGraphic graphic in image.OverlayGraphics)
 				{
 					GraphicAnnotationSequenceItem annotation = new GraphicAnnotationSequenceItem();
-					if (GraphicAnnotationSerializer.SerializeGraphic(graphic, annotation))
+					if (GraphicAnnotationSerializer.SerializeGraphic(graphic, annotation) && AnyContent(annotation))
 					{
 						SetAllSpecificCharacterSets(annotation, DataSet.SpecificCharacterSet);
 						annotation.GraphicLayer = _annotationsLayerId;
@@ -290,6 +294,14 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 
 			if (annotations.Count > 0)
 				graphicAnnotationModule.GraphicAnnotationSequence = annotations.ToArray();
+		}
+
+		private static bool AnyContent(GraphicAnnotationSequenceItem annotation)
+		{
+			var graphicObjectSequenceItems = annotation.GraphicObjectSequence;
+			var textObjectSequenceItems = annotation.TextObjectSequence;
+			return (graphicObjectSequenceItems != null && graphicObjectSequenceItems.Length > 0)
+			       || (textObjectSequenceItems != null && textObjectSequenceItems.Length > 0);
 		}
 
 		private static void SetAllSpecificCharacterSets(GraphicAnnotationSequenceItem annotation, string specificCharacterSet)
@@ -571,12 +583,18 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			return new PointF((rectangle.Left + rectangle.Right)/2f, (rectangle.Top + rectangle.Bottom)/2f);
 		}
 
+		protected bool DeserializeIgnoreImageRelationship
+		{
+			get { return DeserializeOptions.HasFlag(DicomSoftcopyPresentationStateDeserializeOptions.IgnoreImageRelationship); }
+		}
+
 		protected void DeserializeDisplayedArea(DisplayedAreaModuleIod dispAreaMod, out RectangleF displayedArea, T image)
 		{
 			ISpatialTransform spatialTransform = image.SpatialTransform;
 			foreach (DisplayedAreaModuleIod.DisplayedAreaSelectionSequenceItem item in dispAreaMod.DisplayedAreaSelectionSequence)
 			{
-				if (item.ReferencedImageSequence[0].ReferencedSopInstanceUid == image.ImageSop.SopInstanceUid)
+				var dictionary = !DeserializeIgnoreImageRelationship ? new ImageSopInstanceReferenceDictionary(item.ReferencedImageSequence, true) : null;
+				if (dictionary == null || dictionary.ReferencesFrame(image.Frame.SopInstanceUid, image.Frame.FrameNumber))
 				{
 					// get the displayed area of the image in source coordinates (stored values do not have sub-pixel accuracy)
 					var displayRect = RectangleF.FromLTRB(item.DisplayedAreaTopLeftHandCorner.X,
@@ -691,11 +709,13 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			var sqItems = module.GraphicAnnotationSequence;
 			if (sqItems != null)
 			{
+				var interactiveAnnotations = DeserializeOptions.HasFlag(DicomSoftcopyPresentationStateDeserializeOptions.InteractiveAnnotations);
+				var ignoreImageRelationships = DeserializeIgnoreImageRelationship;
 				foreach (var annotation in sqItems.Select(sqItem =>
 				                                          new
 				                                          	{
 				                                          		LayerId = sqItem.GraphicLayer ?? string.Empty,
-				                                          		Graphic = DicomGraphicsFactory.CreateGraphicAnnotation(image.Frame, sqItem, displayedArea, DeserializeInteractiveAnnotations)
+				                                          		Graphic = DicomGraphicsFactory.CreateGraphicAnnotation(image.Frame, sqItem, displayedArea, interactiveAnnotations, ignoreImageRelationships)
 				                                          	}).Where(g => g.Graphic != null))
 				{
 					graphic.Layers[annotation.LayerId].Graphics.Add(annotation.Graphic);

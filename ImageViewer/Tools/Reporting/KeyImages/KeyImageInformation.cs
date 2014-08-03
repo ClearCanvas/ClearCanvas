@@ -34,6 +34,7 @@ using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod.ContextGroups;
 using ClearCanvas.Dicom.Utilities;
 using ClearCanvas.ImageViewer.Clipboard;
+using ClearCanvas.ImageViewer.Clipboard.ImageExport;
 using ClearCanvas.ImageViewer.Common;
 using ClearCanvas.ImageViewer.Common.ServerDirectory;
 using ClearCanvas.ImageViewer.KeyObjects;
@@ -69,8 +70,6 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			_name = SR.LabelNewKeyImageSelection;
 			_seriesNumber = null;
 			_contentDateTime = null;
-			if (!string.IsNullOrEmpty(_author))
-				_seriesDescription = string.Format("{0} ({1})", _seriesDescription, _author);
 		}
 
 		private static IEnumerable<IClipboardItem> CreateClipboardItems(StudyTree studyTree, Sop keyObjectSelectionDocument)
@@ -81,16 +80,22 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			var factory = new PresentationImageFactory(studyTree);
 			foreach (var image in factory.CreateImages(keyObjectSelectionDocument))
 			{
+				var presentationStateInstanceUid = string.Empty;
+
 				// set the deserialize interactive flag on the presentation state
 				var dicomPresentationImage = image as IDicomPresentationImage;
 				if (dicomPresentationImage != null)
 				{
 					var presentationState = dicomPresentationImage.PresentationState as DicomSoftcopyPresentationState;
-					if (presentationState != null) presentationState.DeserializeInteractiveAnnotations = true;
+					if (presentationState != null)
+					{
+						presentationState.DeserializeOptions |= DicomSoftcopyPresentationStateDeserializeOptions.InteractiveAnnotations;
+						presentationStateInstanceUid = presentationState.PresentationSopInstanceUid;
+					}
 				}
 
 				var item = dummyContext.CreateKeyImageItem(image, true);
-				item.AssignSourceInfo(Guid.NewGuid(), keyObjectSelectionDocument.SopInstanceUid);
+				item.AssignSourceInfo(Guid.NewGuid(), keyObjectSelectionDocument.SopInstanceUid, presentationStateInstanceUid);
 				yield return item;
 			}
 		}
@@ -206,17 +211,30 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			return icon;
 		}
 
-		public ClipboardItem CreateKeyImageItem(IPresentationImage image, bool ownReference = false, bool hasChanges = false)
+		public ClipboardItem CreateKeyImageItem(IPresentationImage image, bool ownReference = false)
 		{
-			_creatingItemHasChanges = hasChanges;
-			try
-			{
-				return base.CreatePresentationImageItem(image, ownReference);
-			}
-			finally
-			{
-				_creatingItemHasChanges = false;
-			}
+			Rectangle clientRectangle = image.ClientRectangle;
+			if (clientRectangle.IsEmpty) clientRectangle = new Rectangle(new Point(), image.SceneSize);
+
+			// Must build description from the source image because the ParentDisplaySet info is lost in the cloned image.
+			var name = BuildClipboardItemName(image);
+			var description = BuildClipboardItemDescription(image);
+
+			image = !ownReference ? ImageExporter.ClonePresentationImage(image) : image;
+			var iconGetter = new Func<ClipboardItem, Image>(item =>
+			                                                	{
+			                                                		_creatingItemHasChanges = item.HasChanges();
+			                                                		try
+			                                                		{
+			                                                			return CreateIcon((IPresentationImage) item.Item, clientRectangle);
+			                                                		}
+			                                                		finally
+			                                                		{
+			                                                			_creatingItemHasChanges = false;
+			                                                		}
+			                                                	});
+
+			return new ClipboardItem(image, name, description, clientRectangle, iconGetter);
 		}
 
 		[Obsolete("Use CreateKeyImageItem", true)]
@@ -244,13 +262,17 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		/// <summary>
 		/// Creates all the SOP instances associated with the key object selection and the content presentation states.
 		/// </summary>
-		public IDictionary<IStudySource, List<DicomFile>> CreateSopInstances(NextSeriesNumberDelegate nextSeriesNumberDelegate = null)
+		public IDictionary<IStudySource, List<DicomFile>> CreateSopInstances(NextSeriesNumberDelegate nextSeriesNumberDelegate)
 		{
 			if (!HasChanges || !Items.Any()) return new Dictionary<IStudySource, List<DicomFile>>(0);
+
+			// update the author field
+			Author = GetUserName();
 
 			// the series index ensures consistent series level data because we only create one KO series and one PR series per study
 			var studyIndex = new Dictionary<string, StudyInfo>();
 
+			var secondaryCaptureImageFactory = new SecondaryCaptureImageFactory(nextSeriesNumberDelegate);
 			var framePresentationStates = new List<KeyValuePair<KeyImageReference, PresentationStateReference>>();
 
 			// create presentation states for the images in the clipboard
@@ -279,8 +301,11 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 					studyIndex.Add(studyInstanceUid, studyInfo = new StudyInfo(provider, nextSeriesNumberDelegate));
 
 					// keep the previous series number if the one we know about is the same study as this new document
+					// otherwise, pre-allocate a series number for the KO now (ensures the number will be lower than any SC and PR series)
 					if (_parentStudyInstanceUid == studyInstanceUid && _seriesNumber.HasValue)
 						studyInfo.KeyObjectSeriesNumber = _seriesNumber.Value;
+					else
+						studyInfo.AllocateKeyObjectSeriesNumber();
 				}
 
 				// if the item doesn't have changes and the presentation state is DICOM, simply reserialize the original sop references
@@ -289,6 +314,13 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 					var dicomPresentationState = ((IDicomPresentationImage) image).PresentationState as DicomSoftcopyPresentationState;
 					framePresentationStates.Add(new KeyValuePair<KeyImageReference, PresentationStateReference>(provider.Frame, dicomPresentationState));
 					continue;
+				}
+
+				// if the image is not a permanent stored instance (i.e. it was dynamically generated), create a secondary capture from it
+				if (!provider.Sop.DataSource.IsStored)
+				{
+					image = secondaryCaptureImageFactory.CreateSecondaryCapture(image);
+					provider = (IImageSopProvider) image;
 				}
 
 				var presentationState = DicomSoftcopyPresentationState.IsSupported(image)
@@ -314,7 +346,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			foreach (var presentationFrame in framePresentationStates)
 				serializer.AddImage(presentationFrame.Key, presentationFrame.Value);
 
-			// collect all the SOP instances that were created (both PR and KO)
+			// collect all the SOP instances that were created (SC, PR and KO)
 			var documents = new List<DicomFile>();
 			documents.AddRange(serializer.Serialize(koSeries =>
 			                                        	{
@@ -329,6 +361,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			                                        		return null;
 			                                        	}
 			                   	));
+			documents.AddRange(secondaryCaptureImageFactory.Files);
 			documents.AddRange(presentationStates.Select(ps => ps.DicomFile));
 
 			// return the created instances grouped by study (and thus study origin/source)
@@ -353,10 +386,10 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			private int? _presentationSeriesNumber;
 			private int? _keyObjectSeriesNumber;
 
-			public StudyInfo(IImageSopProvider provider, NextSeriesNumberDelegate nextSeriesNumberDelegate = null)
+			public StudyInfo(IImageSopProvider provider, NextSeriesNumberDelegate nextSeriesNumberDelegate)
 			{
 				_provider = provider;
-				_nextSeriesNumberDelegate = nextSeriesNumberDelegate ?? new DefaultNextSeriesNumberGetter().GetNextSeriesNumber;
+				_nextSeriesNumberDelegate = nextSeriesNumberDelegate;
 				_studyInstanceUid = provider.Sop.StudyInstanceUid;
 				_originServer = ServerDirectory.GetRemoteServersByAETitle(provider.Sop[DicomTags.SourceApplicationEntityTitle].ToString()).FirstOrDefault();
 				_sourceServer = provider.Sop.DataSource.Server;
@@ -374,12 +407,12 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 			public int PresentationSeriesNumber
 			{
-				get { return _presentationSeriesNumber ?? (_presentationSeriesNumber = _nextSeriesNumberDelegate(_provider.Frame)).Value; }
+				get { return _presentationSeriesNumber ?? (_presentationSeriesNumber = _nextSeriesNumberDelegate(_provider.Frame.StudyInstanceUid)).Value; }
 			}
 
 			public int KeyObjectSeriesNumber
 			{
-				get { return _keyObjectSeriesNumber ?? (_keyObjectSeriesNumber = _nextSeriesNumberDelegate(_provider.Frame)).Value; }
+				get { return _keyObjectSeriesNumber ?? (_keyObjectSeriesNumber = _nextSeriesNumberDelegate(_provider.Frame.StudyInstanceUid)).Value; }
 				set { _keyObjectSeriesNumber = value; }
 			}
 
@@ -418,16 +451,9 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 				return _presentationNextInstanceNumber++;
 			}
 
-			private class DefaultNextSeriesNumberGetter
+			public int AllocateKeyObjectSeriesNumber()
 			{
-				private int? _maxSeriesNumber;
-
-				public int GetNextSeriesNumber(Frame f)
-				{
-					if (!_maxSeriesNumber.HasValue)
-						_maxSeriesNumber = KeyImagePublisher.GetMaxSeriesNumber(f);
-					return (_maxSeriesNumber = _maxSeriesNumber.Value + 1).Value;
-				}
+				return KeyObjectSeriesNumber;
 			}
 		}
 
@@ -448,7 +474,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		#endregion
 	}
 
-	public delegate int NextSeriesNumberDelegate(Frame frame);
+	public delegate int NextSeriesNumberDelegate(string studyInstanceUid);
 
 	public interface IStudySource
 	{

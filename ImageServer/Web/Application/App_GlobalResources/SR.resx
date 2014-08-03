@@ -734,7 +734,7 @@ At least one server partition is required. Please add a new server partition.</v
     <value>Not Specified</value>
   </data>
   <data name="ForFurtherAssistanceTryTheFollowingLinks" xml:space="preserve">
-    <value>For further assistance, try the following links:</value>
+    <value>For further assistance, try the following &lt;a href="{0}" target="_blank"&gt;link&lt;/a&gt;.</value>
   </data>
   <data name="ImageServerDevelopersForum" xml:space="preserve">
     <value>ImageServer Developers Forum</value>
@@ -848,5 +848,23 @@ At least one server partition is required. Please add a new server partition.</v
   </data>
   <data name="WorkQueueDeleteWarning" xml:space="preserve">
     <value>Warning: deleting this WorkQueue item may result in loss of images or incorrect study information!</value>
+  </data>
+  <data name="NoExternalRequestQueueItemFound" xml:space="preserve">
+    <value>No items were found using the provided criteria.</value>
+  </data>
+  <data name="ExternalRequest" xml:space="preserve">
+    <value>External Request</value>
+  </data>
+  <data name="MultipleExternalRequestQueueDelete" xml:space="preserve">
+    <value>Are you sure you want to delete these External Request Queue items?</value>
+  </data>
+  <data name="MultipleExternalRequestQueueReset" xml:space="preserve">
+    <value>Are you sure you want to reset these External Request Queue items?</value>
+  </data>
+  <data name="SingleExternalRequestQueueDelete" xml:space="preserve">
+    <value>Are you sure you want to delete this External Request Queue item?</value>
+  </data>
+  <data name="SingleExternalRequestQueueReset" xml:space="preserve">
+    <value>Are you sure you want to reset this External Request Queue item?</value>
   </data>
 </root>

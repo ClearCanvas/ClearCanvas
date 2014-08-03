@@ -334,11 +334,10 @@ namespace ClearCanvas.Common.Rest
 			/// <returns></returns>
 			public Request SetData(string data, string contentType, bool buffer = true)
 			{
-				if (string.IsNullOrEmpty(data))
-					return this;
 				if (!string.IsNullOrEmpty(_contentString) || _contentStream != null)
 					throw new InvalidOperationException("content already specified");
-
+				if (data == null)
+					return this;
 				_contentString = data;
 				_contentType = contentType;
 				_bufferRequest = buffer;
@@ -393,7 +392,7 @@ namespace ClearCanvas.Common.Rest
 					return;
 				}
 
-				if (!string.IsNullOrEmpty(_contentString))
+				if (_contentString != null) // empty string (0 bytes) is valid
 				{
 					// set content type if specified
 					if (!string.IsNullOrEmpty(_contentType))
@@ -518,7 +517,7 @@ namespace ClearCanvas.Common.Rest
 		private string QueryString(Dictionary<string, object> args)
 		{
 			return args == null ? null : string.Join("&",
-				args.Select(kvp => string.Format("{0}={1}", kvp.Key, HttpUtility.UrlEncode(kvp.Value.ToString()))
+				args.Select(kvp => string.Format("{0}={1}", kvp.Key, HttpUtility.UrlEncode((kvp.Value ?? "").ToString()))
 				).ToArray());
 		}
 

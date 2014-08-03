@@ -1,4 +1,5 @@
 <%@ Import Namespace="System.Globalization"%>
+<%@ Import Namespace="ClearCanvas.ImageServer.Web.Common.Security" %>
 <%@ Import Namespace="Resources"%>
 <%@ Master Language="C#" AutoEventWireup="true" Inherits="ClearCanvas.ImageServer.Web.Application.GlobalMasterPage" Codebehind="GlobalMasterPage.master.cs" %>
 
@@ -12,7 +13,6 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <meta http-equiv="X-UA-Compatible" content="IE=7" />
     <title></title>
     <style runat="server" type="text/css" id="IE6PNGBugFixCSS" />
     <link rel="shortcut icon" type="image/ico" runat="server" href="~/Images/favicon.ico" />   
@@ -22,20 +22,21 @@
 <body id="MasterBody" class="GlobalBody">
 
     <script type="text/javascript">
-        function Locale() {
-            this.currentLocale = "<%=CultureInfo.CurrentUICulture%>";
-            this.decimalSeparator = "<%= CultureInfo.CurrentUICulture.NumberFormat.NumberDecimalSeparator %>";
-            this.digitGroupSeparator = "<%= CultureInfo.CurrentUICulture.NumberFormat.NumberGroupSeparator %>";
-        }
-            
-        var SR = new function() {
-            this.Unknown = "<%= SR.Unknown %>";
-            this.SelectAll = "<%= SR.SelectAll %>";
-        };
 
-        var ValidationErrors = new function(){ 
-            this.ThisFieldIsRequired = "<%= InputValidation.ThisFieldIsRequired %>";
-        };
+    	function Locale() {
+    		this.currentLocale = "<%=CultureInfo.CurrentUICulture%>";
+    		this.decimalSeparator = "<%= CultureInfo.CurrentUICulture.NumberFormat.NumberDecimalSeparator %>";
+    		this.digitGroupSeparator = "<%= CultureInfo.CurrentUICulture.NumberFormat.NumberGroupSeparator %>";
+    	}
+            
+    	var SR = new function() {
+    		this.Unknown = "<%= SR.Unknown %>";
+    		this.SelectAll = "<%= SR.SelectAll %>";
+    	};
+
+    	var ValidationErrors = new function(){ 
+    		this.ThisFieldIsRequired = "<%= InputValidation.ThisFieldIsRequired %>";
+    	};
     </script>
     
     <script type="text/javascript" src="<%= ResolveClientUrl("~/Scripts/NumberFormat154.js") %>"></script>
@@ -54,19 +55,19 @@
         
         
         <script type="text/javascript">
-        $(document).ready(function(){
-            var prm = Sys.WebForms.PageRequestManager.getInstance();
-            prm.add_initializeRequest(StartAsyncRequest);
-            prm.add_endRequest(EndAsyncRequest);
-        });
+        	$(document).ready(function(){
+        		var prm = Sys.WebForms.PageRequestManager.getInstance();
+        		prm.add_initializeRequest(StartAsyncRequest);
+        		prm.add_endRequest(EndAsyncRequest);
+        	});
         
-        function StartAsyncRequest(){
-            window.status = "Updating...";
-        }
+        	function StartAsyncRequest(){
+        		window.status = "Updating...";
+        	}
         
-        function EndAsyncRequest(){
-            window.status = "";
-        }
+        	function EndAsyncRequest(){
+        		window.status = "";
+        	}
         
         </script>
 
@@ -110,7 +111,10 @@
                                                   <td><asp:Label runat="server" Text="<%$Resources: Labels,LoggedInAs%>"></asp:Label><b> <asp:Label ID="Username" runat="server"></asp:Label></b></td>
                                                   <td id="LoginWarningCell"><asp:PlaceHolder runat="server" ID="LoginIndicatorPlaceHolder"></asp:PlaceHolder></td>
                                                   <td id="AlertIndicatorCell"><asp:PlaceHolder runat="server" ID="AlertIndicatorPlaceHolder"></asp:PlaceHolder></td>
-                                                  <td>| <asp:LinkButton ID="LogoutButton" runat="server" CssClass="UserInformationLink" OnClick="Logout_Click" Text="<%$Resources: Labels,Logout %>"></asp:LinkButton></td></tr>
+                                                  <td>| 
+												  
+												  <a runat="server" ID="LogoutLink" href="~/Pages/Login/Logout.aspx" class="UserInformationLink">Logout</a>
+												  </td></tr>
                                                   </table>
                                              </td></tr>
                                              </table>
@@ -187,12 +191,5 @@
         </asp:UpdatePanel>
         
     </form>
-    
-    <script type="text/javascript">
-        UserInformationLink_Hover("<%= LogoutButton.ClientID %>");    
-    </script>
-    
-
-    
 </body>
 </html>

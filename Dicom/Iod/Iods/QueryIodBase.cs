@@ -23,9 +23,11 @@
 #endregion
 
 using System;
+using System.Runtime.Serialization;
 
 namespace ClearCanvas.Dicom.Iod.Iods
 {
+	[DataContract]
 	public abstract class QueryIodBase : IodBase
 	{
 		#region Constructors
@@ -51,6 +53,7 @@ namespace ClearCanvas.Dicom.Iod.Iods
 		/// Gets or sets the specific character set.
 		/// </summary>
 		/// <value>The specific character set.</value>
+		[DataMember]
 		public string SpecificCharacterSet
 		{
 			get { return DicomAttributeProvider[DicomTags.SpecificCharacterSet].GetString(0, String.Empty); }
@@ -61,6 +64,7 @@ namespace ClearCanvas.Dicom.Iod.Iods
 		/// Gets or sets the Retrieve AE Title.
 		/// </summary>
 		/// <value>The Retrieve AE Title.</value>
+		[DataMember]
 		public string RetrieveAeTitle
 		{
 			get { return DicomAttributeProvider[DicomTags.RetrieveAeTitle].GetString(0, String.Empty); }
@@ -71,6 +75,7 @@ namespace ClearCanvas.Dicom.Iod.Iods
 		/// Gets or sets the Storage Media Fileset Id.
 		/// </summary>
 		/// <value>The media Fileset Id.</value>
+		[DataMember]
 		public string StorageMediaFileSetId
 		{
 			get { return DicomAttributeProvider[DicomTags.StorageMediaFileSetId].GetString(0, String.Empty); }
@@ -81,6 +86,7 @@ namespace ClearCanvas.Dicom.Iod.Iods
 		/// Gets or sets the Storage Media Fileset Uid.
 		/// </summary>
 		/// <value>The media Fileset Uid.</value>
+		[DataMember]
 		public string StorageMediaFileSetUid
 		{
 			get { return DicomAttributeProvider[DicomTags.StorageMediaFileSetUid].GetString(0, String.Empty); }
@@ -91,6 +97,7 @@ namespace ClearCanvas.Dicom.Iod.Iods
 		/// Gets or sets the query retrieve level.
 		/// </summary>
 		/// <value>The query retrieve level.</value>
+		[DataMember]
 		public QueryRetrieveLevel QueryRetrieveLevel
 		{
 			get
@@ -118,6 +125,7 @@ namespace ClearCanvas.Dicom.Iod.Iods
 		/// <summary>
 		/// Gets or sets the Instance Availability
 		/// </summary>
+		[DataMember]
 		public InstanceAvailability InstanceAvailability
 		{
 			get

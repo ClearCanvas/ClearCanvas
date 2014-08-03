@@ -1,4 +1,6 @@
-﻿namespace ClearCanvas.Common.Utilities
+﻿using System;
+
+namespace ClearCanvas.Common.Utilities
 {
 	public class LogMessage
 	{
@@ -17,6 +19,7 @@
 		public LogLevel Level { get; set; }
 		public string Message { get; set; }
 		public object[] Arguments { get; set; }
+		public Exception Exception { get; set; }
 	}
 
 	/// <summary>
@@ -34,6 +37,11 @@
 		/// Ensures that all messages written to the sink have been committed to the underlying storage.
 		/// </summary>
 		void Flush();
+
+		/// <summary>
+		/// Purges any messages that have not been flushed.
+		/// </summary>
+		void Purge();
 	}
 
 	public static class LogMessageSinkExtensions
@@ -41,6 +49,11 @@
 		public static void Log(this ILogMessageSink sink, LogLevel level, string message, params object[] args)
 		{
 			sink.Write(new LogMessage(level, message, args));
+		}
+
+		public static void Log(this ILogMessageSink sink, LogLevel level, Exception ex, string message, params object[] args)
+		{
+			sink.Write(new LogMessage(level, message, args) { Exception = ex });
 		}
 	}
 }

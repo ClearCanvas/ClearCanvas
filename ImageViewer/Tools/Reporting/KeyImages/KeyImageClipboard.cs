@@ -187,7 +187,11 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		internal static void OnViewerOpened(IImageViewer viewer)
 		{
 			if (!KeyImageClipboards.ContainsKey(viewer))
-				KeyImageClipboards[viewer] = new KeyImageClipboard(viewer.StudyTree);
+			{
+				var keyImageClipboard = new KeyImageClipboard(viewer.StudyTree);
+				KeyImageClipboards[viewer] = keyImageClipboard;
+				viewer.EventBroker.StudyLoaded += keyImageClipboard.OnStudyLoaded;
+			}
 
 			ManageActivityMonitorConnection();
 		}
@@ -199,6 +203,8 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 			if (info != null)
 			{
+				viewer.EventBroker.StudyLoaded -= info.OnStudyLoaded;
+
 				try
 				{
 					info.Publish();
@@ -239,7 +245,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			if (sopProvider == null)
 				throw new ArgumentException("The image must be an IImageSopProvider.", "image");
 
-			var item = (info.CurrentContext ?? new KeyImageInformation()).CreateKeyImageItem(image, hasChanges : true);
+			var item = (info.CurrentContext ?? new KeyImageInformation()).CreateKeyImageItem(image);
 			item.FlagHasChanges();
 			info.ClipboardItems.Add(item);
 		}

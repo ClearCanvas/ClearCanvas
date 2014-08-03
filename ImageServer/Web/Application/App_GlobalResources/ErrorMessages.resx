@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ActionNotAllowedAtThisTime" xml:space="preserve">
     <value>Cannot perform the action at this time: {0}. Please try again later.</value>
@@ -194,7 +194,7 @@ If you would like to report the error, please post to one of the forums listed b
     <value>Could not find a valid license</value>
   </data>
   <data name="LicenseErrorLongDescription" xml:space="preserve">
-    <value>The ImageServer license is invalid or has expired. A valid license must be entered in ClearCanvas Workstation Team Edition. If you have already entered a valid license, please refresh this page to login.</value>
+    <value>A valid license must be entered to use this product.  Please follow the instructions in the Getting Started Guide to enter the license and refresh this page to continue.</value>
   </data>
   <data name="LoginInvalidUsernameOrPassword" xml:space="preserve">
     <value>Invalid User ID or Password.</value>
@@ -234,11 +234,20 @@ Please retype your passwords and try again.</value>
   <data name="UserAccessDenied" xml:space="preserve">
     <value>Access denied.  The user credentials may be invalid or the account may be disabled.</value>
   </data>
-  <data name="WebAuthorizationErrorDescription" xml:space="preserve">
+  <data name="WebViewerAuthorizationErrorDescription" xml:space="preserve">
     <value>This message is being displayed because the ClearCanvas ImageServer encountered an error authorizing user with ID "{0}"</value>
   </data>
+  <data name="WebViewerSessionAlreadyRemoved" xml:space="preserve">
+    <value>The requested session has already been removed.  Please try to login again.</value>
+  </data>
   <data name="WebViewerSessionTimedoutLongDescription" xml:space="preserve">
-    <value>This message is being displayed because there has been no activity in the past {0} minute(s). For security purposes, your ImageServer session has been closed.</value>
+    <value>This message is being displayed because there has been no activity in the past few minute(s). For security purposes, your session has been closed.</value>
     <comment>Timeout page for standalone use case</comment>
+  </data>
+  <data name="WebViewerSpecifiedFieldInvalid" xml:space="preserve">
+    <value>'{0}' is invalid</value>
+  </data>
+  <data name="WebViewerSpecifiedFieldIsEmpty" xml:space="preserve">
+    <value>'{0}' is specified but contain an empty value</value>
   </data>
 </root>

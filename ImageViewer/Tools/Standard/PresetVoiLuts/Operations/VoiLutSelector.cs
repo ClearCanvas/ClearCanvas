@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using ClearCanvas.Desktop;
 using ClearCanvas.ImageViewer.Imaging;
 using ClearCanvas.ImageViewer.StudyManagement;
@@ -107,7 +108,8 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.PresetVoiLuts.Operations
     public class LinearPresetVoiLutSelector : VoiLutSelector
     {
         [HpDataContract("{9F548831-7669-4abb-8CFC-A3AB676C09E6}")]
-        private class Data
+        [Obfuscation(Exclude = true)]
+		private class Data
         {
             public string Modality { get; set; }
             public string Name { get; set; }

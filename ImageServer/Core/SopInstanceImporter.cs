@@ -57,6 +57,7 @@ namespace ClearCanvas.ImageServer.Core
 		private readonly ServerPartition _partition;
 		private readonly ServerPartitionAlternateAeTitle _alternateAe;
 		private readonly ExternalRequestQueue _request;
+		private readonly WorkQueuePriorityEnum _priorityEnum;
 
 		#endregion
 
@@ -84,8 +85,9 @@ namespace ClearCanvas.ImageServer.Core
 		/// <param name="sourceAe">Source AE title of the image(s) to be imported</param>
 		/// <param name="partition">The <see cref="ServerPartition"/> which the image(s) will be imported to</param>
 		/// <param name="request">An external request that triggered this operation.</param>
+		/// <param name="priority">The priority that resulting <see cref="WorkQueue"/> will have upon insertion.</param>
 		public SopInstanceImporterContext(string contextId, string sourceAe, ServerPartition partition,
-		                                  ExternalRequestQueue request = null)
+		                                  ExternalRequestQueue request = null, WorkQueuePriorityEnum priority=null)
 		{
 			Platform.CheckForEmptyString(contextId, "contextID");
 			Platform.CheckForNullReference(partition, "partition");
@@ -93,6 +95,7 @@ namespace ClearCanvas.ImageServer.Core
 			_sourceAE = sourceAe;
 			_partition = partition;
 			_request = request;
+			_priorityEnum = priority;
 		}
 
 		#endregion
@@ -135,6 +138,14 @@ namespace ClearCanvas.ImageServer.Core
 		public ExternalRequestQueue Request
 		{
 			get { return _request; }
+		}
+
+		/// <summary>
+		/// If set, the <see cref="WorkQueuePriorityEnum"/> to set resultant <see cref="WorkQueue"/> items.
+		/// </summary>
+		public WorkQueuePriorityEnum Priority
+		{
+			get { return _priorityEnum; }
 		}
 
 		/// <summary>
@@ -685,7 +696,7 @@ namespace ClearCanvas.ImageServer.Core
             }
 
             commandProcessor.AddCommand(
-                new UpdateWorkQueueCommand(file, studyLocation, dupImage, data, uidData, _context.Request));
+                new UpdateWorkQueueCommand(file, studyLocation, dupImage, data, uidData, _context.Request, _context.Priority));
 
             #region SPECIAL CODE FOR TESTING
             if (Diagnostics.Settings.SimulateFileCorruption)
@@ -726,7 +737,7 @@ namespace ClearCanvas.ImageServer.Core
 			}
 
 			commandProcessor.AddCommand(
-				new UpdateWorkQueueCommand(message, studyLocation, dupImage, data, uidData, _context.Request));
+				new UpdateWorkQueueCommand(message, studyLocation, dupImage, data, uidData, _context.Request, _context.Priority));
 
 			#region SPECIAL CODE FOR TESTING
 			if (Diagnostics.Settings.SimulateFileCorruption)

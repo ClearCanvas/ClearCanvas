@@ -52,14 +52,15 @@ namespace ClearCanvas.Ris.Application.Services
 				diagnosticService.Deactivated);
 		}
 
-		public DiagnosticServicePlanDetail CreatePlanDetail(DiagnosticService diagnosticService, IPersistenceContext context)
+		public DiagnosticServicePlanDetail CreatePlanDetail(DiagnosticService diagnosticService, bool includeDeactivatedProcedures, IPersistenceContext context)
 		{
 			var rptAssembler = new ProcedureTypeAssembler();
+			var procedureTypes = includeDeactivatedProcedures ? diagnosticService.ProcedureTypes : diagnosticService.ProcedureTypes.Where(rpType => !rpType.Deactivated);
 			return new DiagnosticServicePlanDetail(
 				diagnosticService.GetRef(),
 				diagnosticService.Id,
 				diagnosticService.Name,
-				diagnosticService.ProcedureTypes.Select(rpType => rptAssembler.CreateDetail(rpType, context)).ToList()
+				procedureTypes.Select(rpType => rptAssembler.CreateDetail(rpType, context)).ToList()
 				);
 		}
 

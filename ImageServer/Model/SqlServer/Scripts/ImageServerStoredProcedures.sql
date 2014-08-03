@@ -1227,7 +1227,8 @@ CREATE PROCEDURE [dbo].[InsertWorkQueue]
 	@UidGroupID varchar(64) = null,
 	@UidRelativePath varchar(256) = null,
 	@ExternalRequestQueueGUID uniqueidentifier = null,
-	@WorkQueueUidData xml = null
+	@WorkQueueUidData xml = null,
+	@WorkQueuePriorityEnum smallint = 0
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
@@ -1239,11 +1240,16 @@ BEGIN
 	declare @PendingStatusEnum as smallint
 	select @PendingStatusEnum = Enum from WorkQueueStatusEnum where Lookup = ''Pending''
 
-	declare @WorkQueuePriorityEnum as smallint
+	declare @WorkQueuePriorityEnumNew as smallint
 	declare @DelaySeconds as int
 	declare @ExpirationTime as DateTime
-	select @WorkQueuePriorityEnum = WorkQueuePriorityEnum, @DelaySeconds=ExpireDelaySeconds from WorkQueueTypeProperties where WorkQueueTypeEnum = @WorkQueueTypeEnum
+	select @WorkQueuePriorityEnumNew = WorkQueuePriorityEnum, @DelaySeconds=ExpireDelaySeconds from WorkQueueTypeProperties where WorkQueueTypeEnum = @WorkQueueTypeEnum
 	
+	IF @WorkQueuePriorityEnum = 0
+	BEGIN
+		set @WorkQueuePriorityEnum = @WorkQueuePriorityEnumNew
+	END
+
 	set @ExpirationTime = DATEADD(second, @DelaySeconds, @ScheduledTime)
 
 	BEGIN TRANSACTION
@@ -4043,6 +4049,7 @@ BEGIN
 EXEC dbo.sp_executesql @statement = N'-- =============================================
 -- Author:		Thanh Huynh
 -- Create date: Oct 09, 2008
+-- Updated:     Jan 14, 2014, Bug fix when concurrency issues occur with removing the old Patient
 -- Description:	Create a new Patient for a study
 -- =============================================
 CREATE PROCEDURE [dbo].[CreatePatientForStudy]
@@ -4069,11 +4076,9 @@ BEGIN
 	SELECT	@ServerPartitionGUID=Study.ServerPartitionGUID,
 			@StudyInstanceUid = Study.StudyInstanceUid,
 			@CurrentPatientGUID=PatientGUID,
-			@NumStudiesOwnedByCurrentPatient = Patient.NumberOfPatientRelatedStudies,
 			@NumSeries = NumberOfStudyRelatedSeries,
 			@NumInstances = NumberOfStudyRelatedInstances
 	FROM Study 
-	JOIN Patient ON Patient.GUID = Study.PatientGUID
 	WHERE Study.GUID=@StudyGUID
 
 	SET @PatientGUID = newid()
@@ -4100,19 +4105,21 @@ BEGIN
 	WHERE GUID=@PatientGUID
 
 	-- Update current patient, delete it if there''s no attached study.
-	IF @NumStudiesOwnedByCurrentPatient=1
+	UPDATE Patient
+	SET [NumberOfPatientRelatedStudies]=[NumberOfPatientRelatedStudies]-1,
+		[NumberOfPatientRelatedSeries]=[NumberOfPatientRelatedSeries]-@NumSeries,
+		[NumberOfPatientRelatedInstances]=[NumberOfPatientRelatedInstances]-@NumInstances
+	WHERE GUID=@CurrentPatientGUID
+
+	SELECT @NumStudiesOwnedByCurrentPatient=NumberOfPatientRelatedStudies FROM Patient WHERE GUID=@CurrentPatientGUID
+
+	-- CR (Jan 2014): Although unlikely, an error may be thrown here if another process somehow inserted a study for this patient but hasn''t updated the count.
+	-- Instead of relying on the count, it is safer to delete the Patient record only if it is not being referenced in the Study table:
+	--    DELETE Patient WHERE GUID =@CurrentPatientGUID and NOT EXISTS(SELECT COUNT(*) FROM Study WITH (NOLOCK) WHERE Study.PatientGUID = Patient.GUID )		
+	IF @NumStudiesOwnedByCurrentPatient<=0
 	BEGIN
 		DELETE Patient WHERE GUID = @CurrentPatientGUID
 	END
-	ELSE
-	BEGIN
-		UPDATE Patient
-		SET [NumberOfPatientRelatedStudies]=@NumStudiesOwnedByCurrentPatient-1,
-			[NumberOfPatientRelatedSeries]=[NumberOfPatientRelatedSeries]-@NumSeries,
-			[NumberOfPatientRelatedInstances]=[NumberOfPatientRelatedInstances]-@NumInstances
-		WHERE GUID=@CurrentPatientGUID
-	END
-	
 	
 	SET NOCOUNT OFF;
 

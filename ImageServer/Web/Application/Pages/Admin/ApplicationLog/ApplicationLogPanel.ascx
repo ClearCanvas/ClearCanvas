@@ -48,10 +48,10 @@
 							
 							</script>
 
-						<table cellpadding="0" cellspacing="0" border="0">
+						<table>
 							<tr>
 								<td>
-									<table cellpadding="0" cellspacing="0" border="0">
+									<table>
 										<tr>
 											<td align="left" valign="bottom">
 												<asp:Label ID="Label2" runat="server" Text="<%$Resources: SearchFieldLabels,AppLogHost%>" CssClass="SearchTextBoxLabel"></asp:Label><br />
@@ -64,7 +64,7 @@
 
                                             </td>
                                             <td align="left" valign="bottom">
-                                                <table cellspacing="0" cellpadding="0" border="0"><tr><td valign="bottom"><asp:Label ID="Label5" runat="server" Text="<%$Resources: SearchFieldLabels,AppLogFromTime%>" CssClass="SearchTextBoxLabel" EnableViewState="false"/></td><td style="padding-left: 5px;"><ccAsp:InvalidInputIndicator ID="FromTimeHelp" runat="server" SkinID="InvalidInputIndicator" /></td></tr></table>
+                                                <table border="0"><tr><td valign="bottom"><asp:Label ID="Label5" runat="server" Text="<%$Resources: SearchFieldLabels,AppLogFromTime%>" CssClass="SearchTextBoxLabel" EnableViewState="false"/></td><td style="padding-left: 5px;"><ccAsp:InvalidInputIndicator ID="FromTimeHelp" runat="server" SkinID="InvalidInputIndicator" /></td></tr></table>
 												<asp:TextBox ID="FromTimeFilter" runat="server" CssClass="SearchTextBox" ToolTip="From Time (HH:MM:SS.FFF)" ValidationGroup="AppLogValidationGroup"></asp:TextBox>
                                                 <ccValidator:RegularExpressionFieldValidator
                                                         ID="FromTimeValidator" runat="server" ControlToValidate="FromTimeFilter" InvalidInputIndicatorID="FromTimeHelp"
@@ -116,30 +116,18 @@
 			</asp:TableRow>
 			<asp:TableRow Height="100%">
 				<asp:TableCell>
-					<table width="100%" cellpadding="0" cellspacing="0" >
-<!--
+					<table width="100%" class="ToolbarButtonPanel">
 						<tr>
 							<td>
-								<asp:UpdatePanel ID="ToolBarUpdatePanel" runat="server" UpdateMode="Conditional">
-									<ContentTemplate>
-										<asp:Panel ID="ToolbarButtons" runat="server" CssClass="ToolbarButtons">
-										</asp:Panel>
-									</ContentTemplate>
-								</asp:UpdatePanel>
-							</td>
-						</tr>
--->						
-						<tr>
-							<td>
-								<asp:Panel ID="Panel2" runat="server" >
-									<table width="100%" cellpadding="0" cellspacing="0">
+								<asp:Panel ID="Panel2" runat="server" CssClass="SearchPanelResultContainer">
+									<table class="SearchPanelResultContainerTable">
 										<tr>
-											<td style="border-bottom: solid 1px #66aa65">
+											<td>
 												<ccAsp:GridPager ID="GridPagerTop" runat="server" />
 											</td>
 										</tr>
 										<tr>
-											<td style="background-color: white;">
+											<td class="SearchPanelResultContainerTd">
 												<localAsp:ApplicationLogGridView ID="ApplicationLogGridView" runat="server"/>
 											</td>
 										</tr>

@@ -23,33 +23,32 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using ClearCanvas.Common;
+using ClearCanvas.Common.Shreds;
 
 namespace ClearCanvas.Server.ShredHost
 {
     internal class ShredStartupInfo : MarshalByRefObject
     {
-        public ShredStartupInfo(Uri assemblyPath, string shredName, string shredTypeName)
+        public ShredStartupInfo(Uri assemblyPath, string shredName, string shredTypeName, ShredIsolationLevel isolationLevel)
         {
             Platform.CheckForNullReference(assemblyPath, "assemblyPath");
-            Platform.CheckForNullReference(shredName, "shredName");
             Platform.CheckForEmptyString(shredName, "shredName");
-            Platform.CheckForNullReference(shredTypeName, "shredTypeName");
             Platform.CheckForEmptyString(shredTypeName, "shredTypeName");
 
             _assemblyPath = assemblyPath;
             _shredName = shredName;
             _shredTypeName = shredTypeName;
+        	_isolationLevel = isolationLevel;
         }
 
         #region Properties
-        private Uri _assemblyPath;
-        private string _shredName;
-        private string _shredTypeName;
+		private readonly Uri _assemblyPath;
+		private readonly string _shredName;
+		private readonly string _shredTypeName;
+    	private readonly ShredIsolationLevel _isolationLevel;
 
-        public string ShredTypeName
+    	public string ShredTypeName
         {
             get { return _shredTypeName; }
         }
@@ -64,6 +63,12 @@ namespace ClearCanvas.Server.ShredHost
         {
             get { return _assemblyPath; }
         }
-        #endregion
+
+    	public ShredIsolationLevel IsolationLevel
+    	{
+			get { return _isolationLevel; }
+    	}
+
+    	#endregion
     }
 }

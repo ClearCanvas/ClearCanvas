@@ -51,7 +51,7 @@ namespace ClearCanvas.Common
 			Console.WriteLine(@"Product: {0}", settings.Product);
 			Console.WriteLine(@"Component: {0}", settings.Component);
 			Console.WriteLine(@"SubComponent: {0}", settings.SubComponent);
-			Console.WriteLine(@"Edition: {0}", settings.Edition);
+			Console.WriteLine(@"Edition: {0}", settings.DisplayEdition);
 			Console.WriteLine(@"Version: {0}", settings.Version);
 			Console.WriteLine(@"VersionSuffix: {0}", settings.VersionSuffix);
 			Console.WriteLine(@"Release: {0}", settings.Release);
@@ -249,6 +249,18 @@ namespace ClearCanvas.Common
 			}
 		}
 
+		/// <summary>
+		/// Gets the product edition for display.
+		/// </summary>
+		public string DisplayEdition
+		{
+			get
+			{
+				var edition = Edition;
+				return edition != "<empty>" ? edition : string.Empty;
+			}
+		}
+
 		private static string Decrypt(string @string)
 		{
 			if (String.IsNullOrEmpty(@string))
@@ -373,6 +385,14 @@ namespace ClearCanvas.Common
 		}
 
 		/// <summary>
+		/// Gets the product display edition.
+		/// </summary>
+		public static string DisplayEdition
+		{
+			get { return _settings.DisplayEdition; }
+		}
+
+		/// <summary>
 		/// Gets the component name, optionally with the product edition and/or release type.
 		/// </summary>
 		/// <param name="includeEdition">A value indciating whether or not to include the product edition in the name.</param>
@@ -389,7 +409,7 @@ namespace ClearCanvas.Common
 		/// <param name="includeRelease">A value indicating whether or not to include the release type in the name.</param>
 		private static string GetNameSuffix(bool includeEdition, bool includeRelease)
 		{
-			return Concatenate(includeEdition ? Edition : string.Empty, includeRelease && !string.IsNullOrEmpty(Release) ? string.Format(SR.FormatReleaseType, Release) : string.Empty);
+			return Concatenate(includeEdition ? DisplayEdition : string.Empty, includeRelease && !string.IsNullOrEmpty(Release) ? string.Format(SR.FormatReleaseType, Release) : string.Empty);
 		}
 
 		/// <summary>
@@ -417,8 +437,8 @@ namespace ClearCanvas.Common
 		/// <summary>
 		/// Gets the version as a string, optionally with build and revision numbers, and/or version suffix.
 		/// </summary>
-		/// <param name="includeBuildAndRevision">Specifies whether to include the build and revision numbers in the version; false means only the major and minor numbers are included.</param>
-		/// <param name="includeVersionSuffix">Specifies whether to include the version suffix.</param>
+		/// <param name="includeBuildAndRevision">Specifies whether or not to include the build and revision numbers in the version; false means only the major and minor numbers are included.</param>
+		/// <param name="includeVersionSuffix">Specifies whether or not to include the version suffix.</param>
 		public static string GetVersion(bool includeBuildAndRevision, bool includeVersionSuffix)
 		{
 			return GetVersion(includeBuildAndRevision, includeVersionSuffix, false);
@@ -427,10 +447,11 @@ namespace ClearCanvas.Common
 		/// <summary>
 		/// Gets the version as a string, optionally with build and revision numbers, version suffix, and/or release type.
 		/// </summary>
-		/// <param name="includeBuildAndRevision">Specifies whether to include the build and revision numbers in the version; false means only the major and minor numbers are included.</param>
-		/// <param name="includeVersionSuffix">Specifies whether to include the version suffix.</param>
-		/// <param name="includeRelease">A value indicating whether or not to include the release type in the name.</param>
-		public static string GetVersion(bool includeBuildAndRevision, bool includeVersionSuffix, bool includeRelease)
+		/// <param name="includeBuildAndRevision">Specifies whether or not to include the build and revision numbers in the version; false means only the major and minor numbers are included.</param>
+		/// <param name="includeVersionSuffix">Specifies whether or not to include the version suffix.</param>
+		/// <param name="includeRelease">Specifies whether or not to include the release type in the string.</param>
+		/// <param name="includeEdition">Specifies whether or not to include the edition name in the string.</param>
+		public static string GetVersion(bool includeBuildAndRevision, bool includeVersionSuffix, bool includeRelease, bool includeEdition = false)
 		{
 			var version = Version;
 			var versionString = new StringBuilder(string.Format(@"{0}.{1}", version.Major, version.Minor));
@@ -442,7 +463,7 @@ namespace ClearCanvas.Common
 					versionString.AppendFormat(@".{0}", version.Revision);
 			}
 
-			return Concatenate(versionString.ToString(), includeVersionSuffix ? VersionSuffix : string.Empty, includeRelease ? Release : string.Empty);
+			return Concatenate(includeEdition ? DisplayEdition : string.Empty, versionString.ToString(), includeVersionSuffix ? VersionSuffix : string.Empty, includeRelease ? Release : string.Empty);
 		}
 
 		public static bool IsEvaluation

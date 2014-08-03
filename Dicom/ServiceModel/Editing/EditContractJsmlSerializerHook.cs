@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Serialization;
 using ClearCanvas.Common.Utilities;
@@ -37,10 +38,13 @@ namespace ClearCanvas.Dicom.ServiceModel.Editing
 
 		public EditContractJsmlSerializerHook()
 		{
-			_contractMap = (from p in Platform.PluginManager.Plugins
-			                from t in p.Assembly.Resolve().GetTypes()
+			var assemblies = Platform.PluginManager.Plugins.Select(p => p.Assembly.Resolve()).ToList();
+			assemblies.Add(typeof(Edit).Assembly);
+
+			_contractMap = (from t in assemblies.SelectMany(a => a.GetTypes()).Distinct()
 			                let a = AttributeUtils.GetAttribute<EditTypeAttribute>(t)
-			                where (a != null)
+							let b = AttributeUtils.GetAttribute<DataContractAttribute>(t)
+							where (a != null && b != null)
 			                select new {a.ContractId, Contract = t})
 				.ToDictionary(entry => entry.ContractId, entry => entry.Contract);
 		}

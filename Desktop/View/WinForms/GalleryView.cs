@@ -269,6 +269,9 @@ namespace ClearCanvas.Desktop.View.WinForms
 			IGalleryItem item = (IGalleryItem) _gallery[index];
 			int keyIndex = _listView.LargeImageList.Images.IndexOfKey(lvi.ImageKey);
 
+			// ensure tag is the correct item (may change if item at index was set via indexer)
+			lvi.Tag = item;
+
 			var existing = _listView.LargeImageList.Images[keyIndex];
 			var @new = (Image) item.Image;
 

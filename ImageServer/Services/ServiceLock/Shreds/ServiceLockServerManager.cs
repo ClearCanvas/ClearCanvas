@@ -91,6 +91,9 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.Shreds
 
 		protected override void Stop()
 		{
+			//TODO CR (Jan 2014): Move this into the base if it applies to all subclasses?
+			PersistentStoreRegistry.GetDefaultStore().ShutdownRequested = true;
+
 			if (_theProcessor != null)
 			{
 				_theProcessor.Stop();

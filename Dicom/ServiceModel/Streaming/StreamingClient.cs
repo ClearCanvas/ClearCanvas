@@ -30,8 +30,6 @@ using System.Text;
 using System.Web;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
-using System.Diagnostics;
-using System.Net.Cache;
 
 namespace ClearCanvas.Dicom.ServiceModel.Streaming
 {
@@ -58,14 +56,21 @@ namespace ClearCanvas.Dicom.ServiceModel.Streaming
 			get { return _metaData; }	
 		}
 
+		[Obsolete("Use the version with the out (photometricInterpretation) parameter.")]
 		public byte[] GetPixelData()
 		{
+			string photometricInterpretation;
+			return GetPixelData(out photometricInterpretation);
+		}
+
+		public byte[] GetPixelData(out string photometricInterpretation)
+		{
+			photometricInterpretation = null;
 			if (_compressedPixelData != null)
 			{
 				try
 				{
-					byte[] uncompressed = _compressedPixelData.GetFrame(0);
-
+					byte[] uncompressed = _compressedPixelData.GetFrame(0, out photometricInterpretation);
 					_pixelData = uncompressed;
 					_compressedPixelData = null;
 				}
@@ -153,7 +158,7 @@ namespace ClearCanvas.Dicom.ServiceModel.Streaming
 
 				clock.Stop();
 				PerformanceReportBroker.PublishReport("Streaming", "RetrievePixelData", clock.Seconds);
-
+				Platform.Log(LogLevel.Debug, "Client streaming time: {0} seconds", clock.Seconds);
 				RetrievePixelDataResult pixelDataResult;
 				if (response.Headers["Compressed"] != null && bool.Parse(response.Headers["Compressed"]))
 					pixelDataResult = new RetrievePixelDataResult(CreateCompressedPixelData(response, buffer), result);

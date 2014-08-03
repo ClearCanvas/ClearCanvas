@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.ServiceModel;
 using ClearCanvas.Enterprise.Common.ServiceConfiguration.Server;
 
 namespace ClearCanvas.Enterprise.Common
@@ -41,6 +42,7 @@ namespace ClearCanvas.Enterprise.Common
 			MaxReceivedMessageSize = maxReceivedMessageSize;
 			CertificateSearchDirective = certificateSearchParams;
 			SendTimeoutSeconds = 0; //Treated as default (e.g. don't change)
+			TransferMode = TransferMode.Buffered;
 		}
 
 		/// <summary>
@@ -73,5 +75,10 @@ namespace ClearCanvas.Enterprise.Common
 		/// </summary>
 		/// <remarks>Value less than or equal to zero should be ignored.</remarks>
 		public int SendTimeoutSeconds;
+
+		/// <summary>
+		/// The TransferMode used for the service.
+		/// </summary>
+		public TransferMode TransferMode;
 	}
 }

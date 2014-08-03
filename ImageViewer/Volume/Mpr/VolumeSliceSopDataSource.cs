@@ -25,7 +25,7 @@
 using System;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom;
-using ClearCanvas.Dicom.Iod.Macros;
+using ClearCanvas.Dicom.Iod.ContextGroups;
 using ClearCanvas.Dicom.Iod.Modules;
 using ClearCanvas.ImageViewer.StudyManagement;
 using ClearCanvas.ImageViewer.Volumes;
@@ -125,13 +125,13 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 			var scEquipment = new ScEquipmentModuleIod(dataSet);
 			scEquipment.ConversionType = @"WSD";
 			scEquipment.SecondaryCaptureDeviceManufacturer = @"ClearCanvas Inc.";
-			scEquipment.SecondaryCaptureDeviceManufacturersModelName = ProductInformation.GetName(true, false);
-			scEquipment.SecondaryCaptureDeviceSoftwareVersions = new[] {ProductInformation.GetVersion(true, true, true)};
+			scEquipment.SecondaryCaptureDeviceManufacturersModelName = ProductInformation.GetName(false, false);
+			scEquipment.SecondaryCaptureDeviceSoftwareVersions = new[] {ProductInformation.GetVersion(true, true, true, true)};
 
 			// generate values for the General Image Module
 			dataSet[DicomTags.ImageType].SetStringValue(@"DERIVED\SECONDARY");
 			dataSet[DicomTags.DerivationDescription].SetStringValue(@"Multiplanar Reformatting");
-			dataSet[DicomTags.DerivationCodeSequence].Values = new[] {new CodeSequenceMacro {CodingSchemeDesignator = "DCM", CodeValue = "113072", CodeMeaning = "Multiplanar reformatting"}.DicomSequenceItem};
+			dataSet[DicomTags.DerivationCodeSequence].Values = new[] {ImageDerivationContextGroup.MultiplanarReformatting.AsDicomSequenceItem()};
 
 			// update the Image Plane Module
 			dataSet[DicomTags.PixelSpacing].SetStringValue(slice.PixelSpacing);

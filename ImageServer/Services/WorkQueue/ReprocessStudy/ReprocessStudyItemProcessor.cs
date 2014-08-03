@@ -319,12 +319,13 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReprocessStudy
 
             StudyXml studyXml = LoadStudyXml();
 
-            int reprocessedCounter = 0;
+            var reprocessedCounter = 0;
+        	var skippedCount = 0;
             var removedFiles = new List<FileInfo>();
             try
             {
                 // Traverse the directories, process 500 files at a time
-                FileProcessor.Process(StorageLocation.GetStudyPath(), "*.*",
+                var isCancelled = FileProcessor.Process(StorageLocation.GetStudyPath(), "*.*",
                                       delegate(string path, out bool cancel)
                                           {
                                               #region Reprocess File
@@ -354,6 +355,8 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReprocessStudy
                                                           {
                                                               Platform.Log(LogLevel.Warn, "SOP Instance UID in {0} appears more than once in the study.", path);
                                                           }
+
+                                                      	skippedCount++;
                                                       }
                                                       else
                                                       {
@@ -420,7 +423,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReprocessStudy
 
 											  if (reprocessedCounter>0 && reprocessedCounter % 200 == 0)
 											  {
-												  Platform.Log(LogLevel.Info, "Reprocessed {0} files for study {1}", reprocessedCounter, StorageLocation.StudyInstanceUid);
+												  Platform.Log(LogLevel.Info, "Reprocessed {0} files for study {1}", reprocessedCounter + skippedCount, StorageLocation.StudyInstanceUid);
 											  }
 
                                               cancel = reprocessedCounter >= 5000;
@@ -436,7 +439,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReprocessStudy
 
                 // Completed if either all files have been reprocessed 
                 // or no more dicom files left that can be reprocessed.
-                _completed = reprocessedCounter == 0;
+				_completed = reprocessedCounter == 0 || !isCancelled;
             }
             catch (Exception e)
             {

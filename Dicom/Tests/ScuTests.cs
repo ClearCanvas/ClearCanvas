@@ -25,6 +25,7 @@
 #if UNIT_TESTS
 
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom.Network;
@@ -112,16 +113,12 @@ namespace ClearCanvas.Dicom.Tests
 				scu.AddStorageInstance(new StorageInstance(file));
 			}
 
-			scu.ImageStoreCompleted += delegate(object o, StorageInstance instance)
-			                           	{
-											// Test abort
-			                           		scu.Abort();
-			                           	};
+			scu.ImageStoreCompleted += (s, e) => scu.Abort();
 
 			scu.Send();
 			scu.Join();
 
-			Assert.AreEqual(scu.Status, ScuOperationStatus.NetworkError);
+			Assert.AreEqual(ScuOperationStatus.NetworkError, scu.Status);
 
 			// StopListening
 			DicomServer.StopListening(serverParameters);
@@ -181,6 +178,79 @@ namespace ClearCanvas.Dicom.Tests
             // StopListening
             DicomServer.StopListening(serverParameters);
         }
+
+		[Test]
+        public void StorageScuFromDisk()
+        {
+            int port = 2112;
+
+            _serverHandlerList.Clear();
+
+            /* Setup the Server */
+            var serverParameters = new ServerAssociationParameters("AssocTestServer", new IPEndPoint(IPAddress.Any, port));
+            byte pcid = serverParameters.AddPresentationContext(SopClass.MrImageStorage);
+            serverParameters.AddTransferSyntax(pcid, TransferSyntax.ExplicitVrLittleEndian);
+            serverParameters.AddTransferSyntax(pcid, TransferSyntax.ExplicitVrBigEndian);
+            serverParameters.AddTransferSyntax(pcid, TransferSyntax.ImplicitVrLittleEndian);
+
+            _serverType = TestTypes.Receive;
+            DicomServer.StartListening(serverParameters, ServerHandlerCreator);
+
+            StorageScu scu = SetupScu();
+
+            IList<DicomAttributeCollection> list = SetupMRSeries(4, 2, DicomUid.GenerateUid().UID);
+
+            foreach (DicomAttributeCollection collection in list)
+            {
+                var file = new DicomFile("test", new DicomAttributeCollection(), collection)
+                {
+                    TransferSyntax = TransferSyntax.ExplicitVrLittleEndian,
+                    MediaStorageSopClassUid = SopClass.MrImageStorage.Uid,
+                    MediaStorageSopInstanceUid = collection[DicomTags.SopInstanceUid].ToString()
+                };
+
+				string instancePath = file.MediaStorageSopInstanceUid + ".dcm";
+
+	            file.Save(instancePath);
+
+				var instance = new StorageInstance(instancePath)
+					{
+						SopClass = file.SopClass,
+						TransferSyntax = file.TransferSyntax,
+						SopInstanceUid = file.MediaStorageSopClassUid,
+						PatientId = file.DataSet[DicomTags.PatientId].GetString(0, string.Empty),
+						PatientsName = file.DataSet[DicomTags.PatientsName].GetString(0, string.Empty),
+						StudyInstanceUid = file.DataSet[DicomTags.StudyInstanceUid].GetString(0, string.Empty)
+					};
+
+	            scu.AddStorageInstance(instance);
+            }
+
+            scu.Send();
+            scu.Join();
+
+            Assert.AreEqual(scu.Status, ScuOperationStatus.NotRunning);
+
+            var handler = CollectionUtils.FirstElement(_serverHandlerList);
+            var serverHandler = handler as ServerHandler;
+
+            Assert.NotNull(serverHandler);
+
+            foreach (var message in serverHandler.MessagesReceived)
+            {
+				foreach (var file in list)
+				{
+					if (message.AffectedSopInstanceUid.Equals(file[DicomTags.SopInstanceUid].ToString()))
+					{
+						Assert.IsTrue(message.DataSet.Equals(file));
+					}
+				}
+            }
+
+            // StopListening
+            DicomServer.StopListening(serverParameters);
+        }
+	
 	}
 }
 

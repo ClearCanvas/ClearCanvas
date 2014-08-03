@@ -44,8 +44,8 @@ namespace ClearCanvas.Desktop
 		public static readonly Path Empty = new Path(new PathSegment[]{});
 
 
-		private const string SEPARATOR = "/";
-    	private const string ESCAPED_SEPARATOR = "'/";
+		public const string SEPARATOR = "/";
+		public const string ESCAPED_SEPARATOR = "'/";
 		private const string TEMP = "__$:$__";
 
         private readonly List<PathSegment> _segments;

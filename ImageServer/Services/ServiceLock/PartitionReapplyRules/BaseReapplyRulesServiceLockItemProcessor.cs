@@ -1,4 +1,28 @@
-﻿using System.Collections.Generic;
+﻿#region License
+
+// Copyright (c) 2014, ClearCanvas Inc.
+// All rights reserved.
+// http://www.clearcanvas.ca
+//
+// This file is part of the ClearCanvas RIS/PACS open source project.
+//
+// The ClearCanvas RIS/PACS open source project is free software: you can
+// redistribute it and/or modify it under the terms of the GNU General Public
+// License as published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// The ClearCanvas RIS/PACS open source project is distributed in the hope that it
+// will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+// Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along with
+// the ClearCanvas RIS/PACS open source project.  If not, see
+// <http://www.gnu.org/licenses/>.
+
+#endregion
+
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using ClearCanvas.Common;
@@ -104,9 +128,10 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.PartitionReapplyRules
 						filesystemDeleteExists = filesystemQueueBroker.Count(filesystemQueueCriteria) > 0;
 					}
 
-					var context = new ServerActionContext(msg, location.FilesystemKey, partition, location.Key);
-					using (context.CommandProcessor = new ServerCommandProcessor("Study Rule Processor"))
+					using (var commandProcessor = new ServerCommandProcessor("Study Rule Processor"))
 					{
+						var context = new ServerActionContext(msg, location.FilesystemKey, partition, location.Key, commandProcessor);
+					
 						// Check if the Study has been archived 
 						if (archiveStudyStorageExists && !archiveQueueExists && !filesystemDeleteExists)
 						{
@@ -120,7 +145,8 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.PartitionReapplyRules
 							// processed, we don't want to delete them, because they might still be valid.  
 							// We just re-run the rules engine at this point, and delete only the StudyPurge entries,
 							// since those we know at least would only be applied for archived studies.
-							postArchivalEngine.Execute(context);
+							var studyRulesEngine = new StudyRulesEngine(postArchivalEngine, location, location.ServerPartition, location.LoadStudyXml());
+							studyRulesEngine.Apply(ServerRuleApplyTimeEnum.StudyArchived, commandProcessor);
 
 							// Post Archive doesn't allow data access rules.  Force Data Access rules to be reapplied
 							// to these studies also.
@@ -133,12 +159,11 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.PartitionReapplyRules
 							context.CommandProcessor.AddCommand(new DeleteFilesystemQueueCommand(location.Key,ServerRuleApplyTimeEnum.StudyProcessed));
 
 							// Execute the rules engine, insert commands to update the database into the command processor.
-							engine.Execute(context);
-
-							// Re-do insert into the archive queue.
-							// Note: the stored procedure will update the archive entry if it already exists
-							context.CommandProcessor.AddCommand(
-								new InsertArchiveQueueCommand(location.ServerPartitionKey, location.Key));
+							// Due to ticket #11673, we create a new rules engine instance for each study, since the Study QC rules
+							// don't work right now with a single rules engine.
+							//TODO CR (Jan 2014) - Check if we can go back to caching the rules engine to reduce database hits on the rules
+							var studyRulesEngine = new StudyRulesEngine(location, location.ServerPartition, location.LoadStudyXml());
+							studyRulesEngine.Apply(ServerRuleApplyTimeEnum.StudyProcessed, commandProcessor);
 						}
 
 						// Do the actual database updates.

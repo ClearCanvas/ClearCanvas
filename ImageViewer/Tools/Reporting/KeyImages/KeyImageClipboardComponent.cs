@@ -71,11 +71,25 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			{
 				if (_clipboard != value)
 				{
-					if (_clipboard != null) _clipboard.CurrentContextChanged -= OnClipboardCurrentContextChanged;
+					if (_clipboard != null)
+					{
+						_clipboard.AvailableContexts.ItemAdded -= OnAvailableContextsItemAdded;
+						_clipboard.AvailableContexts.ItemChanged -= OnAvailableContextsItemAdded;
+						_clipboard.AvailableContexts.ItemChanging -= OnAvailableContextsItemRemoved;
+						_clipboard.AvailableContexts.ItemRemoved -= OnAvailableContextsItemRemoved;
+						_clipboard.CurrentContextChanged -= OnClipboardCurrentContextChanged;
+					}
 
 					_clipboard = value;
 
-					if (_clipboard != null) _clipboard.CurrentContextChanged += OnClipboardCurrentContextChanged;
+					if (_clipboard != null)
+					{
+						_clipboard.CurrentContextChanged += OnClipboardCurrentContextChanged;
+						_clipboard.AvailableContexts.ItemAdded += OnAvailableContextsItemAdded;
+						_clipboard.AvailableContexts.ItemChanged += OnAvailableContextsItemAdded;
+						_clipboard.AvailableContexts.ItemChanging += OnAvailableContextsItemRemoved;
+						_clipboard.AvailableContexts.ItemRemoved += OnAvailableContextsItemRemoved;
+					}
 
 					AvailableContexts.RaiseListChangedEvents = false;
 					try
@@ -141,6 +155,16 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			base.Clipboard = currentContext;
 			NotifyPropertyChanged("CurrentContext");
 			EventsHelper.Fire(_currentContextChanged, this, new EventArgs());
+		}
+
+		private void OnAvailableContextsItemAdded(object sender, ListEventArgs<KeyImageInformation> e)
+		{
+			AvailableContexts.Insert(e.Index, e.Item);
+		}
+
+		private void OnAvailableContextsItemRemoved(object sender, ListEventArgs<KeyImageInformation> e)
+		{
+			AvailableContexts.RemoveAt(e.Index);
 		}
 
 		#region Static

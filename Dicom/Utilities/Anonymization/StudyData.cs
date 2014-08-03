@@ -43,7 +43,7 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization
 		private string _studyDescription = "";
 		private string _studyId = "";
 		private string _studyDateRaw = "";
-
+		private string _patientsAge = "";
 		/// <summary>
 		/// Constructor.
 		/// </summary>
@@ -64,6 +64,7 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization
 				_studyDescription = sourceData.StudyDescription;
 				_studyId = sourceData.StudyId;
 				_studyDateRaw = sourceData.StudyDate;
+				_patientsAge = sourceData.PatientsAge;
 			}
 		}
 
@@ -151,6 +152,16 @@ namespace ClearCanvas.Dicom.Utilities.Anonymization
 		{
 			get { return _patientsSex; }
 			set { _patientsSex = value ?? ""; }
+		}
+
+		/// <summary>
+		/// Gets or sets the patient's age
+		/// </summary>
+		[DicomField(DicomTags.PatientsAge)]
+		public string PatientsAge
+		{
+			get { return _patientsAge; }
+			set { _patientsAge = value ?? ""; }
 		}
 
 		/// <summary>

@@ -252,8 +252,9 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.AutoRoute
 				scu.AddStorageInstanceList(InstanceList);
 
 				// Set an event to be called when each image is transferred
-				scu.ImageStoreCompleted += delegate(Object sender, StorageInstance instance)
+				scu.ImageStoreCompleted += (sender, e) =>
 				                           	{
+				                           		var instance = e.StorageInstance;
 				                           		if (instance.SendStatus.Status == DicomState.Success
 				                           		    || instance.SendStatus.Status == DicomState.Warning
 				                           		    || instance.SendStatus.Equals(DicomStatuses.SOPClassNotSupported))

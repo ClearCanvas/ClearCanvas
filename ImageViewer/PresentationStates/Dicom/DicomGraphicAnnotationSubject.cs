@@ -60,7 +60,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 				TraverseChildGraphics(Graphics, graphic =>
 				                                	{
 				                                		var controlGraphic = graphic as IControlGraphic;
-				                                		if (controlGraphic != null) (controlGraphic).Enabled = value;
+				                                		if (controlGraphic != null) controlGraphic.Enabled = value;
 				                                	});
 			}
 
@@ -202,7 +202,7 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 
 					var compositeGraphic = graphic as CompositeGraphic;
 					if (compositeGraphic != null)
-						TraverseChildGraphics((compositeGraphic).Graphics, action);
+						TraverseChildGraphics(compositeGraphic.Graphics, action);
 				}
 			}
 		}

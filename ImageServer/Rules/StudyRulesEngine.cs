@@ -62,6 +62,13 @@ namespace ClearCanvas.ImageServer.Rules
 			_location = location;
 			_partition = partition ?? ServerPartition.Load(_location.ServerPartitionKey);
 		}
+		public StudyRulesEngine(ServerRulesEngine studyRulesEngine, StudyStorageLocation location, ServerPartition partition, StudyXml studyXml)
+		{
+			_studyRulesEngine = studyRulesEngine;
+			_studyXml = studyXml;
+			_location = location;
+			_partition = partition ?? ServerPartition.Load(_location.ServerPartitionKey);
+		}
 		#endregion
 
 		#region Public Methods
@@ -96,16 +103,17 @@ namespace ClearCanvas.ImageServer.Rules
                                  _location.StudyInstanceUid, _partition.Description, applyTime.Description);
                 }
 			}
-
-			
 		}
 
 		public void Apply(ServerRuleApplyTimeEnum applyTime, CommandProcessor theProcessor)
 		{
 			try
 			{
-				_studyRulesEngine = new ServerRulesEngine(applyTime, _location.ServerPartitionKey);
-				_studyRulesEngine.Load();
+				if (_studyRulesEngine == null || !_studyRulesEngine.RuleApplyTime.Equals(applyTime))
+				{
+					_studyRulesEngine = new ServerRulesEngine(applyTime, _location.ServerPartitionKey);
+					_studyRulesEngine.Load();
+				}
 
 				List<string> files = GetFirstInstanceInEachStudySeries();
 				if (files.Count == 0)
@@ -125,8 +133,7 @@ namespace ClearCanvas.ImageServer.Rules
 					var theFile = new DicomFile(seriesFilePath);
 					theFile.Load(DicomReadOptions.Default);
 					var context =
-						new ServerActionContext(theFile, _location.FilesystemKey, _partition, _location.Key)
-							{CommandProcessor = theProcessor, RuleEngine = _studyRulesEngine};
+						new ServerActionContext(theFile, _location.FilesystemKey, _partition, _location.Key, theProcessor){ RuleEngine = _studyRulesEngine};
 					_studyRulesEngine.Execute(context);
 
 					ProcessSeriesRules(theFile, theProcessor);
@@ -233,8 +240,7 @@ namespace ClearCanvas.ImageServer.Rules
 				_seriesRulesEngine.Statistics.ExecutionTime.Reset();
 			}
 
-			var context = new ServerActionContext(file, _location.FilesystemKey, _partition, _location.Key)
-		                      {CommandProcessor = processor};
+			var context = new ServerActionContext(file, _location.FilesystemKey, _partition, _location.Key,processor);
 
 
 		    _seriesRulesEngine.Execute(context);

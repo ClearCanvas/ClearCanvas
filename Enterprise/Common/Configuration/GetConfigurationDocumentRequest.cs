@@ -23,26 +23,16 @@
 #endregion
 
 using System.Runtime.Serialization;
-using ClearCanvas.Common.Caching;
 using ClearCanvas.Common.Configuration;
 
 namespace ClearCanvas.Enterprise.Common.Configuration
 {
 	[DataContract]
-	public class GetConfigurationDocumentRequest : ConfigurationDocumentRequestBase, IDefinesCacheKey
+	public class GetConfigurationDocumentRequest : ConfigurationDocumentRequestBase
 	{
 		public GetConfigurationDocumentRequest(ConfigurationDocumentKey documentKey)
 			: base(documentKey)
 		{
 		}
-
-		#region IDefinesCacheKey Members
-
-		string IDefinesCacheKey.GetCacheKey()
-		{
-			return ((IDefinesCacheKey)this.DocumentKey).GetCacheKey();
-		}
-
-		#endregion
 	}
 }

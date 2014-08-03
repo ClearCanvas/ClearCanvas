@@ -73,6 +73,12 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
             get { return ReferringPhysiciansName; }
         }
 
+		string IStudyData.PatientsAge
+		{
+			// TODO, shoudl we add into the DB?
+			get { return string.Empty; }
+		}
+
         string IStudyData.StudyDate
         {
             get { return StudyDateRaw; }

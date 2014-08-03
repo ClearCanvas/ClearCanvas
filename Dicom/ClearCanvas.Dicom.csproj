@@ -139,12 +139,15 @@
     <Compile Include="DicomUncompressedPixelData.cs" />
     <Compile Include="FileReference.cs" />
     <Compile Include="Iod\ComponentGroup.cs" />
+    <Compile Include="Iod\ContextGroups\ImageDrivationContextGroup.cs" />
+    <Compile Include="Iod\ContextGroups\SourceImagePurposesOfReferenceContextGroup.cs" />
     <Compile Include="Iod\CorrectedImage.cs" />
     <Compile Include="Iod\CountsSource.cs" />
     <Compile Include="Iod\DecayCorrection.cs" />
     <Compile Include="Iod\Extensions\XKeyObjectDocumentModuleIod.cs" />
     <Compile Include="Iod\FunctionalGroupDescriptor.cs" />
     <Compile Include="Iod\FunctionalGroupMacro.cs" />
+    <Compile Include="Iod\FunctionalGroupMapCache.cs" />
     <Compile Include="Iod\FunctionalGroups\CardiacSynchronizationFunctionalGroup.cs" />
     <Compile Include="Iod\FunctionalGroups\ContrastBolusUsageFunctionalGroup.cs" />
     <Compile Include="Iod\FunctionalGroups\CtAcquisitionDetailsFunctionalGroup.cs" />
@@ -248,9 +251,11 @@
     <Compile Include="Iod\Modules\EnhancedPetSeriesModuleIod.cs" />
     <Compile Include="Iod\Modules\EnhancedSeriesModuleIod.cs" />
     <Compile Include="Iod\Modules\EnhancedUsSeriesModuleIod.cs" />
+    <Compile Include="Iod\Modules\FrameOfReferenceModuleIod.cs" />
     <Compile Include="Iod\Modules\MrSeriesModuleIod.cs" />
     <Compile Include="Iod\Modules\MultiFrameDimensionModule.cs" />
     <Compile Include="Iod\Modules\MultiFrameFunctionalGroupsModule.cs" />
+    <Compile Include="Iod\Modules\MultiFrameModuleIod.cs" />
     <Compile Include="Iod\Modules\NmPetPatientOrientationModuleIod.cs" />
     <Compile Include="Iod\Modules\OpthalmicTomographySeriesModuleIod.cs" />
     <Compile Include="Iod\Modules\PetIsotopeModuleIod.cs" />
@@ -283,7 +288,9 @@
     <Compile Include="Iod\Tests\HierarchicalSopInstanceReferenceDictionaryTests.cs" />
     <Compile Include="Iod\Tests\WindowTests.cs" />
     <Compile Include="Iod\Units.cs" />
+    <Compile Include="IO\DicomStreamOpener.cs" />
     <Compile Include="IO\IByteBuffer.cs" />
+    <Compile Include="IO\StreamMethods.cs" />
     <Compile Include="IO\Tests\ByteBufferHighCapacityTests.cs" />
     <Compile Include="IO\Tests\ByteBufferPerformanceTest.cs" />
     <Compile Include="IO\Tests\ByteBufferTests.cs" />
@@ -716,7 +723,7 @@
     <Compile Include="Tests\AssociationTests.cs" />
     <Compile Include="Tests\AttributeTests.cs" />
     <Compile Include="Tests\DicomFieldTests.cs" />
-    <Compile Include="Tests\FileTest.cs" />
+    <Compile Include="Tests\DicomFileTests.cs" />
     <Compile Include="Utilities\Anonymization\DicomAnonymizer.cs" />
     <Compile Include="Utilities\Anonymization\DicomAnonymizerTags.cs" />
     <Compile Include="Utilities\Anonymization\SeriesData.cs" />
@@ -735,7 +742,9 @@
     <Compile Include="Validation\StringValueValidation.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <EmbeddedResource Include="Audit\DicomAuditMessageSchema.xsd">
       <SubType>
       </SubType>

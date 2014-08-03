@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Runtime.Serialization;
 using ClearCanvas.Dicom.Utilities;
 using ClearCanvas.Common;
 
@@ -31,6 +32,7 @@ namespace ClearCanvas.Dicom.Iod.Iods
     /// <summary>
     /// IOD for common Query Retrieve items.  This is a replacement for the <see cref="ClearCanvas.Dicom.QueryResult"/>
     /// </summary>
+    [DataContract]
     public class StudyQueryIod : QueryIodBase
     {
         #region Constructors
@@ -59,7 +61,8 @@ namespace ClearCanvas.Dicom.Iod.Iods
         /// Gets or sets the study instance uid.
         /// </summary>
         /// <value>The study instance uid.</value>
-        public string StudyInstanceUid
+		[DataMember]
+		public string StudyInstanceUid
         {
             get { return DicomAttributeProvider[DicomTags.StudyInstanceUid].GetString(0, String.Empty); }
             set { DicomAttributeProvider[DicomTags.StudyInstanceUid].SetString(0, value); }
@@ -69,7 +72,8 @@ namespace ClearCanvas.Dicom.Iod.Iods
         /// Gets or sets the patient id.
         /// </summary>
         /// <value>The patient id.</value>
-        public string PatientId
+		[DataMember]
+		public string PatientId
         {
             get { return DicomAttributeProvider[DicomTags.PatientId].GetString(0, String.Empty); }
             set { DicomAttributeProvider[DicomTags.PatientId].SetString(0, value); }
@@ -79,7 +83,8 @@ namespace ClearCanvas.Dicom.Iod.Iods
         /// Gets or sets the name of the patient.
         /// </summary>
         /// <value>The name of the patients.</value>
-        public PersonName PatientsName
+		[DataMember]
+		public PersonName PatientsName
         {
             get { return new PersonName(DicomAttributeProvider[DicomTags.PatientsName].GetString(0, String.Empty)); }
             set { DicomAttributeProvider[DicomTags.PatientsName].SetString(0, value.ToString()); }
@@ -89,7 +94,8 @@ namespace ClearCanvas.Dicom.Iod.Iods
         /// Gets or sets the patients birth date.
         /// </summary>
         /// <value>The patients birth date.</value>
-        public DateTime PatientsBirthDate
+		[DataMember]
+		public DateTime PatientsBirthDate
         {
             get { return DicomAttributeProvider[DicomTags.PatientsBirthDate].GetDateTime(0, DateTime.MinValue); }
             set { DicomAttributeProvider[DicomTags.PatientsBirthDate].SetDateTime(0, value); }
@@ -99,7 +105,8 @@ namespace ClearCanvas.Dicom.Iod.Iods
         /// Gets or sets the patients sex.
         /// </summary>
         /// <value>The patients sex.</value>
-        public string PatientsSex
+		[DataMember]
+		public string PatientsSex
         {
             get { return DicomAttributeProvider[DicomTags.PatientsSex].GetString(0, String.Empty); }
             set { DicomAttributeProvider[DicomTags.PatientsSex].SetString(0, value); }
@@ -109,7 +116,8 @@ namespace ClearCanvas.Dicom.Iod.Iods
         /// Gets or sets the modalities in study.
         /// </summary>
         /// <value>The modalities in study.</value>
-        public string ModalitiesInStudy
+		[DataMember]
+		public string ModalitiesInStudy
         {
             get { return DicomAttributeProvider[DicomTags.ModalitiesInStudy].GetString(0, String.Empty); }
             set { DicomAttributeProvider[DicomTags.ModalitiesInStudy].SetString(0, value); }
@@ -119,7 +127,8 @@ namespace ClearCanvas.Dicom.Iod.Iods
         /// Gets or sets the study description.
         /// </summary>
         /// <value>The study description.</value>
-        public string StudyDescription
+		[DataMember]
+		public string StudyDescription
         {
             get { return DicomAttributeProvider[DicomTags.StudyDescription].GetString(0, String.Empty); }
             set { DicomAttributeProvider[DicomTags.StudyDescription].SetString(0, value); }
@@ -129,7 +138,8 @@ namespace ClearCanvas.Dicom.Iod.Iods
         /// Gets or sets the study id.
         /// </summary>
         /// <value>The study id.</value>
-        public string StudyId
+		[DataMember]
+		public string StudyId
         {
             get { return DicomAttributeProvider[DicomTags.StudyId].GetString(0, String.Empty); }
             set { DicomAttributeProvider[DicomTags.StudyId].SetString(0, value); }
@@ -139,7 +149,8 @@ namespace ClearCanvas.Dicom.Iod.Iods
         /// Gets or sets the study date.
         /// </summary>
         /// <value>The study date.</value>
-        public DateTime? StudyDate
+		[DataMember]
+		public DateTime? StudyDate
         {
             get { return DateTimeParser.ParseDateAndTime(String.Empty, 
                     DicomAttributeProvider[DicomTags.StudyDate].GetString(0, String.Empty), 
@@ -152,7 +163,8 @@ namespace ClearCanvas.Dicom.Iod.Iods
         /// Gets or sets the accession number.
         /// </summary>
         /// <value>The accession number.</value>
-        public string AccessionNumber
+		[DataMember]
+		public string AccessionNumber
         {
             get { return DicomAttributeProvider[DicomTags.AccessionNumber].GetString(0, String.Empty); }
             set { DicomAttributeProvider[DicomTags.AccessionNumber].SetString(0, value); }
@@ -162,7 +174,8 @@ namespace ClearCanvas.Dicom.Iod.Iods
         /// Gets or sets the number of study related instances.
         /// </summary>
         /// <value>The number of study related instances.</value>
-        public uint NumberOfStudyRelatedInstances
+		[DataMember]
+		public uint NumberOfStudyRelatedInstances
         {
             get { return DicomAttributeProvider[DicomTags.NumberOfStudyRelatedInstances].GetUInt32(0, 0); }
             set { DicomAttributeProvider[DicomTags.NumberOfStudyRelatedInstances].SetUInt32(0, value); }

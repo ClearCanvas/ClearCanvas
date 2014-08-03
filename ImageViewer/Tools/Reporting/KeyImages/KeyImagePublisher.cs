@@ -35,7 +35,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 {
 	internal static class KeyImagePublisher
 	{
-		public static void Publish(IEnumerable<KeyImageInformation> keyImageInformations)
+		public static void Publish(IEnumerable<KeyImageInformation> keyImageInformations, StudyTree studyTree)
 		{
 			var keyImageContexts = keyImageInformations != null ? keyImageInformations.ToList() : null;
 			if (keyImageContexts == null || !keyImageContexts.Any()) return;
@@ -48,12 +48,14 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 				var publishers = new Dictionary<string, DicomPublishingHelper>();
 
 				var seriesNumberIndex = new Dictionary<string, int>();
-				var nextSeriesNumberDelegate = new NextSeriesNumberDelegate(f =>
+				var nextSeriesNumberDelegate = new NextSeriesNumberDelegate(studyInstanceUid =>
 				                                                            	{
-				                                                            		var studyInstanceUid = f.StudyInstanceUid;
 				                                                            		int nextSeriesNumber;
 				                                                            		if (!seriesNumberIndex.TryGetValue(studyInstanceUid, out nextSeriesNumber))
-				                                                            			nextSeriesNumber = GetMaxSeriesNumber(f);
+				                                                            		{
+				                                                            			var study = studyTree.GetStudy(studyInstanceUid);
+				                                                            			nextSeriesNumber = study != null ? study.Series.Select(series => series.SeriesNumber).Concat(new[] {0}).Max() : 0;
+				                                                            		}
 				                                                            		seriesNumberIndex[studyInstanceUid] = ++nextSeriesNumber;
 				                                                            		return nextSeriesNumber;
 				                                                            	});
@@ -94,13 +96,6 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 				else
 					Application.ActiveDesktopWindow.ShowMessageBox(SR.MessageKeyImagePublishingFailed, MessageBoxActions.Ok);
 			}
-		}
-
-		internal static int GetMaxSeriesNumber(Frame frame)
-		{
-			if (frame.ParentImageSop == null || frame.ParentImageSop.ParentSeries == null || frame.ParentImageSop.ParentSeries.ParentStudy == null)
-				return 0;
-			return frame.ParentImageSop.ParentSeries.ParentStudy.Series.Select(series => series.SeriesNumber).Concat(new[] {0}).Max();
 		}
 
 		private static bool AssertIsPublishingServiceAvailable()

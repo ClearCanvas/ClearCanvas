@@ -252,8 +252,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.CompressStudy
                         IDicomCodec codec = theCodecFactory.GetDicomCodec();
 
                         // Create a context for applying actions from the rules engine
-                        var context = new ServerActionContext(file, StorageLocation.FilesystemKey, ServerPartition, item.StudyStorageKey);
-                        context.CommandProcessor = processor;
+                        var context = new ServerActionContext(file, StorageLocation.FilesystemKey, ServerPartition, item.StudyStorageKey, processor);
                         
                         var parms = theCodecFactory.GetCodecParameters(item.Data);
                         var compressCommand =

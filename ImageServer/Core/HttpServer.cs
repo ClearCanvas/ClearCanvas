@@ -130,34 +130,17 @@ namespace ClearCanvas.ImageServer.Core
         /// <summary>
         /// Handles incoming http request asynchronously
         /// </summary>
-        /// <param name="result"></param>
-        private void ListenerCallback(IAsyncResult result)
+		private void ListenerCallback(HttpListenerContext context)
         {
-            HttpListenerContext context = null;
-
             try
             {
-                HttpListenerAsyncState state = result.AsyncState as HttpListenerAsyncState;
-                if (state != null)
-                {
-                    HttpListener listener = state.Listener;
-                    if (listener.IsListening)
-                    {
-                        context = listener.EndGetContext(result);
-                        if (Platform.IsLogLevelEnabled(LogLevel.Debug))
-                        {
-                            Platform.Log(LogLevel.Debug, "Handling http request");
-                            Platform.Log(LogLevel.Debug, "{0}", context.Request.Url.AbsoluteUri);
-                        }
+				if (Platform.IsLogLevelEnabled(LogLevel.Debug))
+				{
+					Platform.Log(LogLevel.Debug, "Handling http request");
+					Platform.Log(LogLevel.Debug, "{0}", context.Request.Url.AbsoluteUri);
+				}
 
-                        // signal the listener that it can now accept another connection
-                        state.WaitEvent.Set();
-
-                        EventsHelper.Fire(_httpRequestReceived, this, new HttpRequestReceivedEventArg(context));
-                        
-                    }
-
-                }
+				EventsHelper.Fire(_httpRequestReceived, this, new HttpRequestReceivedEventArg(context));
             }
             catch (Exception e)
             {
@@ -175,9 +158,7 @@ namespace ClearCanvas.ImageServer.Core
                         Platform.Log(LogLevel.Error, ex, "Unable to set response status description");
                     }
                 }
-                
             }
-
         }
         #endregion
 

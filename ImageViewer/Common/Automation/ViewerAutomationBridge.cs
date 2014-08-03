@@ -30,6 +30,7 @@ using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom.ServiceModel.Query;
 using ClearCanvas.ImageViewer.Common.StudyManagement;
+using StudyDateTimeComparer = ClearCanvas.ImageViewer.Common.Comparers.StudyDateTimeComparer;
 
 namespace ClearCanvas.ImageViewer.Common.Automation
 {
@@ -313,9 +314,13 @@ namespace ClearCanvas.ImageViewer.Common.Automation
 		private Viewer OpenStudies(IList<StudyRootStudyIdentifier> studiesToOpen)
 		{
 			CheckAtLeastOneStudy(studiesToOpen);
-
 			if (_studyComparer != null)
+			{
+				foreach (var identifier in studiesToOpen)
+					identifier.ResolveServer(true);
+
 				studiesToOpen = CollectionUtils.Sort(studiesToOpen, _studyComparer.Compare);
+			}
 
 			return OpenStudies(Convert(studiesToOpen));
 		}

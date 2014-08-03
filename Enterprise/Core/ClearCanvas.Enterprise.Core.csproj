@@ -232,6 +232,12 @@
     <Compile Include="SearchCondition.cs" />
     <Compile Include="SearchConditionBase.cs" />
     <Compile Include="SearchCriteria.cs" />
+    <Compile Include="ServerVersion\LegacyServiceSettings.cs" />
+    <Compile Include="ServerVersion\LegacyServiceSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>LegacyServiceSettings.settings</DependentUpon>
+    </Compile>
     <Compile Include="ServiceImplementsContractAttribute.cs" />
     <Compile Include="ServiceFactory.cs" />
     <Compile Include="ServiceModel\DefaultAuthorizationPolicy.cs" />
@@ -267,7 +273,7 @@
     <Compile Include="Upgrade\PersistentStoreUpgradeScriptExtensionPoint.cs" />
     <Compile Include="ValueObject.cs" />
     <Compile Include="ValueObjectSearchCriteria.cs" />
-    <Compile Include="VersionService.cs" />
+    <Compile Include="ServerVersion\VersionService.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="SR.resx">
@@ -308,6 +314,10 @@
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>EntityChangeSetRecorderSettings.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+    </None>
+    <None Include="ServerVersion\LegacyServiceSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>LegacyServiceSettings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>

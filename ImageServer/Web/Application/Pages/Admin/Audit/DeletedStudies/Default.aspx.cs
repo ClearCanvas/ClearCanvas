@@ -24,8 +24,8 @@
 
 using System;
 using System.Security.Permissions;
+using ClearCanvas.ImageServer.Common.Authentication;
 using ClearCanvas.ImageServer.Enterprise;
-using ClearCanvas.ImageServer.Enterprise.Authentication;
 using Resources;
 using ClearCanvas.ImageServer.Web.Application.Pages.Common;
 using ClearCanvas.ImageServer.Web.Common.Data;

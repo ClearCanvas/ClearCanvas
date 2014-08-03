@@ -23,14 +23,17 @@
 #endregion
 
 using System;
+using System.IO;
 using System.ServiceModel;
 using System.Threading;
 using System.Web;
 using System.Web.Security;
+using System.Web.UI.HtmlControls;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom.Audit;
 using ClearCanvas.Enterprise.Common;
 using ClearCanvas.ImageServer.Common;
+using ClearCanvas.ImageServer.Common.Helpers;
 using ClearCanvas.ImageServer.Web.Application.Pages.Common;
 using ClearCanvas.ImageServer.Web.Common.Security;
 using SR = Resources.SR;
@@ -43,21 +46,76 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Login
     [ExtensibleAttribute(ExtensionPoint=typeof(LoginPageExtensionPoint))]
     public partial class LoginPage : BasePage, ILoginPage
     {
+		private string CustomCssUrl;
+
+    	const String SplashImageNamePrefix = "LoginSplash";
+
+		protected String ApplicationName { get; set; }
+		protected String SplashScreenUrl { get; set; }
+		protected String CssClassName { get; set; }
+
         protected override void OnInit(EventArgs e)
         {
             base.OnInit(e);
-            ForeachExtension<ILoginPageExtension>(ext => ext.OnLoginPageInit(this));
 
-            SplashScreen.ImageUrl = "~/App_Themes/" + Theme + "/images/LoginSplash.png";
+			// Check for customization parameters
+			ApplicationName = Request.Params["AppName"] ?? ImageServerConstants.DefaultApplicationName;
+			SplashScreenUrl = Request.Params["SplashScreenUrl"] ?? DefaultSplashScreenPath;
+			CssClassName = Request.Params["CssClassName"];
+			CustomCssUrl = Request.Params["CssUrl"];
+
+			if (!string.IsNullOrEmpty(CssClassName))
+			{
+				this.PageBody.Attributes["class"] += " " + CssClassName;
+			}
+
+			if (!string.IsNullOrEmpty(CustomCssUrl))
+			{
+				// include the custom css (this will append to the end of the list and will overwrite the default css)
+				var stylesheet = new HtmlLink { Href = CustomCssUrl };
+				stylesheet.Attributes.Add("rel", "stylesheet");
+				stylesheet.Attributes.Add("type", "text/css");
+				Page.Header.Controls.Add(stylesheet);
+			}
+
+        	SetSplashScreen();
+			
+            ForeachExtension<ILoginPageExtension>(ext => ext.OnLoginPageInit(this));
         }
 
-        protected void Page_Load(object sender, EventArgs e)
+		/// <summary>
+		/// Return the virtual path for the default splash screen
+		/// </summary>
+    	protected string DefaultSplashScreenPath
+    	{
+    		get
+    		{
+				return string.Format("~/App_Themes/{0}/images/{1}.png", Theme, SplashImageNamePrefix);
+    		}
+    	}
+
+    	protected void Page_Load(object sender, EventArgs e)
         {
             if (SessionManager.Current != null)
             {
-                // already logged in. Maybe from a different page
-                HttpContext.Current.Response.Redirect(FormsAuthentication.GetRedirectUrl(SessionManager.Current.Credentials.UserName, false), true);
-            } 
+				// User has logged in from another page.
+                // Make sure the session (based on the cookie) is actually valid before redirecting
+            	var userId = SessionManager.Current.User.UserName;
+				var sessionId = SessionManager.Current.User.SessionTokenId;
+            	string[] authorityTokens;
+            	if (SessionManager.VerifySession(userId, sessionId, out authorityTokens, true))
+            	{
+					RedirectAfterLogin();	
+            	}
+
+				// session is invalid, looks like the web server and the authentication server are out of sync? 
+				// To be safe, redirect user to the logout page
+            	var originalRedirectUrl=SessionManager.GetRedirectUrl(SessionManager.Current);
+            	var logoutUrl = string.Format(ImageServerConstants.PageURLs.LogoutPage, originalRedirectUrl);
+
+				Response.Redirect(Page.ResolveClientUrl(logoutUrl), true);
+            	return;
+            }
             
             if (!ServerPlatform.IsManifestVerified)
             {
@@ -74,15 +132,6 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Login
 
             UserName.Focus();
 
-            // Set the size of LoginSplash panel to be the same as the splash screen image
-            // This (together with setting margin to auto in the css) will center the image
-            using(System.Drawing.Image image = System.Drawing.Image.FromFile(this.Server.MapPath(SplashScreen.ImageUrl)))
-            {
-                LoginSplash.Width = image.Width;
-                LoginSplash.Height = image.Height;
-
-                ErrorMessagePanel.Width = image.Width;
-            }
            
         }
 
@@ -91,17 +140,17 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Login
             if (SessionManager.Current != null)
             {
                 // already logged in. Maybe from different page
-                HttpContext.Current.Response.Redirect(FormsAuthentication.GetRedirectUrl(SessionManager.Current.Credentials.UserName, false), true);
+            	RedirectAfterLogin();
             } 
 
             try
             {
-                SessionManager.InitializeSession(UserName.Text, Password.Text);
+                SessionManager.InitializeSession(UserName.Text, Password.Text, ApplicationName ?? ImageServerConstants.DefaultApplicationName);
 
 				UserAuthenticationAuditHelper audit = new UserAuthenticationAuditHelper(ServerPlatform.AuditSource,
 					EventIdentificationContentsEventOutcomeIndicator.Success, UserAuthenticationEventType.Login);
 				audit.AddUserParticipant(new AuditPersonActiveParticipant(UserName.Text, null, SessionManager.Current.Credentials.DisplayName));
-				ServerPlatform.LogAuditMessage(audit);
+                ServerAuditHelper.LogAuditMessage(audit);
 			}
             catch (PasswordExpiredException)
             {
@@ -111,7 +160,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Login
 				UserAuthenticationAuditHelper audit = new UserAuthenticationAuditHelper(ServerPlatform.AuditSource,
 					EventIdentificationContentsEventOutcomeIndicator.Success, UserAuthenticationEventType.Login);
 				audit.AddUserParticipant(new AuditPersonActiveParticipant(UserName.Text, null, null));
-				ServerPlatform.LogAuditMessage(audit);
+                ServerAuditHelper.LogAuditMessage(audit);
 			}
             catch (UserAccessDeniedException ex)
             {
@@ -123,7 +172,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Login
                 UserAuthenticationAuditHelper audit = new UserAuthenticationAuditHelper(ServerPlatform.AuditSource,
                     EventIdentificationContentsEventOutcomeIndicator.SeriousFailureActionTerminated, UserAuthenticationEventType.Login);
                 audit.AddUserParticipant(new AuditPersonActiveParticipant(UserName.Text, null, null));
-                ServerPlatform.LogAuditMessage(audit);
+                ServerAuditHelper.LogAuditMessage(audit);
             }
             catch (CommunicationException ex)
             {
@@ -133,7 +182,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Login
 				UserAuthenticationAuditHelper audit = new UserAuthenticationAuditHelper(ServerPlatform.AuditSource,
 					EventIdentificationContentsEventOutcomeIndicator.MajorFailureActionMadeUnavailable, UserAuthenticationEventType.Login);
 				audit.AddUserParticipant(new AuditPersonActiveParticipant(UserName.Text, null, null));
-				ServerPlatform.LogAuditMessage(audit);
+                ServerAuditHelper.LogAuditMessage(audit);
 			}
             catch (ArgumentException ex)
             {
@@ -144,7 +193,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Login
                 UserAuthenticationAuditHelper audit = new UserAuthenticationAuditHelper(ServerPlatform.AuditSource,
                     EventIdentificationContentsEventOutcomeIndicator.MajorFailureActionMadeUnavailable, UserAuthenticationEventType.Login);
                 audit.AddUserParticipant(new AuditPersonActiveParticipant(UserName.Text, null, null));
-                ServerPlatform.LogAuditMessage(audit);
+                ServerAuditHelper.LogAuditMessage(audit);
             }
             catch (Exception ex)
             {
@@ -154,9 +203,25 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Login
 				UserAuthenticationAuditHelper audit = new UserAuthenticationAuditHelper(ServerPlatform.AuditSource,
 					EventIdentificationContentsEventOutcomeIndicator.MajorFailureActionMadeUnavailable, UserAuthenticationEventType.Login);
 				audit.AddUserParticipant(new AuditPersonActiveParticipant(UserName.Text, null, null));
-				ServerPlatform.LogAuditMessage(audit);
+                ServerAuditHelper.LogAuditMessage(audit);
 			}
         }
+
+		private void RedirectAfterLogin()
+		{
+			//The GetRedirectUrl method returns the URL specified in the query string using the ReturnURL variable name.
+
+			var redirectUrl = SessionManager.GetRedirectUrl(SessionManager.Current);
+			HttpContext.Current.Response.Redirect(redirectUrl, true);
+		}
+
+		/// <summary>
+		/// Sets the splash screen for the current application
+		/// </summary>
+		private void SetSplashScreen()
+		{
+			SplashScreen.ImageUrl = SplashScreenUrl;
+		}
 
         public void ChangePassword(object sender, EventArgs e)
         {

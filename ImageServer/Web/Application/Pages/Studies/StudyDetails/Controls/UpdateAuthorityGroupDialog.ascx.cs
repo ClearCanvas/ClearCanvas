@@ -29,6 +29,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Enterprise.Common.Admin.AuthorityGroupAdmin;
+using ClearCanvas.ImageServer.Common.Authentication;
 using ClearCanvas.ImageServer.Web.Common.Data;
 using ClearCanvas.ImageServer.Web.Common.Data.DataSource;
 
@@ -67,7 +68,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Con
                 return;
             }
 
-            if (Thread.CurrentPrincipal.IsInRole(ClearCanvas.ImageServer.Enterprise.Authentication.AuthorityTokens.Study.EditDataAccess) && Study != null)
+            if (Thread.CurrentPrincipal.IsInRole(AuthorityTokens.Study.EditDataAccess) && Study != null)
             {
                 AuthorityGroupCheckBoxList.Items.Clear();
 

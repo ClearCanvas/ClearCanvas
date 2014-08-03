@@ -26,9 +26,9 @@
 #pragma warning disable 1591,0419,1574,1587
 
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using ClearCanvas.Dicom;
+using ClearCanvas.ImageViewer.Common;
 using ClearCanvas.ImageViewer.StudyManagement;
 using NUnit.Framework;
 
@@ -384,19 +384,6 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom.Tests
 				{
 					return new DisposableList<IPresentationImage>(PresentationImageFactory.Create(sop));
 				}
-			}
-		}
-
-		private class DisposableList<T> : List<T>, IDisposable
-			where T : IDisposable
-		{
-			public DisposableList(IEnumerable<T> collection)
-				: base(collection) {}
-
-			public void Dispose()
-			{
-				foreach (var item in this)
-					item.Dispose();
 			}
 		}
 

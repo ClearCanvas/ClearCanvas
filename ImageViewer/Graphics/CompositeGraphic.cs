@@ -55,7 +55,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 			{
 				if (_graphics == null)
 				{
-					_graphics = new GraphicCollection();
+					_graphics = new GraphicCollection(this);
 					_graphics.ItemAdded += new EventHandler<ListEventArgs<IGraphic>>(OnGraphicAdded);
 					_graphics.ItemRemoved += new EventHandler<ListEventArgs<IGraphic>>(OnGraphicRemoved);
 				}

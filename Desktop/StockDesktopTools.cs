@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop.Actions;
 using ClearCanvas.Desktop.Tools;
@@ -35,8 +36,8 @@ namespace ClearCanvas.Desktop
 	/// <remarks>
 	/// For internal framework use only.
 	/// </remarks>
-    public partial class StockDesktopTools
-    {
+	public partial class StockDesktopTools
+	{
 		/// <summary>
 		/// Closes the <see	cref="IDesktopWindow"/> that owns this tool.
 		/// </summary>
@@ -45,24 +46,22 @@ namespace ClearCanvas.Desktop
 		/// </remarks>
 		[MenuAction("exit", "global-menus/MenuFile/MenuCloseWindow", "CloseWindow", KeyStroke = XKeys.Alt | XKeys.F4)]
 		[GroupHint("exit", "Application.Exit")]
-		[ClearCanvas.Common.ExtensionOf(typeof(DesktopToolExtensionPoint))]
-        public class CloseWindowTool : Tool<IDesktopToolContext>
-        {
+		[ExtensionOf(typeof (DesktopToolExtensionPoint))]
+		public class CloseWindowTool : Tool<IDesktopToolContext>
+		{
 			/// <summary>
 			/// Constructor.
 			/// </summary>
-            public CloseWindowTool()
-            {
-            }
-			
+			public CloseWindowTool() {}
+
 			/// <summary>
 			/// Closes the <see	cref="IDesktopWindow"/> that owns this tool.
 			/// </summary>
 			public void CloseWindow()
 			{
-                this.Context.DesktopWindow.Close(UserInteraction.Allowed, CloseReason.UserInterface);
+				this.Context.DesktopWindow.Close(UserInteraction.Allowed, CloseReason.UserInterface);
 			}
-        }
+		}
 
 		/// <summary>
 		/// Closes the active <see cref="IWorkspace"/>.
@@ -71,19 +70,17 @@ namespace ClearCanvas.Desktop
 		/// For internal framework use only.
 		/// </remarks>
 		[MenuAction("closeWorkspace", "global-menus/MenuFile/MenuCloseWorkspace", "CloseWorkspace", KeyStroke = XKeys.Control | XKeys.F4)]
-        [EnabledStateObserver("closeWorkspace", "Enabled", "EnabledChanged")]
+		[EnabledStateObserver("closeWorkspace", "Enabled", "EnabledChanged")]
 		[GroupHint("closeWorkspace", "Application.Workspace.Close")]
-        [ClearCanvas.Common.ExtensionOf(typeof(DesktopToolExtensionPoint))]
-        public class CloseWorkspaceTool : Tool<IDesktopToolContext>
-        {
-            private event EventHandler _enabledChanged;
-            
+		[ExtensionOf(typeof (DesktopToolExtensionPoint))]
+		public class CloseWorkspaceTool : Tool<IDesktopToolContext>
+		{
+			private event EventHandler _enabledChanged;
+
 			/// <summary>
 			/// Constructor.
 			/// </summary>
-            public CloseWorkspaceTool()
-            {
-            }
+			public CloseWorkspaceTool() {}
 
 			/// <summary>
 			/// Disposes of this object; override to do custom cleanup.
@@ -104,52 +101,53 @@ namespace ClearCanvas.Desktop
 			/// the tool will have access to its context when this method is called.
 			///</summary>
 			public override void Initialize()
-            {
-                base.Initialize();
+			{
+				base.Initialize();
 
-                this.Context.DesktopWindow.Workspaces.ItemOpened += WorkspacesChanged;
-                this.Context.DesktopWindow.Workspaces.ItemClosed += WorkspacesChanged;
-                this.Context.DesktopWindow.Workspaces.ItemActivationChanged += WorkspacesChanged;
-            }
-			
+				this.Context.DesktopWindow.Workspaces.ItemOpened += WorkspacesChanged;
+				this.Context.DesktopWindow.Workspaces.ItemClosed += WorkspacesChanged;
+				this.Context.DesktopWindow.Workspaces.ItemActivationChanged += WorkspacesChanged;
+			}
+
 			/// <summary>
 			/// Closes the active <see cref="IWorkspace"/>.
 			/// </summary>
-            public void CloseWorkspace()
-            {
-                IDesktopWindow window = this.Context.DesktopWindow;
-                IWorkspace activeWorkspace = window.ActiveWorkspace;
-                if (activeWorkspace != null)
-                {
-                    activeWorkspace.Close();
-                }
-            }
+			public void CloseWorkspace()
+			{
+				IDesktopWindow window = this.Context.DesktopWindow;
+				IWorkspace activeWorkspace = window.ActiveWorkspace;
+				if (activeWorkspace != null)
+				{
+					activeWorkspace.Close();
+				}
+			}
 
 			/// <summary>
 			/// Gets the enabled state of the tool.
 			/// </summary>
-            public bool Enabled
-            {
-                get
-                {
-                    return this.Context.DesktopWindow.Workspaces.Count > 0 
-                        && this.Context.DesktopWindow.ActiveWorkspace.UserClosable;
-                }
-            }
+			public bool Enabled
+			{
+				get
+				{
+					return this.Context.DesktopWindow.Workspaces.Count > 0
+					       && this.Context.DesktopWindow.ActiveWorkspace != null
+					       && this.Context.DesktopWindow.ActiveWorkspace.UserClosable;
+				}
+			}
 
 			/// <summary>
 			/// Raised when the <see cref="Enabled"/> property has changed.
 			/// </summary>
-            public event EventHandler EnabledChanged
-            {
-                add { _enabledChanged += value; }
-                remove { _enabledChanged -= value; }
-            }
+			public event EventHandler EnabledChanged
+			{
+				add { _enabledChanged += value; }
+				remove { _enabledChanged -= value; }
+			}
 
-            private void WorkspacesChanged(object sender, ItemEventArgs<Workspace> e)
-            {
-                EventsHelper.Fire(_enabledChanged, this, new EventArgs());
-            }
-        }
-    }
+			private void WorkspacesChanged(object sender, ItemEventArgs<Workspace> e)
+			{
+				EventsHelper.Fire(_enabledChanged, this, new EventArgs());
+			}
+		}
+	}
 }

@@ -505,9 +505,8 @@ namespace ClearCanvas.ImageServer.Core
 				try
 				{
 					// Create a context for applying actions from the rules engine
-					ServerActionContext context =
-						new ServerActionContext(file, _context.StorageLocation.FilesystemKey, _context.Partition, _context.StorageLocation.Key);
-					context.CommandProcessor = processor;
+					var context =
+						new ServerActionContext(file, _context.StorageLocation.FilesystemKey, _context.Partition, _context.StorageLocation.Key, processor);
 
 					_context.SopCompressionRulesEngine.Execute(context);
                     String seriesUid = file.DataSet[DicomTags.SeriesInstanceUid].GetString(0, String.Empty);
@@ -547,6 +546,7 @@ namespace ClearCanvas.ImageServer.Core
 
 					if (uid!=null)
 						processor.AddCommand(new DeleteWorkQueueUidCommand(uid));
+
 
 					// Do the actual processing
 					if (!processor.Execute())

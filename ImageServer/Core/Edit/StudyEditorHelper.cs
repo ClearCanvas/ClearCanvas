@@ -128,8 +128,9 @@ namespace ClearCanvas.ImageServer.Core.Edit
         /// <param name="userId">The ID of the user requesting the study edit</param> 
         /// <param name="editType">The request is a web edit request</param>
         /// <exception cref="InvalidStudyStateOperationException"></exception>
+		/// <param name="priorityEnum">Optional parameter to set the priority of resultant <see cref="WorkQueue"/> items.</param>
         /// <param name="updateItems"></param>
-        public static IList<WorkQueue> EditStudy(IUpdateContext context, ServerEntityKey studyStorageKey, List<UpdateItem> updateItems, string reason, string userId, EditType editType)
+		public static IList<WorkQueue> EditStudy(IUpdateContext context, ServerEntityKey studyStorageKey, List<UpdateItem> updateItems, string reason, string userId, EditType editType, WorkQueuePriorityEnum priorityEnum = null)
         {
             // Find all location of the study in the system and insert series delete request
 			IList<StudyStorageLocation> storageLocations = StudyStorageLocation.FindStorageLocations(studyStorageKey);
@@ -151,7 +152,7 @@ namespace ClearCanvas.ImageServer.Core.Edit
                     if (ServerHelper.LockStudy(location.Key, QueueStudyStateEnum.EditScheduled, out failureReason))
                     {
                         // insert an edit request
-                        WorkQueue request = InsertEditStudyRequest(context, location.Key, location.ServerPartitionKey, WorkQueueTypeEnum.WebEditStudy, updateItems, reason, userId, editType);
+                        WorkQueue request = InsertEditStudyRequest(context, location.Key, location.ServerPartitionKey, WorkQueueTypeEnum.WebEditStudy, updateItems, reason, userId, editType,priorityEnum);
                         entries.Add(request);
                     }
                     else
@@ -183,7 +184,8 @@ namespace ClearCanvas.ImageServer.Core.Edit
         /// <exception cref="InvalidStudyStateOperationException"></exception>
         /// <param name="updateItems"></param>
         /// <param name="editType">The request is a web edit request </param>
-        public static IList<WorkQueue> ExternalEditStudy(IUpdateContext context, ServerEntityKey studyStorageKey, List<UpdateItem> updateItems, string reason, string user, EditType editType)
+		/// <param name="priorityEnum">Optional parameter to set the priority of resultant <see cref="WorkQueue"/> items.</param>
+		public static IList<WorkQueue> ExternalEditStudy(IUpdateContext context, ServerEntityKey studyStorageKey, List<UpdateItem> updateItems, string reason, string user, EditType editType, WorkQueuePriorityEnum priorityEnum = null)
         {
             // Find all location of the study in the system and insert series delete request
             StudyStorage s = StudyStorage.Load(studyStorageKey);
@@ -192,28 +194,31 @@ namespace ClearCanvas.ImageServer.Core.Edit
             // insert an edit request
             WorkQueue request = InsertExternalEditStudyRequest(context, s.Key, s.ServerPartitionKey,
                                                        WorkQueueTypeEnum.ExternalEdit, updateItems, reason, user,
-                                                       editType);
+                                                       editType, priorityEnum);
             entries.Add(request);
 
             return entries;
         }
 
-        /// <summary>
-        /// Insert an EditStudy request.
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="studyStorageKey"></param>
-        /// <param name="serverPartitionKey"></param>
-        /// <param name="type"></param>
-        /// <param name="updateItems"></param>
-        /// <param name="reason"></param>
-        /// <param name="user"></param>
-        /// <param name="editType"></param>
-        /// <returns></returns>
-        private static WorkQueue InsertEditStudyRequest(IUpdateContext context, ServerEntityKey studyStorageKey, ServerEntityKey serverPartitionKey, WorkQueueTypeEnum type, List<UpdateItem> updateItems, string reason, string user, EditType editType)
+	    /// <summary>
+	    /// Insert an EditStudy request.
+	    /// </summary>
+	    /// <param name="context"></param>
+	    /// <param name="studyStorageKey"></param>
+	    /// <param name="serverPartitionKey"></param>
+	    /// <param name="type"></param>
+	    /// <param name="updateItems"></param>
+	    /// <param name="reason"></param>
+	    /// <param name="user"></param>
+	    /// <param name="editType"></param>
+		/// <param name="priorityEnum">Optional parameter to set the priority of resultant <see cref="WorkQueue"/> items.</param>
+	    /// <returns></returns>
+		private static WorkQueue InsertEditStudyRequest(IUpdateContext context, ServerEntityKey studyStorageKey, ServerEntityKey serverPartitionKey, WorkQueueTypeEnum type, List<UpdateItem> updateItems, string reason, string user, EditType editType, WorkQueuePriorityEnum priorityEnum = null)
         {
         	var broker = context.GetBroker<IInsertWorkQueue>();
             InsertWorkQueueParameters criteria = new EditStudyWorkQueueParameters(studyStorageKey, serverPartitionKey, type, updateItems, reason, user, editType);
+		    if (priorityEnum != null)
+			    criteria.WorkQueuePriorityEnum = priorityEnum;
             WorkQueue editEntry = broker.FindOne(criteria);
             if (editEntry == null)
             {
@@ -233,8 +238,10 @@ namespace ClearCanvas.ImageServer.Core.Edit
         /// <param name="reason"></param>
         /// <param name="user"></param>
         /// <param name="editType"></param>
+		/// <param name="priorityEnum">Optional parameter to set the priority of resultant <see cref="WorkQueue"/> items.</param>
         /// <returns></returns>
-        private static WorkQueue InsertExternalEditStudyRequest(IUpdateContext context, ServerEntityKey studyStorageKey, ServerEntityKey serverPartitionKey, WorkQueueTypeEnum type, List<UpdateItem> updateItems, string reason, string user, EditType editType)
+		private static WorkQueue InsertExternalEditStudyRequest(IUpdateContext context, ServerEntityKey studyStorageKey, ServerEntityKey serverPartitionKey, 
+			WorkQueueTypeEnum type, List<UpdateItem> updateItems, string reason, string user, EditType editType, WorkQueuePriorityEnum priorityEnum = null)
         {
             var propertiesBroker = context.GetBroker<IWorkQueueTypePropertiesEntityBroker>();
             var criteria = new WorkQueueTypePropertiesSelectCriteria();
@@ -261,7 +268,7 @@ namespace ClearCanvas.ImageServer.Core.Edit
             insert.ScheduledTime = now;
             insert.ExpirationTime = now.AddSeconds(properties.ExpireDelaySeconds);
             insert.WorkQueueStatusEnum = WorkQueueStatusEnum.Pending;
-            insert.WorkQueuePriorityEnum = properties.WorkQueuePriorityEnum;
+            insert.WorkQueuePriorityEnum = priorityEnum ?? properties.WorkQueuePriorityEnum;
             insert.Data = XmlUtils.SerializeAsXmlDoc(data); 
             WorkQueue editEntry = broker.Insert(insert);
             if (editEntry == null)

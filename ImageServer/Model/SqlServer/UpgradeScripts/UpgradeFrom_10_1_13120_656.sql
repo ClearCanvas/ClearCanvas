@@ -453,6 +453,35 @@ GO
 IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
 GO
 
+PRINT N'Add Enhanced PET Storage SOP Class'
+
+DECLARE @SopClassGUID uniqueidentifier
+DECLARE @ServerPartitionGUID uniqueidentifier
+
+SET @SopClassGUID = NEWID()
+
+INSERT INTO [ImageServer].[dbo].[ServerSopClass] ([GUID],[SopClassUid],[Description],[NonImage])
+VALUES (@SopClassGUID, '1.2.840.10008.5.1.4.1.1.130', 'Enhanced PET Storage', 0);
+
+DECLARE partition_cursor CURSOR FOR SELECT GUID From ServerPartition
+OPEN partition_cursor
+FETCH NEXT FROM partition_cursor INTO @ServerPartitionGUID
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    INSERT INTO [ImageServer].[dbo].[PartitionSopClass]
+			([GUID],[ServerPartitionGUID],[ServerSopClassGUID],[Enabled])
+		VALUES (newid(), @ServerPartitionGUID, @SopClassGUID, 1)
+    
+    FETCH NEXT FROM partition_cursor INTO @ServerPartitionGUID
+END 
+CLOSE partition_cursor;
+DEALLOCATE partition_cursor;
+
+IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+
 IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT>0 BEGIN

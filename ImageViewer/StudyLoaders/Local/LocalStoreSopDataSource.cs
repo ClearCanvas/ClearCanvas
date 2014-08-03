@@ -100,9 +100,9 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Local
             {
                 if (_sop.IsStoredTag(tag))
                 {
+					//Assume that if it exists at all, it'll be in the xml. Otherwise, we can end up parsing image headers unnecessarily, slowing TTFI.
                     attribute = _sop[tag];
-                    if (!attribute.IsEmpty)
-                        return true;
+                	return !attribute.IsEmpty;
                 }
 
                 return base.TryGetAttribute(tag, out attribute);
@@ -115,10 +115,10 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Local
             {
                 if (_sop.IsStoredTag(tag))
                 {
-                    attribute = _sop[tag];
-                    if (!attribute.IsEmpty)
-                        return true;
-                }
+					//Assume that if it exists at all, it'll be in the xml. Otherwise, we can end up parsing image headers unnecessarily, slowing TTFI.
+					attribute = _sop[tag];
+					return !attribute.IsEmpty;
+				}
 
                 return base.TryGetAttribute(tag, out attribute);
             }

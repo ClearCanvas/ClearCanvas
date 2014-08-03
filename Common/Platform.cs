@@ -140,7 +140,6 @@ namespace ClearCanvas.Common
 		private static readonly object _namedLogLock = new object();
 		private static readonly Dictionary<string, ILog> _namedLogs = new Dictionary<string, ILog>();
 
-		private static string _pluginSubFolder = "plugins";
 		private static string _commonSubFolder = "common";
 		private static string _logSubFolder = "logs";
 		private static string _manifestSubFolder = "manifest";
@@ -299,12 +298,10 @@ namespace ClearCanvas.Common
 					{
 						if (_pluginsDirectory == null)
 						{
-							string pluginsDirectory = Path.Combine(InstallDirectory, _pluginSubFolder);
+							var pluginsDirectory = Path.Combine(InstallDirectory, ExtensionSettings.Default.PluginPath);
 
-							if (Directory.Exists(pluginsDirectory))
-								_pluginsDirectory = pluginsDirectory;
-							else
-								_pluginsDirectory = InstallDirectory;
+							// fallback to install directory if PluginPath doesn't exist, for backwards compatibility
+							_pluginsDirectory = Directory.Exists(pluginsDirectory) ? pluginsDirectory : InstallDirectory;
 						}
 					}
 				}
@@ -629,6 +626,31 @@ namespace ClearCanvas.Common
 					}
 				}
 			}
+		}
+
+		/// <summary>
+		/// Obtains an instance of the specified service for use by the application.  
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Instead of returning the service directly, this overload passes the service to the specified delegate for use.
+		/// When the delegate returns, this method automatically takes care of determing whether the service implements <see cref="IDisposable"/>
+		/// and calling <see cref="IDisposable.Dispose"/> if it does.  The delegate must not cache the returned service
+		/// because it may be disposed as soon as the delegate returns.  For the single-use scenario, this overload is preferred
+		/// to the other overloads because it automatically manages the lifecycle of the service object.
+		/// </para>
+		/// <para>
+		/// This method is thread-safe.
+		/// </para>
+		/// </remarks>
+		/// <typeparam name="TService">The service to obtain.</typeparam>
+		/// <typeparam name="TResult">The type of the function result.</typeparam>
+		/// <param name="func">A delegate that will receive the service for one-time use.</param>
+		public static TResult GetService<TService, TResult>(Func<TService, TResult> func)
+		{
+			TResult result = default(TResult);
+			GetService<TService>(svc => result = func.Invoke(svc));
+			return result;
 		}
 
 		/// <summary>

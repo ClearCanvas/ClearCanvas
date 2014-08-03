@@ -325,7 +325,7 @@
     <value>{0}</value>
   </data>
   <data name="ViewImagesPageTitle" xml:space="preserve">
-    <value>Webstation | {0}</value>
+    <value>{1} | {0}</value>
   </data>
   <data name="MoveSeries" xml:space="preserve">
     <value>Move Series</value>
@@ -437,5 +437,20 @@
   </data>
   <data name="Webstation" xml:space="preserve">
     <value>Webstation</value>
+  </data>
+  <data name="ExternalRequestQueue" xml:space="preserve">
+    <value>External Request Queue</value>
+  </data>
+  <data name="ExternalRequestQueuePageTitle" xml:space="preserve">
+    <value>External Request Queue | {0}</value>
+  </data>
+  <data name="StudyQualityControlReport" xml:space="preserve">
+    <value>Study Quality Control Report</value>
+  </data>
+  <data name="Attachment" xml:space="preserve">
+    <value>Attachment</value>
+  </data>
+  <data name="ViewAttachmentPageTitle" xml:space="preserve">
+    <value>{1} | {0}</value>
   </data>
 </root>

@@ -25,8 +25,8 @@
 using System;
 using System.Collections.Generic;
 using ClearCanvas.Common;
-using ClearCanvas.Desktop.Actions;
 using ClearCanvas.Common.Utilities;
+using ClearCanvas.Desktop.Actions;
 
 namespace ClearCanvas.Desktop
 {
@@ -87,10 +87,9 @@ namespace ClearCanvas.Desktop
 
 		#endregion
 
-
 		private Host _host;
 		private DesktopWindow _desktopWindow;
-		private readonly CommandHistory _commandHistory;
+		private CommandHistory _commandHistory;
 		private bool _exitRequestedByComponent;
 		private readonly bool _userClosable;
 		private WorkspaceDialogBoxCollection _dialogBoxes;
@@ -183,7 +182,7 @@ namespace ClearCanvas.Desktop
 				// if the dialogBox is still open, try to close it
 				// (the check is necessary because there is no guarantee that the dialogBox is still open)
 				if (dialogBox.State == DesktopObjectState.Open &&
-					!dialogBox.Close(UserInteraction.Allowed, reason | CloseReason.ParentClosing))
+				    !dialogBox.Close(UserInteraction.Allowed, reason | CloseReason.ParentClosing))
 					return false;
 			}
 
@@ -234,6 +233,8 @@ namespace ClearCanvas.Desktop
 
 				if (_dialogBoxes != null)
 					(_dialogBoxes as IDisposable).Dispose();
+
+				_commandHistory = null;
 				_dialogBoxes = null;
 				_desktopWindow = null;
 			}
@@ -242,7 +243,7 @@ namespace ClearCanvas.Desktop
 		/// <summary>
 		/// Creates a view for this workspace.
 		/// </summary>
-		protected sealed override IDesktopObjectView CreateView()
+		protected override sealed IDesktopObjectView CreateView()
 		{
 			return _desktopWindow.CreateWorkspaceView(this);
 		}
@@ -264,7 +265,7 @@ namespace ClearCanvas.Desktop
 		/// </summary>
 		protected IWorkspaceView WorkspaceView
 		{
-			get { return (IWorkspaceView)this.View; }
+			get { return (IWorkspaceView) View; }
 		}
 
 		/// <summary>
@@ -272,7 +273,7 @@ namespace ClearCanvas.Desktop
 		/// </summary>
 		internal IWorkspaceDialogBoxView CreateWorkspaceDialogBoxView(WorkspaceDialogBox dialogBox)
 		{
-			return this.WorkspaceView.CreateDialogBoxView(dialogBox);
+			return WorkspaceView.CreateDialogBoxView(dialogBox);
 		}
 
 		#endregion
@@ -286,7 +287,7 @@ namespace ClearCanvas.Desktop
 		/// <returns>The newly created dialog box object.</returns>
 		public WorkspaceDialogBox ShowDialogBox(DialogBoxCreationArgs args)
 		{
-			AssertState(new[] { DesktopObjectState.Open, DesktopObjectState.Closing });
+			AssertState(new[] {DesktopObjectState.Open, DesktopObjectState.Closing});
 
 			return _dialogBoxes.AddNew(args);
 		}
@@ -300,6 +301,5 @@ namespace ClearCanvas.Desktop
 		}
 
 		#endregion
-
 	}
 }

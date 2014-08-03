@@ -242,6 +242,11 @@ namespace ClearCanvas.ImageViewer.Explorer.Dicom
             get { return Identifier.StudyDescription ?? string.Empty; }
         }
 
+		public string PatientsAge
+        {
+			get { return Identifier.PatientsAge ?? string.Empty; }
+        }
+
         public string[] ModalitiesInStudy
         {
             get { return Identifier.ModalitiesInStudy ?? _emptyStringArray; }

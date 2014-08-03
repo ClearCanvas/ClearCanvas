@@ -106,6 +106,7 @@
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -186,6 +187,12 @@
     <Compile Include="ImageViewerControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="ViewSettings.cs" />
+    <Compile Include="ViewSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>ViewSettings.settings</DependentUpon>
+    </Compile>
     <Compile Include="TileInputTranslator.cs" />
     <Compile Include="SR.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -214,8 +221,13 @@
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="ClassDiagrams\ModelView.cd" />
     <None Include="ClassDiagrams\Rendering.cd" />
+    <None Include="ViewSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>ViewSettings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ActivityMonitorComponentControl.resx">

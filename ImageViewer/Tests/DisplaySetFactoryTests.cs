@@ -402,7 +402,7 @@ namespace ClearCanvas.ImageViewer.Tests
 						Assert.AreEqual(1, keyImageDisplaySets.Count, "There should be only one display set");
 						IDisplaySet keyImageDisplaySet = keyImageDisplaySets[0];
 						Assert.AreEqual(numberOfKeyImages, keyImageDisplaySet.PresentationImages.Count, "Expected {0} images", numberOfKeyImages);
-						Assert.AreEqual(typeof (SeriesDisplaySetDescriptor), keyImageDisplaySet.Descriptor.GetType(), "Wrong display set descriptor type");
+						Assert.AreEqual(typeof (KOSelectionDocumentDisplaySetDescriptor), keyImageDisplaySet.Descriptor.GetType(), "Wrong display set descriptor type");
 					}
 					else
 					{
@@ -416,11 +416,11 @@ namespace ClearCanvas.ImageViewer.Tests
 
 							Assert.AreEqual(sourceSeries.SeriesInstanceUid, sop.SeriesInstanceUid, "Series Instance Uid is not that of the source series");
 							if (numberOfKeyImages == 1)
-								Assert.AreEqual(typeof (SeriesDisplaySetDescriptor), keyImageDisplaySet.Descriptor.GetType(), "Wrong display set descriptor type");
+								Assert.AreEqual(typeof (KOSelectionDocumentDisplaySetDescriptor), keyImageDisplaySet.Descriptor.GetType(), "Wrong display set descriptor type");
 							else if (sop.NumberOfFrames > 1)
-								Assert.AreEqual(typeof (SingleFrameDisplaySetDescriptor), keyImageDisplaySet.Descriptor.GetType(), "Wrong display set descriptor type");
+								Assert.AreEqual(typeof (KOSelectionSingleFrameDisplaySetDescriptor), keyImageDisplaySet.Descriptor.GetType(), "Wrong display set descriptor type");
 							else
-								Assert.AreEqual(typeof (SingleImageDisplaySetDescriptor), keyImageDisplaySet.Descriptor.GetType(), "Wrong display set descriptor type");
+								Assert.AreEqual(typeof (KOSelectionSingleImageDisplaySetDescriptor), keyImageDisplaySet.Descriptor.GetType(), "Wrong display set descriptor type");
 						}
 					}
 				}

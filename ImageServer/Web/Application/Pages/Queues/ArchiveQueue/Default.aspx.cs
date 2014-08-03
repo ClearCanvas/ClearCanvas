@@ -27,51 +27,52 @@ using System.Collections.Generic;
 using System.Security.Permissions;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Web.Application.Pages.Common;
-using AuthorityTokens=ClearCanvas.ImageServer.Enterprise.Authentication.AuthorityTokens;
+using AuthorityTokens=ClearCanvas.ImageServer.Common.Authentication.AuthorityTokens;
 using Resources;
 
 namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.ArchiveQueue
 {
-    public partial class Default : BasePage
-    {
-        
-        [PrincipalPermission(SecurityAction.Demand, Role = AuthorityTokens.ArchiveQueue.Search)]      
-        protected override void OnInit(EventArgs e)
-        {
-            base.OnInit(e);
+	public partial class Default : BasePage
+	{
 
-            SearchPanel.EnclosingPage = this;
+		[PrincipalPermission(SecurityAction.Demand, Role = AuthorityTokens.ArchiveQueue.Search)]
+		protected override void OnInit(EventArgs e)
+		{
+			base.OnInit(e);
 
-            ServerPartitionSelector.PartitionChanged += delegate(ServerPartition partition)
-            {
-                SearchPanel.ServerPartition = partition;
-                SearchPanel.Reset();
-            };
+			SearchPanel.EnclosingPage = this;
 
-            ServerPartitionSelector.SetUpdatePanel(PageContent);
+			ServerPartitionSelector.UseNonResearchPartitions = true;
+			ServerPartitionSelector.PartitionChanged += delegate(ServerPartition partition)
+				{
+					SearchPanel.ServerPartition = partition;
+					SearchPanel.Reset();
+				};
 
-            SetPageTitle(Titles.ArchiveQueuePageTitle);
-        }
+			ServerPartitionSelector.SetUpdatePanel(PageContent);
+
+			SetPageTitle(Titles.ArchiveQueuePageTitle);
+		}
 
 		public void ResetArchiveQueueItem(IList<Model.ArchiveQueue> list)
-    	{
+		{
 			if (list != null)
 			{
 				ResetArchiveQueueDialog.ArchiveQueueItemList = list;
 				ResetArchiveQueueDialog.Show();
 			}
-    	}
+		}
 
-        protected void Page_Load(object sender, EventArgs e)
-        {
-            if (ServerPartitionSelector.IsEmpty)
-            {
-                SearchPanel.Visible = false;
-            }
-            else
-            {
-                SearchPanel.ServerPartition = ServerPartitionSelector.SelectedPartition;
-            }
-        }
-    }
+		protected void Page_Load(object sender, EventArgs e)
+		{
+			if (ServerPartitionSelector.IsEmpty)
+			{
+				SearchPanel.Visible = false;
+			}
+			else
+			{
+				SearchPanel.ServerPartition = ServerPartitionSelector.SelectedPartition;
+			}
+		}
+	}
 }

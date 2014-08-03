@@ -180,6 +180,7 @@
     <File name="Web\App_Themes\Default\images\Indicators\RefreshEnabled.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Indicators\RetrieveFeature.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Indicators\Searching.gif" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Indicators\star.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Indicators\StoreFeature.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Indicators\unchecked.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Indicators\usage.png" checksum="true" />

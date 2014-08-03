@@ -69,12 +69,7 @@ div#StackTrace
                     <div class="Description">                     
                         <asp:ContentPlaceHolder ID="DescriptionPlaceHolder" runat="server" />                      
 
-                        <p><%= SR.ForFurtherAssistanceTryTheFollowingLinks %></p>
-		                <ul>
-		                    <li><a class="ErrorLink" href="http://www.clearcanvas.ca/dnn/Community/Forums/tabid/69/view/topics/forumid/11/Default.aspx"><%= SR.ImageServerUsersForum %></a></li>
-		                    <li><a class="ErrorLink" href="http://www.clearcanvas.ca/dnn/Community/Forums/tabid/69/view/topics/forumid/12/Default.aspx"><%= SR.ImageServerDevelopersForum %></a></li>
-		                    <li><a class="ErrorLink" href="http://www.clearcanvas.ca">ClearCanvas.ca</a></li>
-		                </ul>
+                        <p><%= String.Format(SR.ForFurtherAssistanceTryTheFollowingLinks, "http://clearcanvas.ca/Support/Howtogetsupport/tabid/549/Default.aspx")%></p>
 		            </div>
                 </asp:TableCell>
             </asp:TableRow>

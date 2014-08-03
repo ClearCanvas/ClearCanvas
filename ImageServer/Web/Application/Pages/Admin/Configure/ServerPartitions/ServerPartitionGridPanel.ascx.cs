@@ -192,10 +192,15 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServerPa
 
         private void CustomizeDuplicateSopPolicyColumn(GridViewRow row)
         {
-            ServerPartition partition = row.DataItem as ServerPartition;
-            Label lbl = row.FindControl("DuplicateSopDescription") as Label; // The label is added in the template
-            lbl.Text = ServerEnumDescription.GetLocalizedDescription(partition.DuplicateSopPolicyEnum);
-        }
+            var partition = row.DataItem as ServerPartition;
+            var lbl = row.FindControl("DuplicateSopDescription") as Label; // The label is added in the template
+			if (lbl != null)
+				lbl.Text = ServerEnumDescription.GetLocalizedDescription(partition.DuplicateSopPolicyEnum);
+
+			lbl = row.FindControl("PartitionTypeDescription") as Label; // The label is added in the template
+			if (lbl != null) 
+				lbl.Text = ServerEnumDescription.GetLocalizedDescription(partition.ServerPartitionTypeEnum);
+		}
 
         #endregion Protected methods
 

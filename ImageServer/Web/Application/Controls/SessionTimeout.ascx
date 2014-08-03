@@ -42,6 +42,7 @@
     
     function initCountdownTimer(){ 
         hideWarning = true;
+        if (countdownTimer){clearTimeout(countdownTimer);}
         countdownTimer = setTimeout("Countdown()", 2000);
     };
     
@@ -112,7 +113,9 @@
         for(var i=0;i < ca.length;i++) {
 		    var c = ca[i];
 		    while (c.charAt(0)==' ') c = c.substring(1,c.length); // trim leading space
-		    if (c.indexOf(cookieName) == 0) {
+
+	        var cb = c.split('=');
+		    if (cb[0] == cookieName) {
 		        if (c.indexOf('=')<0)
 	            {
 	                // Expiry time has been removed. This happens when user logs out from another page.
@@ -123,12 +126,13 @@
 		        else 
 		        {
 		            // cookie format:  ImageServer.userid=yyyy-mm-dd hh:mm:ss
-		            var cookieValue = c.split('=')[1];
+		            var cookieValue = cb[1];
 		            return GetDateFromString(cookieValue);
                 }
 		    }
 	    }   
-	    return null;    
+	    loggedOut = true;
+    	return null;    
     }
     
     function Logout()
@@ -139,6 +143,8 @@
     
     function GetDateFromString(value)
     {
+    	if (!value){return null;}
+    	
         var dateTime = value.split(' ');
         var date = dateTime[0];
         var time = dateTime[1];
@@ -184,6 +190,7 @@
         
         if (!updating)
         {
+            if (countdownTimer){clearTimeout(countdownTimer);}
             countdownTimer = setTimeout("Countdown()", 1000 );
         }
     }

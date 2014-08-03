@@ -29,7 +29,7 @@ using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageServer.Web.Application.Pages.Common;
 using ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Controls;
 using ClearCanvas.ImageServer.Web.Common.Data.DataSource;
-using AuthorityTokens=ClearCanvas.ImageServer.Enterprise.Authentication.AuthorityTokens;
+using AuthorityTokens=ClearCanvas.ImageServer.Common.Authentication.AuthorityTokens;
 using Resources;
 using ClearCanvas.ImageServer.Model;
 

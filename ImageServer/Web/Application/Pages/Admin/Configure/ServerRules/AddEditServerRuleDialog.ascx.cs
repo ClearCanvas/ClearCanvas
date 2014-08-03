@@ -116,11 +116,17 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServerRu
 
         #region Protected Methods
 
-        private static Dictionary<ServerRuleTypeEnum, IList<ServerRuleApplyTimeEnum>> LoadRuleTypes(object[] extensions)
+        private Dictionary<ServerRuleTypeEnum, IList<ServerRuleApplyTimeEnum>> LoadRuleTypes(object[] extensions)
         {
             var ruleTypeList = new Dictionary<ServerRuleTypeEnum, IList<ServerRuleApplyTimeEnum>>();
             foreach (ISampleRule extension in extensions)
             {
+				// Block out OnlineRetention / StudyDelete rules for VFS Partitions
+	            if (Partition != null && Partition.ServerPartitionTypeEnum.Equals(ServerPartitionTypeEnum.VFS)
+	                && (extension.Type.Equals(ServerRuleTypeEnum.OnlineRetention)
+	                    || extension.Type.Equals(ServerRuleTypeEnum.StudyDelete)))
+		            continue;
+
                 if (!ruleTypeList.ContainsKey(extension.Type)  && !extension.Type.Equals(ServerRuleTypeEnum.DataAccess))
                     ruleTypeList.Add(extension.Type, extension.ApplyTimeList);
             }
@@ -208,7 +214,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServerRu
             {
                 control = document.getElementById('" +RuleXmlTextBox.ClientID +@"');
                 params = new Array();
-                params.serverRule=escape(CodeMirrorEditor.getCode());
+                params.serverRule=escape(CodeMirrorEditor.doc.getValue());
 				var oList = document.getElementById('" +RuleTypeDropDownList.ClientID +@"');
 				params.ruleType = oList.options[oList.selectedIndex].value;
                 return params;
@@ -265,29 +271,23 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServerRu
                 //Set the value on the TextArea and then set the value in the Editor.
                 //CodeMirror doesn't monitor changes to the textarea.
                 RsltElem.value = result;
-                CodeMirrorEditor.setCode(RsltElem.value);
+                CodeMirrorEditor.doc.setValue(RsltElem.value);
             }
            
             function pageLoad(){
                 $find('" + ModalDialog.PopupExtenderID + @"').add_shown(HighlightXML);
             }
 
-            function HighlightXML() {
-                CodeMirrorEditor = CodeMirror.fromTextArea('" + RuleXmlTextBox.ClientID + @"', {parserfile: 'parsexml.js',path: '../../../../Scripts/CodeMirror/js/', stylesheet: '../../../../Scripts/CodeMirror/css/xmlcolors.css'});
-            }
 
 	        function UpdateRuleXML() {
                 RsltElem = document.getElementById('" + RuleXmlTextBox.ClientID + @"');	
-                RsltElem.value = CodeMirrorEditor.getCode();    
+                RsltElem.value = CodeMirrorEditor.doc.getValue();    
 	        }
   
             var CodeMirrorEditor = null;
             </script>";
 
             Page.ClientScript.RegisterClientScriptBlock(GetType(), ClientID, javascript);
-
-            Page.ClientScript.RegisterClientScriptInclude(GetType(), "CodeMirrorLibrary",
-                                                          "../../../../Scripts/CodeMirror/js/codemirror.js");
 
             EditServerRuleValidationSummary.HeaderText = ErrorMessages.EditServerRuleValidationError;
         }

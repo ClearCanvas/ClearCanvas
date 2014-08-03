@@ -28,8 +28,10 @@ using System.IO;
 using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Authorization;
+using ClearCanvas.Common.Configuration;
 using ClearCanvas.Common.Serialization;
 using ClearCanvas.Enterprise.Common.Admin.AuthorityGroupAdmin;
+using ClearCanvas.Enterprise.Common.Configuration;
 
 namespace ClearCanvas.Enterprise.Common.Setup
 {
@@ -101,6 +103,55 @@ namespace ClearCanvas.Enterprise.Common.Setup
 				service => service.ImportAuthorityGroups(new ImportAuthorityGroupsRequest(groupDetails)));
 
 			LogImportedGroups(groups, source);
+		}
+
+		public static void ImportConfigurations(string dataFileOrFolderPath)
+		{
+			// determine list of source files to import
+			var fileList = new List<string>();
+			if (File.Exists(dataFileOrFolderPath))
+			{
+				fileList.Add(dataFileOrFolderPath);
+			}
+			else if (Directory.Exists(dataFileOrFolderPath))
+			{
+				fileList.AddRange(Directory.GetFiles(dataFileOrFolderPath, "*.xml"));
+			}
+			else
+				throw new ArgumentException(string.Format("{0} is not a valid data file or directory.", dataFileOrFolderPath));
+
+			var configurations = from file in fileList
+							 let xml = File.ReadAllText(file)
+							 from config in JsmlSerializer.Deserialize<ConfigurationDefinition[]>(xml)
+							 select config;
+
+			ImportConfigurations(configurations, dataFileOrFolderPath);
+		}
+
+		private static void ImportConfigurations(IEnumerable<ConfigurationDefinition> configurations, string source)
+		{
+			var requests = configurations.Select(c =>
+				new SetConfigurationDocumentRequest(
+					new ConfigurationDocumentKey(c.Name, Version.Parse(c.Version), null, null),
+					c.Body
+					)).ToList();
+
+			foreach (var r in requests)
+			{
+				var request = r;
+				Platform.GetService<IConfigurationService>(
+					service => service.SetConfigurationDocument(request));
+			}
+
+			LogImportedSetting(configurations, source);
+		}
+
+		private static void LogImportedSetting(IEnumerable<ConfigurationDefinition> configurations, string source)
+		{
+			foreach (var c in configurations.Distinct())
+			{
+				Platform.Log(LogLevel.Info, "Imported configuration definition {0} from {1}", c.Name, source);
+			}
 		}
 
 		private static void LogImportedGroups(IEnumerable<AuthorityGroupDefinition> groups, string source)

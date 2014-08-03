@@ -22,6 +22,8 @@
 
 #endregion
 
+#if UNIT_TESTS
+
 using ClearCanvas.Dicom;
 
 namespace ClearCanvas.ImageViewer.StudyManagement.Tests
@@ -51,5 +53,52 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Tests
 		{
 			get { return _file; }
 		}
+
+		public override DicomAttribute this[DicomTag tag]
+		{
+			get
+			{
+				DicomAttribute attribute;
+				return _file.MetaInfo.TryGetAttribute(tag, out attribute) ? attribute : _file.DataSet[tag];
+			}
+		}
+
+		public override DicomAttribute this[uint tag]
+		{
+			get
+			{
+				DicomAttribute attribute;
+				return _file.MetaInfo.TryGetAttribute(tag, out attribute) ? attribute : _file.DataSet[tag];
+			}
+		}
+
+		public override bool TryGetAttribute(DicomTag tag, out DicomAttribute attribute)
+		{
+			return _file.MetaInfo.TryGetAttribute(tag, out attribute) || _file.DataSet.TryGetAttribute(tag, out attribute);
+		}
+
+		public override bool TryGetAttribute(uint tag, out DicomAttribute attribute)
+		{
+			return _file.MetaInfo.TryGetAttribute(tag, out attribute) || _file.DataSet.TryGetAttribute(tag, out attribute);
+		}
+
+		public static TestDataSource CreateImageSopDataSource(int? numberOfFrames = null, string sopClassUid = null)
+		{
+			var dcf = new DicomFile();
+			dcf.DataSet[DicomTags.SopClassUid].SetStringValue(dcf.MediaStorageSopClassUid = (!string.IsNullOrEmpty(sopClassUid) ? sopClassUid : SopClass.SecondaryCaptureImageStorageUid));
+			dcf.DataSet[DicomTags.SopInstanceUid].SetStringValue(dcf.MediaStorageSopInstanceUid = DicomUid.GenerateUid().UID);
+			dcf.DataSet[DicomTags.Rows].SetInt32(0, 512);
+			dcf.DataSet[DicomTags.Columns].SetInt32(0, 512);
+			dcf.DataSet[DicomTags.PhotometricInterpretation].SetStringValue("MONOCHROME2");
+			dcf.DataSet[DicomTags.PixelRepresentation].SetInt32(0, 0);
+			dcf.DataSet[DicomTags.BitsAllocated].SetInt32(0, 16);
+			dcf.DataSet[DicomTags.BitsStored].SetInt32(0, 16);
+			dcf.DataSet[DicomTags.HighBit].SetInt32(0, 15);
+			dcf.DataSet[DicomTags.PixelData].SetNullValue();
+			if (numberOfFrames.HasValue) dcf.DataSet[DicomTags.NumberOfFrames].SetInt32(0, numberOfFrames.Value);
+			return new TestDataSource(dcf);
+		}
 	}
 }
+
+#endif

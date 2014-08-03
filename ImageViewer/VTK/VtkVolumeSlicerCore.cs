@@ -51,8 +51,6 @@ namespace ClearCanvas.ImageViewer.Vtk
 		}
 	}
 
-	// TODO: this code only supports ushort volumes - fix to support the other types!!!!
-
 	/// <summary>
 	/// Implements <see cref="IVolumeSlicerCore"/> using the VTK <see cref="vtk.vtkImageReslice"/> utility.
 	/// </summary>
@@ -170,7 +168,7 @@ namespace ClearCanvas.ImageViewer.Vtk
 		/// </summary>
 		private static byte[] GetSlabPixelData(IVolumeReference volumeReference, Matrix resliceAxes, Vector3D stackOrientation, int rows, int columns, int subsamples, float rowSpacing, float columnSpacing, float sliceThickness, VolumeInterpolationMode interpolation, VolumeProjectionMode projection)
 		{
-			if (subsamples == 0) return GetSlicePixelData(volumeReference, resliceAxes, rows, columns, rowSpacing, columnSpacing, interpolation);
+			if (subsamples <= 1) return GetSlicePixelData(volumeReference, resliceAxes, rows, columns, rowSpacing, columnSpacing, interpolation);
 			var subsampleSpacing = sliceThickness/(subsamples - 1);
 
 			using (var reslicer = new vtkImageReslice())

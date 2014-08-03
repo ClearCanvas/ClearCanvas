@@ -69,7 +69,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 		private void OnSelectionChanged(object sender, EventArgs e)
 		{
-			CanRevert = Context.ClipboardItems.Count > 0 && Context.SelectedClipboardItems.Any(CanRevertItem);
+			CanRevert = Context.SelectedClipboardItems.Count > 0 && Context.SelectedClipboardItems.Any(CanRevertItem);
 			CanRevertAll = Context.ClipboardItems.Count > 0 && Context.ClipboardItems.Any(CanRevertItem);
 			EventsHelper.Fire(ActionsChanged, this, EventArgs.Empty);
 		}
@@ -90,7 +90,8 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		{
 			try
 			{
-				foreach (var item in items.ToList())
+				var itemList = items.ToList();
+				foreach (var item in itemList.Where(item => item.IsSerialized()))
 				{
 					var clipboard = KeyImageClipboard.GetKeyImageClipboard(Context.DesktopWindow);
 					var selectionDocumentInstanceUid = item.GetSelectionDocumentInstanceUid();
@@ -98,11 +99,12 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 					if (context != null)
 					{
 						if (item.RevertKeyImage(context))
-						{
 							clipboard.CurrentContext = context;
-						}
 					}
 				}
+
+				if (itemList.Any(item => !item.IsSerialized()))
+					Context.DesktopWindow.ShowMessageBox(SR.MessageUnableToRevertSomeKeyImages, MessageBoxActions.Ok);
 			}
 			catch (Exception ex)
 			{

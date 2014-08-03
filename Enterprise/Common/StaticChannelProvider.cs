@@ -197,13 +197,14 @@ namespace ClearCanvas.Enterprise.Common
         {
             var uri = GetFullUri(serviceContract, baseUri);
             var channelFactoryClass = typeof(ChannelFactory<>).MakeGenericType(new [] { serviceContract });
+	        TransferMode mode = ServiceTransferModeAttribute.GetTransferMode(serviceContract);
             return _args.Configuration.ConfigureChannelFactory(
                 new ServiceChannelConfigurationArgs(channelFactoryClass,
                                                     uri,
                                                     AuthenticationAttribute.IsAuthenticationRequired(serviceContract),
                                                     _args.MaxReceivedMessageSize,
                                                     _args.CertificateValidationMode,
-                                                    _args.RevocationMode){SendTimeoutSeconds = _args.SendTimeoutSeconds});
+                                                    _args.RevocationMode){SendTimeoutSeconds = _args.SendTimeoutSeconds, TransferMode = mode});
         }
 
         private static Uri GetFullUri(Type serviceContract, Uri baseUri)

@@ -24,32 +24,49 @@
 
 using System;
 using ClearCanvas.Common;
+using ClearCanvas.Dicom.IO;
 
 namespace ClearCanvas.Dicom.Network.Scu
 {
 	/// <summary>
 	/// Used by <see cref="StorageScu"/> to specify the <see cref="DicomFile"/>s to transfer over the association.
 	/// </summary>
-	public class StorageInstance : EventArgs
+	public class StorageInstance
 	{
 		#region Private Variables...
+
 		private string _filename;
+		private DicomStreamOpener _streamOpener = null;
 		private SopClass _sopClass;
 		private TransferSyntax _syntax;
 		private bool _infoLoaded = false;
-		private string _patientId = string.Empty;
-		private string _patientsName = string.Empty;
 		private DicomFile _dicomFile = null;
+
 		#endregion
 
 		#region Public Properties
+
 		/// <summary>
 		/// The filename of the storage instance.
 		/// </summary>
 		public string Filename
 		{
 			get { return _filename; }
-			set { _filename = value; }
+			set
+			{
+				_filename = value;
+				_streamOpener = null;
+			}
+		}
+
+		public DicomStreamOpener StreamOpener
+		{
+			get { return _streamOpener ?? (_streamOpener = !string.IsNullOrEmpty(_filename) ? DicomStreamOpener.Create(_filename) : null); }
+			set
+			{
+				_streamOpener = value;
+				_filename = String.Empty;
+			}
 		}
 
 		/// <summary>
@@ -84,20 +101,12 @@ namespace ClearCanvas.Dicom.Network.Scu
 		/// <summary>
 		/// The Patient's Name of the storage instance.
 		/// </summary>
-		public string PatientsName
-		{
-			get { return _patientsName; }
-			set { _patientsName = value; }
-		}
+		public string PatientsName { get; set; }
 
 		/// <summary>
 		/// The Patient Id of the storage instance.
 		/// </summary>
-		public string PatientId
-		{
-			get { return _patientId; }
-			set { _patientId = value; }
-		}
+		public string PatientId { get; set; }
 
 		/// <summary>
 		/// The <see cref="TransferSyntax"/> of the storage instance.
@@ -118,10 +127,10 @@ namespace ClearCanvas.Dicom.Network.Scu
 		/// </summary>
 		public DicomStatus SendStatus { get; set; }
 
-        /// <summary>
-        /// The Message ID assigned to the instance when transferred.  Used to identify the response.
-        /// </summary>
-        public ushort SentMessageId { get; set; }
+		/// <summary>
+		/// The Message ID assigned to the instance when transferred.  Used to identify the response.
+		/// </summary>
+		public ushort SentMessageId { get; set; }
 
 		/// <summary>
 		/// An extended failure description if <see cref="SendStatus"/> is a failure status.
@@ -133,9 +142,18 @@ namespace ClearCanvas.Dicom.Network.Scu
 		/// </summary>
 		public long MetaInfoFileLength { get; set; }
 
+		/// <summary>
+		/// Returns true if the <see cref="DicomFile"/> is already loaded into memory
+		/// </summary>
+		public bool FileIsLoaded
+		{
+			get { return _dicomFile != null; }
+		}
+
 		#endregion
 
 		#region Constructors
+
 		/// <summary>
 		/// Constructor.
 		/// </summary>
@@ -143,12 +161,12 @@ namespace ClearCanvas.Dicom.Network.Scu
 		public StorageInstance(DicomFile dicomFile)
 		{
 			_dicomFile = dicomFile;
-			
+
 			string sopClassInFile = _dicomFile.DataSet[DicomTags.SopClassUid].ToString();
 			if (!sopClassInFile.Equals(_dicomFile.SopClass.Uid))
 			{
 				Platform.Log(LogLevel.Warn, "SOP Class in Meta Info ({0}) does not match SOP Class in DataSet ({1})",
-							 _dicomFile.SopClass.Uid, sopClassInFile);
+				             _dicomFile.SopClass.Uid, sopClassInFile);
 				_sopClass = SopClass.GetSopClass(sopClassInFile);
 				if (_sopClass == null)
 				{
@@ -161,7 +179,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 
 			_syntax = _dicomFile.TransferSyntax;
 			SopInstanceUid = _dicomFile.MediaStorageSopInstanceUid;
-			_filename = dicomFile.Filename;
+			Filename = dicomFile.Filename;
 
 			StudyInstanceUid = _dicomFile.DataSet[DicomTags.StudyInstanceUid].GetString(0, string.Empty);
 			SeriesInstanceUid = _dicomFile.DataSet[DicomTags.SeriesInstanceUid].GetString(0, string.Empty);
@@ -190,10 +208,22 @@ namespace ClearCanvas.Dicom.Network.Scu
 		/// <param name="filename"></param>
 		public StorageInstance(string filename)
 		{
-			_filename = filename;
+			Filename = filename;
 			StudyInstanceUid = string.Empty;
 			SeriesInstanceUid = string.Empty;
 			SopInstanceUid = string.Empty;
+			PatientsName = string.Empty;
+			PatientId = string.Empty;
+		}
+
+		public StorageInstance(DicomStreamOpener streamOpener)
+		{
+			StreamOpener = streamOpener;
+			StudyInstanceUid = string.Empty;
+			SeriesInstanceUid = string.Empty;
+			SopInstanceUid = string.Empty;
+			PatientsName = string.Empty;
+			PatientId = string.Empty;
 		}
 
 		/// <summary>
@@ -207,11 +237,15 @@ namespace ClearCanvas.Dicom.Network.Scu
 			SopInstanceUid = sopInstanceUid;
 			StudyInstanceUid = string.Empty;
 			SeriesInstanceUid = string.Empty;
-			_filename = String.Empty;
+			PatientsName = string.Empty;
+			PatientId = string.Empty;
+			_filename = string.Empty;
 		}
+
 		#endregion
 
 		#region Public Methods
+
 		/// <summary>
 		/// Load a <see cref="DicomFile"/> for the storage instance.
 		/// </summary>
@@ -226,13 +260,12 @@ namespace ClearCanvas.Dicom.Network.Scu
 			if (_dicomFile != null)
 				return _dicomFile;
 
-			DicomFile theFile = new DicomFile(_filename);
-
-			theFile.Load(DicomReadOptions.StorePixelDataReferences | DicomReadOptions.Default);
+			var theFile = new DicomFile();
+			theFile.Load(StreamOpener, null, DicomReadOptions.StorePixelDataReferences | DicomReadOptions.Default);
 
 			StudyInstanceUid = theFile.DataSet[DicomTags.StudyInstanceUid].GetString(0, string.Empty);
-			_patientsName = theFile.DataSet[DicomTags.PatientsName].GetString(0, string.Empty);
-			_patientId = theFile.DataSet[DicomTags.PatientId].GetString(0, string.Empty);
+			PatientsName = theFile.DataSet[DicomTags.PatientsName].GetString(0, string.Empty);
+			PatientId = theFile.DataSet[DicomTags.PatientId].GetString(0, string.Empty);
 
 			MetaInfoFileLength = theFile.MetaInfoFileLength;
 			return theFile;
@@ -246,9 +279,11 @@ namespace ClearCanvas.Dicom.Network.Scu
 			if (_infoLoaded)
 				return;
 
-			DicomFile theFile = new DicomFile(_filename);
+			var theFile = new DicomFile();
 
-			theFile.Load(DicomTags.RelatedGeneralSopClassUid, DicomReadOptions.Default);
+			const uint stopTag = DicomTags.RelatedGeneralSopClassUid;
+			theFile.Load(StreamOpener, DicomTagDictionary.GetDicomTag(stopTag), DicomReadOptions.Default);
+
 			string sopClassInFile = theFile.DataSet[DicomTags.SopClassUid].ToString();
 			if (!sopClassInFile.Equals(theFile.SopClass.Uid))
 			{
@@ -257,7 +292,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 				_sopClass = SopClass.GetSopClass(sopClassInFile);
 				if (_sopClass == null)
 				{
-					Platform.Log(LogLevel.Warn,"Unknown SOP Class in dataset, reverting to meta info:  {0}", sopClassInFile);
+					Platform.Log(LogLevel.Warn, "Unknown SOP Class in dataset, reverting to meta info:  {0}", sopClassInFile);
 					_sopClass = theFile.SopClass;
 				}
 			}
@@ -269,6 +304,28 @@ namespace ClearCanvas.Dicom.Network.Scu
 			MetaInfoFileLength = theFile.MetaInfoFileLength;
 			_infoLoaded = true;
 		}
+
+		/// <summary>
+		/// Ensures the offset of the data set in the source stream is determined.
+		/// </summary>
+		internal void ParseMetaInfo()
+		{
+			if (MetaInfoFileLength != 0) return;
+
+			var theFile = new DicomFile();
+
+			const uint stopTag = DicomTags.RelatedGeneralSopClassUid;
+			theFile.Load(StreamOpener, DicomTagDictionary.GetDicomTag(stopTag), DicomReadOptions.Default);
+
+			MetaInfoFileLength = theFile.MetaInfoFileLength;
+		}
+
+		public override string ToString()
+		{
+			if (_streamOpener != null) return string.Format("Stream [{0}]", !string.IsNullOrEmpty(SopInstanceUid) ? SopInstanceUid : "Unknown");
+			return Filename ?? string.Empty;
+		}
+
 		#endregion
 	}
 }

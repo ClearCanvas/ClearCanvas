@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:tns="http://tempuri.org/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" name="VersionService" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="VersionService" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsp:Policy wsu:Id="NetTcpBinding_IVersionService_policy">
     <wsp:ExactlyOne>
       <wsp:All>
@@ -32,7 +32,7 @@
       <xsd:import schemaLocation="http://localhost:8001/IVersionService/mex?xsd=xsd0" namespace="http://tempuri.org/" />
       <xsd:import schemaLocation="http://localhost:8001/IVersionService/mex?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
       <xsd:import schemaLocation="http://localhost:8001/IVersionService/mex?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/ClearCanvas.Enterprise.Common.ServerVersion" />
-      <xsd:import schemaLocation="http://localhost:8001/IVersionService/mex?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/ClearCanvas.Enterprise.Common" />
+      <xsd:import schemaLocation="http://localhost:8001/IVersionService/mex?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/ClearCanvas.Common.Serialization" />
     </xsd:schema>
   </wsdl:types>
   <wsdl:message name="IVersionService_GetVersion_InputMessage">
@@ -41,10 +41,20 @@
   <wsdl:message name="IVersionService_GetVersion_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetVersionResponse" />
   </wsdl:message>
+  <wsdl:message name="IVersionService_GetVersion2_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetVersion2" />
+  </wsdl:message>
+  <wsdl:message name="IVersionService_GetVersion2_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetVersion2Response" />
+  </wsdl:message>
   <wsdl:portType name="IVersionService">
     <wsdl:operation name="GetVersion">
       <wsdl:input wsaw:Action="http://tempuri.org/IVersionService/GetVersion" message="tns:IVersionService_GetVersion_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IVersionService/GetVersionResponse" message="tns:IVersionService_GetVersion_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetVersion2">
+      <wsdl:input wsaw:Action="http://tempuri.org/IVersionService/GetVersion2" message="tns:IVersionService_GetVersion2_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IVersionService/GetVersion2Response" message="tns:IVersionService_GetVersion2_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="NetTcpBinding_IVersionService" type="tns:IVersionService">
@@ -52,6 +62,15 @@
     <soap12:binding transport="http://schemas.microsoft.com/soap/tcp" />
     <wsdl:operation name="GetVersion">
       <soap12:operation soapAction="http://tempuri.org/IVersionService/GetVersion" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetVersion2">
+      <soap12:operation soapAction="http://tempuri.org/IVersionService/GetVersion2" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

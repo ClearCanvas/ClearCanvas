@@ -76,6 +76,7 @@ namespace ClearCanvas.Common.Utilities
         /// <param name="searchPattern">The search pattern to be used.  A value of <b>null</b> or <b>""</b> indicates that all files are a match.</param>
         /// <param name="proc">The method to call for each matching file.</param>
         /// <param name="recursive">Whether or not the <paramref name="path"/> should be searched recursively.</param>
+        /// <returns>True if the process was cancelled; False otherwise</returns>
         public static bool Process(string path, string searchPattern, ProcessFileCancellable proc, bool recursive)
         {
             Platform.CheckForNullReference(path, "path");
@@ -99,7 +100,8 @@ namespace ClearCanvas.Common.Utilities
                 throw new FileNotFoundException(String.Format(SR.ExceptionPathDoesNotExist, path));
             }
 
-            return cancel;
+			// TODO: from API perspective, more intuitive if this returns false when cancelled. Leave it as is for now.
+			return cancel;
         }
 
         private static void ProcessDirectory(string path, string searchPattern, ProcessFileCancellable proc, bool recursive, out bool cancel)
@@ -124,7 +126,7 @@ namespace ClearCanvas.Common.Utilities
             if (!recursive) return;
 
             // If recursive, then descend into lower directories and process those as well
-            TraverseDirectories(path, searchPattern, proc);
+            TraverseDirectories(path, searchPattern, proc, out cancel);
         }
 
         private static void GetFiles(string path, string searchPattern, out string[] fileList)
@@ -144,9 +146,11 @@ namespace ClearCanvas.Common.Utilities
             }
         }
 
-        private static void TraverseDirectories(string path, string searchPattern, ProcessFileCancellable proc)
+		private static void TraverseDirectories(string path, string searchPattern, ProcessFileCancellable proc, out bool cancel)
         {
             string[] dirList;
+
+			cancel = false;
 
             try
             {
@@ -160,12 +164,13 @@ namespace ClearCanvas.Common.Utilities
 
             for (int i = 0; i < dirList.Length; i++)
             {
-                bool cancel;
                 ProcessDirectory(dirList[i], searchPattern, proc, true, out cancel);
                 if (cancel)
                     break;
                 dirList[i] = null;
             }
+
+			
         }
     }
 }

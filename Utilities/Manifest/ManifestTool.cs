@@ -1,6 +1,6 @@
-#region License
+﻿#region License
 
-// Copyright (c) 2013, ClearCanvas Inc.
+// Copyright (c) 2014, ClearCanvas Inc.
 // All rights reserved.
 // http://www.clearcanvas.ca
 //
@@ -23,21 +23,39 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using ClearCanvas.Common.Authorization;
+using ClearCanvas.Common;
 
-namespace ClearCanvas.Ris.Client
+// ReSharper disable LocalizableElement
+
+namespace ClearCanvas.Utilities.Manifest
 {
-	public static class AuthorityTokens
+	[ExtensionOf(typeof (ApplicationRootExtensionPoint))]
+	internal sealed class ManifestTool : IApplicationRoot
 	{
-        public static class Desktop
-        {
-            [AuthorityToken(Description = "Allow administration of User-Interface validation rules.")]
-            public const string UIValidationRules = "Desktop/UI Validation Rules";
-		
-			[AuthorityToken(Description = "Allow access to the RIS Folder Organization functionality.")]
-			public const string FolderOrganization = "Desktop/RIS/Folder Organization";
+		#region IApplicationRoot Members
+
+		public void RunApplication(string[] args)
+		{
+			Console.WriteLine(@"Manifest Verification Tool");
+			Console.WriteLine(@"  Version {0}", ProductInformation.GetVersion(true, true, true));
+			Console.WriteLine(@"  {0}", ProductInformation.Copyright);
+			Console.WriteLine();
+			Console.Write(@"Verifying... ");
+
+			if (!ManifestVerification.Valid)
+			{
+				Console.WriteLine(@"Failed!");
+				Console.WriteLine();
+				Console.WriteLine(ManifestVerification.ErrorMessage);
+			}
+			else
+			{
+				Console.WriteLine(@"Success!");
+			}
 		}
+
+		#endregion
 	}
 }
+
+// ReSharper restore LocalizableElement

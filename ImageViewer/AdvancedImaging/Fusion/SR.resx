@@ -204,4 +204,7 @@
   <data name="TooltipAdjustOpacity" xml:space="preserve">
     <value>Adjust Opacity</value>
   </data>
+  <data name="MessageInconsistentRescaleFunctionUnits" xml:space="preserve">
+    <value>Images have inconsistent rescale function units</value>
+  </data>
 </root>

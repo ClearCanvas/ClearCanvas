@@ -39,9 +39,9 @@ namespace ClearCanvas.Dicom.Utilities
 		protected SopInstanceFactory()
 		{
 			Manufacturer = @"ClearCanvas Inc.";
-			ManufacturersModelName = ProductInformation.GetName(true, false);
+			ManufacturersModelName = ProductInformation.GetName(false, false);
 			DeviceSerialNumber = string.Empty;
-			SoftwareVersions = ProductInformation.GetVersion(true, true, true);
+			SoftwareVersions = ProductInformation.GetVersion(true, true, true, true);
 			SpecificCharacterSet = @"ISO_IR 192";
 		}
 

@@ -140,7 +140,19 @@ namespace ClearCanvas.Dicom.Network
             }
             else
             {
-                IPHostEntry entry = Dns.GetHostEntry(_assoc.RemoteHostname);
+                IPHostEntry entry;
+
+	            try
+	            {
+					entry = Dns.GetHostEntry(_assoc.RemoteHostname);
+	            }
+	            catch (SocketException x)
+	            {
+					if (x.SocketErrorCode == SocketError.NoData || x.SocketErrorCode == SocketError.HostNotFound)
+						throw new DicomException(SR.UnknownHost, x);
+		            throw;
+	            }
+				
                 IPAddress[] list = entry.AddressList;
                 foreach (IPAddress dnsAddr in list)
                 {

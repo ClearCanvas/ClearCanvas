@@ -50,7 +50,7 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 
 		private static readonly bool _reportRenderingPerformance = Settings.Default.ReportRendererPerformance;
 
-		private const double _dynamicFrameRate = 20;
+		private readonly double _dynamicFrameRate = 20;
 		private const double _stillFrameRate = 0.0001;
 
 		private readonly object _lockRender = new object();
@@ -92,7 +92,9 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 			_vtkRenderWindow.SetDesiredUpdateRate(_dynamicFrameRate);
 			_vtkRenderWindow.AddRenderer(_vtkRenderer);
 
-			_dynamicRenderEventPublisher = !offscreen ? new DelayedEventPublisher((s, e) => Render(true, null)) : null;
+			var delayTime = Math.Min(10000, Math.Max(100, Settings.Default.RendererRefinementDelayMs));
+			_dynamicFrameRate = Math.Min(1000, Math.Max(1, Settings.Default.RendererDynamicFps));
+			_dynamicRenderEventPublisher = !offscreen ? new DelayedEventPublisher((s, e) => Render(true, null), delayTime) : null;
 
 			WindowID = windowId;
 		}
@@ -260,9 +262,11 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 		{
 			if (_dynamicRenderEventPublisher != null)
 			{
-				_dynamicRenderEventPublisher.Publish(null, null);
+				_dynamicRenderEventPublisher.Cancel();
 
 				Render(false, updateOverlayCallback);
+
+				_dynamicRenderEventPublisher.Publish(null, null);
 			}
 			else
 			{
@@ -322,7 +326,8 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 							glPixelStorei(GL_PACK_ALIGNMENT, 4); // align to 4 byte boundaries (since we're copying 32-bit pixels anyway)
 
 							// now read from the OpenGL buffer directly into our surface buffer
-							glReadPixels(0, 0, _clientRectangle.Width, _clientRectangle.Height, GL_BGRA, OpenGlImplementation.ReadPixelsTypeBgra, bmpData.Scan0);
+							var pData = bmpData.Stride > 0 ? bmpData.Scan0 : bmpData.Scan0 + (bmpData.Height - 1)*bmpData.Stride;
+							glReadPixels(0, 0, _clientRectangle.Width, _clientRectangle.Height, GL_BGRA, OpenGlImplementation.ReadPixelsTypeBgra, pData);
 
 							// OpenGL buffer data is a bottom-up image, and the GDI+ memory bitmap might be top-bottom, so we flip the scan lines here
 							if (bmpData.Stride > 0)

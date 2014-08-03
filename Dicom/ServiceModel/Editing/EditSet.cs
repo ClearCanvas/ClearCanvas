@@ -53,15 +53,11 @@ namespace ClearCanvas.Dicom.ServiceModel.Editing
 
 		public override void Apply(IEditContext context)
 		{
-			if (context.Excluded || !AppliesTo(context))
+			if (!AppliesTo(context))
 				return;
 
 			foreach (var edit in Edits)
-			{
 				edit.Apply(context);
-				if (context.Excluded)
-					return;
-			}
 		}
 
 		#endregion

@@ -93,6 +93,8 @@
     <Compile Include="BlockingThreadPool.cs" />
     <Compile Include="BufferCache.cs" />
     <Compile Include="Cache.cs" />
+    <Compile Include="Comparers\StudyDateTimeComparer.cs" />
+    <Compile Include="Comparers\Tests\StudyDateTimeComparerTests.cs" />
     <Compile Include="CompressionType.cs" />
     <Compile Include="Configuration\ISystemConfigurationSettingsStore.cs" />
     <Compile Include="Configuration\SystemConfigurationSettingsProvider.cs" />
@@ -118,6 +120,7 @@
     <Compile Include="DicomServer\Tests\DicomServerSettingsTests.cs" />
     <Compile Include="Diskspace.cs" />
     <Compile Include="DiskspaceMonitor.cs" />
+    <Compile Include="DisposableList.cs" />
     <Compile Include="ExtensionData.cs" />
     <Compile Include="FilteredGroup.cs" />
     <Compile Include="IBlockingEnumerator.cs" />

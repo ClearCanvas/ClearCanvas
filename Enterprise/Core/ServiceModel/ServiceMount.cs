@@ -335,6 +335,8 @@ namespace ClearCanvas.Enterprise.Core.ServiceModel
 			var authenticationAttribute = AttributeUtils.GetAttribute<AuthenticationAttribute>(contractAttribute.ServiceContract);
 			var authenticated = authenticationAttribute == null || authenticationAttribute.AuthenticationRequired;
 
+			TransferMode mode = ServiceTransferModeAttribute.GetTransferMode(contractAttribute.ServiceContract);
+
 			// create service URI
 			var uri = new Uri(_baseAddress, contractAttribute.ServiceContract.FullName);
 
@@ -366,7 +368,7 @@ namespace ClearCanvas.Enterprise.Core.ServiceModel
 					contractAttribute.ServiceContract,
 					uri, authenticated,
 					_maxReceivedMessageSize,
-					_certificateSearchDirective){SendTimeoutSeconds = SendTimeoutSeconds});
+					_certificateSearchDirective){SendTimeoutSeconds = SendTimeoutSeconds, TransferMode = mode});
 
 			// add behaviour to inject AOP proxy service factory
 			host.Description.Behaviors.Add(new ServiceFactoryInjectionServiceBehavior(contractAttribute.ServiceContract, serviceFactory));

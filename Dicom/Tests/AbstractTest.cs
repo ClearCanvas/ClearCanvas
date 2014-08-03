@@ -210,7 +210,7 @@ namespace ClearCanvas.Dicom.Tests
 			item[DicomTags.CodeMeaning].SetStringValue("Key Object Description");
 		}
 
-		public void SetupMR(DicomAttributeCollection theSet)
+		public virtual void SetupMR(DicomAttributeCollection theSet)
 		{
 			DateTime studyTime = DateTime.Now;
 			theSet[DicomTags.SpecificCharacterSet].SetStringValue("ISO_IR 100");

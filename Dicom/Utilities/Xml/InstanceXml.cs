@@ -27,6 +27,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Security;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -604,13 +605,17 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 
 			List<DicomTag> newlyExcludedTags = new List<DicomTag>();
 
+			// pre-sort the list of excluded tags, so that finding an entry in the list is as fast as a binary search
+			var thisCollectionExcludedTags = thisCollection != null ? thisCollection.ExcludedTags.Select(u => u.TagValue).OrderBy(u => u).ToList() : null;
+			var privateBaseCollectionExcludedTags = privateBaseCollection != null ? privateBaseCollection.ExcludedTags.Select(u => u.TagValue).OrderBy(u => u).ToList() : null;
+
 			foreach (DicomAttribute attribute in collection)
 			{
-				bool isExcludedFromThisCollection = thisCollection != null && 
-					thisCollection.IsTagExcluded(attribute.Tag.TagValue);
+				bool isExcludedFromThisCollection = thisCollectionExcludedTags != null &&
+					thisCollectionExcludedTags.BinarySearch(attribute.Tag.TagValue) >= 0;
 
-				bool isExcludedFromBase = privateBaseCollection != null && 
-					privateBaseCollection.ExcludedTagsHelper.IsTagExcluded(attribute.Tag.TagValue);
+				bool isExcludedFromBase = privateBaseCollectionExcludedTags != null &&
+					privateBaseCollectionExcludedTags.BinarySearch(attribute.Tag.TagValue) >= 0;
 
 				bool isInBase = isExcludedFromBase;
 				bool isSameAsInBase = isExcludedFromThisCollection && isExcludedFromBase;

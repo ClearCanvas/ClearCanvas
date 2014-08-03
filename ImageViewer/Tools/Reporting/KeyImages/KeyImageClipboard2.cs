@@ -38,7 +38,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 	public partial class KeyImageClipboard : IDisposable, IKeyImageClipboard, IKeyObjectSelectionDocumentInformation, INotifyPropertyChanged
 	{
 		private readonly StudyTree _studyTree;
-		private readonly List<KeyImageInformation> _availableContexts;
+		private readonly ObservableList<KeyImageInformation> _availableContexts;
 		private KeyImageInformation _currentContext;
 
 		public KeyImageClipboard(StudyTree studyTree)
@@ -46,7 +46,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			_studyTree = studyTree;
 
 			_currentContext = new KeyImageInformation();
-			_availableContexts = new List<KeyImageInformation> {_currentContext};
+			_availableContexts = new ObservableList<KeyImageInformation> {_currentContext};
 			_availableContexts.AddRange(_studyTree.Studies
 			                            	.SelectMany(s => s.Series)
 			                            	.SelectMany(s => s.Sops)
@@ -56,7 +56,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			                            	.ThenBy(s => s.SeriesNumber));
 		}
 
-		public IList<KeyImageInformation> AvailableContexts
+		public IObservableList<KeyImageInformation> AvailableContexts
 		{
 			get { return _availableContexts; }
 		}
@@ -147,7 +147,7 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 		public void Publish()
 		{
-			KeyImagePublisher.Publish(AvailableContexts.Where(c => c.HasChanges && c.Items.Count > 0));
+			KeyImagePublisher.Publish(AvailableContexts.Where(c => c.HasChanges && c.Items.Count > 0), _studyTree);
 		}
 
 		public void Dispose()
@@ -162,6 +162,16 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		protected virtual void NotifyPropertyChanged(string propertyName)
 		{
 			EventsHelper.Fire(PropertyChanged, this, new PropertyChangedEventArgs(propertyName));
+		}
+
+		private void OnStudyLoaded(object sender, StudyLoadedEventArgs e)
+		{
+			_availableContexts.AddRange(e.Study.Series
+			                            	.SelectMany(s => s.Sops)
+			                            	.Where(s => s.SopClassUid == SopClass.KeyObjectSelectionDocumentStorageUid)
+			                            	.Select(s => new KeyImageInformation(_studyTree, s))
+			                            	.OrderByDescending(s => s.ContentDateTime)
+			                            	.ThenBy(s => s.SeriesNumber));
 		}
 
 		#region IKeyImageClipboard Implementation

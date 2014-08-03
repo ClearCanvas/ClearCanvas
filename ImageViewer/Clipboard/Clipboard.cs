@@ -259,7 +259,7 @@ namespace ClearCanvas.ImageViewer.Clipboard
 			return new ClipboardItem(displaySet, bmp, displaySet.Name, BuildClipboardItemDescription(displaySet), clientRectangle);
 		}
 
-		private static string BuildClipboardItemName(IPresentationImage image)
+		protected static string BuildClipboardItemName(IPresentationImage image)
 		{
 			if (!(image is IImageSopProvider))
 				return string.Empty;
@@ -282,7 +282,7 @@ namespace ClearCanvas.ImageViewer.Clipboard
 			return image.ParentDisplaySet.Name;
 		}
 
-		private static string BuildClipboardItemDescription(IPresentationImage image)
+		protected static string BuildClipboardItemDescription(IPresentationImage image)
 		{
 			if (!(image is IImageSopProvider))
 				return string.Empty;
@@ -300,7 +300,7 @@ namespace ClearCanvas.ImageViewer.Clipboard
 			                     , TextOverlayVisibilityHelper.IsVisible(image, true) ? SR.LabelOn : SR.LabelOff);
 		}
 
-		private static string BuildClipboardItemDescription(IDisplaySet displaySet)
+		protected static string BuildClipboardItemDescription(IDisplaySet displaySet)
 		{
 			return displaySet.PresentationImages.Count == 0
 			       	? string.Empty

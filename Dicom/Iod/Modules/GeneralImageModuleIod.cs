@@ -154,8 +154,7 @@ namespace ClearCanvas.Dicom.Iod.Modules
 		/// </summary>
 		public string PatientOrientation
 		{
-			// TODO: make it easier to specify values
-			get { return DicomAttributeProvider[DicomTags.PatientOrientation].GetString(0, string.Empty); }
+			get { return DicomAttributeProvider[DicomTags.PatientOrientation].ToString(); }
 			set
 			{
 				if (string.IsNullOrEmpty(value))
@@ -163,7 +162,7 @@ namespace ClearCanvas.Dicom.Iod.Modules
 					DicomAttributeProvider[DicomTags.PatientOrientation] = null;
 					return;
 				}
-				DicomAttributeProvider[DicomTags.PatientOrientation].SetString(0, value);
+				DicomAttributeProvider[DicomTags.PatientOrientation].SetStringValue(value);
 			}
 		}
 
@@ -197,8 +196,7 @@ namespace ClearCanvas.Dicom.Iod.Modules
 		/// </summary>
 		public string ImageType
 		{
-			// TODO: make it easier to specify values
-			get { return DicomAttributeProvider[DicomTags.ImageType].GetString(0, string.Empty); }
+			get { return DicomAttributeProvider[DicomTags.ImageType].ToString(); }
 			set
 			{
 				if (string.IsNullOrEmpty(value))
@@ -206,7 +204,7 @@ namespace ClearCanvas.Dicom.Iod.Modules
 					DicomAttributeProvider[DicomTags.ImageType] = null;
 					return;
 				}
-				DicomAttributeProvider[DicomTags.ImageType].SetString(0, value);
+				DicomAttributeProvider[DicomTags.ImageType].SetStringValue(value);
 			}
 		}
 

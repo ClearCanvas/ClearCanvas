@@ -103,6 +103,9 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			var calloutGraphic = annotations.FirstOrDefault() as ICalloutGraphic;
 			if (subjectGraphic.Graphics.Count == 1 && annotations.Count == 1 && calloutGraphic != null)
 			{
+				// disable the subject graphics before we add the callout, because we want the callout to be moveable
+				subjectGraphic.SetEnabled(false);
+
 				var subjectElement = (ElementGraphic) subjectGraphic.Graphics.Single();
 				subjectElement.Graphics.Add(calloutGraphic);
 				subjectElement.Callout = calloutGraphic;
@@ -117,9 +120,11 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 				                                                                                   		Text = g.Text,
 				                                                                                   		ShowArrowhead = !(g is CalloutGraphic) || ((CalloutGraphic) g).ShowArrowhead
 				                                                                                   	}));
+
+				// disable both subject graphiucs and any callouts
+				subjectGraphic.SetEnabled(false);
 			}
 
-			subjectGraphic.SetEnabled(false);
 			subjectGraphic.SetColor(Color.LemonChiffon);
 			return new DicomGraphicAnnotation(subjectGraphic);
 		}
@@ -199,6 +204,11 @@ namespace ClearCanvas.ImageViewer.PresentationStates.Dicom
 			{
 				graphic.SetEnabled(Interactive);
 			}
+		}
+
+		public override bool HitTest(Point point)
+		{
+			return Graphics.Any(g => g.HitTest(point));
 		}
 
 		protected override bool Start(IMouseInformation mouseInformation)
