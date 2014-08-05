@@ -127,8 +127,7 @@ namespace ClearCanvas.Common.Utilities
         /// <param name="dir"></param>
         public static void DeleteIfExists(string dir)
         {
-            if (Directory.Exists(dir))
-                DeleteIfExists(dir, false);
+            DeleteIfExists(dir, false);
         }
 
         /// <summary>

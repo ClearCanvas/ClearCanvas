@@ -36,13 +36,13 @@ namespace ClearCanvas.ImageServer.Core.Edit
 
 		public PatientInfo(PatientInfo other)
 		{
-			Name = other.Name;
+			PatientsName = other.PatientsName;
 			PatientId = other.PatientId;
 			IssuerOfPatientId = other.IssuerOfPatientId;
 		}
 
 		[DicomField(DicomTags.PatientsName, DefaultValue = DicomFieldDefault.Null)]
-		public string Name { get; set; }
+		public string PatientsName { get; set; }
 
 		[DicomField(DicomTags.PatientId, DefaultValue = DicomFieldDefault.Null)]
 		public string PatientId { get; set; }
@@ -54,11 +54,24 @@ namespace ClearCanvas.ImageServer.Core.Edit
 
 		public bool Equals(PatientInfo other)
 		{
-			var name = new PersonName(Name);
-			var otherName = new PersonName(other.Name);
-			return name.Equals(otherName) && String.Equals(PatientId, other.PatientId, StringComparison.InvariantCultureIgnoreCase);
+			var name = new PersonName(PatientsName);
+			var otherName = new PersonName(other.PatientsName);
+			return name.Equals(otherName)
+				&& String.Equals(PatientId, other.PatientId, StringComparison.InvariantCultureIgnoreCase);
 		}
 
 		#endregion
+
+		public bool AreSame(PatientInfo other, bool caseSensitive)
+		{
+			if (other == null)
+				return false;
+
+			var comparison = caseSensitive ? StringComparison.CurrentCulture : StringComparison.CurrentCultureIgnoreCase;
+
+			return string.Equals(this.PatientsName, other.PatientsName, comparison) &&
+			       string.Equals(this.PatientId, other.PatientId, comparison) &&
+				   string.Equals(this.IssuerOfPatientId, other.IssuerOfPatientId, comparison);
+		}
 	}
 }

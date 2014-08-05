@@ -661,7 +661,7 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
                         command.Parameters.AddWithValue("@" + sqlParmName, v.Enum);
                     }
                     else
-                        command.Parameters.AddWithValue("@" + sqlParmName, parm.Value);
+                        command.Parameters.AddWithValue("@" + sqlParmName, parm.Value ?? DBNull.Value);
                 }
 
                 string text = String.Format("[{0}]=@{0}", sqlParmName);

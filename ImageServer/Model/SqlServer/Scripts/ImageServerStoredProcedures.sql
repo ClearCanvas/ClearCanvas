@@ -4007,14 +4007,7 @@ BEGIN
 	UPDATE Study 
 	SET PatientGUID=@NewPatientGUID
 	WHERE GUID=	@StudyGUID
-
-	UPDATE Study 
-	SET Study.PatientsName=Patient.PatientsName,
-		Study.PatientId=Patient.PatientId,
-		Study.IssuerOfPatientId = Patient.IssuerOfPatientId	
-	FROM Study JOIN Patient ON Patient.GUID=Study.PatientGUID
-	WHERE Study.GUID=@StudyGUID
-	
+		
 	UPDATE Patient 
 	SET NumberOfPatientRelatedStudies=NumberOfPatientRelatedStudies+1,
 		NumberOfPatientRelatedSeries=NumberOfPatientRelatedSeries+(SELECT Count(GUID)

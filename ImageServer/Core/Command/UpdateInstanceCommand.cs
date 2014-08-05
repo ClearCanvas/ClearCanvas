@@ -101,7 +101,7 @@ namespace ClearCanvas.ImageServer.Core.Command
 			_curPatient = _study.LoadPatient(ServerExecutionContext.Current.ReadContext);
 			_oldPatientInfo = new PatientInfo
 				{
-					Name = _curPatient.PatientsName,
+					PatientsName = _curPatient.PatientsName,
 					PatientId = _curPatient.PatientId,
 					IssuerOfPatientId = _curPatient.IssuerOfPatientId
 				};
@@ -130,8 +130,8 @@ namespace ClearCanvas.ImageServer.Core.Command
 			else
 				criteria.PatientId.IsNull();
 
-			if (!String.IsNullOrEmpty(patientInfo.Name))
-				criteria.PatientsName.EqualTo(patientInfo.Name);
+			if (!String.IsNullOrEmpty(patientInfo.PatientsName))
+				criteria.PatientsName.EqualTo(patientInfo.PatientsName);
 			else
 				criteria.PatientsName.IsNull();
 
@@ -262,7 +262,7 @@ namespace ClearCanvas.ImageServer.Core.Command
 			{
 				IssuerOfPatientId = patientInfo.IssuerOfPatientId,
 				PatientId = patientInfo.PatientId,
-				PatientsName = patientInfo.Name,
+				PatientsName = patientInfo.PatientsName,
 				SpecificCharacterSet = _curPatient.SpecificCharacterSet, // this will be updated at the end if necessary
 				StudyKey = _study.GetKey()
 			};
@@ -276,7 +276,7 @@ namespace ClearCanvas.ImageServer.Core.Command
 		private void TransferStudy(ServerEntityKey studyKey, PatientInfo oldPatient, Patient newPatient)
 		{
 			Platform.Log(LogLevel.Info, "Transferring study from {0} [ID={1}] to {2} [ID={3}]",
-						 oldPatient.Name, oldPatient.PatientId, newPatient.PatientsName, newPatient.PatientId);
+						 oldPatient.PatientsName, oldPatient.PatientId, newPatient.PatientsName, newPatient.PatientId);
 
 			var attachStudyToPatientBroker = UpdateContext.GetBroker<IAttachStudyToPatient>();
 			var parms = new AttachStudyToPatientParamaters

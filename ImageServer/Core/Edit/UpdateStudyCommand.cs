@@ -84,7 +84,7 @@ namespace ClearCanvas.ImageServer.Core.Edit
 		private bool _restored;
 		private bool _deleteOriginalFolder;
 
-		private bool _patientInfoIsNotChanged;
+		private bool _patientInfoChanged;
 		private readonly ServerRulesEngine _rulesEngine;
 
 		private bool atLeastOneFileUpdatedToUTF8 = false;
@@ -173,7 +173,7 @@ namespace ClearCanvas.ImageServer.Core.Edit
 			_curPatient = _study.LoadPatient(ServerExecutionContext.Current.ReadContext);
 			_oldPatientInfo = new PatientInfo
 				{
-					Name = _curPatient.PatientsName,
+					PatientsName = _curPatient.PatientsName,
 					PatientId = _curPatient.PatientId,
 					IssuerOfPatientId = _curPatient.IssuerOfPatientId
 				};
@@ -201,7 +201,7 @@ namespace ClearCanvas.ImageServer.Core.Edit
 				}
 				else if (imageLevelUpdate.TagPath.Tag.TagValue == DicomTags.PatientsName)
 				{
-					_newPatientInfo.Name = imageLevelUpdate.GetStringValue();
+					_newPatientInfo.PatientsName = imageLevelUpdate.GetStringValue();
 				}
 			}
 
@@ -212,7 +212,7 @@ namespace ClearCanvas.ImageServer.Core.Edit
 			NewStudyPath = Path.Combine(NewStudyPath, _newStudyInstanceUid);
 
 			_newPatient = FindPatient(_newPatientInfo, ServerExecutionContext.Current.ReadContext);
-			_patientInfoIsNotChanged = _newPatientInfo.Equals(_oldPatientInfo);
+			_patientInfoChanged = !_newPatientInfo.AreSame(_oldPatientInfo, false);
 
 			Statistics.InstanceCount = _study.NumberOfStudyRelatedInstances;
 			Statistics.StudySize = (ulong) _oldStudyLocation.LoadStudyXml().GetStudySize();
@@ -238,8 +238,8 @@ namespace ClearCanvas.ImageServer.Core.Edit
 			else
 				criteria.PatientId.IsNull();
 
-			if (!String.IsNullOrEmpty(patientInfo.Name))
-				criteria.PatientsName.EqualTo(patientInfo.Name);
+			if (!String.IsNullOrEmpty(patientInfo.PatientsName))
+				criteria.PatientsName.EqualTo(patientInfo.PatientsName);
 			else
 				criteria.PatientsName.IsNull();
 
@@ -381,35 +381,7 @@ namespace ClearCanvas.ImageServer.Core.Edit
 				}
 			}
 		}
-
-		private void UpdatePatientEncoding(Patient patient)
-		{
-			// Note: patient can be an existing one or a new one
-
-			// set the SpecificCharacterSet of the patient and study record. This will update the database
-			// and force Patient/Study/Series level query response to be encoded in UTF8. Image level responses
-			// will be encoded using the character set in the image (see QueryScpExtension) 
-			//
-			if (atLeastOneFileUpdatedToUTF8)
-			{
-				// Only update the db if necessary
-				if (!IsUTF8(patient.SpecificCharacterSet))
-				{
-					Platform.Log(LogLevel.Info,
-					             "Updating encoding for patient information in the database to UTF8 [ Name={0}, ID={1} ]", patient.Name,
-					             patient.PatientId);
-
-					// update to UTF8
-					patient.SpecificCharacterSet = UTF8;
-
-					// This method is called at the very end of UpdateDatabase(), update the database now
-					var broker = UpdateContext.GetBroker<IPatientEntityBroker>();
-					var columns = new PatientUpdateColumns {SpecificCharacterSet = UTF8};
-					broker.Update(patient.Key, columns);
-				}
-			}
-		}
-
+		
 
 		private void UpdateDatabase()
 		{
@@ -441,24 +413,38 @@ namespace ClearCanvas.ImageServer.Core.Edit
 			//      C) New patient demographics doesn't match any patient in the database
 			//              ==> A new patient should be created for this study. The study count on the current patient should be updated
 			//                  and the patient should also be deleted if this is the only study attached to it.
-			if (_patientInfoIsNotChanged)
+			if (!_patientInfoChanged)
 			{
-				UpdateCurrentPatient();
-				UpdatePatientEncoding(_curPatient);
+				UpdatePatientDemographics(_curPatient.GetKey(), _newPatientInfo);
 			}
 			else if (_newPatient == null)
 			{
 				// No matching patient in the database. We should create a new patient for this study
 				_newPatient = CreateNewPatient(_newPatientInfo);
-				UpdatePatientEncoding(_newPatient);
+				UpdatePatientDemographics(_newPatient.GetKey(), _newPatientInfo);
 			}
 			else
 			{
 				// There's already patient in the database with the new patient demographics
 				// The study should be attached to that patient.
 				TransferStudy(_study.Key, _oldPatientInfo, _newPatient);
-				UpdatePatientEncoding(_newPatient);
+				UpdatePatientDemographics(_newPatient.GetKey(), _newPatientInfo);
 			}
+		}
+
+		private void UpdatePatientDemographics(ServerEntityKey patientEntityKey, PatientInfo patientInfo)
+		{
+			Platform.Log(LogLevel.Info, "Update patient record...");
+			var patientUpdateBroker = UpdateContext.GetBroker<IPatientEntityBroker>();
+			var columns = new PatientUpdateColumns();
+			columns.IssuerOfPatientId = patientInfo.IssuerOfPatientId;
+			columns.PatientId = patientInfo.PatientId;
+			columns.PatientsName = patientInfo.PatientsName;
+			if (atLeastOneFileUpdatedToUTF8) 
+				columns.SpecificCharacterSet = UTF8;
+			
+			patientUpdateBroker.Update(patientEntityKey, columns);
+
 		}
 
 		private Order FindOrderForStudy()
@@ -481,7 +467,7 @@ namespace ClearCanvas.ImageServer.Core.Edit
 				{
 					IssuerOfPatientId = patientInfo.IssuerOfPatientId,
 					PatientId = patientInfo.PatientId,
-					PatientsName = patientInfo.Name,
+					PatientsName = patientInfo.PatientsName,
 					SpecificCharacterSet = _curPatient.SpecificCharacterSet, // this will be updated at the end if necessary
 					StudyKey = _study.GetKey()
 				};
@@ -492,18 +478,11 @@ namespace ClearCanvas.ImageServer.Core.Edit
 			return newPatient;
 		}
 
-		private void UpdateCurrentPatient()
-		{
-			Platform.Log(LogLevel.Info, "Update current patient record...");
-			var patientUpdateBroker = UpdateContext.GetBroker<IPatientEntityBroker>();
-			patientUpdateBroker.Update(_curPatient);
-
-		}
 
 		private void TransferStudy(ServerEntityKey studyKey, PatientInfo oldPatient, Patient newPatient)
 		{
 			Platform.Log(LogLevel.Info, "Transferring study from {0} [ID={1}] to {2} [ID={3}]",
-			             oldPatient.Name, oldPatient.PatientId, newPatient.PatientsName, newPatient.PatientId);
+			             oldPatient.PatientsName, oldPatient.PatientId, newPatient.PatientsName, newPatient.PatientId);
 
 			var attachStudyToPatientBroker = UpdateContext.GetBroker<IAttachStudyToPatient>();
 			var parms = new AttachStudyToPatientParamaters
@@ -636,7 +615,7 @@ namespace ClearCanvas.ImageServer.Core.Edit
 				{
 					Platform.Log(LogLevel.Warn, "File was converted to unicode but AllowedConvertToUnicodeOnEdit is false");
 				}
-				atLeastOneFileUpdatedToUTF8 = IsUTF8(newCS);
+				atLeastOneFileUpdatedToUTF8 = atLeastOneFileUpdatedToUTF8 || IsUTF8(newCS);
 			}
 
 			SaveFile(file);
