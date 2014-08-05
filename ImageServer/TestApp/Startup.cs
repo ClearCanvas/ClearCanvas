@@ -89,5 +89,11 @@ namespace ClearCanvas.ImageServer.TestApp
             var form = new GenerateDatabase();
             form.Show();
         }
+
+		private void _archiveTestBtn_Click(object sender, EventArgs e)
+		{
+			var form = new ArchiveTestForm();
+			form.Show();
+		}
     }
 }

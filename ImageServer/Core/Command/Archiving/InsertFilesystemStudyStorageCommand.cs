@@ -1,6 +1,6 @@
 #region License
 
-// Copyright (c) 2013, ClearCanvas Inc.
+// Copyright (c) 2014, ClearCanvas Inc.
 // All rights reserved.
 // http://www.clearcanvas.ca
 //
@@ -31,13 +31,13 @@ using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.Brokers;
 using ClearCanvas.ImageServer.Model.Parameters;
 
-namespace ClearCanvas.ImageServer.Services.Archiving
+namespace ClearCanvas.ImageServer.Core.Command.Archiving
 {
 	/// <summary>
 	/// Command to insert a <see cref="FilesystemStudyStorage"/> record in the database
 	/// and update the Study status.
 	/// </summary>
-	public class InsertFilesystemStudyStorageCommand : ServerDatabaseCommand
+	public sealed class InsertFilesystemStudyStorageCommand : ServerDatabaseCommand
 	{
 		private readonly ServerEntityKey _serverPartitionKey;
 		private readonly string _studyInstanceUid;

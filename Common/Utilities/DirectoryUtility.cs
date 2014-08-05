@@ -230,17 +230,22 @@ namespace ClearCanvas.Common.Utilities
         /// <param name="deleteParentIfEmpty"></param>
         public static void DeleteIfExists(string dir, bool deleteParentIfEmpty)
         {
-            if (Directory.Exists(dir))
-            {
-                DirectoryInfo parent = Directory.GetParent(dir);
-                Directory.Delete(dir, true);
+	        try
+	        {
 
-                if (deleteParentIfEmpty && parent != null)
-                {
-                    // delete the parent too
-                    DeleteIfEmpty(parent.FullName);
-                }
-            }
+		        DirectoryInfo parent = Directory.GetParent(dir);
+		        Directory.Delete(dir, true);
+
+		        if (deleteParentIfEmpty && parent != null)
+		        {
+			        // delete the parent too
+			        DeleteIfEmpty(parent.FullName);
+		        }
+	        }
+	        catch (DirectoryNotFoundException e)
+	        {
+		        // ignore
+	        }
         }
 
         /// <summary>

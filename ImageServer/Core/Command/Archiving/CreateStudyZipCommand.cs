@@ -1,6 +1,6 @@
 #region License
 
-// Copyright (c) 2013, ClearCanvas Inc.
+// Copyright (c) 2014, ClearCanvas Inc.
 // All rights reserved.
 // http://www.clearcanvas.ca
 //
@@ -25,21 +25,25 @@
 using System;
 using System.IO;
 using ClearCanvas.Common;
+using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom.Utilities.Command;
 using ClearCanvas.Dicom.Utilities.Xml;
 using ClearCanvas.ImageServer.Common;
 
-namespace ClearCanvas.ImageServer.Services.Archiving.Hsm
+namespace ClearCanvas.ImageServer.Core.Command.Archiving
 {
+	
 	/// <summary>
 	/// <see cref="CommandBase"/> to create Zip file containing all the dcm files in a study
 	/// </summary>
-	public class CreateStudyZipCommand : CommandBase
+	public sealed class CreateStudyZipCommand : CommandBase
 	{
 		private readonly string _zipFile;
 		private readonly StudyXml _studyXml;
 		private readonly string _studyFolder;
 		private readonly string _tempFolder;
+
+		public event EventHandler<ProgressUpdatedEventArgs> ProgressUpdated;
 
 		/// <summary>
 		/// Constructor
@@ -56,17 +60,23 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Hsm
 			_tempFolder = tempFolder;
 		}
 
+		public bool ForceCompress { get; set; }
+
 		/// <summary>
 		/// Do the work.
 		/// </summary>
 		protected override void OnExecute(CommandProcessor theProcessor)
 		{
+
 		    var zipService = Platform.GetService<IZipService>();
 			using (var zipWriter = zipService.OpenWrite(_zipFile))
 			{
-                zipWriter.ForceCompress = HsmSettings.Default.CompressZipFiles;
+				zipWriter.ForceCompress = ForceCompress;
                 zipWriter.TempFileFolder = _tempFolder;
                 zipWriter.Comment = String.Format("Archive for study {0}", _studyXml.StudyInstanceUid);
+
+				zipWriter.ProgressUpdated += (s, e) => EventsHelper.Fire(this.ProgressUpdated, this, e);
+
 
 				// Add the studyXml file
                 zipWriter.AddFile(Path.Combine(_studyFolder, String.Format("{0}.xml", _studyXml.StudyInstanceUid)), String.Empty);
@@ -79,16 +89,22 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Hsm
                     zipWriter.AddFile(uidMapXmlPath, String.Empty);
 
 				// Add each sop from the StudyXmlFile
+				var i = 0;
 				foreach (SeriesXml seriesXml in _studyXml)
+				{
+					i++;
 					foreach (InstanceXml instanceXml in seriesXml)
 					{
 						string filename = Path.Combine(_studyFolder, seriesXml.SeriesInstanceUid);
 						filename = Path.Combine(filename, String.Format("{0}.dcm", instanceXml.SopInstanceUid));
 
-                        zipWriter.AddFile(filename, seriesXml.SeriesInstanceUid);
+						zipWriter.AddFile(filename, seriesXml.SeriesInstanceUid);
 					}
 
-                zipWriter.Save();
+				}
+
+				zipWriter.Save();
+				
 			}
 		}
 

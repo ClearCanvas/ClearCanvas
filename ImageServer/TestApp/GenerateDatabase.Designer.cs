@@ -34,7 +34,7 @@
             this._textBoxStudiesPerDay = new System.Windows.Forms.TextBox();
             this._numericUpDownPercentWeekend = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox1 = new CheckableGroupBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this._textBoxPort = new System.Windows.Forms.TextBox();
