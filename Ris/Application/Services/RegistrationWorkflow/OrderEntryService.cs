@@ -339,7 +339,7 @@ namespace ClearCanvas.Ris.Application.Services.RegistrationWorkflow
 					var destinationOrder = this.PersistenceContext.Load<Order>(request.OrderRef);
 					var sourceOrders = destinationOrder.MergeSourceOrders;
 					if (sourceOrders.Count == 0)
-						throw new RequestValidationException("This order does not have any orders to un-merge.");
+						throw new RequestValidationException(SR.InvalidRequest_NoOrdersToUnmerge);
 
 					// load the reason; if reason is null (eg dry run), just get the first available reason
 					var reason = request.UnmergeReason == null ?

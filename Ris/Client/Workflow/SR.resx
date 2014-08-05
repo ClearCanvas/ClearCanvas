@@ -1079,4 +1079,19 @@ Are you sure you want to cancel and replace this order?</value>
   <data name="MenuDowntime" xml:space="preserve">
     <value>Downtime</value>
   </data>
+  <data name="FormatCommentsFor" xml:space="preserve">
+    <value>Comments for {0}</value>
+  </data>
+  <data name="FormatReportedProcedures" xml:space="preserve">
+    <value>Reported Procedure(s): {0}</value>
+  </data>
+  <data name="MessageMergeOrderConfirmation" xml:space="preserve">
+    <value>Merge order(s) {0} into order {1}?</value>
+  </data>
+  <data name="MessageUndoMergeOrder" xml:space="preserve">
+    <value>Undo merge order {0}</value>
+  </data>
+  <data name="MessageUnmergeOrderConfirmation" xml:space="preserve">
+    <value>Un-merge all orders merged into {0}?</value>
+  </data>
 </root>

@@ -72,7 +72,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 			get
 			{
 				return _context.SelectedPerformedStep == null ? ""
-				: string.Format("Comments for {0}",
+				: string.Format(SR.FormatCommentsFor,
 					string.Join("/", _context.SelectedPerformedStep.ModalityProcedureSteps.Select(mps => mps.Description).ToArray()));
 			}
 		}

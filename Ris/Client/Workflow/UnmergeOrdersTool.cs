@@ -84,7 +84,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 				var exitCode = ApplicationComponent.LaunchAsDialog(
 					this.Context.DesktopWindow,
 					unmergeComponent,
-					string.Format("Undo merge order {0}", AccessionFormat.Format(item.AccessionNumber)));
+					string.Format(SR.MessageUndoMergeOrder, AccessionFormat.Format(item.AccessionNumber)));
 
 				if (exitCode != ApplicationComponentExitCode.Accepted)
 					return false;
@@ -94,7 +94,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 			else
 			{
 				// confirm
-				var message = string.Format("Un-merge all orders merged into {0}?", item.AccessionNumber);
+				var message = string.Format(SR.MessageUnmergeOrderConfirmation, item.AccessionNumber);
 				if (DialogBoxAction.No == this.Context.DesktopWindow.ShowMessageBox(message, MessageBoxActions.YesNo))
 					return false;
 				reason = new EnumValueInfo(reasonCode, null, null);
