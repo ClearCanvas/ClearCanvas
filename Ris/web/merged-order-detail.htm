@@ -38,15 +38,15 @@
 					Preview.ProtocolProceduresTable.create($("protocolProceduresSection"), orderDetail.Procedures, orderDetail.Notes);
 
 					var notes = orderDetail.Notes.select(function(note) { return note.Category == "PrelimDiagnosis"; });
-					Preview.OrderNotesTable.create($("prelimDiagnosisNotesSection"), notes, "Preliminary Diagnosis", false);
+					Preview.OrderNotesTable.create($("prelimDiagnosisNotesSection"), notes, SR.OrderNotes.PreliminaryDiagnosis, false);
 
 					notes = orderDetail.Notes.select(function(note) { return note.Category == "General"; });
-					Preview.OrderNotesTable.create($("generalNotesSection"), notes, "Order Notes", false);
+					Preview.OrderNotesTable.create($("generalNotesSection"), notes, SR.OrderNotes.OrderNotes, false);
 
 					notes = orderDetail.Notes.select(function(note) { return note.Category == "Protocol"; });
-					Preview.OrderNotesTable.create($("protocolNotesSection"), notes, "Protocol Notes", true);
+					Preview.OrderNotesTable.create($("protocolNotesSection"), notes, SR.OrderNotes.ProtocolNotes, true);
 
-					Preview.ResultRecipientsSection.create($("resultRecipientsSection"), orderDetail.OrderingPractitioner, orderDetail.ResultRecipients, "Copies To");
+					Preview.ResultRecipientsSection.create($("resultRecipientsSection"), orderDetail.OrderingPractitioner, orderDetail.ResultRecipients, SR.OrderNotes.CopiesTo);
 				}
 				else
 				{

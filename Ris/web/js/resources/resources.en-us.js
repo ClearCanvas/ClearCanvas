@@ -71,6 +71,22 @@ SR({
 		OrderingPhysicianPhone: "Phone: %0",
 		OrderingPhysicianFax: "Fax: %0"
 	},
+  
+  OrderNotes: {
+    CopiesTo: "Copies To",
+    OrderNotes: "Order Notes",
+    PreliminaryDiagnosis: "Preliminary Diagnosis",
+    ProtocolNotes: "Protocol Notes",
+    From: "From:",
+    LabelUrgent: "URGENT",
+    OnBehalfOf: "%0 on behalf of %1",
+    AcknowledgedAtTime: "at %0",
+    AcknowledgedBy: "Acknowledged By:",
+    WaitingForAcknowledgement: "Waiting For Acknowledgement:"
+    ColumnHeadings: {
+      OrderNote: "Order Note"
+    }
+  },
 	
 	OrderedProcedures: {
 		ColumnHeadings: {
@@ -130,7 +146,15 @@ SR({
 	},
 	
 	Procedures: {
+    Procedure: "Procedure",
 		Procedures: "Procedures",
+    
+    Mrn: "MRN",
+    Name: "Name",
+    AccessionNumber: "Accession #",
+    OrderPriority: "Order Priority",
+    PatientClass: "Patient Class",
+    Time: "Time",
 		
 		RequestedFor: "Requested for %0",
 		NotScheduled: "Not scheduled",
@@ -290,6 +314,48 @@ SR({
 		FromAnytime: "anytime",
 		ToEndOfDay: "to end of %0",
 		ToTime: "to %0",
-		ToAnytime: "to anytime"
-	}
+		ToAnytime: "to anytime",
+    
+    PrintedBy: "Printed By",
+    FolderSystem: "Folder System",
+    FolderName: "Folder Name",
+    Showing: "Showing"
+	},
+  
+  Physicians: {
+    AttendingPhysician: "Attending Physician",
+    ReferringPhysician: "Referring Physician",
+    ConsultingPhysician: "Consulting Physician",
+    AdmittingPhysician: "Admitting Physician"
+  },
+  
+  Visits: {
+    VisitNumber: "Visit Number",
+    VisitStatus: "Visit Status"
+    Facility: "Facility",
+    RoomNotSpecified: "Room Not Specified",
+    CurrentLocation: "Current Location",
+    CurrentRoom: "Current Room",
+    PatientClass: "Patient Class",
+    PatientType: "Patient Type",
+    CurrentBed: "Current Bed",
+    AdmissionType: "Admission Type",
+    DischargeDisposition: "Discharge Disposition",
+    AdmitDateTime: "Admit Date/Time",
+    DischargeDateTime: "Discharge Date/Time",
+    PreAdmitNumber: "Pre-Admit Number",
+    VIP: "VIP?",
+    AmbulatoryStatuses: "Ambulatory Statuses"
+  },
+  
+  Protocols: {
+    NotProtocolled: "Not Protocolled",
+    ColumnHeadings: {
+      Author: "Author",
+      Procedure: "Procedure",
+      Protocol: "Protocol",
+      Status: "Status",
+      Urgency: "Urgency"
+    }
+  }
 });

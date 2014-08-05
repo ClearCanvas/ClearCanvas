@@ -57,7 +57,7 @@
 					Preview.ProtocolProceduresTable.create($("protocolProceduresSection"), orderDetail.Procedures, orderDetail.Notes);
 
 					notes = orderDetail.Notes.select(function(note) { return note.Category == "PrelimDiagnosis"; });
-					Preview.OrderNotesTable.create($("prelimDiagnosisNotesSection"), notes, "Preliminary Diagnosis", false);
+					Preview.OrderNotesTable.create($("prelimDiagnosisNotesSection"), notes, SR.OrderNotes.PreliminaryDiagnosis, false);
 				}
 				else
 				{

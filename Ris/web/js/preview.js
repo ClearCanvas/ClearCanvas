@@ -226,7 +226,7 @@ var Preview = function () {
 				return null;
 			
 			if (visit.CurrentRoom || visit.CurrentBed)
-				return visit.CurrentLocation.Name + ", " + (visit.CurrentRoom || "Room Not Specified") + (visit.CurrentBed ? "/" + visit.CurrentBed : "");
+				return visit.CurrentLocation.Name + ", " + (visit.CurrentRoom || SR.Visits.RoomNotSpecified) + (visit.CurrentBed ? "/" + visit.CurrentBed : "");
 			else
 				return visit.CurrentLocation.Name;
 		}
@@ -597,7 +597,7 @@ Preview.ProtocolProceduresTable = function () {
 	var _formatProtocolStatus = function(protocol)
 	{
 		if(!protocol)
-			return "Not Protocolled";
+			return SR.Protocols.NotProtocolled;
 
 		if(protocol.Status.Code == "RJ")
 			return protocol.Status.Value + " - "+ protocol.RejectReason.Value;
@@ -695,23 +695,23 @@ Preview.ProtocolProceduresTable = function () {
 			var htmlTable = Preview.ProceduresTableHelper.addTable(parentElement);
 			htmlTable = Table.createTable(htmlTable, { editInPlace: false, flow: false, addColumnHeadings: true },
 				 [
-					{   label: "Procedure",
+					{   label: SR.Protocols.ColumnHeadings.Procedure,
 						cellType: "text",
 						getValue: function(item) { return item.Procedure; }
 					},
-					{   label: "Status",
+					{   label: SR.Protocols.ColumnHeadings.Status,
 						cellType: "text",
 						getValue: function(item) { return item.Status; }
 					},
-					{   label: "Protocol",
+					{   label: SR.Protocols.ColumnHeadings.Protocol,
 						cellType: "html",
 						getValue: function(item) { return item.Protocol; }
 					},
-					{   label: "Author",
+					{   label: SR.Protocols.ColumnHeadings.Author,
 						cellType: "text",
 						getValue: function(item) { return item.Author; }
 					},
-					{   label: "Urgency",
+					{   label: SR.Protocols.ColumnHeadings.Urgency,
 						cellType: "text",
 						getValue: function(item) { return item.WTIS; }
 					}
@@ -1104,7 +1104,7 @@ Preview.ConversationHistory = function () {
 		var htmlTable = Preview.ProceduresTableHelper.addTableWithClass(parentElement, "NoteEntryTable", noColumnHeadings=true, "ConversationHistoryTable");
 		htmlTable = Table.createTable(htmlTable, { checkBoxes: false, checkBoxesProperties: checkBoxesProperties, editInPlace: false, flow: false, addColumnHeadings: false },
 		[
-			{   label: "Order Note",
+			{   label: SR.OrderNotes.ColumnHeadings.OrderNote,
 				cellType: "html",
 				getValue: function(item) 
 				{
@@ -1460,7 +1460,7 @@ Preview.ImagingServiceSection = function () {
 }();
 
 /*
- *	Create a contrainer for the element with the specified title.
+ *	Create a container for the element with the specified title.
  */
 Preview.SectionContainer = function () {
 
@@ -1765,12 +1765,13 @@ Preview.BannerSection = function() {
 Preview.OrderNoteSection = function() {
 	var _formatStaffNameAndRoleAndOnBehalf = function(author, onBehalfOfGroup)
 		{
-			return Ris.formatStaffNameAndRole(author) + ((onBehalfOfGroup != null) ? (" on behalf of " + onBehalfOfGroup.Name) : "");
+      var authorName = Ris.formatStaffNameAndRole(author);
+			return (onBehalfOfGroup != null) ? SR.OrderNotes.OnBehalfOf.interp(authorName, onBehalfOfGroup.Name) : authorName;
 		};
 
 	var _formatAcknowledgedTime = function(acknowledgedTime)
 		{
-			return acknowledgedTime ? (" at " + Ris.formatDateTime(acknowledgedTime)) : "";
+			return acknowledgedTime ? " " + SR.OrderNotes.AcknowledgedAtTime.interp(Ris.formatDateTime(acknowledgedTime)) : "";
 		};
 		
 	var _formatAcknowledged = function(groups, staffs)
@@ -1830,23 +1831,23 @@ Preview.OrderNoteSection = function() {
 			var html = "";
 			html += '<table style="{width:98%; margin-top: 4px;}" border="0" cellspacing="0" cellpadding="0">';
 			html += '	<tr class="orderNoteHeading">';
-			html += '		<td style="{width:100%;}"><span style="{padding-right: 5px;}" class="orderNoteLabel">From:</span>';
+			html += '		<td style="{width:100%;}"><span style="{padding-right: 5px;}" class="orderNoteLabel">'+SR.OrderNotes.From+'</span>';
 			html += '		' + _formatStaffNameAndRoleAndOnBehalf(note.Author, note.OnBehalfOfGroup) + '</td>';
 			//html += '		<td>' + (note.Urgent ? "<img alt='Urgent' src='" + imagePath + "/urgent.gif'/>" : "") + '</td>';
-			html += '		<td style="{width:5em; text-align:right; padding-right: 5px;}">' + (note.Urgent ? '<span class="urgentTextMark">URGENT</span>' : "")  + '</td>';
+			html += '		<td style="{width:5em; text-align:right; padding-right: 5px;}">' + (note.Urgent ? '<span class="urgentTextMark">'+SR.OrderNotes.LabelUrgent+'</span>' : "")  + '</td>';
 			html += '		<td style="{width:9.5em;text-align:right; padding-right: 5px;}" class="orderNoteLabel" NOWRAP title="' +  Ris.formatDateTime(note.PostTime) + '">' + Ris.formatDateTime(note.PostTime) + '</td>';
 			html += '	</tr>';
 			if (acknowledgedGroups.length > 0 || acknowledgedStaffs.length > 0)
 			{
 				html += '	<tr id="acknowledgedRow" class="orderNoteHeading">';
-				html += '		<td colspan="3" NOWRAP valign="top"><span style="{padding-right: 5px;}" class="orderNoteLabel">Acknowledged By:</span>';
+				html += '		<td colspan="3" NOWRAP valign="top"><span style="{padding-right: 5px;}" class="orderNoteLabel">'+SR.OrderNotes.AcknowledgedBy+'</span>';
 				html += '		' + String.replaceLineBreak(_formatAcknowledged(acknowledgedGroups, acknowledgedStaffs)) + '<div id="acknowledged"></td>';
 				html += '	</tr>';
 			}
 			if (notAcknowledgedGroups.length > 0 || notAcknowledgedStaffs.length > 0)
 			{
 				html += '	<tr id="notAcknowledgedRow" class="orderNoteHeading">';
-				html += '		<td valign="top" colspan="3"><span style="{padding-right: 5px;}" class="orderNoteLabel">Waiting For Acknowledgement:</span>';
+				html += '		<td valign="top" colspan="3"><span style="{padding-right: 5px;}" class="orderNoteLabel">'+SR.OrderNotes.WaitingForAcknowledgement+'</span>';
 				html += '		<B>' + String.replaceLineBreak(_formatNotAcknowledged(notAcknowledgedGroups, notAcknowledgedStaffs)) + '</B></td>';
 				html += '	</tr>';
 			}
@@ -1861,7 +1862,7 @@ Preview.OrderNoteSection = function() {
 }();
 
 /*
- *	Create a conversation note that shows author, post date, urgency, receipients and note body.
+ *	Create a conversation note that shows author, post date, urgency, recipients and note body.
  *	Exposes:
  *		create(element, note)
  *			element - parent node for the order note
@@ -1870,12 +1871,13 @@ Preview.OrderNoteSection = function() {
 Preview.ConversationNote = function() {
 	var _formatStaffNameAndRoleAndOnBehalf = function(author, onBehalfOfGroup)
 		{
-			return Ris.formatStaffNameAndRole(author) + ((onBehalfOfGroup != null) ? (" on behalf of " + onBehalfOfGroup.Name) : "");
+      var authorName = Ris.formatStaffNameAndRole(author);
+			return (onBehalfOfGroup != null) ? SR.OrderNotes.OnBehalfOf.interp(authorName, onBehalfOfGroup.Name) : authorName;
 		};
 
 	var _formatAcknowledgedTime = function(acknowledgedTime)
 		{
-			return acknowledgedTime ? (" at " + Ris.formatDateTime(acknowledgedTime)) : "";
+			return acknowledgedTime ? " " + SR.OrderNotes.AcknowledgedAtTime.interp(Ris.formatDateTime(acknowledgedTime)) : "";
 		};
 		
 	var _formatAcknowledged = function(groups, staffs)
@@ -1938,25 +1940,25 @@ Preview.ConversationNote = function() {
 			html += '<tr><td class="ConversationNote_left_upper"></td><td class="ConversationNote_content_upper">';
 			html += '<table width="100%" class="ConversationNoteDetails" border="0" cellspacing="0" cellpadding="0">';
 			html += '	<tr>';
-			html += '		<td><span style="{color: #205F87; font-weight: bold; padding-right: 10px;}">From:</span> ' 
+			html += '		<td><span style="{color: #205F87; font-weight: bold; padding-right: 10px;}">'+SR.OrderNotes.From+'</span> ' 
 				+  _formatStaffNameAndRoleAndOnBehalf(note.Author, note.OnBehalfOfGroup) 
 				//+ '<span style="{padding-left: 20px;}">' 
 				//+ (note.Urgent ? "<img alt='Urgent' src='" + imagePath + "/urgent.gif'/>" : "") 
-				+ (note.Urgent ? '<span class="urgentTextMark" style="{margin-left: 20px;}">URGENT</span>' : "") + "</td>";
+				+ (note.Urgent ? '<span class="urgentTextMark" style="{margin-left: 20px;}">'+SR.OrderNotes.LabelUrgent+'</span>' : "") + "</td>";
 				//+ '</span></td>';
 			html += '		<td style="{padding-right: 10px; text-align:right; color: #205F87; font-weight: bold;}" NOWRAP title="' +  Ris.formatDateTime(note.PostTime) + '">' + Ris.formatDateTime(note.PostTime) + '</td>';
 			html += '	</tr>';
 			if (acknowledgedGroups.length > 0 || acknowledgedStaffs.length > 0) {
 				html += '	<tr id="acknowledgedRow">';
-				html += '		<td colspan="2" NOWRAP valign="top"><span style="{color: #205F87; font-weight: bold; padding-right: 10px;}">Acknowledged By:</span>';
+				html += '		<td colspan="2" NOWRAP valign="top"><span style="{color: #205F87; font-weight: bold; padding-right: 10px;}">'+SR.OrderNotes.AcknowledgedBy+'</span>';
 				html += '		' + String.replaceLineBreak(_formatAcknowledged(acknowledgedGroups, acknowledgedStaffs)) + '<div id="acknowledged"></td>';
 				html += '	</tr>';
 			}
 			if (notAcknowledgedGroups.length > 0 || notAcknowledgedStaffs.length > 0) {
 				html += '	<tr id="notAcknowledgedRow">';
 				html += note.CanAcknowledge
-						? '		<td valign="middle" colspan="2" ><input type="checkbox" id="' + checkBoxId + '"/><span style="{margin-left: 5px; margin-right: 10px;}">Waiting For Acknowledgement:</span>'
-						: '		<td colspan="2" NOWRAP valign="top"><span style="{padding-right: 10px;}">Waiting For Acknowledgement:</span>';
+						? '		<td valign="middle" colspan="2" ><input type="checkbox" id="' + checkBoxId + '"/><span style="{margin-left: 5px; margin-right: 10px;}">'+SR.OrderNotes.WaitingForAcknowledgement+'</span>'
+						: '		<td colspan="2" NOWRAP valign="top"><span style="{padding-right: 10px;}">'+SR.OrderNotes.WaitingForAcknowledgement+'</span>';
 				html += '		' + String.replaceLineBreak(_formatNotAcknowledged(notAcknowledgedGroups, notAcknowledgedStaffs)) + '</td>';
 				html += '	</tr>';
 			}
@@ -1965,11 +1967,10 @@ Preview.ConversationNote = function() {
 			html += '   <tr><td class="ConversationNote_left_lower"></td><td class="ConversationNote_content_lower"><table>'
 			html += '	<tr>';
 			html += '		<td colspan="4" style="{text-align:justify;}"><div class="ConversationNoteMessage">' +  String.replaceLineBreak(note.NoteBody) + '</div></td>';
-			html += '	</tr>';
 			html += '   </table>';
 			html += '</td><td class="ConversationNote_right_lower"></td></tr>';
 			html += '<tr><td class="ConversationNote_bottomleft"></td><td class="ConversationNote_bottom"></td><td class="ConversationNote_bottomright"></td></tr></table>';
-			
+			html += '	</tr>';
 			element.innerHTML = html;
 		}
 	};
@@ -2074,51 +2075,51 @@ Preview.VisitDetailsSection = function () {
 		'<div class="SectionTableContainer">'+
 		'	<table cellspacing="5">'+
 		'		<tr>'+
-		'			<td width="120" class="propertyname">Visit Number</td>'+
+		'			<td width="120" class="propertyname">'+SR.Visits.VisitNumber+'</td>'+
 		'			<td width="200"><div id="VisitNumber"/></td>'+
-		'			<td width="120" class="propertyname">Facility</td>'+
+		'			<td width="120" class="propertyname">'+SR.Visits.Facility+'</td>'+
 		'			<td width="200"><div id="Facility"/></td>'+
 		'		</tr>'+
 		'		<tr>'+
-		'			<td width="120" class="propertyname">Visit Status</td>'+
+		'			<td width="120" class="propertyname">'+SR.Visits.VisitStatus+'</td>'+
 		'			<td width="200"><div id="VisitStatus"/></td>'+
-		'			<td width="120" class="propertyname">Current Location</td>'+
+		'			<td width="120" class="propertyname">'+SR.Visits.CurrentLocation+'</td>'+
 		'			<td width="200"><div id="CurrentLocation"/></td>'+
 		'		</tr>'+
 		'		<tr>'+
-		'			<td width="120" class="propertyname">Patient Class</td>'+
+		'			<td width="120" class="propertyname">'+SR.Visits.PatientClass+'</td>'+
 		'			<td width="200"><div id="PatientClass"/></td>'+
-		'			<td width="120" class="propertyname">Current Room</td>'+
+		'			<td width="120" class="propertyname">'+SR.Visits.CurrentRoom+'</td>'+
 		'			<td width="200"><div id="CurrentRoom"/></td>'+
 		'		</tr>'+
 		'		<tr>'+
-		'			<td width="120" class="propertyname">Patient Type</td>'+
+		'			<td width="120" class="propertyname">'+SR.Visits.PatientType+'</td>'+
 		'			<td width="200"><div id="PatientType"/></td>'+
-		'			<td width="120" class="propertyname">Current Bed</td>'+
+		'			<td width="120" class="propertyname">'+SR.Visits.CurrentBed+'</td>'+
 		'			<td width="200"><div id="CurrentBed"/></td>'+
 		'		</tr>'+
 		'		<tr>'+
-		'			<td width="120" class="propertyname">Admission Type</td>'+
+		'			<td width="120" class="propertyname">'+SR.Visits.AdmissionType+'</td>'+
 		'			<td width="200"><div id="AdmissionType"/></td>'+
-		'			<td width="120" class="propertyname">Discharge Disposition</td>'+
+		'			<td width="120" class="propertyname">'+SR.Visits.DischargeDisposition+'</td>'+
 		'			<td width="200"><div id="DischargeDisposition"/></td>'+
 		'		</tr>'+
 		'		<tr>'+
-		'			<td width="120" class="propertyname">Admit Date/Time</td>'+
+		'			<td width="120" class="propertyname">'+SR.Visits.AdmitDateTime+'</td>'+
 		'			<td width="200"><div id="AdmitTime"/></td>'+
-		'			<td width="120" class="propertyname">Discharge Date/Time</td>'+
+		'			<td width="120" class="propertyname">'+SR.Visits.DischargeDateTime+'</td>'+
 		'			<td width="200"><div id="DischargeTime"/></td>'+
 		'		</tr>'+
 		'		<tr>'+
-		'			<td width="120" class="propertyname">Pre-Admit Number</td>'+
+		'			<td width="120" class="propertyname">'+SR.Visits.PreAdmitNumber+'</td>'+
 		'			<td><div id="PreAdmitNumber"/></td>'+
 		'		</tr>'+
 		'		<tr>'+
-		'			<td width="120" class="propertyname">VIP?</td>'+
+		'			<td width="120" class="propertyname">'+SR.Visits.VIP+'</td>'+
 		'			<td><div id="VipFlag"/></td>'+
 		'		</tr>'+
 		'		<tr>'+
-		'			<td width="120" class="propertyname">Ambulatory Statuses</td>'+
+		'			<td width="120" class="propertyname">'+SR.Visits.AmbulatoryStatuses+'</td>'+
 		'			<td><div id="AmbulatoryStatuses"/></td>'+
 		'		</tr>'+
 		'	</table>'+
@@ -2164,15 +2165,15 @@ Preview.PhysiciansSection = function () {
 		'<div class="SectionTableContainer">'+
 		'	<table cellspacing="5">'+
 		'		<tr>'+
-		'			<td width="120" class="propertyname">Attending Physician</td>'+
+		'			<td width="120" class="propertyname">'+SR.Physicians.AttendingPhysician+'</td>'+
 		'			<td width="200"><div id="AttendingPhysician"/></td>'+
-		'			<td width="120" class="propertyname">Referring Physician</td>'+
+		'			<td width="120" class="propertyname">'+SR.Physicians.ReferringPhysician+'</td>'+
 		'			<td width="200"><div id="ReferringPhysician"/></td>'+
 		'		</tr>'+
 		'		<tr>'+
-		'			<td width="120" class="propertyname">Consulting Physician</td>'+
+		'			<td width="120" class="propertyname">'+SR.Physicians.ConsultingPhysician+'</td>'+
 		'			<td width="200"><div id="ConsultingPhysician"/></td>'+
-		'			<td width="120" class="propertyname">Admitting Physician</td>'+
+		'			<td width="120" class="propertyname">'+SR.Physicians.AdmittingPhysician+'</td>'+
 		'			<td width="200"><div id="AdmittingPhysician"/></td>'+
 		'		</tr>'+
 		'	</table>'+
@@ -2466,26 +2467,26 @@ Preview.ResultRecipientsSection = function() {
 Preview.WorklistItemsPreview = function () {
 
 	var _worklistPropertiesHtml = 
-		'<p class="sectionheading">Worklist</p>'+
+		'<p class="sectionheading">'+SR.Worklists.Worklist+'</p>'+
 		'<table>'+
 		'	<tr>'+
-		'		<td class="propertyname" width="125">Printed By</td>'+
+		'		<td class="propertyname" width="125">'+SR.Worklists.PrintedBy+'</td>'+
 		'		<td><div id="PrintedBy"/></td>'+
 		'	</tr>'+
 		'	<tr>'+
-		'		<td class="propertyname">Folder System</td>'+
+		'		<td class="propertyname">'+SR.Worklists.FolderSystem+'</td>'+
 		'		<td><div id="FolderSystem"/></td>'+
 		'	</tr>'+
 		'	<tr>'+
-		'		<td class="propertyname">Folder Name</td>'+
+		'		<td class="propertyname">'+SR.Worklists.FolderName+'</td>'+
 		'		<td><div id="FolderName"/></td>'+
 		'	</tr>'+
 		'	<tr>'+
-		'		<td class="propertyname">Description</td>'+
+		'		<td class="propertyname">'+SR.Worklists.Description+'</td>'+
 		'		<td><div id="Description"/></td>'+
 		'	</tr>'+
 		'	<tr>'+
-		'		<td class="propertyname">Showing</td>'+
+		'		<td class="propertyname">'+SR.Worklists.Showing+'</td>'+
 		'		<td><div id="ShowingCount"/></td>'+
 		'	</tr>'+
 		'</table>'+
@@ -2496,9 +2497,9 @@ Preview.WorklistItemsPreview = function () {
 		var laterality = lateralityEnum && lateralityEnum.Code != 'N' ? lateralityEnum.Value : null;
 
 		if (portable && laterality)
-			return procedureName + " (Portable/" + laterality + ")";
+			return procedureName + " (" + SR.Worklists.Portable + "/" + laterality + ")";
 		else if (portable)
-			return procedureName + " (Portable)";
+			return procedureName + " (" + SR.Worklists.Portable + ")";
 		else if (laterality)
 			return procedureName + " (" + laterality + ")";
 
@@ -2531,32 +2532,32 @@ Preview.WorklistItemsPreview = function () {
 		var htmlTable = Preview.ProceduresTableHelper.addTable(worklistItemsSection);
 		htmlTable = Table.createTable(htmlTable, { editInPlace: false, flow: false, addColumnHeadings: true },
 			 [
-				{   label: "Mrn",
+				{   label: SR.Procedures.Mrn,
 					cellType: "text",
 					getValue: function(item) { return Ris.formatMrn(item.Mrn); }
 				},
-				{   label: "Name",
+				{   label: SR.Procedures.Name,
 					cellType: "text",
 					getValue: function(item) { return Ris.formatPersonName(item.PatientName); }
 				},
-				{   label: "Accession #",
+				{   label: SR.Procedures.AccessionNumber,
 					cellType: "text",
 					noWrap: true,
 					getValue: function(item) { return item.AccessionNumber; }
 				},
-				{   label: "Order Priority",
+				{   label: SR.Procedures.OrderPriority,
 					cellType: "text",
 					getValue: function(item) { return item.OrderPriority.Value; }
 				},
-				{   label: "Patient Class",
+				{   label: SR.Procedures.PatientClass,
 					cellType: "text",
 					getValue: function(item) { return item.PatientClass.Value; }
 				},
-				{   label: "Procedure",
+				{   label: SR.Procedures.Procedure,
 					cellType: "text",
 					getValue: function(item) { return _formatProcedure(item.ProcedureName, item.ProcedurePortable, item.ProcedureLaterality); }
 				},
-				{   label: "Time",
+				{   label: SR.Procedures.Time,
 					cellType: "html",
 					noWrap: true,
 					getValue: function(item) { return Ris.formatDate(item.Time) + "<br>" + Ris.formatTime(item.Time); }

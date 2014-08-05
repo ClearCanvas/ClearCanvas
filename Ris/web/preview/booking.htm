@@ -78,10 +78,10 @@
 					Preview.ProtocolProceduresTable.create($("protocolProceduresSection"), orderDetail.Procedures, orderDetail.Notes);
 
 					var notes = orderDetail.Notes.select(function(note) { return note.Category == "PrelimDiagnosis"; });
-					Preview.OrderNotesTable.create($("prelimDiagnosisNotesSection"), notes, "Preliminary Diagnosis", false);
+					Preview.OrderNotesTable.create($("prelimDiagnosisNotesSection"), notes, SR.OrderNotes.PreliminaryDiagnosis, false);
 
 					notes = orderDetail.Notes.select(function(note) { return note.Category == "General"; });
-					Preview.OrderNotesTable.create($("generalNotesSection"), notes, "Order Notes", true);
+					Preview.OrderNotesTable.create($("generalNotesSection"), notes, SR.OrderNotes.OrderNotes, true);
 				}
 				else
 				{
