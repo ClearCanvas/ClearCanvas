@@ -28,80 +28,44 @@ using ClearCanvas.Common;
 using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Configuration;
 using ClearCanvas.Ris.Application.Common;
+using AuthorityTokens = ClearCanvas.Ris.Application.Common.AuthorityTokens;
 
 namespace ClearCanvas.Ris.Client
 {
-	[ExtensionOf(typeof(ConfigurationPageProviderExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]
+	[ExtensionOf(typeof (ConfigurationPageProviderExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]
 	public class ConfigurationPageProvider : IConfigurationPageProvider
 	{
 		#region IConfigurationPageProvider Members
 
 		public IEnumerable<IConfigurationPage> GetPages()
 		{
-			if (!Thread.CurrentPrincipal.IsInRole(ClearCanvas.Ris.Application.Common.AuthorityTokens.Workflow.HomePage.View)
-				|| LoginSession.Current == null
-				|| !LoginSession.Current.IsStaff)
-				return new IConfigurationPage[] {}; 
-			
-			return new IConfigurationPage[] { new HomepageConfigurationPage() };
+			if (!Thread.CurrentPrincipal.IsInRole(AuthorityTokens.Workflow.HomePage.View)
+			    || LoginSession.Current == null
+			    || !LoginSession.Current.IsStaff)
+				yield break;
+
+			yield return new ConfigurationPage<HomepageConfigurationComponent>("TitleHomepage");
 		}
 
 		#endregion
 	}
-
-	public class HomepageConfigurationPage : IConfigurationPage
-	{
-		private HomepageConfigurationComponent _component;
-
-		#region IConfigurationPage Members
-
-		public string GetPath()
-		{
-			return "Homepage";
-		}
-
-		public IApplicationComponent GetComponent()
-		{
-			if(_component == null)
-			{
-				_component = new HomepageConfigurationComponent();
-			}
-			return _component;
-		}
-
-		public void SaveConfiguration()
-		{
-			HomePageSettings.Default.Save();
-		}
-
-		#endregion
-		
-	}
-
 
 	/// <summary>
 	/// Extension point for views onto <see cref="HomepageConfigurationComponent"/>.
 	/// </summary>
 	[ExtensionPoint]
-	public sealed class HomepageConfigurationComponentViewExtensionPoint : ExtensionPoint<IApplicationComponentView>
-	{
-	}
+	public sealed class HomepageConfigurationComponentViewExtensionPoint : ExtensionPoint<IApplicationComponentView> {}
 
 	/// <summary>
 	/// HomepageConfigurationComponent class.
 	/// </summary>
-	[AssociateView(typeof(HomepageConfigurationComponentViewExtensionPoint))]
-	public class HomepageConfigurationComponent : ApplicationComponent
+	[AssociateView(typeof (HomepageConfigurationComponentViewExtensionPoint))]
+	public class HomepageConfigurationComponent : ConfigurationApplicationComponent
 	{
-
-
-		/// <summary>
-		/// Constructor.
-		/// </summary>
-		public HomepageConfigurationComponent()
+		public override void Save()
 		{
+			HomePageSettings.Default.Save();
 		}
-
 
 		#region Presentation Model
 
@@ -141,10 +105,9 @@ namespace ClearCanvas.Ris.Client
 				// it does not make sense to even have the option of preventing the homepage from closing,
 				// unless it is shown on startup
 				return HomePageSettings.Default.ShowHomepageOnStartUp;
-			}	
+			}
 		}
 
 		#endregion
-
 	}
 }

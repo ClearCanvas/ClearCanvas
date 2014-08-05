@@ -447,8 +447,8 @@
   <data name="ExceptionWeakSearchCriteria" xml:space="preserve">
     <value>Search criteria would return too many results.  Try repeating the search with different criteria.</value>
   </data>
-  <data name="FolderExplorerConfigurationPagePath" xml:space="preserve">
-    <value>Homepage/Folder Organization</value>
+  <data name="TitleFolderOrganization" xml:space="preserve">
+    <value>Folder Organization</value>
   </data>
   <data name="FormatCheckedInTime" xml:space="preserve">
     <value>Checked-in at {0}</value>
@@ -1547,5 +1547,8 @@
   </data>
   <data name="MenuUserProfile" xml:space="preserve">
     <value>User Profile</value>
+  </data>
+  <data name="TitleHomepage" xml:space="preserve">
+    <value>Homepage</value>
   </data>
 </root>

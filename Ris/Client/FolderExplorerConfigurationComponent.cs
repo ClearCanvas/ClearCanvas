@@ -53,7 +53,7 @@ namespace ClearCanvas.Ris.Client
 				&& LoginSession.Current != null && LoginSession.Current.IsStaff
 				&& Desktop.Application.SessionStatus == SessionStatus.Online)
 			{
-				listPages.Add(new ConfigurationPage<FolderExplorerConfigurationComponent>(SR.FolderExplorerConfigurationPagePath));
+				listPages.Add(new ConfigurationPage<FolderExplorerConfigurationComponent>(FolderExplorerConfigurationComponent.ConfigurationPagePath));
 			}
 
 			return listPages.AsReadOnly();
@@ -76,6 +76,8 @@ namespace ClearCanvas.Ris.Client
 	[AssociateView(typeof(FolderExplorerConfigurationComponentViewExtensionPoint))]
 	public class FolderExplorerConfigurationComponent : ConfigurationApplicationComponent
 	{
+		public const string ConfigurationPagePath = "TitleHomepage/TitleFolderOrganization";
+
 		private BindingList<FolderSystemConfigurationNode> _folderSystems;
 		private FolderSystemConfigurationNode _selectedFolderSystemNode;
 		private SimpleActionModel _folderSystemsActionModel;

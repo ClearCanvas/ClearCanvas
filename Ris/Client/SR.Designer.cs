@@ -1618,15 +1618,6 @@ namespace ClearCanvas.Ris.Client {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Homepage/Folder Organization.
-        /// </summary>
-        internal static string FolderExplorerConfigurationPagePath {
-            get {
-                return ResourceManager.GetString("FolderExplorerConfigurationPagePath", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Address: {0}.
         /// </summary>
         internal static string FormatAddress {
@@ -3733,11 +3724,29 @@ namespace ClearCanvas.Ris.Client {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Folder Organization.
+        /// </summary>
+        internal static string TitleFolderOrganization {
+            get {
+                return ResourceManager.GetString("TitleFolderOrganization", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Home.
         /// </summary>
         internal static string TitleHome {
             get {
                 return ResourceManager.GetString("TitleHome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Homepage.
+        /// </summary>
+        internal static string TitleHomepage {
+            get {
+                return ResourceManager.GetString("TitleHomepage", resourceCulture);
             }
         }
         
