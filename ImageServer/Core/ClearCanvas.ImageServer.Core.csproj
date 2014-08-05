@@ -56,9 +56,13 @@
     <Compile Include="ApplySopRulesCommand.cs" />
     <Compile Include="AutoReconciler.cs" />
     <Compile Include="BasePreprocessor.cs" />
+    <Compile Include="Command\Archiving\ArchiveStudyCommand.cs" />
+    <Compile Include="Command\Archiving\CreateStudyZipCommand.cs" />
     <Compile Include="Command\DeleteDirectoryCommand.cs" />
     <Compile Include="Command\DeleteWorkQueueUidCommand.cs" />
+    <Compile Include="Command\Archiving\InsertFilesystemStudyStorageCommand.cs" />
     <Compile Include="Command\LockStudyCommand.cs" />
+    <Compile Include="Command\Archiving\PurgeStudyCommand.cs" />
     <Compile Include="Command\SaveDicomFileCommand.cs" />
     <Compile Include="Command\SaveXmlCommand.cs" />
     <Compile Include="Command\UpdateInstanceCommand.cs" />
