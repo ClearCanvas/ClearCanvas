@@ -1069,6 +1069,15 @@ namespace ClearCanvas.Ris.Client.Workflow {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Comments for {0}.
+        /// </summary>
+        internal static string FormatCommentsFor {
+            get {
+                return ResourceManager.GetString("FormatCommentsFor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} from the &quot;{1}&quot; worklist.
         /// </summary>
         internal static string FormatContinuousWorkflowDescription {
@@ -1112,6 +1121,15 @@ namespace ClearCanvas.Ris.Client.Workflow {
         internal static string FormatProtocolStatusText {
             get {
                 return ResourceManager.GetString("FormatProtocolStatusText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reported Procedure(s): {0}.
+        /// </summary>
+        internal static string FormatReportedProcedures {
+            get {
+                return ResourceManager.GetString("FormatReportedProcedures", resourceCulture);
             }
         }
         
@@ -1548,6 +1566,15 @@ namespace ClearCanvas.Ris.Client.Workflow {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Merge order(s) {0} into order {1}?.
+        /// </summary>
+        internal static string MessageMergeOrderConfirmation {
+            get {
+                return ResourceManager.GetString("MessageMergeOrderConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Merging these orders cannot be undone. Proceed?.
         /// </summary>
         internal static string MessageMergeOrders {
@@ -1681,6 +1708,24 @@ namespace ClearCanvas.Ris.Client.Workflow {
         internal static string MessageTranscriptionHasErrors {
             get {
                 return ResourceManager.GetString("MessageTranscriptionHasErrors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Undo merge order {0}.
+        /// </summary>
+        internal static string MessageUndoMergeOrder {
+            get {
+                return ResourceManager.GetString("MessageUndoMergeOrder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Un-merge all orders merged into {0}?.
+        /// </summary>
+        internal static string MessageUnmergeOrderConfirmation {
+            get {
+                return ResourceManager.GetString("MessageUnmergeOrderConfirmation", resourceCulture);
             }
         }
         

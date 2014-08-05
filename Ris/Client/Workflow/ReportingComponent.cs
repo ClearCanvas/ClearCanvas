@@ -629,7 +629,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 
 		public string ProceduresText
 		{
-			get { return "Reported Procedure(s): " + _proceduresText; }
+			get { return string.Format(SR.FormatReportedProcedures, _proceduresText); }
 		}
 
 		public bool ReportNextItem

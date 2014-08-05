@@ -431,6 +431,15 @@ namespace ClearCanvas.Ris.Application.Services {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This order does not have any orders to un-merge..
+        /// </summary>
+        internal static string InvalidRequest_NoOrdersToUnmerge {
+            get {
+                return ResourceManager.GetString("InvalidRequest_NoOrdersToUnmerge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Orders with a status of &apos;{0}&apos; cannot be replaced..
         /// </summary>
         internal static string InvalidRequest_OrderInStatusCannotBeReplaced {
@@ -445,6 +454,15 @@ namespace ClearCanvas.Ris.Application.Services {
         internal static string InvalidRequest_ReportCannotBeSubmittedForProcedure {
             get {
                 return ResourceManager.GetString("InvalidRequest_ReportCannotBeSubmittedForProcedure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A supervisor is required..
+        /// </summary>
+        internal static string InvalidRequest_SupervisorIsRequired {
+            get {
+                return ResourceManager.GetString("InvalidRequest_SupervisorIsRequired", resourceCulture);
             }
         }
         
