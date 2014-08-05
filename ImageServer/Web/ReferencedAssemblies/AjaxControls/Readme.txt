@@ -46,5 +46,22 @@ Steps to recompile this dll:
                             this._switchMode("months");
                         }
                         break;
+						
+						
+
+	- Find "_performLayout: function()"
+    - Change
+			case "years":
+						....
+						this._title.appendChild(document.createTextNode(this._convertToLocal(visibleDate).localeFormat("yyyy")))
+						
+						
+		to:
+			case "years":
+						....
+						var minRenderedYear = new Date(minYear, 0, 1);
+						var maxRenderedYear = new Date(minRenderedYear.getUTCFullYear() + 9, 0, 1);
+						this._title.appendChild(document.createTextNode(this._convertToLocal(minRenderedYear).localeFormat("yyyy") + "-" + 	this._convertToLocal(maxRenderedYear).localeFormat("yyyy")));
+			
 
 6. Rebuild the solution
