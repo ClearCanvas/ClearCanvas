@@ -27,11 +27,13 @@ using System.Configuration;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+using ClearCanvas.Common;
 using ClearCanvas.ImageServer.Web.Application.Controls;
 using ClearCanvas.ImageServer.Web.Application.Pages.Common;
 using ClearCanvas.ImageServer.Web.Common.Exceptions;
 using ClearCanvas.ImageServer.Web.Common.Security;
 using ClearCanvas.Web.Enterprise.Authentication;
+using Resources;
 
 namespace ClearCanvas.ImageServer.Web.Application
 {
@@ -128,6 +130,9 @@ namespace ClearCanvas.ImageServer.Web.Application
                     MenuCell.Width = Unit.Percentage(100);
                 }
             }
+
+
+           
         }
 
         private void AddIE6PngBugFixCSS()
@@ -152,6 +157,20 @@ namespace ClearCanvas.ImageServer.Web.Application
         protected void GlobalScriptManager_AsyncPostBackError(object sender, AsyncPostBackErrorEventArgs e)
         {
             GlobalScriptManager.AsyncPostBackErrorMessage = ExceptionHandler.ThrowAJAXException(e.Exception);
+        }
+
+        protected void OnMainMenuDataBound(object sender, EventArgs e)
+        {
+			// Yes this looks hacky
+            if (!LicenseInformation.IsFeatureAuthorized("ImageServer.QualityControl"))
+            {
+                var menuPath = string.Format("{0}/{1}", Titles.Admin, Titles.QCSummaryPageTitle);
+                var menu = MainMenu.FindItem(menuPath);
+                if (menu != null && menu.Parent!=null)
+                {
+                    menu.Parent.ChildItems.Remove(menu);
+                }
+            }
         }
     }
 }

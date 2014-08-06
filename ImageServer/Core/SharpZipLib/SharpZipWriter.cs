@@ -22,6 +22,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using ClearCanvas.ImageServer.Common;
@@ -82,6 +83,8 @@ namespace ClearCanvas.ImageServer.Core.SharpZipLib
 				return list;
 			}
 		}
+
+		public event EventHandler<ProgressUpdatedEventArgs> ProgressUpdated;
 
 		#endregion Public Properties
 

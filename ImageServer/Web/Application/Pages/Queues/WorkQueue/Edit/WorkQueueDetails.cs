@@ -42,7 +42,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.WorkQueue.Edit
 
         public DateTime ScheduledDateTime { get; set; }
 
-        public DateTime ExpirationTime { get; set; }
+        public DateTime? ExpirationTime { get; set; }
 
         public DateTime InsertTime { get; set; }
 
