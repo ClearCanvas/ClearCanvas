@@ -82,7 +82,7 @@ SR({
     OnBehalfOf: "%0 on behalf of %1",
     AcknowledgedAtTime: "at %0",
     AcknowledgedBy: "Acknowledged By:",
-    WaitingForAcknowledgement: "Waiting For Acknowledgement:"
+    WaitingForAcknowledgement: "Waiting For Acknowledgement:",
     ColumnHeadings: {
       OrderNote: "Order Note"
     }
@@ -331,7 +331,7 @@ SR({
   
   Visits: {
     VisitNumber: "Visit Number",
-    VisitStatus: "Visit Status"
+    VisitStatus: "Visit Status",
     Facility: "Facility",
     RoomNotSpecified: "Room Not Specified",
     CurrentLocation: "Current Location",
