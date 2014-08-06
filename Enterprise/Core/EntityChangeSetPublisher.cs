@@ -58,6 +58,14 @@ namespace ClearCanvas.Enterprise.Core
 		}
 
 		/// <summary>
+		/// Gets a value indicating whether this instance has any listeners.
+		/// </summary>
+		public bool HasListeners
+		{
+			get { return _listeners.Count > 0; }
+		}
+
+		/// <summary>
 		/// Publishes the pre-commit notification.
 		/// </summary>
 		/// <param name="args"></param>
