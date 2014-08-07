@@ -201,6 +201,9 @@ namespace ClearCanvas.ImageViewer
 				}
 			}
 
+			// return a KO error placeholder, otherwise the sop will be treated later as an unsupported sop class
+			if (images.Count == 0 && keyObjectDocument.DataSource is Sop)
+				images.Add(PlaceholderDisplaySetFactory.CreatePlaceholderImage((Sop) keyObjectDocument.DataSource, SR.MessageKeyObjectDeserializeFailure));
 			return images;
 		}
 

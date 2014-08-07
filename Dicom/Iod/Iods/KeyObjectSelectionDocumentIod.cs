@@ -22,7 +22,6 @@
 
 #endregion
 
-using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod.Modules;
 
 namespace ClearCanvas.Dicom.Iod.Iods
@@ -66,6 +65,11 @@ namespace ClearCanvas.Dicom.Iod.Iods
 			_keyObjectDocumentModule = new KeyObjectDocumentModuleIod(_dicomAttributeProvider);
 			_srDocumentContentModule = new SrDocumentContentModuleIod(_dicomAttributeProvider);
 			_sopCommonModule = new SopCommonModuleIod(_dicomAttributeProvider);
+		}
+
+		public IDicomAttributeProvider DataSource
+		{
+			get { return _dicomAttributeProvider; }
 		}
 
 		public PatientModuleIod Patient
