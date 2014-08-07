@@ -186,12 +186,12 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
             {
                 var toKey = DateTime.ParseExact(ToStudyDate, DateFormats, null);
                 var fromKey = DateTime.ParseExact(FromStudyDate, DateFormats, null);
-                criteria.ScheduledDateTime.Between(fromKey, toKey);
+				criteria.ScheduledDateTime.Between(fromKey, toKey.AddHours(24));
             }
             else if (!String.IsNullOrEmpty(ToStudyDate))
             {
                 var toKey = DateTime.ParseExact(ToStudyDate, DateFormats, null);
-                criteria.ScheduledDateTime.LessThanOrEqualTo(toKey);
+				criteria.InsertTime.LessThanOrEqualTo(toKey.AddHours(24));
             }
             else if (!String.IsNullOrEmpty(FromStudyDate))
             {
