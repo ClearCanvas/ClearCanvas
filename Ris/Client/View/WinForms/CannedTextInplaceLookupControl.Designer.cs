@@ -32,6 +32,8 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			this._suggestBox = new ClearCanvas.Desktop.View.WinForms.SuggestComboBox();
 			this._findButton = new System.Windows.Forms.Button();
 			this.label1 = new System.Windows.Forms.Label();
+			this._pnlTop = new System.Windows.Forms.Panel();
+			this._pnlTop.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// _suggestBox
@@ -58,17 +60,24 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			resources.ApplyResources(this.label1, "label1");
 			this.label1.Name = "label1";
 			// 
+			// _pnlTop
+			// 
+			this._pnlTop.Controls.Add(this.label1);
+			this._pnlTop.Controls.Add(this._findButton);
+			resources.ApplyResources(this._pnlTop, "_pnlTop");
+			this._pnlTop.Name = "_pnlTop";
+			// 
 			// CannedTextInplaceLookupControl
 			// 
 			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.Controls.Add(this.label1);
-			this.Controls.Add(this._findButton);
 			this.Controls.Add(this._suggestBox);
+			this.Controls.Add(this._pnlTop);
 			this.Name = "CannedTextInplaceLookupControl";
+			this._pnlTop.ResumeLayout(false);
+			this._pnlTop.PerformLayout();
 			this.ResumeLayout(false);
-			this.PerformLayout();
 
         }
 
@@ -77,5 +86,6 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 		private ClearCanvas.Desktop.View.WinForms.SuggestComboBox _suggestBox;
 		private System.Windows.Forms.Button _findButton;
 		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.Panel _pnlTop;
     }
 }
