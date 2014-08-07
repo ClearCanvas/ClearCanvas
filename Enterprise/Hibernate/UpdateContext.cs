@@ -118,8 +118,9 @@ namespace ClearCanvas.Enterprise.Hibernate
 				EventsHelper.Fire(PreCommit, this, EventArgs.Empty);
 
 				// publish pre-commit to listeners
+				var changeSetId = Guid.NewGuid().ToString("N");
 				var changeSetPublisher = new EntityChangeSetPublisher();
-				changeSetPublisher.PreCommit(new EntityChangeSetPreCommitArgs(new EntityChangeSet(_interceptor.FullChangeSet), this));
+				changeSetPublisher.PreCommit(new EntityChangeSetPreCommitArgs(changeSetId, new EntityChangeSet(_interceptor.FullChangeSet), this));
 
 				// flush session again, in case pre-commit listeners made modifications to entities in this context
 				FlushAndValidate();
@@ -131,7 +132,7 @@ namespace ClearCanvas.Enterprise.Hibernate
 				CommitTransaction();
 
 				// publish post-commit to listeners
-				changeSetPublisher.PostCommit(new EntityChangeSetPostCommitArgs(new EntityChangeSet(_interceptor.FullChangeSet)));
+				changeSetPublisher.PostCommit(new EntityChangeSetPostCommitArgs(changeSetId, new EntityChangeSet(_interceptor.FullChangeSet)));
 			}
 			catch (Exception e)
 			{
