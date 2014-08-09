@@ -133,6 +133,7 @@
     <Compile Include="Configuration\SettingsManagementComponent2.cs" />
     <Compile Include="Configuration\SettingsManagementLaunchTool.cs" />
     <Compile Include="Configuration\Tools\ActionModelsTool.cs" />
+    <Compile Include="FileExtensionFilter.cs" />
     <Compile Include="IDesktopAlertContext.cs" />
     <Compile Include="StockStartupActionTool.cs" />
     <Compile Include="Tables\ComboBoxCellEditor.cs" />

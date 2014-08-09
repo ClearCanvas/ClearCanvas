@@ -514,7 +514,64 @@ You can configure this item, but you do not have permission to use it.</value>
   <data name="MessageDisplayLanguageChangedRestartRequired" xml:space="preserve">
     <value>The application must restart in order to apply the new display language. Would you like to restart now?</value>
   </data>
-  <data name="MessageConfirmImportSettingsMetaData" xml:space="preserve">
-    <value>Import settings meta-data defined in locally installed plugins?</value>
+  <data name="LabelAllFilesFilter" xml:space="preserve">
+    <value>All Files (*.*)</value>
+  </data>
+  <data name="LabelDicomFilesFilter" xml:space="preserve">
+    <value>DICOM Files (*.dcm)</value>
+  </data>
+  <data name="LabelDicomDirFilter" xml:space="preserve">
+    <value>DICOM Directories (DICOMDIR)</value>
+  </data>
+  <data name="LabelTextFilesFilter" xml:space="preserve">
+    <value>Text Files (*.txt)</value>
+  </data>
+  <data name="LabelLogFilesFilter" xml:space="preserve">
+    <value>Log Files (*.log)</value>
+  </data>
+  <data name="LabelXmlFilesFilter" xml:space="preserve">
+    <value>XML Files (*.xml)</value>
+  </data>
+  <data name="LabelRtfFilesFilter" xml:space="preserve">
+    <value>RTF Files (*.rtf)</value>
+  </data>
+  <data name="LabelPdfFilesFilter" xml:space="preserve">
+    <value>PDF Files (*.pdf)</value>
+  </data>
+  <data name="LabelRawFilesFilter" xml:space="preserve">
+    <value>RAW Data Files (*.raw)</value>
+  </data>
+  <data name="LabelGifFilesFilter" xml:space="preserve">
+    <value>GIF Image Files (*.gif)</value>
+  </data>
+  <data name="LabelBmpFilesFilter" xml:space="preserve">
+    <value>Bitmap Image Files (*.bmp)</value>
+  </data>
+  <data name="LabelJpegFilesFilter" xml:space="preserve">
+    <value>JPEG Image Files (*.jpg, *.jif, *.jpe, *.jpeg)</value>
+  </data>
+  <data name="LabelPngFilesFilter" xml:space="preserve">
+    <value>PNG Image Files (*.png)</value>
+  </data>
+  <data name="LabelTiffFilesFilter" xml:space="preserve">
+    <value>TIFF Image Files (*.tif, *.tiff)</value>
+  </data>
+  <data name="LabelZipFilesFilter" xml:space="preserve">
+    <value>ZIP Archive Files (*.zip)</value>
+  </data>
+  <data name="LabelTarGzFilesFilter" xml:space="preserve">
+    <value>GZip Tarball Archive Files (*.tar.gz)</value>
+  </data>
+  <data name="LabelGzFilesFilter" xml:space="preserve">
+    <value>GZip Compressed Files (*.gz)</value>
+  </data>
+  <data name="LabelTarBz2FilesFilter" xml:space="preserve">
+    <value>BZip2 Tarball Archive Files (*.tar.bz2)</value>
+  </data>
+  <data name="LabelBz2FilesFilter" xml:space="preserve">
+    <value>BZip2 Compressed Files (*.bz2)</value>
+  </data>
+  <data name="LabelTarFilesFilter">
+    <value xml:space="preserve">Tarball Archive Files (*.tar)</value>
   </data>
 </root>
