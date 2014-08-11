@@ -112,7 +112,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 		}
 	}
 
-	[ExtensionOf(typeof(RegistrationWorkflowItemToolExtensionPoint))]
+	// [ExtensionOf(typeof(RegistrationWorkflowItemToolExtensionPoint))] // Disabled due to bug #12488
 	public class RegistrationUnmergeOrdersTool : UnmergeOrdersToolBase<RegistrationWorklistItemSummary, IRegistrationWorkflowItemToolContext>
 	{
 		protected override bool Execute(RegistrationWorklistItemSummary item)
@@ -127,7 +127,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 		}
 	}
 
-	[ExtensionOf(typeof(PerformingWorkflowItemToolExtensionPoint))]
+	// [ExtensionOf(typeof(PerformingWorkflowItemToolExtensionPoint))] // Disabled due to bug #12488
 	public class PerformingUnmergeOrdersTool : UnmergeOrdersToolBase<ModalityWorklistItemSummary, IPerformingWorkflowItemToolContext>
 	{
 		protected override bool Execute(ModalityWorklistItemSummary item)

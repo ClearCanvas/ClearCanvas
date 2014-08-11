@@ -835,6 +835,51 @@ namespace ClearCanvas.Healthcare {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Orders with different ordering facilities cannot be merged..
+        /// </summary>
+        internal static string MessageOrderCannotMergeDifferentOrderingFacilityOrders {
+            get {
+                return ResourceManager.GetString("MessageOrderCannotMergeDifferentOrderingFacilityOrders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Orders that belong to different patients cannot be merged..
+        /// </summary>
+        internal static string MessageOrderCannotMergeDifferentPatientOrders {
+            get {
+                return ResourceManager.GetString("MessageOrderCannotMergeDifferentPatientOrders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Downtime orders cannot be merged..
+        /// </summary>
+        internal static string MessageOrderCannotMergeDowntimeOrders {
+            get {
+                return ResourceManager.GetString("MessageOrderCannotMergeDowntimeOrders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Orders that have already been started cannot be merged..
+        /// </summary>
+        internal static string MessageOrderCannotMergeOrderAlreadyStarted {
+            get {
+                return ResourceManager.GetString("MessageOrderCannotMergeOrderAlreadyStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Orders with the same accession number cannot be merged..
+        /// </summary>
+        internal static string MessageOrderCannotMergeSameAccessionNumber {
+            get {
+                return ResourceManager.GetString("MessageOrderCannotMergeSameAccessionNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An active external practitioner requires exactly one default contact point..
         /// </summary>
         internal static string MessageValidateExternalPractitionerRequiresExactlyOneDefaultContactPoint {

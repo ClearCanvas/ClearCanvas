@@ -810,4 +810,19 @@
   <data name="OrderNoteOrdersMergeFrom" xml:space="preserve">
     <value>Orders {0} are merged into this order.</value>
   </data>
+  <data name="MessageOrderCannotMergeSameAccessionNumber" xml:space="preserve">
+    <value>Orders with the same accession number cannot be merged.</value>
+  </data>
+  <data name="MessageOrderCannotMergeOrderAlreadyStarted" xml:space="preserve">
+    <value>Orders that have already been started cannot be merged.</value>
+  </data>
+  <data name="MessageOrderCannotMergeDifferentPatientOrders" xml:space="preserve">
+    <value>Orders that belong to different patients cannot be merged.</value>
+  </data>
+  <data name="MessageOrderCannotMergeDifferentOrderingFacilityOrders" xml:space="preserve">
+    <value>Orders with different ordering facilities cannot be merged.</value>
+  </data>
+  <data name="MessageOrderCannotMergeDowntimeOrders" xml:space="preserve">
+    <value>Downtime orders cannot be merged.</value>
+  </data>
 </root>
