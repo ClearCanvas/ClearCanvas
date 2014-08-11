@@ -35,18 +35,15 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 	public class Study : IStudy
 	{
 		private readonly StudyXml _xml;
-		private readonly IDicomFileLoader _headerProvider;
+		private readonly IDicomFileLoader _dicomFileLoader;
 		private IList<ISeries> _series;
+		private string[] _sopClassesInStudy;
+		private string[] _modalitiesInStudy;
 
-		public Study(StudyXml xml, IDicomFileLoader headerProvider)
+		public Study(StudyXml xml, IDicomFileLoader dicomFileLoader)
 		{
 			_xml = xml;
-			_headerProvider = headerProvider;
-		}
-
-		internal IDicomFileLoader HeaderProvider
-		{
-			get { return _headerProvider; }
+			_dicomFileLoader = dicomFileLoader;
 		}
 
 		public ISopInstance FirstSopInstance
@@ -58,7 +55,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 
 		public IList<ISeries> Series
 		{
-			get { return _series ?? (_series = _xml.Select(x => (ISeries) new Series(x, this)).ToList()); }
+			get { return _series ?? (_series = _xml.Select(x => (ISeries)new Series(x, this)).ToList()); }
 		}
 
 		#endregion
@@ -74,9 +71,14 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 		{
 			get
 			{
-				return (from series in Series
-				        from sop in series.SopInstances
-				        select sop.SopClassUid).Distinct().ToArray();
+				if (_sopClassesInStudy != null)
+					return _sopClassesInStudy;
+
+				_sopClassesInStudy = (from series in Series
+									  from sop in series.SopInstances
+									  select sop.SopClassUid).Distinct().ToArray();
+
+				return _sopClassesInStudy;
 			}
 		}
 
@@ -84,9 +86,12 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 		{
 			get
 			{
-				var list = Series.Select(s => s.Modality).Distinct().ToList();
-				list.Sort();
-				return list.ToArray();
+				if (_modalitiesInStudy != null)
+					return _modalitiesInStudy;
+
+				_modalitiesInStudy = Series.Select(s => s.Modality).Distinct().OrderBy(s => s).ToArray();
+
+				return _modalitiesInStudy;
 			}
 		}
 
@@ -255,6 +260,11 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 		}
 
 		#endregion
+
+		internal IDicomFileLoader DicomFileLoader
+		{
+			get { return _dicomFileLoader; }
+		}
 
 		private string GetSequenceValue(uint sequenceTag, uint itemTag)
 		{

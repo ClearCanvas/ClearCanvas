@@ -28,39 +28,37 @@ using ClearCanvas.Dicom.Iod;
 
 namespace ClearCanvas.Dicom.Utilities.Xml.Study
 {
-    /// <summary>
-    /// Represents an <see cref="ISeries"/> whose main source of data is a <see cref="StudyXml"/> document.
-    /// </summary>
+	/// <summary>
+	/// Represents an <see cref="ISeries"/> whose main source of data is a <see cref="StudyXml"/> document.
+	/// </summary>
 	//JR: made this class public so that Specifications using Jscript.NET can operate on it (JScript.NET can't see members on internal classes)
 	public class Series : ISeries
-    {
-        private readonly SeriesXml _xml;
-        private IList<ISopInstance> _sopInstances;
+	{
+		private readonly SeriesXml _xml;
+		private IList<ISopInstance> _sopInstances;
 
-        public Series(SeriesXml xml, Study parent)
-        {
-            _xml = xml;
-            ParentStudy = parent;
-        }
+		internal Series(SeriesXml xml, Study parent)
+		{
+			_xml = xml;
+			ParentStudy = parent;
+		}
 
-        internal Study ParentStudy { get; private set; }
+		#region ISeries Members
 
-        IStudy ISeries.ParentStudy { get { return ParentStudy; } }
+		IStudy ISeries.ParentStudy { get { return ParentStudy; } }
 
-        #region ISeries Members
+		public IList<ISopInstance> SopInstances
+		{
+			get
+			{
+				return _sopInstances ?? (_sopInstances = _xml.Select(s => (ISopInstance)new SopInstance(s, this)).ToList());
+			}
+		}
 
-        public IList<ISopInstance> SopInstances
-        {
-            get
-            {
-                return _sopInstances ?? (_sopInstances = _xml.Select(s => (ISopInstance) new SopInstance(s, this)).ToList());
-            }
-        }
-
-    	public string StationName
-    	{
+		public string StationName
+		{
 			get { return SopInstances.First().GetAttribute(DicomTags.StationName).ToString(); }
-    	}
+		}
 
 		public string Manufacturer
 		{
@@ -87,40 +85,42 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 			get { return SopInstances.First().GetAttribute(DicomTags.InstitutionalDepartmentName).ToString(); }
 		}
 
-    	#endregion
+		#endregion
 
-        #region ISeriesData Members
+		#region ISeriesData Members
 
-        public string StudyInstanceUid
-        {
-            get { return ParentStudy.StudyInstanceUid; }
-        }
+		public string StudyInstanceUid
+		{
+			get { return ParentStudy.StudyInstanceUid; }
+		}
 
-        public string SeriesInstanceUid
-        {
-            get { return _xml.SeriesInstanceUid; }
-        }
+		public string SeriesInstanceUid
+		{
+			get { return _xml.SeriesInstanceUid; }
+		}
 
-        public string Modality
-        {
-            get { return SopInstances.First().GetAttribute(DicomTags.Modality).ToString(); }
-        }
+		public string Modality
+		{
+			get { return SopInstances.First().GetAttribute(DicomTags.Modality).ToString(); }
+		}
 
-        public string SeriesDescription
-        {
-            get { return SopInstances.First().GetAttribute(DicomTags.SeriesDescription).ToString(); }
-        }
+		public string SeriesDescription
+		{
+			get { return SopInstances.First().GetAttribute(DicomTags.SeriesDescription).ToString(); }
+		}
 
-        public int SeriesNumber
-        {
-            get { return SopInstances.First().GetAttribute(DicomTags.SeriesNumber).GetInt32(0,0); }
-        }
+		public int SeriesNumber
+		{
+			get { return SopInstances.First().GetAttribute(DicomTags.SeriesNumber).GetInt32(0, 0); }
+		}
 
-        public int? NumberOfSeriesRelatedInstances
-        {
-            get { return SopInstances.Count; }
-        }
+		public int? NumberOfSeriesRelatedInstances
+		{
+			get { return SopInstances.Count; }
+		}
 
-        #endregion
-    }
+		#endregion
+
+		internal Study ParentStudy { get; private set; }
+	}
 }
