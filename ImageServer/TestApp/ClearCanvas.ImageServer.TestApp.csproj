@@ -64,14 +64,17 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
@@ -109,6 +112,17 @@
     </Compile>
     <Compile Include="ImageStreamingStressTest.Designer.cs">
       <DependentUpon>ImageStreamingStressTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PerfMon\ImageServerDB.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ImageServerDB.dbml</DependentUpon>
+    </Compile>
+    <Compile Include="PerfMon\WorkQueuePerfMon.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PerfMon\WorkQueuePerfMon.Designer.cs">
+      <DependentUpon>WorkQueuePerfMon.cs</DependentUpon>
     </Compile>
     <Compile Include="ProductVerificationTest.cs">
       <SubType>Form</SubType>
@@ -195,6 +209,12 @@
       <SubType>Designer</SubType>
       <DependentUpon>ImageStreamingStressTest.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="PerfMon\ImageServerDB.dbml.layout">
+      <DependentUpon>ImageServerDB.dbml</DependentUpon>
+    </None>
+    <EmbeddedResource Include="PerfMon\WorkQueuePerfMon.resx">
+      <DependentUpon>WorkQueuePerfMon.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ProductVerificationTest.resx">
       <DependentUpon>ProductVerificationTest.cs</DependentUpon>
     </EmbeddedResource>
@@ -253,6 +273,11 @@
     </None>
     <None Include="ImageServerDataSet.xss">
       <DependentUpon>ImageServerDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="PerfMon\ImageServerDB.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>ImageServerDB.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </None>
     <None Include="PostBuild_dist.proj" />
     <None Include="Properties\Settings.settings">
@@ -378,6 +403,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Streaming\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

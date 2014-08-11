@@ -64,6 +64,7 @@ namespace ClearCanvas.ImageServer.TestApp
 			this.DatabaseGenerator = new System.Windows.Forms.Button();
 			this.ProductVerify = new System.Windows.Forms.Button();
 			this._archiveTestBtn = new System.Windows.Forms.Button();
+			this._perfMon = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// TestRule
@@ -175,6 +176,16 @@ namespace ClearCanvas.ImageServer.TestApp
 			this._archiveTestBtn.UseVisualStyleBackColor = true;
 			this._archiveTestBtn.Click += new System.EventHandler(this._archiveTestBtn_Click);
 			// 
+			// _perfMon
+			// 
+			this._perfMon.Location = new System.Drawing.Point(487, 135);
+			this._perfMon.Name = "_perfMon";
+			this._perfMon.Size = new System.Drawing.Size(183, 59);
+			this._perfMon.TabIndex = 2;
+			this._perfMon.Text = "Performance Monitor";
+			this._perfMon.UseVisualStyleBackColor = true;
+			this._perfMon.Click += new System.EventHandler(this._perfMon_Click);
+			// 
 			// Startup
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -185,6 +196,7 @@ namespace ClearCanvas.ImageServer.TestApp
 			this.Controls.Add(this.UsageTracking);
 			this.Controls.Add(this.button1);
 			this.Controls.Add(this.ExtremeStreaming);
+			this.Controls.Add(this._perfMon);
 			this.Controls.Add(this._archiveTestBtn);
 			this.Controls.Add(this.RandomImageSender);
 			this.Controls.Add(this.TestEditStudyButton);
@@ -210,5 +222,6 @@ namespace ClearCanvas.ImageServer.TestApp
         private System.Windows.Forms.Button DatabaseGenerator;
         private System.Windows.Forms.Button ProductVerify;
 		private System.Windows.Forms.Button _archiveTestBtn;
+		private System.Windows.Forms.Button _perfMon;
     }
 }
