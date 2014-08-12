@@ -53,6 +53,7 @@ public partial class WorkQueueTypeEnum : ServerEnum
       private static readonly WorkQueueTypeEnum _ProcessDuplicate = GetEnum("ProcessDuplicate");
       private static readonly WorkQueueTypeEnum _CleanupDuplicate = GetEnum("CleanupDuplicate");
       private static readonly WorkQueueTypeEnum _ExternalEdit = GetEnum("ExternalEdit");
+      private static readonly WorkQueueTypeEnum _StudyAutoRoute = GetEnum("StudyAutoRoute");
       #endregion
 
       #region Public Static Properties
@@ -174,6 +175,13 @@ public partial class WorkQueueTypeEnum : ServerEnum
       public static WorkQueueTypeEnum ExternalEdit
       {
           get { return _ExternalEdit; }
+      }
+      /// <summary>
+      /// DICOM Auto-route request of a Study.
+      /// </summary>
+      public static WorkQueueTypeEnum StudyAutoRoute
+      {
+          get { return _StudyAutoRoute; }
       }
 
       #endregion

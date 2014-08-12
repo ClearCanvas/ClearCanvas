@@ -504,6 +504,28 @@ GO
 IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
 GO
 
+PRINT N'Add new StudyAutoRoute WorkQueueTypeEnum and WorkQueueTypeProperties'
+GO
+
+INSERT INTO [ImageServer].[dbo].[WorkQueueTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),117,'StudyAutoRoute','Study Auto Route','DICOM Auto-route request of a Study.')
+GO
+  -- StudyAutoRoute
+INSERT INTO [ImageServer].[dbo].[WorkQueueTypeProperties]
+           ([WorkQueueTypeEnum],[WorkQueuePriorityEnum],[MemoryLimited],[AlertFailedWorkQueue],
+           [MaxFailureCount],[ProcessDelaySeconds],[FailureDelaySeconds],[DeleteDelaySeconds],
+           [PostponeDelaySeconds],[ExpireDelaySeconds],[MaxBatchSize], [QueueStudyStateEnum], [QueueStudyStateOrder],
+           [ReadLock],[WriteLock])
+     VALUES
+           (117,300,1,1,3,10,180,60,120,15,-1,101,0,1,0)
+GO
+
+IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
 
 IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
 GO
