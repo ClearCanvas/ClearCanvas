@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using ClearCanvas.Common;
 
 namespace ClearCanvas.Dicom
@@ -41,11 +42,12 @@ namespace ClearCanvas.Dicom
 	/// <summary>
 	/// This class contains transfer syntax definitions.
 	/// </summary>
-	public partial class TransferSyntax
+	public partial class TransferSyntax : IEquatable<TransferSyntax>
 	{
-		// Internal members
+		private static readonly object _updateLock = new object();
 		private static readonly Dictionary<String, TransferSyntax> _transferSyntaxes = new Dictionary<String, TransferSyntax>();
-		private static readonly Dictionary<String, TransferSyntax> _privateTransferSyntaxes = new Dictionary<String, TransferSyntax>();
+		private static Dictionary<String, TransferSyntax> _privateTransferSyntaxes = new Dictionary<String, TransferSyntax>();
+
 		private readonly bool _littleEndian;
 		private readonly bool _encapsulated;
 		private readonly bool _explicitVr;
@@ -68,6 +70,21 @@ namespace ClearCanvas.Dicom
 			_deflate = bDeflate;
 			_lossy = bLossy;
 			_lossless = bLossless;
+		}
+
+		public bool Equals(TransferSyntax other)
+		{
+			return !ReferenceEquals(other, null) && _uid == other._uid;
+		}
+
+		public override bool Equals(object obj)
+		{
+			return Equals(obj as TransferSyntax);
+		}
+
+		public override int GetHashCode()
+		{
+			return _uid.GetHashCode();
 		}
 
 		///<summary>Override to the ToString() method, returns the name of the transfer syntax.</summary>
@@ -103,13 +120,7 @@ namespace ClearCanvas.Dicom
 		///<summary>Property representing the Endian enumerated value for the transfer syntax.</summary>
 		public Endian Endian
 		{
-			get
-			{
-				if (_littleEndian)
-					return Endian.Little;
-
-				return Endian.Big;
-			}
+			get { return _littleEndian ? Endian.Little : Endian.Big; }
 		}
 
 		///<summary>Property representing if the transfer syntax is encoded as encapsulated.</summary>
@@ -142,6 +153,16 @@ namespace ClearCanvas.Dicom
 			get { return _deflate; }
 		}
 
+		public static bool operator ==(TransferSyntax x, TransferSyntax y)
+		{
+			return Equals(x, y);
+		}
+
+		public static bool operator !=(TransferSyntax x, TransferSyntax y)
+		{
+			return !Equals(x, y);
+		}
+
 		/// <summary>
 		/// Gets the <see cref="TransferSyntax"/> instance for a specific transfer syntax UID.
 		/// </summary>
@@ -150,7 +171,6 @@ namespace ClearCanvas.Dicom
 			TransferSyntax theSyntax;
 			if (!_transferSyntaxes.TryGetValue(uid, out theSyntax) && !_privateTransferSyntaxes.TryGetValue(uid, out theSyntax))
 				return null;
-
 			return theSyntax;
 		}
 
@@ -179,7 +199,13 @@ namespace ClearCanvas.Dicom
 			Platform.CheckForNullReference(transferSyntax, "transferSyntax");
 			Platform.CheckTrue(!_transferSyntaxes.ContainsKey(transferSyntax.UidString), "Cannot redefine a standard transfer syntax.");
 			Platform.CheckTrue(!_privateTransferSyntaxes.ContainsKey(transferSyntax.UidString), "The specified private transfer syntax UID is already defined.");
-			_privateTransferSyntaxes.Add(transferSyntax.UidString, transferSyntax);
+
+			lock (_updateLock)
+			{
+				var transferSyntaxes = new Dictionary<string, TransferSyntax>(_privateTransferSyntaxes);
+				transferSyntaxes.Add(transferSyntax.UidString, transferSyntax);
+				Interlocked.Exchange(ref _privateTransferSyntaxes, transferSyntaxes);
+			}
 		}
 
 		/// <summary>
@@ -189,7 +215,13 @@ namespace ClearCanvas.Dicom
 		public static void UnregisterTransferSyntax(TransferSyntax transferSyntax)
 		{
 			Platform.CheckForNullReference(transferSyntax, "transferSyntax");
-			_privateTransferSyntaxes.Remove(transferSyntax.UidString);
+
+			lock (_updateLock)
+			{
+				var transferSyntaxes = new Dictionary<string, TransferSyntax>(_privateTransferSyntaxes);
+				_privateTransferSyntaxes.Remove(transferSyntax.UidString);
+				Interlocked.Exchange(ref _privateTransferSyntaxes, transferSyntaxes);
+			}
 		}
 	}
 }

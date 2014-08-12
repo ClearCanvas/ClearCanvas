@@ -24,6 +24,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using ClearCanvas.Common;
 
 namespace ClearCanvas.Dicom
 {
@@ -42,8 +45,11 @@ namespace ClearCanvas.Dicom
 	/// <summary>
 	/// This class contains defines for all DICOM SOP Classes.
 	/// </summary>
-	public partial class SopClass
+	public partial class SopClass : IEquatable<SopClass>
 	{
+		private static readonly object _updateLock = new object();
+		private static Dictionary<String, SopClass> _sopList = new Dictionary<String, SopClass>();
+
 		private readonly String _sopName;
 		private readonly String _sopUid;
 		private readonly SopClassCategory _category;
@@ -105,17 +111,44 @@ namespace ClearCanvas.Dicom
 			_category = category;
 		}
 
-		private static readonly Dictionary<String, SopClass> _sopList = new Dictionary<String, SopClass>();
+		public bool Equals(SopClass other)
+		{
+			return !ReferenceEquals(other, null) && _sopUid == other._sopUid;
+		}
+
+		public override bool Equals(object obj)
+		{
+			return Equals(obj as SopClass);
+		}
+
+		public override int GetHashCode()
+		{
+			return _sopUid.GetHashCode();
+		}
 
 		/// <summary>Override that displays the name of the SOP Class.</summary>
 		public override string ToString()
 		{
-			return this.Name;
+			return Name;
 		}
 
+		public static bool operator ==(SopClass x, SopClass y)
+		{
+			return Equals(x, y);
+		}
+
+		public static bool operator !=(SopClass x, SopClass y)
+		{
+			return !Equals(x, y);
+		}
+
+		/// <summary>
+		/// Gets a list of all the registered SOP Classes.
+		/// </summary>
+		/// <returns></returns>
 		public static IList<SopClass> GetRegisteredSopClasses()
 		{
-			return new List<SopClass>(_sopList.Values).AsReadOnly();
+			return _sopList.Values.ToList();
 		}
 
 		/// <summary>Retrieve a SopClass object associated with the Uid.</summary>
@@ -123,18 +156,51 @@ namespace ClearCanvas.Dicom
 		{
 			SopClass theSop;
 			if (!_sopList.TryGetValue(uid, out theSop))
+				theSop = new SopClass(string.Format("Generated: '{0}'", uid), uid, SopClassCategory.Uncategorized);
+			return theSop;
+		}
+
+		/// <summary>
+		/// Registers a private SOP Class.
+		/// </summary>
+		/// <param name="sopClass">The private SOP Class to register.</param>
+		/// <returns></returns>
+		public static SopClass RegisterSopClass(SopClass sopClass)
+		{
+			Platform.CheckForNullReference("sopClass", "sopClass");
+
+			SopClass theSop;
+			if (!_sopList.TryGetValue(sopClass.Uid, out theSop))
 			{
-				var newSop = new SopClass(string.Format("Generated: '{0}'", uid), uid, SopClassCategory.Uncategorized);
-				theSop = RegisterSopClass(newSop);
+				lock (_updateLock)
+				{
+					var sopClasses = new Dictionary<string, SopClass>(_sopList);
+					sopClasses.Add(sopClass.Uid, theSop = sopClass);
+					Interlocked.Exchange(ref _sopList, sopClasses);
+				}
 			}
 			return theSop;
 		}
 
-		public static SopClass RegisterSopClass(SopClass sopClass)
+		/// <summary>
+		/// Unregisters a private SOP Class.
+		/// </summary>
+		/// <param name="sopClass">The private SOP Class to unregister.</param>
+		/// <returns></returns>
+		public static SopClass UnregisterSopClass(SopClass sopClass)
 		{
+			Platform.CheckForNullReference("sopClass", "sopClass");
+
 			SopClass theSop;
-			if (!_sopList.TryGetValue(sopClass.Uid, out theSop))
-				_sopList.Add(sopClass.Uid, theSop = sopClass);
+			if (_sopList.TryGetValue(sopClass.Uid, out theSop))
+			{
+				lock (_updateLock)
+				{
+					var sopClasses = new Dictionary<string, SopClass>(_sopList);
+					sopClasses.Remove(sopClass.Uid);
+					Interlocked.Exchange(ref _sopList, sopClasses);
+				}
+			}
 			return theSop;
 		}
 	}
