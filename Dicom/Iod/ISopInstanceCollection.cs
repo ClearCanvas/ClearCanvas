@@ -27,6 +27,9 @@ using System.Collections.Generic;
 
 namespace ClearCanvas.Dicom.Iod
 {
+	/// <summary>
+	/// Represents the collection of SOP instances in a <see cref="ISeries"/>.
+	/// </summary>
 	public interface ISopInstanceCollection : IEnumerable<ISopInstance>
 	{
 		/// <summary>

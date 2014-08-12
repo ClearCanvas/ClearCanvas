@@ -27,6 +27,9 @@ using System.Collections.Generic;
 
 namespace ClearCanvas.Dicom.Iod
 {
+	/// <summary>
+	/// Represents the collection of series in a <see cref="IStudy"/>.
+	/// </summary>
 	public interface ISeriesCollection : IEnumerable<ISeries>
 	{
 		/// <summary>
