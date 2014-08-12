@@ -22,6 +22,8 @@
 
 #endregion
 
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ClearCanvas.Dicom.Iod;
@@ -34,10 +36,73 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 	//JR: made this class public so that Specifications using Jscript.NET can operate on it (JScript.NET can't see members on internal classes)
 	public class Series : ISeries
 	{
+		private class SopInstanceCollection : ISopInstanceCollection
+		{
+			private readonly Series _owner;
+
+			public SopInstanceCollection(Series owner)
+			{
+				_owner = owner;
+			}
+
+			public IEnumerator<ISopInstance> GetEnumerator()
+			{
+				return Xml.Select(_owner.GetSopInstance).GetEnumerator();
+			}
+
+			IEnumerator IEnumerable.GetEnumerator()
+			{
+				return GetEnumerator();
+			}
+
+			public int Count
+			{
+				get { return Xml.NumberOfSeriesRelatedInstances; }
+			}
+
+			public bool Contains(string sopInstanceUid)
+			{
+				return Xml[sopInstanceUid] != null;
+			}
+
+			public ISopInstance Get(string sopInstanceUid)
+			{
+				var seriesXml = Xml[sopInstanceUid];
+				if (seriesXml == null)
+					throw new ArgumentException("Invalid value for series instance UID.");
+
+				return _owner.GetSopInstance(seriesXml);
+			}
+
+			public ISopInstance this[string sopInstanceUid]
+			{
+				get { return Get(sopInstanceUid); }
+			}
+
+			public bool TryGet(string sopInstanceUid, out ISopInstance series)
+			{
+				var seriesXml = Xml[sopInstanceUid];
+				if (seriesXml != null)
+				{
+					series = _owner.GetSopInstance(seriesXml);
+					return true;
+				}
+				series = null;
+				return false;
+			}
+
+			private SeriesXml Xml
+			{
+				get { return _owner._xml; }
+			}
+		}
+
+
 		private readonly SeriesXml _xml;
 		private readonly Study _parentStudy;
 		private readonly IDicomFileLoader _dicomFileLoader;
 		private readonly SopInstance _firstSopInstance;
+		private readonly SopInstanceCollection _sopInstanceCollection;
 
 		internal Series(SeriesXml xml, Study parent, IDicomFileLoader dicomFileLoader)
 		{
@@ -45,6 +110,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 			_parentStudy = parent;
 			_dicomFileLoader = dicomFileLoader;
 			_firstSopInstance = GetSopInstance(_xml.First());
+			_sopInstanceCollection = new SopInstanceCollection(this);
 		}
 
 		#region ISeries Members
@@ -54,25 +120,9 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 			get { return _parentStudy; }
 		}
 
-		public int SopInstanceCount
+		public ISopInstanceCollection SopInstances
 		{
-			get { return _xml.NumberOfSeriesRelatedInstances; }
-		}
-
-		public ISopInstance FirstSopInstance
-		{
-			get { return _firstSopInstance; }
-		}
-
-		public ISopInstance GetSopInstance(string sopInstanceUid)
-		{
-			var instanceXml = _xml[sopInstanceUid];
-			return instanceXml == null ? null : GetSopInstance(instanceXml);
-		}
-
-		public IEnumerable<ISopInstance> EnumerateSopInstances()
-		{
-			return _xml.Select(GetSopInstance);
+			get { return _sopInstanceCollection; }
 		}
 
 		public string StationName

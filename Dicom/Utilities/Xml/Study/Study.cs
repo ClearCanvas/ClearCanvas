@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ClearCanvas.Dicom.Iod;
@@ -35,11 +36,75 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 	/// </summary>
 	public class Study : IStudy
 	{
+		private class SeriesCollection : ISeriesCollection
+		{
+			private readonly Study _owner;
+
+			public SeriesCollection(Study owner)
+			{
+				_owner = owner;
+			}
+
+			public IEnumerator<ISeries> GetEnumerator()
+			{
+				return Xml.Select(_owner.GetSeries).GetEnumerator();
+			}
+
+			IEnumerator IEnumerable.GetEnumerator()
+			{
+				return GetEnumerator();
+			}
+
+			public int Count
+			{
+				get { return Xml.NumberOfStudyRelatedSeries; }
+			}
+
+			public bool Contains(string seriesInstanceUid)
+			{
+				return Xml.Contains(seriesInstanceUid);
+			}
+
+			public ISeries Get(string seriesInstanceUid)
+			{
+				var seriesXml = Xml[seriesInstanceUid];
+				if(seriesXml == null)
+					throw new ArgumentException("Invalid value for series instance UID.");
+
+				return _owner.GetSeries(seriesXml);
+			}
+
+			public ISeries this[string seriesInstanceUid]
+			{
+				get { return Get(seriesInstanceUid); }
+			}
+
+			public bool TryGet(string seriesInstanceUid, out ISeries series)
+			{
+				var seriesXml = Xml[seriesInstanceUid];
+				if(seriesXml != null)
+				{
+					series = _owner.GetSeries(seriesXml);
+					return true;
+				}
+				series = null;
+				return false;
+			}
+
+			private StudyXml Xml
+			{
+				get { return _owner._xml; }
+			}
+		}
+
+
+
 		private readonly string _studyInstanceUid;
 		private readonly StudyXml _xml;
 		private readonly IDicomFileLoader _dicomFileLoader;
 		private readonly ISeries _firstSeries;
 		private readonly ISopInstance _firstSopInstance;
+		private readonly SeriesCollection _seriesCollection;
 
 		public Study(string studyInstanceUid, StudyXml xml, IDicomFileLoader dicomFileLoader)
 		{
@@ -47,8 +112,9 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 			_xml = xml;
 
 			_firstSeries = GetSeries(xml.First());
-			_firstSopInstance = _firstSeries.FirstSopInstance;
+			_firstSopInstance = _firstSeries.SopInstances.First();
 			_dicomFileLoader = dicomFileLoader;
+			_seriesCollection = new SeriesCollection(this);
 		}
 
 		public IDicomFileLoader DicomFileLoader
@@ -58,25 +124,9 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 
 		#region Implementation of IStudy
 
-		public int SeriesCount
+		public ISeriesCollection Series
 		{
-			get { return _xml.NumberOfStudyRelatedSeries; }
-		}
-
-		public ISeries GetSeries(string seriesInstanceUid)
-		{
-			var seriesXml = _xml[seriesInstanceUid];
-			return seriesXml == null ? null : GetSeries(seriesXml);
-		}
-
-		public ISeries FirstSeries
-		{
-			get { return _firstSeries; }
-		}
-
-		public IEnumerable<ISeries> EnumerateSeries()
-		{
-			return _xml.Select(GetSeries);
+			get { return _seriesCollection; }
 		}
 
 		public ISopInstance FirstSopInstance

@@ -35,27 +35,9 @@ namespace ClearCanvas.Dicom.Iod
 	public interface IStudy : IStudyData, IPatientData
 	{
 		/// <summary>
-		/// Gets the total number of series in this study.
+		/// Gets the collection of series in this study.
 		/// </summary>
-		int SeriesCount { get; }
-
-		/// <summary>
-		/// Gets the specified series, or null if the series does not exist.
-		/// </summary>
-		/// <param name="seriesInstanceUid"></param>
-		/// <returns></returns>
-		ISeries GetSeries(string seriesInstanceUid);
-
-		/// <summary>
-		/// Gets the first series in this study.
-		/// </summary>
-		ISeries FirstSeries { get; }
-
-		/// <summary>
-		/// Enumerates the series in this study.
-		/// </summary>
-		/// <returns></returns>
-		IEnumerable<ISeries> EnumerateSeries();
+		ISeriesCollection Series { get; }
 
 		/// <summary>
 		/// Gets the first SOP instance in this study.

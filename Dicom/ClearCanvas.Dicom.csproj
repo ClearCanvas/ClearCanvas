@@ -236,7 +236,9 @@
     <Compile Include="Iod\Iods\RawDataIod.cs" />
     <Compile Include="Iod\Iods\ScImageIod.cs" />
     <Compile Include="Iod\ISeries.cs" />
+    <Compile Include="Iod\ISeriesCollection.cs" />
     <Compile Include="Iod\ISopInstance.cs" />
+    <Compile Include="Iod\ISopInstanceCollection.cs" />
     <Compile Include="Iod\Macros\CommonCtMrImageDescriptionMacro.cs" />
     <Compile Include="Iod\Macros\ExposureIndexMacro.cs" />
     <Compile Include="Iod\Macros\XRay3DGeneralPerProjectionAcquisitionMacro.cs" />
