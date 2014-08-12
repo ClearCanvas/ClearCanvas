@@ -22,8 +22,8 @@
 
 #endregion
 
+using System.Linq;
 #if UNIT_TESTS
-
 using NUnit.Framework;
 
 namespace ClearCanvas.Dicom.Tests
@@ -37,6 +37,24 @@ namespace ClearCanvas.Dicom.Tests
 			const string uid = "1.2.3";
 			var retrieved = TransferSyntax.GetTransferSyntax(uid);
 			Assert.AreEqual(null, retrieved);
+		}
+
+		[Test]
+		public void TestRegister()
+		{
+			const string uid = "1.2.3";
+			var registered = new TransferSyntax("a", "1.2.3", true, true, true, false, false, true);
+
+			TransferSyntax.RegisterTransferSyntax(registered);
+			Assert.IsTrue(TransferSyntax.TransferSyntaxes.Contains(registered));
+
+			var retrieved = TransferSyntax.GetTransferSyntax(uid);
+			Assert.AreEqual(uid, retrieved.UidString);
+
+			TransferSyntax.UnregisterTransferSyntax(registered);
+			Assert.IsFalse(TransferSyntax.TransferSyntaxes.Contains(registered));
+
+			TransferSyntax.UnregisterTransferSyntax(registered);
 		}
 
 		[Test]

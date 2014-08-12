@@ -81,8 +81,17 @@ namespace ClearCanvas.Dicom.Tests
 			Assert.AreEqual(uid, retrieved.Uid);
 
 			var reregistered = new SopClass("Bleeding Edge Image", uid, SopClassCategory.Image);
+			Assert.IsTrue(SopClass.GetRegisteredSopClasses().Contains(reregistered));
+
 			reregistered = SopClass.RegisterSopClass(reregistered);
 			Assert.IsTrue(ReferenceEquals(registered, reregistered));
+
+			var unregistered = SopClass.UnregisterSopClass(registered);
+			Assert.IsTrue(ReferenceEquals(registered, unregistered));
+			Assert.IsFalse(SopClass.GetRegisteredSopClasses().Contains(registered));
+
+			unregistered = SopClass.UnregisterSopClass(registered);
+			Assert.IsNull(unregistered);
 		}
 
 		[Test]
@@ -91,6 +100,7 @@ namespace ClearCanvas.Dicom.Tests
 			const string uid = "1.2.3";
 			var retrieved = SopClass.GetSopClass(uid);
 			Assert.AreEqual(uid, retrieved.Uid);
+			Assert.IsTrue(!SopClass.GetRegisteredSopClasses().Contains(retrieved));
 		}
 
 		[Test]

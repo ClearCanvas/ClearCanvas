@@ -219,7 +219,7 @@ namespace ClearCanvas.Dicom
 			lock (_updateLock)
 			{
 				var transferSyntaxes = new Dictionary<string, TransferSyntax>(_privateTransferSyntaxes);
-				_privateTransferSyntaxes.Remove(transferSyntax.UidString);
+				transferSyntaxes.Remove(transferSyntax.UidString);
 				Interlocked.Exchange(ref _privateTransferSyntaxes, transferSyntaxes);
 			}
 		}
