@@ -40,7 +40,7 @@ namespace ClearCanvas.Dicom
     /// value respectively.
     /// </para>
     /// </remarks>
-    public abstract class DicomAttribute
+    public abstract class DicomAttribute : IReadOnlyDicomAttribute
     {
         #region Private Members
 
@@ -62,7 +62,8 @@ namespace ClearCanvas.Dicom
         /// <returns>true if the attributes are equal.</returns>
         public abstract override bool Equals(object obj);
         public abstract override int GetHashCode();
-        public abstract bool IsNull { get; }
+
+    	public abstract bool IsNull { get; }
         public abstract bool IsEmpty { get; }
         public abstract Object Values { get; set; }
         public abstract DicomAttribute Copy();
@@ -690,9 +691,24 @@ namespace ClearCanvas.Dicom
 
         #endregion
 
-        #region Public Properties
 
-    	/// <summary>
+		#region IReadOnlyDicomAttribute implementation
+
+		DicomTag IReadOnlyDicomAttribute.Tag
+		{
+			get { return this.Tag; }
+		}
+
+		string IReadOnlyDicomAttribute.GetStringValue()
+		{
+			return ToString();
+		}
+
+		#endregion
+
+		#region Public Properties
+
+		/// <summary>
     	/// Retrieve <see cref="Tag"/> instance for the attribute.
     	/// </summary>
     	/// <remarks>

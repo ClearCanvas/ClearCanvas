@@ -235,6 +235,8 @@
     <Compile Include="Iod\GradientDirection.cs" />
     <Compile Include="Iod\Iods\RawDataIod.cs" />
     <Compile Include="Iod\Iods\ScImageIod.cs" />
+    <Compile Include="Iod\ISeries.cs" />
+    <Compile Include="Iod\ISopInstance.cs" />
     <Compile Include="Iod\Macros\CommonCtMrImageDescriptionMacro.cs" />
     <Compile Include="Iod\Macros\ExposureIndexMacro.cs" />
     <Compile Include="Iod\Macros\XRay3DGeneralPerProjectionAcquisitionMacro.cs" />
@@ -296,6 +298,7 @@
     <Compile Include="IO\Tests\ByteBufferTests.cs" />
     <Compile Include="IO\Tests\LegacyByteBuffer.cs" />
     <Compile Include="IO\Tests\TestByteBuffer.cs" />
+    <Compile Include="IReadOnlyDicomAttribute.cs" />
     <Compile Include="Network\SR.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

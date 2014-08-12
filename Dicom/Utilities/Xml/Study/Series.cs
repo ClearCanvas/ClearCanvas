@@ -35,54 +35,74 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 	public class Series : ISeries
 	{
 		private readonly SeriesXml _xml;
-		private IList<ISopInstance> _sopInstances;
+		private readonly Study _parentStudy;
+		private readonly IDicomFileLoader _dicomFileLoader;
+		private readonly SopInstance _firstSopInstance;
 
-		internal Series(SeriesXml xml, Study parent)
+		internal Series(SeriesXml xml, Study parent, IDicomFileLoader dicomFileLoader)
 		{
 			_xml = xml;
-			ParentStudy = parent;
+			_parentStudy = parent;
+			_dicomFileLoader = dicomFileLoader;
+			_firstSopInstance = GetSopInstance(_xml.First());
 		}
 
 		#region ISeries Members
 
-		IStudy ISeries.ParentStudy { get { return ParentStudy; } }
-
-		public IList<ISopInstance> SopInstances
+		public IStudy ParentStudy
 		{
-			get
-			{
-				return _sopInstances ?? (_sopInstances = _xml.Select(s => (ISopInstance)new SopInstance(s, this)).ToList());
-			}
+			get { return _parentStudy; }
+		}
+
+		public int SopInstanceCount
+		{
+			get { return _xml.NumberOfSeriesRelatedInstances; }
+		}
+
+		public ISopInstance FirstSopInstance
+		{
+			get { return _firstSopInstance; }
+		}
+
+		public ISopInstance GetSopInstance(string sopInstanceUid)
+		{
+			var instanceXml = _xml[sopInstanceUid];
+			return instanceXml == null ? null : GetSopInstance(instanceXml);
+		}
+
+		public IEnumerable<ISopInstance> EnumerateSopInstances()
+		{
+			return _xml.Select(GetSopInstance);
 		}
 
 		public string StationName
 		{
-			get { return SopInstances.First().GetAttribute(DicomTags.StationName).ToString(); }
+			get { return _firstSopInstance.GetAttribute(DicomTags.StationName).ToString(); }
 		}
 
 		public string Manufacturer
 		{
-			get { return SopInstances.First().GetAttribute(DicomTags.Manufacturer).ToString(); }
+			get { return _firstSopInstance.GetAttribute(DicomTags.Manufacturer).ToString(); }
 		}
 
 		public string ManufacturersModelName
 		{
-			get { return SopInstances.First().GetAttribute(DicomTags.ManufacturersModelName).ToString(); }
+			get { return _firstSopInstance.GetAttribute(DicomTags.ManufacturersModelName).ToString(); }
 		}
 
 		public string InstitutionName
 		{
-			get { return SopInstances.First().GetAttribute(DicomTags.InstitutionName).ToString(); }
+			get { return _firstSopInstance.GetAttribute(DicomTags.InstitutionName).ToString(); }
 		}
 
 		public string InstitutionAddress
 		{
-			get { return SopInstances.First().GetAttribute(DicomTags.InstitutionAddress).ToString(); }
+			get { return _firstSopInstance.GetAttribute(DicomTags.InstitutionAddress).ToString(); }
 		}
 
 		public string InstitutionalDepartmentName
 		{
-			get { return SopInstances.First().GetAttribute(DicomTags.InstitutionalDepartmentName).ToString(); }
+			get { return _firstSopInstance.GetAttribute(DicomTags.InstitutionalDepartmentName).ToString(); }
 		}
 
 		#endregion
@@ -91,7 +111,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 
 		public string StudyInstanceUid
 		{
-			get { return ParentStudy.StudyInstanceUid; }
+			get { return _parentStudy.StudyInstanceUid; }
 		}
 
 		public string SeriesInstanceUid
@@ -101,26 +121,29 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 
 		public string Modality
 		{
-			get { return SopInstances.First().GetAttribute(DicomTags.Modality).ToString(); }
+			get { return _firstSopInstance.GetAttribute(DicomTags.Modality).ToString(); }
 		}
 
 		public string SeriesDescription
 		{
-			get { return SopInstances.First().GetAttribute(DicomTags.SeriesDescription).ToString(); }
+			get { return _firstSopInstance.GetAttribute(DicomTags.SeriesDescription).ToString(); }
 		}
 
 		public int SeriesNumber
 		{
-			get { return SopInstances.First().GetAttribute(DicomTags.SeriesNumber).GetInt32(0, 0); }
+			get { return _firstSopInstance.GetAttribute(DicomTags.SeriesNumber).GetInt32(0, 0); }
 		}
 
 		public int? NumberOfSeriesRelatedInstances
 		{
-			get { return SopInstances.Count; }
+			get { return _xml.NumberOfSeriesRelatedInstances; }
 		}
 
 		#endregion
 
-		internal Study ParentStudy { get; private set; }
+		private SopInstance GetSopInstance(InstanceXml xml)
+		{
+			return new SopInstance(xml, this, _dicomFileLoader);
+		}
 	}
 }
