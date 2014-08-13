@@ -67,6 +67,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.StudyAutoRoute
 
 				foreach (InstanceXml instanceXml in seriesXml)
 				{
+					//CR (Aug 2014): matchingSops is always empty
 					if (matchingSops.Count > 0)
 					{
 						bool found = matchingSops.Any(uid => uid.Equals(instanceXml.SopInstanceUid));
@@ -99,6 +100,9 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.StudyAutoRoute
 			{
 				AddWorkQueueData();
 			}
+
+			// CR (Aug 2014): why not just set it to complete? We already know all instances have been sent
+
 			// Force the entry to idle and stay for a while
 			// Note: the assumption is the code will set ScheduledTime = ExpirationTime = some future time
 			// so that the item will be removed when it is processed again.
@@ -109,11 +113,12 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.StudyAutoRoute
 
 		private void AddWorkQueueData()
 		{
+			//CR (Aug 2014): Do we need to store this ? Unlike web study move, there's no user involved here.
 			var data = new WebMoveWorkQueueEntryData
 			{
 				Timestamp = DateTime.Now,
 				Level = MoveLevel.Study,
-				UserId = ServerHelper.CurrentUserName
+				UserId = ServerHelper.CurrentUserName  
 			};
 			using (
 				IUpdateContext update = PersistentStoreRegistry.GetDefaultStore().OpenUpdateContext(UpdateContextSyncMode.Flush))
