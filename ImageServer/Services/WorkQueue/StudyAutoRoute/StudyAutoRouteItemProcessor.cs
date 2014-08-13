@@ -25,19 +25,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom.Network.Scu;
 using ClearCanvas.Dicom.Utilities.Xml;
-using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
-using ClearCanvas.ImageServer.Common.Utilities;
-using ClearCanvas.ImageServer.Core.Edit;
-using ClearCanvas.ImageServer.Core.Helpers;
 using ClearCanvas.ImageServer.Core.Validation;
 using ClearCanvas.ImageServer.Model;
-using ClearCanvas.ImageServer.Model.EntityBrokers;
 using ClearCanvas.ImageServer.Services.WorkQueue.AutoRoute;
 
 namespace ClearCanvas.ImageServer.Services.WorkQueue.StudyAutoRoute
@@ -55,25 +49,12 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.StudyAutoRoute
 
 			var list = new List<StorageInstance>();
 
-			// We already moved the Study
-			if (WorkQueueItem.Data != null)
-				return list;
-
 			string studyPath = StorageLocation.GetStudyPath();
 			StudyXml studyXml = LoadStudyXml(StorageLocation);
 			foreach (SeriesXml seriesXml in studyXml)
 			{
-				var matchingSops = new List<string>();
-
 				foreach (InstanceXml instanceXml in seriesXml)
 				{
-					//CR (Aug 2014): matchingSops is always empty
-					if (matchingSops.Count > 0)
-					{
-						bool found = matchingSops.Any(uid => uid.Equals(instanceXml.SopInstanceUid));
-						if (!found) continue; // don't send this sop
-					}
-
 					string seriesPath = Path.Combine(studyPath, seriesXml.SeriesInstanceUid);
 					string instancePath = Path.Combine(seriesPath, instanceXml.SopInstanceUid + ServerPlatform.DicomFileExtension);
 					var instance = new StorageInstance(instancePath)
@@ -96,43 +77,10 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.StudyAutoRoute
 
 		protected override void OnComplete()
 		{
-			if (WorkQueueItem.Data == null)
-			{
-				AddWorkQueueData();
-			}
-
-			// CR (Aug 2014): why not just set it to complete? We already know all instances have been sent
-
-			// Force the entry to idle and stay for a while
-			// Note: the assumption is the code will set ScheduledTime = ExpirationTime = some future time
-			// so that the item will be removed when it is processed again.
 			PostProcessing(WorkQueueItem,
-			               WorkQueueProcessorStatus.CompleteDelayDelete,
+			               WorkQueueProcessorStatus.Complete,
 			               WorkQueueProcessorDatabaseUpdate.None);
 		}
-
-		private void AddWorkQueueData()
-		{
-			//CR (Aug 2014): Do we need to store this ? Unlike web study move, there's no user involved here.
-			var data = new WebMoveWorkQueueEntryData
-			{
-				Timestamp = DateTime.Now,
-				Level = MoveLevel.Study,
-				UserId = ServerHelper.CurrentUserName  
-			};
-			using (
-				IUpdateContext update = PersistentStoreRegistry.GetDefaultStore().OpenUpdateContext(UpdateContextSyncMode.Flush))
-			{
-				var broker = update.GetBroker<IWorkQueueEntityBroker>();
-				var cols = new WorkQueueUpdateColumns
-				{
-					Data = XmlUtils.SerializeAsXmlDoc(data)
-				};
-				broker.Update(WorkQueueItem.Key, cols);
-				update.Commit();
-			}
-		}
-
 
 		protected override bool CanStart()
 		{
