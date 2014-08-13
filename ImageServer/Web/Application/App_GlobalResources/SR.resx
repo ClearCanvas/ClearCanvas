@@ -900,4 +900,7 @@ At least one server partition is required. Please add a new server partition.</v
   <data name="NotExpected" xml:space="preserve">
     <value>Not Expected</value>
   </data>
+  <data name="ToFromDateValidationError" xml:space="preserve">
+    <value>"To Date must be greater than From Date"</value>
+  </data>
 </root>

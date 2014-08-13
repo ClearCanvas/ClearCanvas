@@ -43,11 +43,11 @@ namespace ClearCanvas.ImageServer.Web.Application.Helpers
                          "return false;";
         }
 
-        public static string CheckDateRange(string fromDateTextBoxID, string toDateTextBoxID, string textBoxID, string calendarExtenderID, string message)
+        public static string CheckDateRange(string fromDateTextBoxID, string toDateTextBoxID, string message)
         {
             return
-                "CheckDateRange(document.getElementById('" + fromDateTextBoxID + "').value, document.getElementById('" +
-                toDateTextBoxID + "').value, '" + textBoxID + "' , '" + calendarExtenderID + "' , '" + message + "');";
+                "return CheckDateRange(document.getElementById('" + fromDateTextBoxID + "').value, document.getElementById('" +
+                toDateTextBoxID + "').value, '" + message + "');";
         }
 
         public static string PopulateDefaultFromTime(string fromTimeTextBoxID)
