@@ -22,14 +22,14 @@
 
 #endregion
 
-using NUnit.Framework;
-
 #if UNIT_TESTS
+
+using NUnit.Framework;
 
 namespace ClearCanvas.Dicom.Tests
 {
 	[TestFixture]
-	public class SopClassGeneratorTests
+	internal class SopClassTests
 	{
 		[Test(Description = "Sanity check on generated SopClass(es)")]
 		public void TestCategories()
@@ -62,7 +62,7 @@ namespace ClearCanvas.Dicom.Tests
 				else
 				{
 					Assert.IsFalse(sopClass.IsImage);
-					Assert.IsFalse(sopClass.IsStorage); 
+					Assert.IsFalse(sopClass.IsStorage);
 					Assert.IsFalse(sopClass.Meta);
 				}
 			}
@@ -71,7 +71,7 @@ namespace ClearCanvas.Dicom.Tests
 		[Test]
 		public void TestRegister()
 		{
-			var uid = "1.2.3";
+			const string uid = "1.2.3";
 			var sopClass = new SopClass("Bleeding Edge Image", uid, SopClassCategory.Image);
 
 			var registered = SopClass.RegisterSopClass(sopClass);
@@ -81,16 +81,65 @@ namespace ClearCanvas.Dicom.Tests
 			Assert.AreEqual(uid, retrieved.Uid);
 
 			var reregistered = new SopClass("Bleeding Edge Image", uid, SopClassCategory.Image);
+			Assert.IsTrue(SopClass.GetRegisteredSopClasses().Contains(reregistered));
+
 			reregistered = SopClass.RegisterSopClass(reregistered);
 			Assert.IsTrue(ReferenceEquals(registered, reregistered));
+
+			var unregistered = SopClass.UnregisterSopClass(registered);
+			Assert.IsTrue(ReferenceEquals(registered, unregistered));
+			Assert.IsFalse(SopClass.GetRegisteredSopClasses().Contains(registered));
+
+			unregistered = SopClass.UnregisterSopClass(registered);
+			Assert.IsNull(unregistered);
 		}
 
 		[Test]
-		public void TestGet()
+		public void TestGetSopClass()
 		{
-			var uid = "1.2.3";
+			const string uid = "1.2.3";
 			var retrieved = SopClass.GetSopClass(uid);
 			Assert.AreEqual(uid, retrieved.Uid);
+			Assert.IsTrue(!SopClass.GetRegisteredSopClasses().Contains(retrieved));
+		}
+
+		[Test]
+		public void TestEquality()
+		{
+			// ReSharper disable ExpressionIsAlwaysNull
+
+			var sop0 = (SopClass) null;
+			var sopA = new SopClass("a", "1.2.3", SopClassCategory.Image);
+			var sopA2 = new SopClass("a2", "1.2.3", SopClassCategory.Meta);
+			var sopA3 = sopA;
+			var sopB = new SopClass("b", "1.2.3.4", SopClassCategory.Image);
+
+			Assert.IsTrue(null == sop0);
+			Assert.IsTrue(sop0 == null);
+			Assert.IsTrue(Equals(null, sop0));
+			Assert.IsTrue(Equals(sop0, null));
+
+			Assert.IsTrue(sopA == sopA2);
+			Assert.IsTrue(sopA2 == sopA);
+			Assert.IsTrue(Equals(sopA, sopA2));
+			Assert.IsTrue(Equals(sopA2, sopA));
+
+			Assert.IsTrue(sopA == sopA3);
+			Assert.IsTrue(sopA3 == sopA);
+			Assert.IsTrue(Equals(sopA, sopA3));
+			Assert.IsTrue(Equals(sopA3, sopA));
+
+			Assert.IsFalse(sop0 == sopA);
+			Assert.IsFalse(sopA == sop0);
+			Assert.IsFalse(Equals(sop0, sopA));
+			Assert.IsFalse(Equals(sopA, sop0));
+
+			Assert.IsFalse(sopA == sopB);
+			Assert.IsFalse(sopB == sopA);
+			Assert.IsFalse(Equals(sopA, sopB));
+			Assert.IsFalse(Equals(sopB, sopA));
+
+			// ReSharper restore ExpressionIsAlwaysNull
 		}
 	}
 }

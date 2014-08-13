@@ -42,20 +42,12 @@ namespace ClearCanvas.ImageServer.Model
         public Staff(
              ServerEntityKey _serverPartitionKey_
             ,String _identifier_
-            ,String _familyName_
-            ,String _givenName_
-            ,String _middleName_
-            ,String _suffix_
-            ,String _prefix_
+            ,String _name_
             ):base("Staff")
         {
             ServerPartitionKey = _serverPartitionKey_;
             Identifier = _identifier_;
-            FamilyName = _familyName_;
-            GivenName = _givenName_;
-            MiddleName = _middleName_;
-            Suffix = _suffix_;
-            Prefix = _prefix_;
+            Name = _name_;
         }
         #endregion
 
@@ -66,20 +58,8 @@ namespace ClearCanvas.ImageServer.Model
         [EntityFieldDatabaseMappingAttribute(TableName="Staff", ColumnName="Identifier")]
         public String Identifier
         { get; set; }
-        [EntityFieldDatabaseMappingAttribute(TableName="Staff", ColumnName="FamilyName")]
-        public String FamilyName
-        { get; set; }
-        [EntityFieldDatabaseMappingAttribute(TableName="Staff", ColumnName="GivenName")]
-        public String GivenName
-        { get; set; }
-        [EntityFieldDatabaseMappingAttribute(TableName="Staff", ColumnName="MiddleName")]
-        public String MiddleName
-        { get; set; }
-        [EntityFieldDatabaseMappingAttribute(TableName="Staff", ColumnName="Suffix")]
-        public String Suffix
-        { get; set; }
-        [EntityFieldDatabaseMappingAttribute(TableName="Staff", ColumnName="Prefix")]
-        public String Prefix
+        [EntityFieldDatabaseMappingAttribute(TableName="Staff", ColumnName="Name")]
+        public String Name
         { get; set; }
         #endregion
 
@@ -112,11 +92,7 @@ namespace ClearCanvas.ImageServer.Model
             var updateColumns = new StaffUpdateColumns();
             updateColumns.ServerPartitionKey = entity.ServerPartitionKey;
             updateColumns.Identifier = entity.Identifier;
-            updateColumns.FamilyName = entity.FamilyName;
-            updateColumns.GivenName = entity.GivenName;
-            updateColumns.MiddleName = entity.MiddleName;
-            updateColumns.Suffix = entity.Suffix;
-            updateColumns.Prefix = entity.Prefix;
+            updateColumns.Name = entity.Name;
             Staff newEntity = broker.Insert(updateColumns);
             return newEntity;
         }

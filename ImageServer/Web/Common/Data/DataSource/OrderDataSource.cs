@@ -199,33 +199,14 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
                 criteria.ScheduledDateTime.MoreThanOrEqualTo(fromKey);
             }
 
-			if (!string.IsNullOrEmpty(ReferringPhysiciansName))
-			{
-				if (ReferringPhysiciansName.Contains(","))
-				{
-					var splitName = ReferringPhysiciansName.Split(new [] {','});
-					var staffCriteria = new StaffSelectCriteria();
-					if (splitName.Length > 0)
-						QueryHelper.SetGuiStringCondition(staffCriteria.FamilyName, splitName[0].Trim() + "*");
-					if (splitName.Length > 1)
-						QueryHelper.SetGuiStringCondition(staffCriteria.GivenName, splitName[1].Trim() + "*");
+	        if (!string.IsNullOrEmpty(ReferringPhysiciansName))
+	        {
+		        var staffCriteria = new StaffSelectCriteria();
+		        QueryHelper.SetGuiStringCondition(staffCriteria.Name, ReferringPhysiciansName);
+		        criteria.ReferringStaffRelatedEntityCondition.Exists(staffCriteria);
+	        }
 
-					criteria.ReferringStaffRelatedEntityCondition.Exists(staffCriteria);
-				}
-				else
-				{
-					var staffCriteria = new StaffSelectCriteria();
-					var pn = new PersonName(ReferringPhysiciansName);
-					if (!string.IsNullOrEmpty(pn.LastName))
-						QueryHelper.SetGuiStringCondition(staffCriteria.FamilyName, pn.LastName + "*");
-					if (!string.IsNullOrEmpty(pn.FirstName))
-						QueryHelper.SetGuiStringCondition(staffCriteria.GivenName, pn.FirstName + "*");
-
-					criteria.ReferringStaffRelatedEntityCondition.Exists(staffCriteria);
-				}
-			}
-
-            if (Statuses != null && Statuses.Length > 0)
+	        if (Statuses != null && Statuses.Length > 0)
             {
                 if (Statuses.Length == 1)
                     criteria.OrderStatusEnum.EqualTo(OrderStatusEnum.GetEnum(Statuses[0]));
@@ -341,14 +322,10 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
             orderSummary.RequestedProcedure = orderSummary.TheRequestedProcedure.Text;
 
             var referStaff = Staff.Load(order.ReferringStaffKey);
-            orderSummary.ReferringStaff = string.Format("{0}^{1}^{2}^{3}^{4}", referStaff.FamilyName,
-                                                        referStaff.GivenName, referStaff.MiddleName, referStaff.Prefix,
-                                                        referStaff.Suffix);
+            orderSummary.ReferringStaff = referStaff.Name;
             
             var enteredByStaff = Staff.Load(order.EnteredByStaffKey);
-            orderSummary.EnteredByStaff = string.Format("{0}^{1}^{2}^{3}^{4}", enteredByStaff.FamilyName,
-                                                        enteredByStaff.GivenName, enteredByStaff.MiddleName,
-                                                        enteredByStaff.Prefix, enteredByStaff.Suffix);
+            orderSummary.EnteredByStaff = enteredByStaff.Name;
             
            
             orderSummary.ThePartition = ServerPartitionMonitor.Instance.FindPartition(order.ServerPartitionKey) ??

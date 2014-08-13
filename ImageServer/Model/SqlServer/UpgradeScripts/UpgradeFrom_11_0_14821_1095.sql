@@ -115,11 +115,7 @@ CREATE TABLE [dbo].[Staff](
 	[GUID] [uniqueidentifier] ROWGUIDCOL  NOT NULL,
 	[ServerPartitionGUID] [uniqueidentifier] NOT NULL,
 	[Identifier] [nvarchar](15) NOT NULL,
-	[FamilyName] [nvarchar](194) NOT NULL,
-	[GivenName] [nvarchar](30) NOT NULL,
-	[MiddleName] [nvarchar](3) NULL,
-	[Suffix] [nvarchar](20) NULL,
-	[Prefix] [nvarchar](20) NULL,
+	[Name] [nvarchar](255) NOT NULL,
  CONSTRAINT [PK_Staff] PRIMARY KEY CLUSTERED 
 (
 	[GUID] ASC
@@ -504,6 +500,28 @@ GO
 IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
 GO
 
+PRINT N'Add new StudyAutoRoute WorkQueueTypeEnum and WorkQueueTypeProperties'
+GO
+
+INSERT INTO [ImageServer].[dbo].[WorkQueueTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),117,'StudyAutoRoute','Study Auto Route','DICOM Auto-route request of a Study.')
+GO
+  -- StudyAutoRoute
+INSERT INTO [ImageServer].[dbo].[WorkQueueTypeProperties]
+           ([WorkQueueTypeEnum],[WorkQueuePriorityEnum],[MemoryLimited],[AlertFailedWorkQueue],
+           [MaxFailureCount],[ProcessDelaySeconds],[FailureDelaySeconds],[DeleteDelaySeconds],
+           [PostponeDelaySeconds],[ExpireDelaySeconds],[MaxBatchSize], [QueueStudyStateEnum], [QueueStudyStateOrder],
+           [ReadLock],[WriteLock])
+     VALUES
+           (117,300,1,1,3,10,180,60,120,15,-1,101,0,1,0)
+GO
+
+IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
 
 IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
 GO

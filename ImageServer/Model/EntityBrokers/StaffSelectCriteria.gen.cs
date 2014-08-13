@@ -67,64 +67,16 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
               return (ISearchCondition<String>)SubCriteria["Identifier"];
             } 
         }
-        [EntityFieldDatabaseMappingAttribute(TableName="Staff", ColumnName="FamilyName")]
-        public ISearchCondition<String> FamilyName
+        [EntityFieldDatabaseMappingAttribute(TableName="Staff", ColumnName="Name")]
+        public ISearchCondition<String> Name
         {
             get
             {
-              if (!SubCriteria.ContainsKey("FamilyName"))
+              if (!SubCriteria.ContainsKey("Name"))
               {
-                 SubCriteria["FamilyName"] = new SearchCondition<String>("FamilyName");
+                 SubCriteria["Name"] = new SearchCondition<String>("Name");
               }
-              return (ISearchCondition<String>)SubCriteria["FamilyName"];
-            } 
-        }
-        [EntityFieldDatabaseMappingAttribute(TableName="Staff", ColumnName="GivenName")]
-        public ISearchCondition<String> GivenName
-        {
-            get
-            {
-              if (!SubCriteria.ContainsKey("GivenName"))
-              {
-                 SubCriteria["GivenName"] = new SearchCondition<String>("GivenName");
-              }
-              return (ISearchCondition<String>)SubCriteria["GivenName"];
-            } 
-        }
-        [EntityFieldDatabaseMappingAttribute(TableName="Staff", ColumnName="MiddleName")]
-        public ISearchCondition<String> MiddleName
-        {
-            get
-            {
-              if (!SubCriteria.ContainsKey("MiddleName"))
-              {
-                 SubCriteria["MiddleName"] = new SearchCondition<String>("MiddleName");
-              }
-              return (ISearchCondition<String>)SubCriteria["MiddleName"];
-            } 
-        }
-        [EntityFieldDatabaseMappingAttribute(TableName="Staff", ColumnName="Suffix")]
-        public ISearchCondition<String> Suffix
-        {
-            get
-            {
-              if (!SubCriteria.ContainsKey("Suffix"))
-              {
-                 SubCriteria["Suffix"] = new SearchCondition<String>("Suffix");
-              }
-              return (ISearchCondition<String>)SubCriteria["Suffix"];
-            } 
-        }
-        [EntityFieldDatabaseMappingAttribute(TableName="Staff", ColumnName="Prefix")]
-        public ISearchCondition<String> Prefix
-        {
-            get
-            {
-              if (!SubCriteria.ContainsKey("Prefix"))
-              {
-                 SubCriteria["Prefix"] = new SearchCondition<String>("Prefix");
-              }
-              return (ISearchCondition<String>)SubCriteria["Prefix"];
+              return (ISearchCondition<String>)SubCriteria["Name"];
             } 
         }
     }

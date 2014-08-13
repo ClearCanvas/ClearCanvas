@@ -45,30 +45,10 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
         {
             set { SubParameters["Identifier"] = new EntityUpdateColumn<String>("Identifier", value); }
         }
-        [EntityFieldDatabaseMappingAttribute(TableName="Staff", ColumnName="FamilyName")]
-        public String FamilyName
+        [EntityFieldDatabaseMappingAttribute(TableName="Staff", ColumnName="Name")]
+        public String Name
         {
-            set { SubParameters["FamilyName"] = new EntityUpdateColumn<String>("FamilyName", value); }
-        }
-        [EntityFieldDatabaseMappingAttribute(TableName="Staff", ColumnName="GivenName")]
-        public String GivenName
-        {
-            set { SubParameters["GivenName"] = new EntityUpdateColumn<String>("GivenName", value); }
-        }
-        [EntityFieldDatabaseMappingAttribute(TableName="Staff", ColumnName="MiddleName")]
-        public String MiddleName
-        {
-            set { SubParameters["MiddleName"] = new EntityUpdateColumn<String>("MiddleName", value); }
-        }
-        [EntityFieldDatabaseMappingAttribute(TableName="Staff", ColumnName="Suffix")]
-        public String Suffix
-        {
-            set { SubParameters["Suffix"] = new EntityUpdateColumn<String>("Suffix", value); }
-        }
-        [EntityFieldDatabaseMappingAttribute(TableName="Staff", ColumnName="Prefix")]
-        public String Prefix
-        {
-            set { SubParameters["Prefix"] = new EntityUpdateColumn<String>("Prefix", value); }
+            set { SubParameters["Name"] = new EntityUpdateColumn<String>("Name", value); }
         }
     }
 }

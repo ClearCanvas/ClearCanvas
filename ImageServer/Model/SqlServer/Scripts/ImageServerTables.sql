@@ -2162,11 +2162,7 @@ CREATE TABLE [dbo].[Staff](
 	[GUID] [uniqueidentifier] ROWGUIDCOL  NOT NULL,
 	[ServerPartitionGUID] [uniqueidentifier] NOT NULL,
 	[Identifier] [nvarchar](15) NOT NULL,
-	[FamilyName] [nvarchar](194) NOT NULL,
-	[GivenName] [nvarchar](30) NOT NULL,
-	[MiddleName] [nvarchar](3) NULL,
-	[Suffix] [nvarchar](20) NULL,
-	[Prefix] [nvarchar](20) NULL,
+	[Name] [nvarchar](255) NOT NULL,
  CONSTRAINT [PK_Staff] PRIMARY KEY CLUSTERED 
 (
 	[GUID] ASC

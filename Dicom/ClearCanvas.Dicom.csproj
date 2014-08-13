@@ -309,11 +309,12 @@
     <Compile Include="ServiceModel\Streaming\HeaderStreamingServiceClient.cs" />
     <Compile Include="ServiceModel\Streaming\IDicomImportService.cs" />
     <Compile Include="Tests\ChangeTransferSyntaxTests.cs" />
-    <Compile Include="Tests\SopClassGeneratorTests.cs" />
+    <Compile Include="Tests\SopClassTests.cs" />
     <Compile Include="Tests\DicomAttributeBinaryDataTests.cs" />
     <Compile Include="Tests\DicomImageTestHelper.cs" />
     <Compile Include="Tests\DicomUncompressedPixelDataTests.cs" />
     <Compile Include="IO\Tests\StreamWriterTest.cs" />
+    <Compile Include="Tests\TransferSyntaxTests.cs" />
     <Compile Include="Utilities\Command\AggregateCommand.cs" />
     <Compile Include="Utilities\Command\RemoveSeriesFromStudyXml.cs" />
     <Compile Include="Utilities\Command\RemoveSopInstanceFromStudyXmlCommand.cs" />
@@ -347,6 +348,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Iod\PersonName.cs" />
     <Compile Include="SopClass.cs" />
+    <Compile Include="SopClasses.cs" />
     <Compile Include="SpecificCharacterSetParser.cs" />
     <Compile Include="SR.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -367,6 +369,7 @@
     <Compile Include="Utilities\Tests\PdfTestSamples.cs" />
     <Compile Include="Utilities\TimeParser.cs" />
     <Compile Include="TransferSyntax.cs" />
+    <Compile Include="TransferSyntaxes.cs" />
     <Compile Include="Iod\Window.cs" />
   </ItemGroup>
   <ItemGroup>

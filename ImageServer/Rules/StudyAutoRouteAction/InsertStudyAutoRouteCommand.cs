@@ -27,6 +27,7 @@ using ClearCanvas.Common;
 using ClearCanvas.Dicom.Utilities.Command;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
+using ClearCanvas.ImageServer.Common.Utilities;
 using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.Brokers;
@@ -137,13 +138,13 @@ namespace ClearCanvas.ImageServer.Rules.StudyAutoRouteAction
 
 			var parms = new InsertWorkQueueParameters
 			{
-				WorkQueueTypeEnum = WorkQueueTypeEnum.AutoRoute,
+				WorkQueueTypeEnum = WorkQueueTypeEnum.StudyAutoRoute,
 				ScheduledTime = _scheduledTime.HasValue
 									? _scheduledTime.Value
 									: Platform.Time.AddSeconds(30),
 				StudyStorageKey = _context.StudyLocationKey,
 				ServerPartitionKey = _context.ServerPartitionKey,
-				DeviceKey = dev.GetKey(),
+				DeviceKey = dev.GetKey()
 			};
 			var broker = updateContext.GetBroker<IInsertWorkQueue>();
 

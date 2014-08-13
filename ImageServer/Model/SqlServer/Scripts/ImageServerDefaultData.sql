@@ -101,6 +101,13 @@ INSERT INTO [ImageServer].[dbo].[WorkQueueTypeEnum]
            (newid(),116,'ExternalEdit','External Edit','Edit request trigger by an external application.')
 GO
 
+INSERT INTO [ImageServer].[dbo].[WorkQueueTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),117,'StudyAutoRoute','Study Auto Route','DICOM Auto-route request of a Study.')
+GO
+
+
 --  WorkQueuePriorityEnum inserts
 INSERT INTO [ImageServer].[dbo].WorkQueuePriorityEnum
            ([GUID],[Enum],[Lookup],[Description],[LongDescription])
@@ -281,7 +288,15 @@ INSERT INTO [ImageServer].[dbo].[WorkQueueTypeProperties]
      VALUES
            (116,300,0,1,1,30,180,60,120,240,-1,101,3,0,1)
 GO
-
+  -- StudyAutoRoute
+INSERT INTO [ImageServer].[dbo].[WorkQueueTypeProperties]
+           ([WorkQueueTypeEnum],[WorkQueuePriorityEnum],[MemoryLimited],[AlertFailedWorkQueue],
+           [MaxFailureCount],[ProcessDelaySeconds],[FailureDelaySeconds],[DeleteDelaySeconds],
+           [PostponeDelaySeconds],[ExpireDelaySeconds],[MaxBatchSize], [QueueStudyStateEnum], [QueueStudyStateOrder],
+           [ReadLock],[WriteLock])
+     VALUES
+           (117,300,1,1,3,10,180,60,120,15,-1,101,0,1,0)
+GO
 
 -- WorkQueueStatusEnum inserts
 INSERT INTO [ImageServer].[dbo].[WorkQueueStatusEnum]

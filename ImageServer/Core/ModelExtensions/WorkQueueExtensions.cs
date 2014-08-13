@@ -49,7 +49,8 @@ namespace ClearCanvas.ImageServer.Core.ModelExtensions
                 WorkQueueTypeEnum.CompressStudy, // not changing patient/study info 
                 WorkQueueTypeEnum.PurgeStudy, // nearline or online
                 WorkQueueTypeEnum.MigrateStudy,
-                WorkQueueTypeEnum.WebMoveStudy
+                WorkQueueTypeEnum.WebMoveStudy,
+				WorkQueueTypeEnum.StudyAutoRoute
             };
 
             return !harmlessWQITypes.Contains(item.WorkQueueTypeEnum);
