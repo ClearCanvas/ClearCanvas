@@ -65,6 +65,7 @@ namespace ClearCanvas.ImageServer.TestApp
 			this.ProductVerify = new System.Windows.Forms.Button();
 			this._archiveTestBtn = new System.Windows.Forms.Button();
 			this._perfMon = new System.Windows.Forms.Button();
+			this._cfindPerformanceTest = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// TestRule
@@ -186,6 +187,16 @@ namespace ClearCanvas.ImageServer.TestApp
 			this._perfMon.UseVisualStyleBackColor = true;
 			this._perfMon.Click += new System.EventHandler(this._perfMon_Click);
 			// 
+			// _cfindPerformanceTest
+			// 
+			this._cfindPerformanceTest.Location = new System.Drawing.Point(487, 228);
+			this._cfindPerformanceTest.Name = "_cfindPerformanceTest";
+			this._cfindPerformanceTest.Size = new System.Drawing.Size(183, 59);
+			this._cfindPerformanceTest.TabIndex = 2;
+			this._cfindPerformanceTest.Text = "DICOM C-FIND Performance";
+			this._cfindPerformanceTest.UseVisualStyleBackColor = true;
+			this._cfindPerformanceTest.Click += new System.EventHandler(this._perfMon_Click);
+			// 
 			// Startup
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -196,6 +207,7 @@ namespace ClearCanvas.ImageServer.TestApp
 			this.Controls.Add(this.UsageTracking);
 			this.Controls.Add(this.button1);
 			this.Controls.Add(this.ExtremeStreaming);
+			this.Controls.Add(this._cfindPerformanceTest);
 			this.Controls.Add(this._perfMon);
 			this.Controls.Add(this._archiveTestBtn);
 			this.Controls.Add(this.RandomImageSender);
@@ -223,5 +235,6 @@ namespace ClearCanvas.ImageServer.TestApp
         private System.Windows.Forms.Button ProductVerify;
 		private System.Windows.Forms.Button _archiveTestBtn;
 		private System.Windows.Forms.Button _perfMon;
+		private System.Windows.Forms.Button _cfindPerformanceTest;
     }
 }

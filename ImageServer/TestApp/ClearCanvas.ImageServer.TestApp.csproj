@@ -113,6 +113,12 @@
     <Compile Include="ImageStreamingStressTest.Designer.cs">
       <DependentUpon>ImageStreamingStressTest.cs</DependentUpon>
     </Compile>
+    <Compile Include="PerfCFind\CFindPerformanceTestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PerfCFind\CFindPerformanceTestForm.Designer.cs">
+      <DependentUpon>CFindPerformanceTestForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="PerfMon\ImageServerDB.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -212,6 +218,9 @@
     <None Include="PerfMon\ImageServerDB.dbml.layout">
       <DependentUpon>ImageServerDB.dbml</DependentUpon>
     </None>
+    <EmbeddedResource Include="PerfCFind\CFindPerformanceTestForm.resx">
+      <DependentUpon>CFindPerformanceTestForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="PerfMon\WorkQueuePerfMon.resx">
       <DependentUpon>WorkQueuePerfMon.cs</DependentUpon>
     </EmbeddedResource>

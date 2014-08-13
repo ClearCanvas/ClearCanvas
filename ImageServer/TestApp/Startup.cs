@@ -24,6 +24,7 @@
 
 using System;
 using System.Windows.Forms;
+using ClearCanvas.ImageServer.TestApp.PerfCFind;
 using ClearCanvas.ImageServer.TestApp.PerfMon;
 
 namespace ClearCanvas.ImageServer.TestApp
@@ -99,7 +100,7 @@ namespace ClearCanvas.ImageServer.TestApp
 
 		private void _perfMon_Click(object sender, EventArgs e)
 		{
-			new WorkQueuePerfMon().Show();
+			new CFindPerformanceTestForm().Show();
 		}
     }
 }
