@@ -9,7 +9,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="FtpPassiveMode" Description="Specifies whether FTP passive mode is enabled." Type="System.Boolean" Scope="Application">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="FtpBaseUrl" Description="Base URL of the FTP attached document store." Type="System.String" Scope="Application">
       <Value Profile="(Default)">ftp://localhost</Value>
