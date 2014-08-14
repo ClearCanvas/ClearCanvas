@@ -1,6 +1,6 @@
-#region License
+﻿#region License
 
-// Copyright (c) 2013, ClearCanvas Inc.
+// Copyright (c) 2014, ClearCanvas Inc.
 // All rights reserved.
 // http://www.clearcanvas.ca
 //
@@ -25,19 +25,17 @@
 using System;
 using System.Threading;
 using ClearCanvas.Common;
+using ClearCanvas.Enterprise.Core;
 
-namespace ClearCanvas.ImageServer.Common
+namespace ClearCanvas.ImageServer.Core.Helpers
 {
 	/// <summary>
-	/// Base class for a service that runs in a dedicated thread.
+	/// Helper class to make sure the database connection is valid when starting up a Shred.
 	/// </summary>
-	public abstract class ThreadedService
+	public class ShredStartupHelper
 	{
 		#region Private Members
-
-		private Thread _theThread;
 		private readonly string _name;
-
 		#endregion
 
 		#region Public Properties
@@ -67,32 +65,22 @@ namespace ClearCanvas.ImageServer.Common
 
 		#endregion
 
-		#region Protected Abstract Methods
-		protected abstract bool Initialize();
-		protected abstract void Run();
-		protected abstract void Stop();
-		#endregion
-
-		#region Constructor
-		/// <summary>
-		/// Constructor.
-		/// </summary>
-		/// <param name="name">The name of the service.</param>
-		protected ThreadedService(string name)
+		#region Constructors
+		public ShredStartupHelper(string name)
 		{
 			_name = name;
-			StopFlag = false;
-			ThreadRetryDelay = 60000;
+			ThreadStop = new ManualResetEvent(false);
+			ThreadRetryDelay = 60*1000;
 		}
 		#endregion
 
-		#region Protected Methods
+		#region Private Methods
 		/// <summary>
 		/// Check if a stop is requested.
 		/// </summary>
 		/// <param name="msDelay"></param>
 		/// <returns></returns>
-		protected bool CheckStop(int msDelay)
+		private bool CheckStop(int msDelay)
 		{
 			ThreadStop.WaitOne(msDelay, false);
 			ThreadStop.Reset();
@@ -102,72 +90,44 @@ namespace ClearCanvas.ImageServer.Common
 		#endregion
 
 		#region Public Methods
-		/// <summary>
-		/// Start the service.
-		/// </summary>
-		public void StartService()
+		public void Initialize()
 		{
-			if (_theThread == null)
+			bool bInit = false;
+			while (!bInit)
 			{
-				ThreadStop = new ManualResetEvent(false);
-				_theThread = new Thread(delegate()
+				try
+				{
+					// Force a read context to be opened.  When developing the retry mechanism 
+					// for startup when the DB was down, there were problems when the type
+					// initializer for enumerated values were failng first.  For some reason,
+					// when the database went back online, they would still give exceptions.
+					// changed to force the processor to open a dummy DB connect and cause an 
+					// exception here, instead of getting to the enumerated value initializer.
+					using (IReadContext readContext = PersistentStoreRegistry.GetDefaultStore().OpenReadContext())
 					{
-						bool bInit = false;
-						while (!bInit)
-						{
-							try
-							{
-								bInit = Initialize();
-							}
-							catch (Exception e)
-							{
-								Platform.Log(LogLevel.Warn, "Unexpected exception intializing {0} service: {1}", Name, e.Message);
-							}
-							if (!bInit)
-							{
-								if (CheckStop(ThreadRetryDelay))
-									return;
-							}
-						}
-
-						if (StopFlag)
-							return;
-
-						try
-						{
-							Run();
-						}
-						catch (Exception e)
-						{
-							Platform.Log(LogLevel.Error, e, "Unexpected exception running service {0}", Name);
-						}
-
-					});
-				_theThread.Name = String.Format("{0}:{1}", Name, _theThread.ManagedThreadId);
-				_theThread.Start();
+						readContext.Dispose();
+					}
+					bInit = true;
+				}
+				catch (Exception e)
+				{
+					Platform.Log(LogLevel.Warn, "Unexpected exception intializing {0} service: {1}", Name, e.Message);
+				}
+				if (!bInit)
+				{
+					if (CheckStop(ThreadRetryDelay))
+						return;
+				}
 			}
 		}
 
-        public void StopService(string reason)
-        {
-            Platform.Log(LogLevel.Info, "{0} service is stopping : {1}", Name, reason);
-            StopService();
-        }
-		
 		/// <summary>
 		/// Stop the service.
 		/// </summary>
 		public void StopService()
 		{
 			StopFlag = true;
-			Stop();
-
-			if (_theThread != null && _theThread.IsAlive)
-			{
-				ThreadStop.Set();
-				_theThread.Join();
-				_theThread = null;
-			}
+			ThreadStop.Set();
 		}
 		#endregion
 	}

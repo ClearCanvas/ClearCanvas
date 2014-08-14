@@ -28,6 +28,7 @@ using ClearCanvas.Common;
 using ClearCanvas.Common.Shreds;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
+using ClearCanvas.ImageServer.Core.Helpers;
 
 namespace ClearCanvas.ImageServer.Services.Common.Shreds
 {
@@ -44,6 +45,7 @@ namespace ClearCanvas.ImageServer.Services.Common.Shreds
 
 		private Timer _timer;
 		private readonly TimeSpan _repeatEvery24Hours = TimeSpan.FromHours(24);
+		private ShredStartupHelper _shredStartupHelper;
 
 		#endregion
 
@@ -62,6 +64,12 @@ namespace ClearCanvas.ImageServer.Services.Common.Shreds
 		{
 			Platform.Log(LogLevel.Debug, "{0}[{1}]: Start invoked", _className, AppDomain.CurrentDomain.FriendlyName);
 
+			_shredStartupHelper = new ShredStartupHelper(GetDisplayName());
+			_shredStartupHelper.Initialize();
+			if (_shredStartupHelper.StopFlag)
+				return;
+			_shredStartupHelper = null;
+
 			try
 			{
 				VerifyManifest();
@@ -75,6 +83,9 @@ namespace ClearCanvas.ImageServer.Services.Common.Shreds
 
 		public override void Stop()
 		{
+			if (_shredStartupHelper != null)
+				_shredStartupHelper.StopService();
+
 			if (_timer != null)
 			{
 				_timer.Dispose();

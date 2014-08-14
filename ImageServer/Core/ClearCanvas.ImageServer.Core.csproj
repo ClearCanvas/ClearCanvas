@@ -116,6 +116,7 @@
     <Compile Include="FilesystemDynamicPath.cs" />
     <Compile Include="FileSystemMonitor.cs" />
     <Compile Include="FilesystemSelector.cs" />
+    <Compile Include="Helpers\ShredStartupHelper.cs" />
     <Compile Include="Helpers\StudyComparer.cs" />
     <Compile Include="Helpers\StudyHistoryHelper.cs" />
     <Compile Include="Helpers\WorkQueueHelper.cs" />

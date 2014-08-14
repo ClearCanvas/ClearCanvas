@@ -216,7 +216,7 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
             }
             catch (Exception e)
             {
-                Platform.Log(LogLevel.Fatal, e, "Exception when opening database connection for reading");
+                Platform.Log(LogLevel.Error, e, "Exception when opening database connection for reading");
 
                 throw new PersistenceException("Unexpected exception opening database connection for reading", e);
             }
@@ -232,7 +232,7 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
             }
             catch (Exception e)
             {
-                Platform.Log(LogLevel.Fatal, e, "Exception when opening database connection for update");
+                Platform.Log(LogLevel.Error, e, "Exception when opening database connection for update");
 
                 throw new PersistenceException("Unexpected exception opening database connection for update", e);
             }

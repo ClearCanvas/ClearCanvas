@@ -27,6 +27,7 @@ using ClearCanvas.Common;
 using ClearCanvas.Common.Shreds;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
+using ClearCanvas.ImageServer.Core.Helpers;
 
 namespace ClearCanvas.ImageServer.Services.Common.Shreds
 {
@@ -47,6 +48,7 @@ namespace ClearCanvas.ImageServer.Services.Common.Shreds
 		#region Private Members
 
 		private readonly string _className;
+		private ShredStartupHelper _shredStartupHelper;
 
 		#endregion
 
@@ -63,6 +65,12 @@ namespace ClearCanvas.ImageServer.Services.Common.Shreds
 
 		public override void Start()
 		{
+			_shredStartupHelper = new ShredStartupHelper(GetDisplayName());
+			_shredStartupHelper.Initialize();
+			if (_shredStartupHelper.StopFlag)
+				return;
+			_shredStartupHelper = null;
+
 			try
 			{
 				ServerPlatform.Alert(AlertCategory.System, AlertLevel.Informational,
@@ -70,14 +78,17 @@ namespace ClearCanvas.ImageServer.Services.Common.Shreds
 								 null, TimeSpan.Zero,
 								 SR.AlertShredHostServiceStarting);
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
-				Platform.Log(LogLevel.Error, "Unexpected exception generating an alert for ShredHost startup");
+				Platform.Log(LogLevel.Error, "Unexpected exception generating an alert for ShredHost startup: {0}", e.Message);
 			}
 		}
 
 		public override void Stop()
 		{
+			if (_shredStartupHelper != null)
+				_shredStartupHelper.StopService();
+
 			PersistentStoreRegistry.GetDefaultStore().ShutdownRequested = true;
 			try
 			{
