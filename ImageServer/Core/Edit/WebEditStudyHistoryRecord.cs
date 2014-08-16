@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using ClearCanvas.ImageServer.Common.StudyHistory;
 using ClearCanvas.ImageServer.Common.Utilities;
 using ClearCanvas.ImageServer.Model;
 
@@ -34,7 +35,8 @@ namespace ClearCanvas.ImageServer.Core.Edit
 	/// Decoded information of the ChangeDescription field of a <see cref="StudyHistory"/> 
 	/// record whose type is "WebEdited"
 	/// </summary>
-	public class WebEditStudyHistoryChangeDescription
+	[ImageServerStudyHistoryType("49E19BBC-DAF3-40CD-BEAB-FC15A9028572")]
+	public class WebEditStudyHistoryChangeDescription : ImageServerStudyHistory
 	{
 		#region Public Properties
 

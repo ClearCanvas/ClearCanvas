@@ -399,6 +399,18 @@
   <data name="StudyHistoryTypeEnum_ExternalEdit_LongDescription" xml:space="preserve">
     <value>Study was edited via an external request.</value>
   </data>
+  <data name="StudyHistoryTypeEnum_StudyCompress_Description" xml:space="preserve">
+    <value>Study Compress</value>
+  </data>
+  <data name="StudyHistoryTypeEnum_StudyCompress_LongDescription" xml:space="preserve">
+    <value>Study was compressed.</value>
+  </data>
+  <data name="StudyHistoryTypeEnum_SopCompress_Description" xml:space="preserve">
+    <value>SOP Compress</value>
+  </data>
+  <data name="StudyHistoryTypeEnum_SopCompress_LongDescription" xml:space="preserve">
+    <value>Study was compressed by a SOP Compress rule.</value>
+  </data>
   <data name="ServiceLockTypeEnum_FilesystemDelete_Description" xml:space="preserve">
     <value>Filesystem Watermark Check</value>
   </data>

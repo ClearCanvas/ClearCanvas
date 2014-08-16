@@ -601,6 +601,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Final Transfer Syntax.
+        /// </summary>
+        internal static string FinalTransferSyntax {
+            get {
+                return ResourceManager.GetString("FinalTransferSyntax", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to From Date.
         /// </summary>
         internal static string FromDate {
@@ -759,6 +768,15 @@ namespace Resources {
         internal static string OriginalPassword {
             get {
                 return ResourceManager.GetString("OriginalPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Original Transfer Syntax.
+        /// </summary>
+        internal static string OriginalTransferSyntax {
+            get {
+                return ResourceManager.GetString("OriginalTransferSyntax", resourceCulture);
             }
         }
         

@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 
 // Copyright (c) 2013, ClearCanvas Inc.
 // All rights reserved.
@@ -23,30 +23,30 @@
 #endregion
 
 using System;
+using System.Runtime.Serialization;
 using ClearCanvas.Common.Serialization;
-using ClearCanvas.ImageServer.Common.StudyHistory;
-using ClearCanvas.ImageServer.Common.WorkQueue;
 
-namespace ClearCanvas.ImageServer.Core.Data
+namespace ClearCanvas.ImageServer.Common.StudyHistory
 {
-	[ImageServerStudyHistoryType("4EE14CE6-8F2B-4A99-A89F-1AE96BDF2A21")]
-    [WorkQueueDataType("0579EBC2-44EA-4C0F-B30B-2B2D9647B1E1")]
-    public class ReprocessStudyChangeLog : DataContractBase
-    {
-        #region Private Members
+	/// <summary>
+	/// Base class for Study History records.
+	/// </summary>
+	[DataContract(Namespace = ImageServerStudyHistoryNamespace.Value)]
+	[ImageServerStudyHistoryType("FA1B30A1-B9C8-4C90-BF79-EEEB6BB6872E")]
+	public abstract class ImageServerStudyHistory : DataContractBase
+	{
+	}
 
-    	#endregion
+	[DataContract(Namespace = ImageServerStudyHistoryNamespace.Value)]
+	[ImageServerStudyHistoryType("98ED279E-4D76-400C-99E1-9AEFFC81AD8E")]
+	public class CompressionStudyHistory : ImageServerStudyHistory
+	{
+		public DateTime TimeStamp { get; set; }
 
-        #region Public Properties
+		public string OriginalTransferSyntaxUid { get; set; }
 
-    	public DateTime TimeStamp { get; set; }
+		public string FinalTransferSyntaxUid { get; set; }
 
-    	public string Reason { get; set; }
-
-    	public string User { get; set; }
-
-    	public string StudyInstanceUid { get; set; }
-
-    	#endregion
-    }
+		public string RuleName { get; set; }
+	}
 }

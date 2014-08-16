@@ -523,6 +523,27 @@ GO
 IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
 GO
 
+PRINT N'Add new StudyCompress and SopCompress StudyHistoryTypeEnum'
+GO
+
+INSERT INTO [ImageServer].[dbo].[StudyHistoryTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),205,'StudyCompress','Study Compress','Study was compressed.')
+GO
+INSERT INTO [ImageServer].[dbo].[StudyHistoryTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),206,'SopCompress','SOP Compress','Study was compressed by a SOP Compress rule.')
+GO
+
+
+IF @@ERROR<>0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+
+
 IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT>0 BEGIN

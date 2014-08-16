@@ -1829,6 +1829,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Study compressed to {0}.
+        /// </summary>
+        internal static string StudyDetails_History_Compress {
+            get {
+                return ResourceManager.GetString("StudyDetails_History_Compress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete duplicate SOPs..
         /// </summary>
         internal static string StudyDetails_History_Duplicate_Delete {

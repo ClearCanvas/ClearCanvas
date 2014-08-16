@@ -238,8 +238,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies
 
             ClearToStudyDateButton.Attributes["onclick"] = ScriptHelper.ClearDate(ToStudyDate.ClientID, ToStudyDateCalendarExtender.ClientID);
             ClearFromStudyDateButton.Attributes["onclick"] = ScriptHelper.ClearDate(FromStudyDate.ClientID, FromStudyDateCalendarExtender.ClientID);
-            ToStudyDate.Attributes["OnChange"] = ScriptHelper.CheckDateRange(FromStudyDate.ClientID, ToStudyDate.ClientID, ToStudyDate.ClientID, ToStudyDateCalendarExtender.ClientID, "To Date must be greater than From Date");
-            FromStudyDate.Attributes["OnChange"] = ScriptHelper.CheckDateRange(FromStudyDate.ClientID, ToStudyDate.ClientID, FromStudyDate.ClientID, FromStudyDateCalendarExtender.ClientID, "From Date must be less than To Date");
+			SearchButton.Attributes["onclick"] = ScriptHelper.CheckDateRange(FromStudyDate.ClientID, ToStudyDate.ClientID, "To Date must be greater than From Date");
             
             GridPagerTop.InitializeGridPager(SR.GridPagerStudySingleItem, SR.GridPagerStudyMultipleItems, StudyListGridView.TheGrid,
                                              () => StudyListGridView.ResultCount, ImageServerConstants.GridViewPagerPosition.Top);

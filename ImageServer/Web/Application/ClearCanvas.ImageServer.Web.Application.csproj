@@ -667,12 +667,20 @@
     <Compile Include="Pages\Studies\SeriesDetails\StudySummaryPanel.ascx.designer.cs">
       <DependentUpon>StudySummaryPanel.ascx</DependentUpon>
     </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Code\CompressionHistoryRendererFactory.cs" />
     <Compile Include="Pages\Studies\StudyDetails\Controls\AddAuthorityGroupsDialog.ascx.cs">
       <DependentUpon>AddAuthorityGroupsDialog.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Pages\Studies\StudyDetails\Controls\AddAuthorityGroupsDialog.ascx.designer.cs">
       <DependentUpon>AddAuthorityGroupsDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\CompressionHistory.ascx.cs">
+      <DependentUpon>CompressionHistory.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\CompressionHistory.ascx.designer.cs">
+      <DependentUpon>CompressionHistory.ascx</DependentUpon>
     </Compile>
     <Compile Include="Pages\Studies\StudyDetails\Controls\UpdateAuthorityGroupDialog.ascx.cs">
       <DependentUpon>UpdateAuthorityGroupDialog.ascx</DependentUpon>
@@ -1561,6 +1569,7 @@
     <Content Include="Pages\Queues\StudyIntegrityQueue\SIQEntryTooltip.ascx" />
     <Content Include="Pages\Queues\WorkQueue\Edit\EditWorkQueueDetailsView.ascx" />
     <Content Include="Pages\Studies\StudyDetails\Controls\AddAuthorityGroupsDialog.ascx" />
+    <Content Include="Pages\Studies\StudyDetails\Controls\CompressionHistory.ascx" />
     <Content Include="Pages\Studies\StudyDetails\Controls\UpdateAuthorityGroupDialog.ascx" />
     <EmbeddedResource Include="App_GlobalResources\ColumnHeaders.resx">
       <Generator>GlobalResourceProxyGenerator</Generator>

@@ -903,4 +903,7 @@ At least one server partition is required. Please add a new server partition.</v
   <data name="ToFromDateValidationError" xml:space="preserve">
     <value>"To Date must be greater than From Date"</value>
   </data>
+  <data name="StudyDetails_History_Compress" xml:space="preserve">
+    <value>Study compressed to {0}</value>
+  </data>
 </root>

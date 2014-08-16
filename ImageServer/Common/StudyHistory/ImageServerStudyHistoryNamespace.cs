@@ -1,6 +1,6 @@
-#region License
+﻿#region License
 
-// Copyright (c) 2013, ClearCanvas Inc.
+// Copyright (c) 2014, ClearCanvas Inc.
 // All rights reserved.
 // http://www.clearcanvas.ca
 //
@@ -22,31 +22,10 @@
 
 #endregion
 
-using System;
-using ClearCanvas.Common.Serialization;
-using ClearCanvas.ImageServer.Common.StudyHistory;
-using ClearCanvas.ImageServer.Common.WorkQueue;
-
-namespace ClearCanvas.ImageServer.Core.Data
+namespace ClearCanvas.ImageServer.Common.StudyHistory
 {
-	[ImageServerStudyHistoryType("4EE14CE6-8F2B-4A99-A89F-1AE96BDF2A21")]
-    [WorkQueueDataType("0579EBC2-44EA-4C0F-B30B-2B2D9647B1E1")]
-    public class ReprocessStudyChangeLog : DataContractBase
-    {
-        #region Private Members
-
-    	#endregion
-
-        #region Public Properties
-
-    	public DateTime TimeStamp { get; set; }
-
-    	public string Reason { get; set; }
-
-    	public string User { get; set; }
-
-    	public string StudyInstanceUid { get; set; }
-
-    	#endregion
-    }
+	public static class ImageServerStudyHistoryNamespace
+	{
+		public const string Value = ImageServerNamespace.Value + "/studyhistory";
+	}
 }

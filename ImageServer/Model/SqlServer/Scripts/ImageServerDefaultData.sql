@@ -1173,6 +1173,16 @@ INSERT INTO [ImageServer].[dbo].[StudyHistoryTypeEnum]
      VALUES
            (newid(),204,'ExternalEdit','External Edit','Study was edited via an external request.')
 GO
+INSERT INTO [ImageServer].[dbo].[StudyHistoryTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),205,'StudyCompress','Study Compress','Study was compressed.')
+GO
+INSERT INTO [ImageServer].[dbo].[StudyHistoryTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),206,'SopCompress','SOP Compress','Study was compressed by a SOP Compress rule.')
+GO
 
 -- Canned Text
 INSERT INTO [ImageServer].[dbo].[CannedText]([GUID],[Label],[Category],[Text])
