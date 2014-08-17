@@ -163,6 +163,7 @@
     <Compile Include="IExtensionPoint.cs" />
     <Compile Include="IMessageBox.cs" />
     <Compile Include="ITimeProvider.cs" />
+    <Compile Include="JetbrainsAnnotations.cs" />
     <Compile Include="LicenseSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
