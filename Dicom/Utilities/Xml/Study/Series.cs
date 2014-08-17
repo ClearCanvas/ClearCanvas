@@ -101,7 +101,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 		private readonly SeriesXml _xml;
 		private readonly Study _parentStudy;
 		private readonly IDicomFileLoader _dicomFileLoader;
-		private readonly SopInstance _firstSopInstance;
+		private readonly ISopInstance _firstSopInstance;
 		private readonly SopInstanceCollection _sopInstanceCollection;
 
 		internal Series(SeriesXml xml, Study parent, IDicomFileLoader dicomFileLoader)
@@ -109,8 +109,8 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 			_xml = xml;
 			_parentStudy = parent;
 			_dicomFileLoader = dicomFileLoader;
-			_firstSopInstance = GetSopInstance(_xml.First());
 			_sopInstanceCollection = new SopInstanceCollection(this);
+			_firstSopInstance = _sopInstanceCollection.FirstOrDefault();
 		}
 
 		#region ISeries Members
@@ -127,32 +127,32 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 
 		public string StationName
 		{
-			get { return _firstSopInstance.GetAttribute(DicomTags.StationName).ToString(); }
+			get { return FirstSopInstance.GetAttribute(DicomTags.StationName).ToString(); }
 		}
 
 		public string Manufacturer
 		{
-			get { return _firstSopInstance.GetAttribute(DicomTags.Manufacturer).ToString(); }
+			get { return FirstSopInstance.GetAttribute(DicomTags.Manufacturer).ToString(); }
 		}
 
 		public string ManufacturersModelName
 		{
-			get { return _firstSopInstance.GetAttribute(DicomTags.ManufacturersModelName).ToString(); }
+			get { return FirstSopInstance.GetAttribute(DicomTags.ManufacturersModelName).ToString(); }
 		}
 
 		public string InstitutionName
 		{
-			get { return _firstSopInstance.GetAttribute(DicomTags.InstitutionName).ToString(); }
+			get { return FirstSopInstance.GetAttribute(DicomTags.InstitutionName).ToString(); }
 		}
 
 		public string InstitutionAddress
 		{
-			get { return _firstSopInstance.GetAttribute(DicomTags.InstitutionAddress).ToString(); }
+			get { return FirstSopInstance.GetAttribute(DicomTags.InstitutionAddress).ToString(); }
 		}
 
 		public string InstitutionalDepartmentName
 		{
-			get { return _firstSopInstance.GetAttribute(DicomTags.InstitutionalDepartmentName).ToString(); }
+			get { return FirstSopInstance.GetAttribute(DicomTags.InstitutionalDepartmentName).ToString(); }
 		}
 
 		#endregion
@@ -171,17 +171,17 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 
 		public string Modality
 		{
-			get { return _firstSopInstance.GetAttribute(DicomTags.Modality).ToString(); }
+			get { return FirstSopInstance.GetAttribute(DicomTags.Modality).ToString(); }
 		}
 
 		public string SeriesDescription
 		{
-			get { return _firstSopInstance.GetAttribute(DicomTags.SeriesDescription).ToString(); }
+			get { return FirstSopInstance.GetAttribute(DicomTags.SeriesDescription).ToString(); }
 		}
 
 		public int SeriesNumber
 		{
-			get { return _firstSopInstance.GetAttribute(DicomTags.SeriesNumber).GetInt32(0, 0); }
+			get { return FirstSopInstance.GetAttribute(DicomTags.SeriesNumber).GetInt32(0, 0); }
 		}
 
 		public int? NumberOfSeriesRelatedInstances
@@ -190,6 +190,17 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 		}
 
 		#endregion
+
+		private ISopInstance FirstSopInstance
+		{
+			get
+			{
+				if (_firstSopInstance == null)
+					throw new InvalidOperationException("Series contains no SOPs.");
+
+				return _firstSopInstance;
+			}
+		}
 
 		private SopInstance GetSopInstance(InstanceXml xml)
 		{

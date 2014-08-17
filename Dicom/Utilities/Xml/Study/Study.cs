@@ -36,6 +36,8 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 	/// </summary>
 	public class Study : IStudy
 	{
+		#region SeriesCollection class
+
 		private class SeriesCollection : ISeriesCollection
 		{
 			private readonly Study _owner;
@@ -97,24 +99,23 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 			}
 		}
 
+		#endregion
 
 
 		private readonly string _studyInstanceUid;
 		private readonly StudyXml _xml;
 		private readonly IDicomFileLoader _dicomFileLoader;
-		private readonly ISeries _firstSeries;
 		private readonly ISopInstance _firstSopInstance;
 		private readonly SeriesCollection _seriesCollection;
 
-		public Study(string studyInstanceUid, StudyXml xml, IDicomFileLoader dicomFileLoader)
+		public Study(StudyXml xml, IDicomFileLoader dicomFileLoader)
 		{
-			_studyInstanceUid = studyInstanceUid;
+			_studyInstanceUid = xml.StudyInstanceUid;
 			_xml = xml;
-
-			_firstSeries = GetSeries(xml.First());
-			_firstSopInstance = _firstSeries.SopInstances.First();
 			_dicomFileLoader = dicomFileLoader;
+
 			_seriesCollection = new SeriesCollection(this);
+			_firstSopInstance = _seriesCollection.SelectMany(s => s.SopInstances).FirstOrDefault();
 		}
 
 		public IDicomFileLoader DicomFileLoader
@@ -131,19 +132,25 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 
 		public ISopInstance FirstSopInstance
 		{
-			get { return _firstSopInstance; }
+			get
+			{
+				if(_firstSopInstance == null)
+					throw new InvalidOperationException("Study contains no SOPs.");
+
+				return _firstSopInstance;
+			}
 		}
 
 		public DateTime? StudyDate
 		{
-			get { return DateParser.Parse(_firstSopInstance.GetAttribute(DicomTags.StudyDate).ToString()); }
+			get { return DateParser.Parse(FirstSopInstance.GetAttribute(DicomTags.StudyDate).ToString()); }
 		}
 
 		public TimeSpan? StudyTime
 		{
 			get
 			{
-				var time = TimeParser.Parse(_firstSopInstance.GetAttribute(DicomTags.StudyTime).ToString());
+				var time = TimeParser.Parse(FirstSopInstance.GetAttribute(DicomTags.StudyTime).ToString());
 				if (time.HasValue)
 					return time.Value.TimeOfDay;
 
@@ -177,37 +184,37 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 
 		public string StudyDescription
 		{
-			get { return _firstSopInstance.GetAttribute(DicomTags.StudyDescription).ToString(); }
+			get { return FirstSopInstance.GetAttribute(DicomTags.StudyDescription).ToString(); }
 		}
 
 		public string StudyId
 		{
-			get { return _firstSopInstance.GetAttribute(DicomTags.StudyId).ToString(); }
+			get { return FirstSopInstance.GetAttribute(DicomTags.StudyId).ToString(); }
 		}
 
 		string IStudyData.StudyDate
 		{
-			get { return _firstSopInstance.GetAttribute(DicomTags.StudyDate).ToString(); }
+			get { return FirstSopInstance.GetAttribute(DicomTags.StudyDate).ToString(); }
 		}
 
 		string IStudyData.StudyTime
 		{
-			get { return _firstSopInstance.GetAttribute(DicomTags.StudyTime).ToString(); }
+			get { return FirstSopInstance.GetAttribute(DicomTags.StudyTime).ToString(); }
 		}
 
 		public string AccessionNumber
 		{
-			get { return _firstSopInstance.GetAttribute(DicomTags.AccessionNumber).ToString(); }
+			get { return FirstSopInstance.GetAttribute(DicomTags.AccessionNumber).ToString(); }
 		}
 
 		public string PatientsAge
 		{
-			get { return _firstSopInstance.GetAttribute(DicomTags.PatientsAge).ToString(); }
+			get { return FirstSopInstance.GetAttribute(DicomTags.PatientsAge).ToString(); }
 		}
 
 		public string ReferringPhysiciansName
 		{
-			get { return _firstSopInstance.GetAttribute(DicomTags.ReferringPhysiciansName).ToString(); }
+			get { return FirstSopInstance.GetAttribute(DicomTags.ReferringPhysiciansName).ToString(); }
 		}
 
 		public int? NumberOfStudyRelatedSeries
@@ -226,29 +233,29 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 
 		public string PatientId
 		{
-			get { return _firstSopInstance.GetAttribute(DicomTags.PatientId).ToString(); }
+			get { return FirstSopInstance.GetAttribute(DicomTags.PatientId).ToString(); }
 		}
 
 		public string PatientsName
 		{
-			get { return _firstSopInstance.GetAttribute(DicomTags.PatientsName).ToString(); }
+			get { return FirstSopInstance.GetAttribute(DicomTags.PatientsName).ToString(); }
 		}
 
 		public DateTime? PatientsBirthDate
 		{
-			get { return DateParser.Parse(_firstSopInstance.GetAttribute(DicomTags.PatientsBirthDate).ToString()); }
+			get { return DateParser.Parse(FirstSopInstance.GetAttribute(DicomTags.PatientsBirthDate).ToString()); }
 		}
 
 		string IPatientData.PatientsBirthDate
 		{
-			get { return _firstSopInstance.GetAttribute(DicomTags.PatientsBirthDate).ToString(); }
+			get { return FirstSopInstance.GetAttribute(DicomTags.PatientsBirthDate).ToString(); }
 		}
 
 		public TimeSpan? PatientsBirthTime
 		{
 			get
 			{
-				var time = TimeParser.Parse(_firstSopInstance.GetAttribute(DicomTags.PatientsBirthTime).ToString());
+				var time = TimeParser.Parse(FirstSopInstance.GetAttribute(DicomTags.PatientsBirthTime).ToString());
 				if (time.HasValue)
 					return time.Value.TimeOfDay;
 
@@ -258,17 +265,17 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 
 		string IPatientData.PatientsBirthTime
 		{
-			get { return _firstSopInstance.GetAttribute(DicomTags.PatientsBirthTime).ToString(); }
+			get { return FirstSopInstance.GetAttribute(DicomTags.PatientsBirthTime).ToString(); }
 		}
 
 		public string PatientsSex
 		{
-			get { return _firstSopInstance.GetAttribute(DicomTags.PatientsSex).ToString(); }
+			get { return FirstSopInstance.GetAttribute(DicomTags.PatientsSex).ToString(); }
 		}
 
 		public string PatientSpeciesDescription
 		{
-			get { return _firstSopInstance.GetAttribute(DicomTags.PatientSpeciesDescription).ToString(); }
+			get { return FirstSopInstance.GetAttribute(DicomTags.PatientSpeciesDescription).ToString(); }
 		}
 
 		public string PatientSpeciesCodeSequenceCodingSchemeDesignator
@@ -288,7 +295,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 
 		public string PatientBreedDescription
 		{
-			get { return _firstSopInstance.GetAttribute(DicomTags.PatientBreedDescription).ToString(); }
+			get { return FirstSopInstance.GetAttribute(DicomTags.PatientBreedDescription).ToString(); }
 		}
 
 		public string PatientBreedCodeSequenceCodingSchemeDesignator
@@ -309,17 +316,17 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 
 		public string ResponsiblePerson
 		{
-			get { return _firstSopInstance.GetAttribute(DicomTags.ResponsiblePerson).ToString(); }
+			get { return FirstSopInstance.GetAttribute(DicomTags.ResponsiblePerson).ToString(); }
 		}
 
 		public string ResponsiblePersonRole
 		{
-			get { return _firstSopInstance.GetAttribute(DicomTags.ResponsiblePersonRole).ToString(); }
+			get { return FirstSopInstance.GetAttribute(DicomTags.ResponsiblePersonRole).ToString(); }
 		}
 
 		public string ResponsibleOrganization
 		{
-			get { return _firstSopInstance.GetAttribute(DicomTags.ResponsibleOrganization).ToString(); }
+			get { return FirstSopInstance.GetAttribute(DicomTags.ResponsibleOrganization).ToString(); }
 		}
 
 		#endregion
@@ -331,7 +338,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 
 		private string GetSequenceValue(uint sequenceTag, uint itemTag)
 		{
-			var sequence = _firstSopInstance.GetAttribute(sequenceTag) as DicomAttributeSQ;
+			var sequence = FirstSopInstance.GetAttribute(sequenceTag) as DicomAttributeSQ;
 			if (sequence == null)
 				return String.Empty;
 
