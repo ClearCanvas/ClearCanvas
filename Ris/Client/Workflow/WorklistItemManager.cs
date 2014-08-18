@@ -270,6 +270,9 @@ namespace ClearCanvas.Ris.Client.Workflow
 
 		public void IgnoreWorklistItems(List<TWorklistItem> interpretations)
 		{
+			if (interpretations.Count == 0)
+				return;
+
 			_visitedItems.AddRange(interpretations);
 			RefreshWorklistItemLocalQueue();
 		}
@@ -338,6 +341,9 @@ namespace ClearCanvas.Ris.Client.Workflow
 
 		private void RefreshWorklistItemLocalQueue()
 		{
+			if (!this.HasValidWorklistContext)
+				return;
+
 			// refresh the count of available items
 			_allAvailableItemsCount = GetAvailableItemCount();
 
