@@ -451,7 +451,7 @@ BEGIN
 			-- iterate through the GUIDs
 			SET @String = @UserAuthorityGroupGUIDs + @Delimiter
 			SET @Pos = charindex(@Delimiter,@String)
-			WHILE (@pos <> 0)
+			WHILE (@Pos <> 0)
 			BEGIN
 				SET @guid = substring(@String,1,@Pos - 1)
 				
@@ -461,8 +461,8 @@ BEGIN
 				--PRINT @guid
 				SET @guids = @guids + '''''''' + @guid + ''''''''
 
-				SET @String = substring(@String,@pos+1,len(@String))
-				SET @pos = charindex(@Delimiter,@String)
+				SET @String = substring(@String,@Pos+1,len(@String))
+				SET @Pos = charindex(@Delimiter,@String)
 			END 
 
 			SET @DataAccessJoinStmt = '' JOIN StudyDataAccess sda ON sda.StudyStorageGUID=workqueue.StudyStorageGUID 
@@ -1833,9 +1833,9 @@ BEGIN
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
 
-	if (@ProcessorID is NULL)
+	if (@ProcessorId is NULL)
 	begin
-		RAISERROR (N''Calling [dbo.QueryServiceLock] with @ProcessorID = NULL'', 18 /* severity.. >=20 means fatal but needs sysadmin role*/, 1 /*state*/)
+		RAISERROR (N''Calling [dbo.QueryServiceLock] with @ProcessorId = NULL'', 18 /* severity.. >=20 means fatal but needs sysadmin role*/, 1 /*state*/)
 		RETURN 50000
 	end
 
@@ -1989,7 +1989,7 @@ BEGIN
     -- Insert statements for procedure here
 		UPDATE ServiceLock
 		SET Lock = @Lock, ScheduledTime = @ScheduledTime,
-			ProcessorID = @ProcessorID, Enabled = @Enabled
+			ProcessorId = @ProcessorId, Enabled = @Enabled
 		WHERE GUID = @ServiceLockGUID
 END
 ' 
@@ -2770,7 +2770,7 @@ BEGIN
 		BEGIN TRANSACTION
 
 		-- Create ''CleanupStudy'' when deleting ''StudyProcess''
-		IF (@workQueueTypeEnum = @StudyProcessTypeEnum)
+		IF (@WorkQueueTypeEnum = @StudyProcessTypeEnum)
 		BEGIN
 			declare @CleanupStudyTypeEnum as smallint
 			select @CleanupStudyTypeEnum = Enum from WorkQueueTypeEnum where Lookup = ''CleanupStudy''
@@ -2786,7 +2786,7 @@ BEGIN
 			DELETE FROM WorkQueue where GUID = @WorkQueueGUID			
 		END
 		-- Create ''CleanupDuplicate'' when deleting ''ProcessDuplicate''
-		ELSE IF (@workQueueTypeEnum = @ProcessDuplicateTypeEnum)
+		ELSE IF (@WorkQueueTypeEnum = @ProcessDuplicateTypeEnum)
 		BEGIN
 			declare @CleanupDuplicateTypeEnum as smallint
 			select @CleanupDuplicateTypeEnum = Enum from WorkQueueTypeEnum where Lookup = ''CleanupDuplicate''
@@ -2803,7 +2803,7 @@ BEGIN
 			DELETE FROM WorkQueue where GUID = @WorkQueueGUID			
 		END
 		-- Create ''ReconcileCleanup'' when deleting ''ReconcileStudy'' 
-		ELSE IF (@workQueueTypeEnum = @ReconcileStudyTypeEnum)
+		ELSE IF (@WorkQueueTypeEnum = @ReconcileStudyTypeEnum)
 		BEGIN
 			DECLARE @StudyHistoryGUID as uniqueidentifier
 			DECLARE @CleanupReconcileTypeEnum as smallint
@@ -3034,14 +3034,14 @@ BEGIN
 		BEGIN
 			UPDATE ArchiveQueue
 			SET ArchiveQueueStatusEnum = @ArchiveQueueStatusEnum, ScheduledTime = @ScheduledTime,
-				ProcessorID = Null
+				ProcessorId = Null
 			WHERE GUID = @ArchiveQueueGUID
 		END
 		ELSE
 		BEGIN
 			UPDATE ArchiveQueue
 			SET ArchiveQueueStatusEnum = @ArchiveQueueStatusEnum, ScheduledTime = @ScheduledTime,
-				ProcessorID = Null, FailureDescription = @FailureDescription
+				ProcessorId = Null, FailureDescription = @FailureDescription
 			WHERE GUID = @ArchiveQueueGUID
 		END
 		UPDATE StudyStorage set ReadLock = ReadLock-1, LastAccessedTime = getdate() 
@@ -3071,16 +3071,16 @@ EXEC dbo.sp_executesql @statement = N'-- =======================================
 CREATE PROCEDURE [dbo].[QueryArchiveQueue] 
 	-- Add the parameters for the stored procedure here
 	@PartitionArchiveGUID uniqueidentifier,
-	@ProcessorID varchar(256)
+	@ProcessorId varchar(256)
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
 
-	if (@ProcessorID is NULL)
+	if (@ProcessorId is NULL)
 	begin
-		RAISERROR (N''Calling [dbo.QueryArchiveQueue] with @ProcessorID = NULL'', 18 /* severity.. >=20 means fatal but needs sysadmin role*/, 1 /*state*/)
+		RAISERROR (N''Calling [dbo.QueryArchiveQueue] with @ProcessorId = NULL'', 18 /* severity.. >=20 means fatal but needs sysadmin role*/, 1 /*state*/)
 		RETURN 50000
 	end
 
@@ -3124,7 +3124,7 @@ BEGIN
 		BEGIN
 			UPDATE ArchiveQueue
 				SET ArchiveQueueStatusEnum  = @InProgressStatusEnum,
-					ProcessorID = @ProcessorID
+					ProcessorId = @ProcessorId
 			WHERE 
 				GUID = @ArchiveQueueGUID
 				
@@ -3172,14 +3172,14 @@ EXEC dbo.sp_executesql @statement = N'-- =======================================
 CREATE PROCEDURE [dbo].[QueryRestoreQueue] 
 	@PartitionArchiveGUID uniqueidentifier,
 	@RestoreQueueStatusEnum smallint,
-	@ProcessorID varchar(256)
+	@ProcessorId varchar(256)
 AS
 BEGIN
 	SET NOCOUNT ON;
 
-	if (@ProcessorID is NULL)
+	if (@ProcessorId is NULL)
 	begin
-		RAISERROR (N''Calling [dbo.QueryRestoreQueue] with @ProcessorID = NULL'', 18 /* severity.. >=20 means fatal but needs sysadmin role*/, 1 /*state*/)
+		RAISERROR (N''Calling [dbo.QueryRestoreQueue] with @ProcessorId = NULL'', 18 /* severity.. >=20 means fatal but needs sysadmin role*/, 1 /*state*/)
 		RETURN 50000
 	end
 
@@ -3222,7 +3222,7 @@ BEGIN
 		BEGIN
 			UPDATE RestoreQueue
 				SET RestoreQueueStatusEnum  = @InProgressStatusEnum,
-					ProcessorID = @ProcessorID
+					ProcessorId = @ProcessorId
 			WHERE 
 				GUID = @RestoreQueueGUID
 				
@@ -3302,14 +3302,14 @@ BEGIN
 		BEGIN
 			UPDATE RestoreQueue
 			SET RestoreQueueStatusEnum = @RestoreQueueStatusEnum, ScheduledTime = @ScheduledTime,
-				ProcessorID = Null
+				ProcessorId = Null
 			WHERE GUID = @RestoreQueueGUID
 		END
 		ELSE
 		BEGIN
 			UPDATE RestoreQueue
 			SET RestoreQueueStatusEnum = @RestoreQueueStatusEnum, ScheduledTime = @ScheduledTime,
-				ProcessorID = Null, FailureDescription = @FailureDescription
+				ProcessorId = Null, FailureDescription = @FailureDescription
 			WHERE GUID = @RestoreQueueGUID
 		END
 
@@ -3607,7 +3607,7 @@ BEGIN
 			-- iterate through the GUIDs
 			SET @String = @UserAuthorityGroupGUIDs + @Delimiter
 			SET @Pos = charindex(@Delimiter,@String)
-			WHILE (@pos <> 0)
+			WHILE (@Pos <> 0)
 			BEGIN
 				SET @guid = substring(@String,1,@Pos - 1)
 				
@@ -3617,8 +3617,8 @@ BEGIN
 				--PRINT @guid
 				SET @guids = @guids + '''''''' + @guid + ''''''''
 
-				SET @String = substring(@String,@pos+1,len(@String))
-				SET @pos = charindex(@Delimiter,@String)
+				SET @String = substring(@String,@Pos+1,len(@String))
+				SET @Pos = charindex(@Delimiter,@String)
 			END 
 
 			SET @DataAccessJoinStmt = '' JOIN StudyDataAccess sda ON sda.StudyStorageGUID=ArchiveQueue.StudyStorageGUID 
@@ -3794,7 +3794,7 @@ BEGIN
 			-- iterate through the GUIDs
 			SET @String = @UserAuthorityGroupGUIDs + @Delimiter
 			SET @Pos = charindex(@Delimiter,@String)
-			WHILE (@pos <> 0)
+			WHILE (@Pos <> 0)
 			BEGIN
 				SET @guid = substring(@String,1,@Pos - 1)
 				
@@ -3804,8 +3804,8 @@ BEGIN
 				--PRINT @guid
 				SET @guids = @guids + '''''''' + @guid + ''''''''
 
-				SET @String = substring(@String,@pos+1,len(@String))
-				SET @pos = charindex(@Delimiter,@String)
+				SET @String = substring(@String,@Pos+1,len(@String))
+				SET @Pos = charindex(@Delimiter,@String)
 			END 
 
 			SET @DataAccessJoinStmt = '' JOIN StudyDataAccess sda ON sda.StudyStorageGUID=RestoreQueue.StudyStorageGUID 
@@ -4163,7 +4163,7 @@ CREATE PROCEDURE [dbo].[InsertDuplicateSopReceivedQueue]
 	@SopInstanceUid varchar(64),
 	@StudyData xml,
 	@Details xml,
-    @GroupId varchar(50),
+    @GroupID varchar(50),
 	@UidRelativePath varchar(256)
 AS
 BEGIN
