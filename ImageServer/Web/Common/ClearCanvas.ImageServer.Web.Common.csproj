@@ -170,6 +170,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>AboutPage.settings</DependentUpon>
     </Compile>
+    <Compile Include="PatientSummaryPanelExtensionPoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\WebAppUserCredentialProvider.cs" />
     <Compile Include="Security\XmlMembershipProvider.cs" />
