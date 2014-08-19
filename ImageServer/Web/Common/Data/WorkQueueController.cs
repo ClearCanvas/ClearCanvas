@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Web;
 using System.Xml;
 using ClearCanvas.Common;
 using ClearCanvas.Enterprise.Core;
@@ -58,7 +59,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
         public static StudyStorageLocation GetLoadStorageLocation(WorkQueue item)
         {
 
-            var select = HttpContextData.Current.ReadContext.GetBroker<IQueryStudyStorageLocation>();
+			var select = HttpContext.Current.GetSharedPersistentContext().GetBroker<IQueryStudyStorageLocation>();
 
             var parms = new StudyStorageLocationQueryParameters();
             parms.StudyStorageKey = item.StudyStorageKey;
@@ -195,7 +196,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
             {
                 IList<WorkQueue> list;
 
-                IWebQueryWorkQueue broker = HttpContextData.Current.ReadContext.GetBroker<IWebQueryWorkQueue>();
+                IWebQueryWorkQueue broker = HttpContext.Current.GetSharedPersistentContext().GetBroker<IWebQueryWorkQueue>();
                 list = broker.Find(parameters);
                 return list;
             }
@@ -211,7 +212,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
             IList<WorkQueueInfo> workQueueInfo = new List<WorkQueueInfo>();
             
             WorkQueueProcessorIDsParameters parameters = new WorkQueueProcessorIDsParameters();
-            IWorkQueueProcessorIDs broker = HttpContextData.Current.ReadContext.GetBroker<IWorkQueueProcessorIDs>();
+            IWorkQueueProcessorIDs broker = HttpContext.Current.GetSharedPersistentContext().GetBroker<IWorkQueueProcessorIDs>();
             IList<WorkQueue> processorIDList = broker.Find(parameters);
 
             WorkQueueSelectCriteria criteria = new WorkQueueSelectCriteria();

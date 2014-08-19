@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using System.Web;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common.Authentication;
 using ClearCanvas.ImageServer.Core;
@@ -554,7 +555,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 			_list = new List<StudySummary>();
 
 			foreach (Study study in studyList)
-                _list.Add(StudySummaryAssembler.CreateStudySummary(HttpContextData.Current.ReadContext, study));
+				_list.Add(StudySummaryAssembler.CreateStudySummary(HttpContext.Current.GetSharedPersistentContext(), study));
 
 			if (StudyFoundSet != null)
 				StudyFoundSet(_list);

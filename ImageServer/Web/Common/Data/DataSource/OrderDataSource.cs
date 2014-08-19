@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using ClearCanvas.Dicom.Iod;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Core;
@@ -239,7 +240,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
             _list = new List<OrderSummary>();
 
             foreach (Order study in studyList)
-                _list.Add(OrderSummaryAssembler.CreateOrderSummary(HttpContextData.Current.ReadContext, study));
+				_list.Add(OrderSummaryAssembler.CreateOrderSummary(HttpContext.Current.GetSharedPersistentContext(), study));
 
             if (OrderFoundSet != null)
                 OrderFoundSet(_list);
