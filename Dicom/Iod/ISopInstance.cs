@@ -1,5 +1,26 @@
+using JetBrains.Annotations;
+
 namespace ClearCanvas.Dicom.Iod
 {
+	public class StorageInfo
+	{
+		public StorageInfo(long fileSize, TransferSyntax transferSyntax)
+		{
+			FileSize = fileSize;
+			TransferSyntax = transferSyntax;
+		}
+
+		/// <summary>
+		/// Gets the size in bytes of the associated DICOM file.
+		/// </summary>
+		public long FileSize { get; private set; }
+
+		/// <summary>
+		/// Gets the transfer syntax.
+		/// </summary>
+		public TransferSyntax TransferSyntax { get; private set; }
+	}
+
 	/// <summary>
 	/// Abstract representation of a sop instance, that provides <see cref="DicomAttribute"/> objects, or can construct and return an entire header.
 	/// </summary>
@@ -15,6 +36,14 @@ namespace ClearCanvas.Dicom.Iod
 		/// </summary>
 		SopClass SopClass { get; }
 
+		/// <summary>
+		/// Gets the storage information if applicable, otherwise null.
+		/// </summary>
+		StorageInfo StorageInfo { get; }
+
+		/// <summary>
+		/// Gets the Source Application Entity Title.
+		/// </summary>
 		string SourceApplicationEntityTitle { get; }
 
 		/// <summary>

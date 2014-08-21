@@ -107,6 +107,11 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 			get { return SopClass.GetSopClass(_xml.SopClass.Uid); }
 		}
 
+		public StorageInfo StorageInfo
+		{
+			get { return new StorageInfo(_xml.FileSize, _xml.TransferSyntax); }
+		}
+
 		public string SourceApplicationEntityTitle
 		{
 			get { return GetAttribute(DicomTags.SourceApplicationEntityTitle).ToString(); }
