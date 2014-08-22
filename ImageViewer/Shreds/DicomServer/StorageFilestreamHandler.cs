@@ -74,7 +74,7 @@ namespace ClearCanvas.ImageViewer.Shreds.DicomServer
 
 				try
 				{
-					_fileStream = FileStreamOpener.OpenForSoleUpdate(_sourceFilename, FileMode.Create);
+					_fileStream = new FileStream(_sourceFilename, FileMode.Create, FileAccess.Write, FileShare.None, 65536, FileOptions.SequentialScan);
 				}
 				catch (Exception x)
 				{

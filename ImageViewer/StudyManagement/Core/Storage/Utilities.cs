@@ -25,13 +25,14 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 
 		public static void ReadInsertedRowIdentity(this DbCommand command, ILinq2SqlEntity entity, string tableName, string rowIdColumn = "oid", string rowVersionColumn = "version")
 		{
-			var commandText = string.Format("SELECT [{0}], [{1}] FROM [{2}] WHERE [{0}] = @@IDENTITY", rowIdColumn, rowVersionColumn, tableName);
-			using (var cmd = CreateCommand(command.Connection, commandText, command.Transaction))
-			using (var reader = cmd.ExecuteReader())
+			var commandText = string.Format("SELECT [{1}] FROM [{2}] WHERE [{0}] = @id", rowIdColumn, rowVersionColumn, tableName);
+			using (var cmd = CreateCommand(command.Connection, "SELECT @@IDENTITY", command.Transaction))
 			{
-				reader.Read();
-				entity.RowId = reader.GetInt64(0);
-				entity.RowVersion = ToLinqBinary(reader.GetValue(1));
+				// executing a scalar command twice is significantly faster then executing a reader query for a two-column-single-row result
+				entity.RowId = Convert.ToInt64(cmd.ExecuteScalar());
+				cmd.CommandText = commandText;
+				cmd.SetParameter("id", entity.RowId);
+				entity.RowVersion = ToLinqBinary(cmd.ExecuteScalar());
 			}
 		}
 

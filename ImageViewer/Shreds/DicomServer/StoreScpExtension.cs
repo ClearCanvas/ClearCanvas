@@ -26,44 +26,42 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using ClearCanvas.Common;
-using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
+using ClearCanvas.Dicom.Codec;
 using ClearCanvas.Dicom.Network;
 using ClearCanvas.Dicom.Network.Scp;
 using ClearCanvas.ImageViewer.Common.Auditing;
+using ClearCanvas.ImageViewer.Common.StudyManagement;
 using ClearCanvas.ImageViewer.Common.WorkItem;
 using ClearCanvas.ImageViewer.StudyManagement.Core;
-using ClearCanvas.ImageViewer.StudyManagement.Core.Storage;
-using ClearCanvas.ImageViewer.Common.StudyManagement;
 using LocalDicomServer = ClearCanvas.ImageViewer.Common.DicomServer.DicomServer;
 
 namespace ClearCanvas.ImageViewer.Shreds.DicomServer
 {
-	[ExtensionOf(typeof(DicomScpExtensionPoint<IDicomServerContext>))]
+	[ExtensionOf(typeof (DicomScpExtensionPoint<IDicomServerContext>))]
 	public class ImageStorageScpExtension : StoreScpExtension
 	{
 		public ImageStorageScpExtension()
-			: base(GetSupportedSops())
-		{}
+			: base(GetSupportedSops()) {}
 
 		public override bool ReceiveMessageAsFileStream(Dicom.Network.DicomServer server, ServerAssociationParameters association, byte presentationId,
-									   DicomMessage message)
+		                                                DicomMessage message)
 		{
 			var sopClassUid = message.AffectedSopClassUid;
 
 			if (sopClassUid.Equals(SopClass.BreastTomosynthesisImageStorageUid)
-				|| sopClassUid.Equals(SopClass.EnhancedCtImageStorageUid)
-				|| sopClassUid.Equals(SopClass.EnhancedMrColorImageStorageUid)
-				|| sopClassUid.Equals(SopClass.EnhancedMrImageStorageUid)
-				|| sopClassUid.Equals(SopClass.EnhancedPetImageStorageUid)
-				|| sopClassUid.Equals(SopClass.EnhancedUsVolumeStorageUid)
-				|| sopClassUid.Equals(SopClass.EnhancedXaImageStorageUid)
-				|| sopClassUid.Equals(SopClass.EnhancedXrfImageStorageUid)
-				|| sopClassUid.Equals(SopClass.UltrasoundMultiFrameImageStorageUid)
-				|| sopClassUid.Equals(SopClass.MultiFrameGrayscaleByteSecondaryCaptureImageStorageUid)
-				|| sopClassUid.Equals(SopClass.MultiFrameGrayscaleWordSecondaryCaptureImageStorageUid)
-				|| sopClassUid.Equals(SopClass.MultiFrameSingleBitSecondaryCaptureImageStorageUid)
-				|| sopClassUid.Equals(SopClass.MultiFrameTrueColorSecondaryCaptureImageStorageUid))
+			    || sopClassUid.Equals(SopClass.EnhancedCtImageStorageUid)
+			    || sopClassUid.Equals(SopClass.EnhancedMrColorImageStorageUid)
+			    || sopClassUid.Equals(SopClass.EnhancedMrImageStorageUid)
+			    || sopClassUid.Equals(SopClass.EnhancedPetImageStorageUid)
+			    || sopClassUid.Equals(SopClass.EnhancedUsVolumeStorageUid)
+			    || sopClassUid.Equals(SopClass.EnhancedXaImageStorageUid)
+			    || sopClassUid.Equals(SopClass.EnhancedXrfImageStorageUid)
+			    || sopClassUid.Equals(SopClass.UltrasoundMultiFrameImageStorageUid)
+			    || sopClassUid.Equals(SopClass.MultiFrameGrayscaleByteSecondaryCaptureImageStorageUid)
+			    || sopClassUid.Equals(SopClass.MultiFrameGrayscaleWordSecondaryCaptureImageStorageUid)
+			    || sopClassUid.Equals(SopClass.MultiFrameSingleBitSecondaryCaptureImageStorageUid)
+			    || sopClassUid.Equals(SopClass.MultiFrameTrueColorSecondaryCaptureImageStorageUid))
 			{
 				server.DimseDatasetStopTag = DicomTagDictionary.GetDicomTag(DicomTags.ReconstructionIndex); // Random tag at the end of group 20
 				server.StreamMessage = true;
@@ -74,7 +72,7 @@ namespace ClearCanvas.ImageViewer.Shreds.DicomServer
 		}
 
 		public override IDicomFilestreamHandler OnStartFilestream(Dicom.Network.DicomServer server, ServerAssociationParameters association,
-																  byte presentationId, DicomMessage message)
+		                                                          byte presentationId, DicomMessage message)
 		{
 			if (_importContext == null)
 			{
@@ -86,22 +84,22 @@ namespace ClearCanvas.ImageViewer.Shreds.DicomServer
 
 		private static IEnumerable<SupportedSop> GetSupportedSops()
 		{
-            var extendedConfiguration = LocalDicomServer.GetExtendedConfiguration();
+			var extendedConfiguration = LocalDicomServer.GetExtendedConfiguration();
 
-            foreach (SopClass sopClass in GetSopClasses(extendedConfiguration.ImageStorageSopClassUids))
+			foreach (SopClass sopClass in GetSopClasses(extendedConfiguration.ImageStorageSopClassUids))
 			{
-			    var supportedSop = new SupportedSop
-			                           {
-			                               SopClass = sopClass
-			                           };
+				var supportedSop = new SupportedSop
+				                   {
+					                   SopClass = sopClass
+				                   };
 
-			    supportedSop.AddSyntax(TransferSyntax.ExplicitVrLittleEndian);
+				supportedSop.AddSyntax(TransferSyntax.ExplicitVrLittleEndian);
 				supportedSop.AddSyntax(TransferSyntax.ImplicitVrLittleEndian);
 
-                foreach (TransferSyntax transferSyntax in GetTransferSyntaxes(extendedConfiguration.StorageTransferSyntaxUids))
+				foreach (TransferSyntax transferSyntax in GetTransferSyntaxes(extendedConfiguration.StorageTransferSyntaxUids))
 				{
 					if (transferSyntax.DicomUid.UID != TransferSyntax.ExplicitVrLittleEndianUid &&
-						transferSyntax.DicomUid.UID != TransferSyntax.ImplicitVrLittleEndianUid)
+					    transferSyntax.DicomUid.UID != TransferSyntax.ImplicitVrLittleEndianUid)
 					{
 						supportedSop.AddSyntax(transferSyntax);
 					}
@@ -112,23 +110,22 @@ namespace ClearCanvas.ImageViewer.Shreds.DicomServer
 		}
 	}
 
-	[ExtensionOf(typeof(DicomScpExtensionPoint<IDicomServerContext>))]
+	[ExtensionOf(typeof (DicomScpExtensionPoint<IDicomServerContext>))]
 	public class NonImageStorageScpExtension : StoreScpExtension
 	{
 		public NonImageStorageScpExtension()
-			: base(GetSupportedSops())
-		{ }
+			: base(GetSupportedSops()) {}
 
 		private static IEnumerable<SupportedSop> GetSupportedSops()
 		{
-            var extendedConfiguration = LocalDicomServer.GetExtendedConfiguration();
-            foreach (SopClass sopClass in GetSopClasses(extendedConfiguration.NonImageStorageSopClassUids))
+			var extendedConfiguration = LocalDicomServer.GetExtendedConfiguration();
+			foreach (SopClass sopClass in GetSopClasses(extendedConfiguration.NonImageStorageSopClassUids))
 			{
-			    var supportedSop = new SupportedSop
-			                           {
-			                               SopClass = sopClass
-			                           };
-			    supportedSop.AddSyntax(TransferSyntax.ExplicitVrLittleEndian);
+				var supportedSop = new SupportedSop
+				                   {
+					                   SopClass = sopClass
+				                   };
+				supportedSop.AddSyntax(TransferSyntax.ExplicitVrLittleEndian);
 				supportedSop.AddSyntax(TransferSyntax.ImplicitVrLittleEndian);
 				yield return supportedSop;
 			}
@@ -137,45 +134,43 @@ namespace ClearCanvas.ImageViewer.Shreds.DicomServer
 
 	public abstract class StoreScpExtension : ScpExtension
 	{
-	    protected DicomReceiveImportContext _importContext;
+		protected DicomReceiveImportContext _importContext;
 
 		protected StoreScpExtension(IEnumerable<SupportedSop> supportedSops)
-			: base(supportedSops)
-		{
-		}
+			: base(supportedSops) {}
 
 		protected static IEnumerable<SopClass> GetSopClasses(IEnumerable<string> sopClassUids)
 		{
-            foreach (var sopClassUid in sopClassUids)
+			foreach (var sopClassUid in sopClassUids)
 			{
-                if (!String.IsNullOrEmpty(sopClassUid))
+				if (!String.IsNullOrEmpty(sopClassUid))
 				{
-                    SopClass sopClass = SopClass.GetSopClass(sopClassUid);
+					SopClass sopClass = SopClass.GetSopClass(sopClassUid);
 					if (sopClass != null)
 						yield return sopClass;
 				}
 			}
 		}
 
-        protected static IEnumerable<TransferSyntax> GetTransferSyntaxes(IEnumerable<string> transferSyntaxUids)
+		protected static IEnumerable<TransferSyntax> GetTransferSyntaxes(IEnumerable<string> transferSyntaxUids)
 		{
-            foreach (var transferSyntaxUid in transferSyntaxUids)
+			foreach (var transferSyntaxUid in transferSyntaxUids)
 			{
-                if (!String.IsNullOrEmpty(transferSyntaxUid))
+				if (!String.IsNullOrEmpty(transferSyntaxUid))
 				{
-                    TransferSyntax syntax = TransferSyntax.GetTransferSyntax(transferSyntaxUid);
+					TransferSyntax syntax = TransferSyntax.GetTransferSyntax(transferSyntaxUid);
 					if (syntax != null)
 					{
 						//at least for now, restrict to available codecs for compressed syntaxes.
-						if (!syntax.Encapsulated || ClearCanvas.Dicom.Codec.DicomCodecRegistry.GetCodec(syntax) != null)
+						if (!syntax.Encapsulated || DicomCodecRegistry.GetCodec(syntax) != null)
 							yield return syntax;
 					}
 				}
 			}
 		}
 
-		public override bool OnReceiveRequest(ClearCanvas.Dicom.Network.DicomServer server, 
-			ServerAssociationParameters association, byte presentationID, DicomMessage message)
+		public override bool OnReceiveRequest(Dicom.Network.DicomServer server,
+		                                      ServerAssociationParameters association, byte presentationID, DicomMessage message)
 		{
 			string studyInstanceUid;
 			string seriesInstanceUid;
@@ -190,78 +185,76 @@ namespace ClearCanvas.ImageViewer.Shreds.DicomServer
 				Platform.Log(LogLevel.Error, "Unable to retrieve UIDs from request message, sending failure status.");
 
 				server.SendCStoreResponse(presentationID, message.MessageId, sopInstanceUid.UID,
-					DicomStatuses.ProcessingFailure);
+				                          DicomStatuses.ProcessingFailure);
 
 				return true;
 			}
 
-            if (_importContext == null)
-            {
-	            LoadImportContext(association);
-            }
+			if (_importContext == null)
+			{
+				LoadImportContext(association);
+			}
 
-		    var importer = new ImportFilesUtility(_importContext);
+			var importer = new ImportFilesUtility(_importContext);
 
-		    var result = importer.Import(message,BadFileBehaviourEnum.Ignore, FileImportBehaviourEnum.Save);
-            if (result.Successful)
-            {
-                if (!String.IsNullOrEmpty(result.AccessionNumber))
-                    Platform.Log(LogLevel.Info, "Received SOP Instance {0} from {1} to {2} (A#:{3} StudyUid:{4})",
-                                 result.SopInstanceUid, association.CallingAE, association.CalledAE, result.AccessionNumber,
-                                 result.StudyInstanceUid);
-                else
-                    Platform.Log(LogLevel.Info, "Received SOP Instance {0} from {1} to {2} (StudyUid:{3})",
-                                 result.SopInstanceUid, association.CallingAE, association.CalledAE,
-                                 result.StudyInstanceUid);
-                server.SendCStoreResponse(presentationID, message.MessageId, message.AffectedSopInstanceUid, result.DicomStatus);
-            }
-            else
-            {
-                if (result.DicomStatus==DicomStatuses.ProcessingFailure)
-                    Platform.Log(LogLevel.Error, "Failure importing sop: {0}", result.ErrorMessage);
+			var result = importer.Import(message, BadFileBehaviourEnum.Ignore, FileImportBehaviourEnum.Save);
+			if (result.Successful)
+			{
+				if (!String.IsNullOrEmpty(result.AccessionNumber))
+					Platform.Log(LogLevel.Info, "Received SOP Instance {0} from {1} to {2} (A#:{3} StudyUid:{4})",
+					             result.SopInstanceUid, association.CallingAE, association.CalledAE, result.AccessionNumber,
+					             result.StudyInstanceUid);
+				else
+					Platform.Log(LogLevel.Info, "Received SOP Instance {0} from {1} to {2} (StudyUid:{3})",
+					             result.SopInstanceUid, association.CallingAE, association.CalledAE,
+					             result.StudyInstanceUid);
+				server.SendCStoreResponse(presentationID, message.MessageId, message.AffectedSopInstanceUid, result.DicomStatus);
+			}
+			else
+			{
+				if (result.DicomStatus == DicomStatuses.ProcessingFailure)
+					Platform.Log(LogLevel.Error, "Failure importing sop: {0}", result.ErrorMessage);
 
-                //OnReceiveError(message, result.ErrorMessage, association.CallingAE);
-                server.SendCStoreResponse(presentationID, message.MessageId, message.AffectedSopInstanceUid,
-                                          result.DicomStatus, result.ErrorMessage);
-            }		    
-               
+				//OnReceiveError(message, result.ErrorMessage, association.CallingAE);
+				server.SendCStoreResponse(presentationID, message.MessageId, message.AffectedSopInstanceUid,
+				                          result.DicomStatus, result.ErrorMessage);
+			}
+
 			return true;
 		}
 
+		public override void Cleanup()
+		{
+			if (_importContext != null)
+				_importContext.Cleanup();
+		}
 
-        public override void Cleanup()
-        {
-            if (_importContext != null)
-                _importContext.Cleanup();
-        }
+		private static string GetRemoteHostName(AssociationParameters association)
+		{
+			string remoteHostName = null;
+			try
+			{
+				if (association.RemoteEndPoint != null)
+				{
+					try
+					{
+						IPHostEntry entry = Dns.GetHostEntry(association.RemoteEndPoint.Address);
+						remoteHostName = entry.HostName;
+					}
+					catch
+					{
+						remoteHostName = association.RemoteEndPoint.Address.ToString();
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				remoteHostName = null;
+				Platform.Log(LogLevel.Warn, e, "Unable to resolve remote host name.");
+			}
 
-
-        private static string GetRemoteHostName(AssociationParameters association)
-        {
-            string remoteHostName = null;
-            try
-            {
-                if (association.RemoteEndPoint != null)
-                {
-                    try
-                    {
-                        IPHostEntry entry = Dns.GetHostEntry(association.RemoteEndPoint.Address);
-                        remoteHostName = entry.HostName;
-                    }
-                    catch
-                    {
-                        remoteHostName = association.RemoteEndPoint.Address.ToString();
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                remoteHostName = null;
-                Platform.Log(LogLevel.Warn, e, "Unable to resolve remote host name.");
-            }
-
-            return remoteHostName;
-        }
+			return remoteHostName;
+		}
 
 		protected void LoadImportContext(ServerAssociationParameters association)
 		{
@@ -270,33 +263,23 @@ namespace ClearCanvas.ImageViewer.Shreds.DicomServer
 			// Publish new WorkItems as they're added to the context
 			lock (_importContext.StudyWorkItemsSyncLock)
 			{
-				_importContext.StudyWorkItems.ItemAdded += delegate(object sender, DictionaryEventArgs<string, WorkItem> args)
-					{
-						Platform.GetService(
-							(IWorkItemActivityMonitorService service) =>
-							service.Publish(new WorkItemPublishRequest
-								{
-									Item = WorkItemDataHelper.FromWorkItem(args.Item)
-								}));
+				_importContext.StudyWorkItems.ItemAdded += (sender, args) =>
+				                                           {
+					                                           _importContext.PublishWorkItemActivity(WorkItemDataHelper.FromWorkItem(args.Item));
 
+					                                           var auditedInstances = new AuditedInstances();
+					                                           var request = args.Item.Request as DicomReceiveRequest;
+					                                           if (request != null)
+						                                           auditedInstances.AddInstance(request.Patient.PatientId, request.Patient.PatientsName, request.Study.StudyInstanceUid);
 
-						var auditedInstances = new AuditedInstances();
-						var request = args.Item.Request as DicomReceiveRequest;
-						if (request != null)
-						{
-							auditedInstances.AddInstance(request.Patient.PatientId, request.Patient.PatientsName,
-							                             request.Study.StudyInstanceUid);
-						}
+					                                           AuditHelper.LogReceivedInstances(
+						                                           association.CallingAE, GetRemoteHostName(association),
+						                                           auditedInstances, EventSource.CurrentProcess,
+						                                           EventResult.Success, EventReceiptAction.ActionUnknown);
+				                                           };
 
-						AuditHelper.LogReceivedInstances(
-							association.CallingAE, GetRemoteHostName(association),
-							auditedInstances, EventSource.CurrentProcess,
-							EventResult.Success, EventReceiptAction.ActionUnknown);
-					};
-
-				_importContext.StudyWorkItems.ItemChanged += (sender, args) => Platform.GetService(
-					(IWorkItemActivityMonitorService service) =>
-					service.Publish(new WorkItemPublishRequest { Item = WorkItemDataHelper.FromWorkItem(args.Item) }));
+				_importContext.StudyWorkItems.ItemChanged += (sender, args) =>
+					_importContext.PublishWorkItemActivity(WorkItemDataHelper.FromWorkItem(args.Item));
 			}
 		}
 	}

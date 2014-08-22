@@ -30,7 +30,7 @@ using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Dicom.Utilities.Command
 {
-    public class SaveDicomFileCommand : CommandBase, IAggregateCommand
+    public class SaveDicomFileCommand : CommandBase, IAggregateCommand, IDisposable
     {
         #region Private Members
         private readonly string _path;

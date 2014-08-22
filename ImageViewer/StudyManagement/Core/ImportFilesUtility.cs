@@ -104,6 +104,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core
 		private readonly IDicomServiceNode _dicomServerNode;
 		private readonly string _hostname;
 
+		private IWorkItemActivityMonitorService _activityMonitorService;
+
 		#endregion
 
 		#region Constructor
@@ -132,6 +134,18 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core
 		#region Public Methods
 
 		/// <summary>
+		/// Publishes changing work item activity to the <see cref="IWorkItemActivityMonitorService"/>.
+		/// </summary>
+		/// <param name="item">The work item data</param>
+		public void PublishWorkItemActivity(WorkItemData item)
+		{
+			if (_activityMonitorService == null)
+				_activityMonitorService = Platform.GetService<IWorkItemActivityMonitorService>();
+
+			_activityMonitorService.Publish(new WorkItemPublishRequest {Item = item});
+		}
+
+		/// <summary>
 		/// Create a StudyProcessRequest object for a specific SOP Instance.
 		/// </summary>
 		/// <param name="message"></param>
@@ -139,16 +153,16 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core
 		public override ProcessStudyRequest CreateRequest(DicomMessageBase message)
 		{
 			var request = new DicomReceiveRequest
-			              	{
-			              		// TODO (CR Jun 2012): Ok, but anyone writing code that relied on these request objects may take
-			              		// for granted that it is in fact always a server name. Might be better to put 3 properties on the request
-			              		// and document how they work (SourceServerName, SourceAE, Hostname), or change the property to a
-			              		// data contract object (ServerDescriptor).
-			              		SourceServerName = _dicomServerNode == null ? string.Format("{0}/{1}", SourceAE, _hostname) : _dicomServerNode.Name,
-			              		Priority = WorkItemPriorityEnum.High,
-			              		Patient = new WorkItemPatient(message.DataSet),
-			              		Study = new WorkItemStudy(message.DataSet)
-			              	};
+			              {
+				              // TODO (CR Jun 2012): Ok, but anyone writing code that relied on these request objects may take
+				              // for granted that it is in fact always a server name. Might be better to put 3 properties on the request
+				              // and document how they work (SourceServerName, SourceAE, Hostname), or change the property to a
+				              // data contract object (ServerDescriptor).
+				              SourceServerName = _dicomServerNode == null ? string.Format("{0}/{1}", SourceAE, _hostname) : _dicomServerNode.Name,
+				              Priority = WorkItemPriorityEnum.High,
+				              Patient = new WorkItemPatient(message.DataSet),
+				              Study = new WorkItemStudy(message.DataSet)
+			              };
 
 			return request;
 		}
@@ -167,6 +181,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core
 		/// </summary>
 		public void Cleanup()
 		{
+			var disposableService = _activityMonitorService as IDisposable;
+			if (disposableService != null) disposableService.Dispose();
+			_activityMonitorService = null;
+
 			_monitor.WorkItemsChanged -= WorkItemsChanged;
 			_monitor.Dispose();
 		}
@@ -228,11 +246,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core
 		public override ProcessStudyRequest CreateRequest(DicomMessageBase message)
 		{
 			var request = new ImportStudyRequest
-			              	{
-			              		Priority = WorkItemPriorityEnum.High,
-			              		Patient = new WorkItemPatient(message.DataSet),
-			              		Study = new WorkItemStudy(message.DataSet)
-			              	};
+			              {
+				              Priority = WorkItemPriorityEnum.High,
+				              Patient = new WorkItemPatient(message.DataSet),
+				              Study = new WorkItemStudy(message.DataSet)
+			              };
 			var participant = (AuditActiveParticipant) AuditSource;
 			if (participant != null)
 				request.UserName = participant.UserName;
@@ -391,15 +409,15 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core
 			String patientId = message.DataSet[DicomTags.PatientId].GetString(0, string.Empty);
 
 			var result = new DicomProcessingResult
-			             	{
-			             		Successful = true,
-			             		StudyInstanceUid = studyInstanceUid,
-			             		SeriesInstanceUid = seriesInstanceUid,
-			             		SopInstanceUid = sopInstanceUid,
-			             		AccessionNumber = accessionNumber,
-			             		PatientsName = patientsName,
-			             		PatientId = patientId,
-			             	};
+			             {
+				             Successful = true,
+				             StudyInstanceUid = studyInstanceUid,
+				             SeriesInstanceUid = seriesInstanceUid,
+				             SopInstanceUid = sopInstanceUid,
+				             AccessionNumber = accessionNumber,
+				             PatientsName = patientsName,
+				             PatientId = patientId,
+			             };
 
 			WorkItem workItem;
 			lock (_context.StudyWorkItemsSyncLock)
@@ -581,15 +599,15 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core
 
 					if (fileImportBehaviour == FileImportBehaviourEnum.Move)
 					{
-						commandProcessor.AddCommand(new RenameFileCommand(file.Filename, destinationFile, true));
+						commandProcessor.AddCommand(CommandFactory.CreateRenameFileCommand(file.Filename, destinationFile, true));
 					}
 					else if (fileImportBehaviour == FileImportBehaviourEnum.Copy)
 					{
-						commandProcessor.AddCommand(new CopyFileCommand(file.Filename, destinationFile, true));
+						commandProcessor.AddCommand(CommandFactory.CreateCopyFileCommand(file.Filename, destinationFile, true));
 					}
 					else if (fileImportBehaviour == FileImportBehaviourEnum.Save)
 					{
-						commandProcessor.AddCommand(new SaveDicomFileCommand(destinationFile, file, true));
+						commandProcessor.AddCommand(CommandFactory.CreateSaveDicomFileCommand(destinationFile, file, true));
 					}
 
 					var insertWorkItemCommand = CreateWorkItemCommand(workItem, result, file, duplicateFile, dupName);
@@ -665,22 +683,22 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core
 			if (duplicateFile)
 			{
 				insertWorkItemCommand = workItem != null
-				                        	? new InsertWorkItemCommand(workItem, result.StudyInstanceUid,
-				                        	                            result.SeriesInstanceUid, result.SopInstanceUid,
-				                        	                            duplicateFileName)
-				                        	: new InsertWorkItemCommand(_context.CreateRequest(file),
-				                        	                            _context.CreateProgress(), result.StudyInstanceUid,
-				                        	                            result.SeriesInstanceUid, result.SopInstanceUid,
-				                        	                            duplicateFileName);
+					? new InsertWorkItemCommand(workItem, result.StudyInstanceUid,
+					                            result.SeriesInstanceUid, result.SopInstanceUid,
+					                            duplicateFileName)
+					: new InsertWorkItemCommand(_context.CreateRequest(file),
+					                            _context.CreateProgress(), result.StudyInstanceUid,
+					                            result.SeriesInstanceUid, result.SopInstanceUid,
+					                            duplicateFileName);
 			}
 			else
 			{
 				insertWorkItemCommand = workItem != null
-				                        	? new InsertWorkItemCommand(workItem, result.StudyInstanceUid,
-				                        	                            result.SeriesInstanceUid, result.SopInstanceUid)
-				                        	: new InsertWorkItemCommand(_context.CreateRequest(file),
-				                        	                            _context.CreateProgress(), result.StudyInstanceUid,
-				                        	                            result.SeriesInstanceUid, result.SopInstanceUid);
+					? new InsertWorkItemCommand(workItem, result.StudyInstanceUid,
+					                            result.SeriesInstanceUid, result.SopInstanceUid)
+					: new InsertWorkItemCommand(_context.CreateRequest(file),
+					                            _context.CreateProgress(), result.StudyInstanceUid,
+					                            result.SeriesInstanceUid, result.SopInstanceUid);
 			}
 
 			insertWorkItemCommand.ExpirationDelaySeconds = _context.ExpirationDelaySeconds;
