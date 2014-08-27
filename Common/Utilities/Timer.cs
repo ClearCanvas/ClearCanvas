@@ -49,8 +49,8 @@ namespace ClearCanvas.Common.Utilities
 		private readonly TimerDelegate _elapsedDelegate;
 
 	    private System.Threading.Timer _timer;
-	    private int _processing;
 		private volatile int _intervalMilliseconds;
+        private int _processing;
 		
 		/// <summary>
 		/// Constructor.
@@ -71,7 +71,13 @@ namespace ClearCanvas.Common.Utilities
 		{
 		}
 
-		public Timer(TimerDelegate elapsedDelegate, object stateObject, TimeSpan interval)
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="elapsedDelegate">The delegate to execute on a timer.</param>
+        /// <param name="stateObject">A user defined state object.</param>
+        /// <param name="interval">The timer interval.</param>
+        public Timer(TimerDelegate elapsedDelegate, object stateObject, TimeSpan interval)
 			: this(elapsedDelegate, stateObject, (int)interval.TotalMilliseconds)
 		{
 		}
@@ -155,22 +161,27 @@ namespace ClearCanvas.Common.Utilities
 
 		private void OnElapsed(object nothing)
 		{
-			if (!Enabled)
-				return;
-
 		    try
 		    {
-                _elapsedDelegate(_stateObject);
+                if (Enabled)
+                    _elapsedDelegate(_stateObject);
 		    }
 		    finally
 		    {
+                //The next one can be posted.
 		        Interlocked.Exchange(ref _processing, 0);
 		    }
 		}
 
 		private void OnTimer(object nothing)
 		{
-		    if (0 == Interlocked.Exchange(ref _processing, 1))
+		    //A couple things:
+            //1. System.Threading.Timer allows re-entrancy, so you can actually get
+            //   multiple callbacks executing at once on different thread pool threads.
+            //2. Depending on how long the "elapsed" callback takes, things can get pretty
+            //   out of hand with the message pump filling up, so we actually delay
+            //   posting again until the current user callback is done.
+            if (0 == Interlocked.Exchange(ref _processing, 1))
                 _synchronizationContext.Post(OnElapsed, null);
 		}
 	}
