@@ -124,11 +124,9 @@ namespace ClearCanvas.Dicom.Utilities.Command
                 BackupTime.Start();
                 _backupDestDir = Path.Combine(ProcessorContext.BackupDirectory, "DestFolder");
 
-				// CR (Orion Aug 2014) : Remove this. DirectoryUtility.Copy() will handle the creation.
-                Directory.CreateDirectory(_backupDestDir);
-
                 Platform.Log(LogLevel.Info, "Backing up original destination folder {0}", _dest);
-                DirectoryUtility.Copy(_dest, _backupDestDir);
+				// Will create the destination folder, if need be.
+				DirectoryUtility.Copy(_dest, _backupDestDir);
                 Platform.Log(LogLevel.Info, "Original destination folder {0} is backed up to {1}", _dest, _backupDestDir);
                 BackupTime.End();
             }
