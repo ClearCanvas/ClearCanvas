@@ -526,8 +526,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core
 					using (var context = new DataAccessContext(DataAccessContext.WorkItemMutex))
 					{
 						var broker = context.GetWorkItemBroker();
-						var scheduledTime = DateTime.Now.AddTicks(-1);
-
+						var scheduledTime = Platform.Time;
+                        
 						foreach (var workItem in _context.StudyWorkItems.Values.Select(x => broker.GetWorkItem(x.Oid)).Where(x => x != null && x.Status == WorkItemStatusEnum.Idle))
 						{
 							workItem.ProcessTime = scheduledTime;

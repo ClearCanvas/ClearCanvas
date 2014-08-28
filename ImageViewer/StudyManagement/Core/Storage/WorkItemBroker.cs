@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Linq;
 using System.Linq;
+using ClearCanvas.Common;
 using ClearCanvas.ImageViewer.Common.WorkItem;
 
 namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
@@ -44,8 +45,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 		public List<WorkItem> GetWorkItemsForProcessing(int n, WorkItemPriorityEnum? priority = null)
 		{
 			return priority.HasValue
-			       	? _getWorkItemsForProcessingByPriority(Context, n, DateTime.Now, priority.Value).ToList()
-			       	: _getWorkItemsForProcessing(Context, n, DateTime.Now).ToList();
+			       	? _getWorkItemsForProcessingByPriority(Context, n, Platform.Time, priority.Value).ToList()
+                    : _getWorkItemsForProcessing(Context, n, Platform.Time).ToList();
 		}
 
 		/// <summary>
@@ -54,7 +55,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 		/// <returns></returns>
 		public List<WorkItem> GetWorkItemsToDelete(int n)
 		{
-			return _getWorkItemsToDelete(Context, n, DateTime.Now).ToList();
+            return _getWorkItemsToDelete(Context, n, Platform.Time).ToList();
 		}
 
 		/// <summary>
@@ -133,7 +134,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 		{
 			IQueryable<WorkItem> query = from w in Context.WorkItems select w;
 
-			query = query.Where(w => w.ScheduledTime < DateTime.Now);
+            query = query.Where(w => w.ScheduledTime < Platform.Time);
 			query = query.Where(w => (w.ScheduledTime < scheduledTime && w.Priority <= priority) || w.Priority < priority);
 			statusFilter = statusFilter ?? WorkItemStatusFilter.Active;
 			query = statusFilter.Apply(query);
