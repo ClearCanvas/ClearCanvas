@@ -246,7 +246,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.TierMigrate
                                                		Destination = newFilesystem
                                                	};
 
-				// CR (Orion  Aug 2014): folder will be created by CopyDirectoryCommand. Don't need to use multiple CreateDirectoryCommand here.
+				// The multiple CreateDirectoryCommands are done so that rollback of the directories being created happens properly if either of the directories already exist.
 				var origFolder = context.OriginalStudyLocation.GetStudyPath();
                 processor.AddCommand(new CreateDirectoryCommand(newPath));
 

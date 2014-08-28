@@ -94,12 +94,9 @@ namespace ClearCanvas.Common.Utilities
         private static ulong InternalCopy(DirectoryInfo source, DirectoryInfo target, CopyProcessCallback progressCallback)
         {
             ulong bytesCopied = 0;
-			// CR (Orion Aug 2014): Remove the check. Directory.CreateDirectory() already handles it.
-            // Check if the target directory exists, if not, create it.
-            if (Directory.Exists(target.FullName) == false)
-            {
-                Directory.CreateDirectory(target.FullName);
-            }
+
+			// Silently returns if the directory already exists
+            Directory.CreateDirectory(target.FullName);
 
             // Copy each file into it's new directory.
             foreach (FileInfo fi in source.GetFiles())
