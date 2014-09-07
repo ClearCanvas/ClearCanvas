@@ -41,7 +41,7 @@
   <ItemGroup>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ReferencedAssemblies\log4net.dll</HintPath>
+      <HintPath>..\..\..\ReferencedAssemblies\log4net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -140,6 +140,9 @@
     <EmbeddedResource Include="SampleXml\StudyRootMoveImage.xml" />
     <EmbeddedResource Include="SampleXml\StudyRootMoveSeries.xml" />
     <EmbeddedResource Include="SampleXml\StudyRootMoveStudy.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

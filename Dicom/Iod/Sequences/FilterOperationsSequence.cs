@@ -98,19 +98,19 @@ namespace ClearCanvas.Dicom.Iod.Sequences
         /// <summary>
         /// Gets or sets the value of SelectorSequencePointer in the underlying collection. Type 1C.
         /// </summary>
-        public uint SelectorSequencePointer
+        public uint? SelectorSequencePointer
         {
-            get { return DicomAttributeProvider[DicomTags.SelectorSequencePointer].GetUInt32(0, 0); }
-            set { DicomAttributeProvider[DicomTags.SelectorSequencePointer].SetUInt32(0, value); }
+            get { return DicomAttributeProvider[DicomTags.SelectorSequencePointer].Values as uint?; }
+            set { DicomAttributeProvider[DicomTags.SelectorSequencePointer].Values = value; }
         }
 
         /// <summary>
         /// Gets or sets the value of FunctionalGroupPointer in the underlying collection. Type 1C.
         /// </summary>
-        public uint FunctionalGroupPointer
+        public uint? FunctionalGroupPointer
         {
-            get { return DicomAttributeProvider[DicomTags.FunctionalGroupPointer].GetUInt32(0, 0); }
-            set { DicomAttributeProvider[DicomTags.FunctionalGroupPointer].SetUInt32(0, value); }
+            get { return DicomAttributeProvider[DicomTags.FunctionalGroupPointer].Values as uint?; }
+            set { DicomAttributeProvider[DicomTags.FunctionalGroupPointer].Values = value; }
         }
 
         /// <summary>
@@ -166,104 +166,104 @@ namespace ClearCanvas.Dicom.Iod.Sequences
 
 
         //AT expressed by uint all Type 1C
-        public uint SelectorATValue
+        public uint[] SelectorATValue
         {
-            get { return DicomAttributeProvider[DicomTags.SelectorAtValue].GetUInt32(0, 0); }
-            set { DicomAttributeProvider[DicomTags.SelectorAtValue].SetUInt32(0, value); }
+            get { return DicomAttributeProvider[DicomTags.SelectorAtValue].Values as uint[]; }
+            set { DicomAttributeProvider[DicomTags.SelectorAtValue].Values = value; }
         }
 
-        public uint SelectorCSValue
+        public uint[] SelectorCSValue
         {
-            get { return DicomAttributeProvider[DicomTags.SelectorCsValue].GetUInt32(0, 0); }
-            set { DicomAttributeProvider[DicomTags.SelectorCsValue].SetUInt32(0, value); }
+            get { return DicomAttributeProvider[DicomTags.SelectorCsValue].Values as uint[]; }
+            set { DicomAttributeProvider[DicomTags.SelectorCsValue].Values = value; }
         }
 
-        public uint SelectorISValue
+        public uint[] SelectorISValue
         {
-            get { return DicomAttributeProvider[DicomTags.SelectorIsValue].GetUInt32(0, 0); }
-            set { DicomAttributeProvider[DicomTags.SelectorIsValue].SetUInt32(0, value); }
+            get { return DicomAttributeProvider[DicomTags.SelectorIsValue].Values as uint[]; }
+            set { DicomAttributeProvider[DicomTags.SelectorIsValue].Values = value; }
         }
 
-        public uint SelectorLOValue
+        public uint[] SelectorLOValue
         {
-            get { return DicomAttributeProvider[DicomTags.SelectorLoValue].GetUInt32(0, 0); }
-            set { DicomAttributeProvider[DicomTags.SelectorLoValue].SetUInt32(0, value); }
+            get { return DicomAttributeProvider[DicomTags.SelectorLoValue].Values as uint[]; }
+            set { DicomAttributeProvider[DicomTags.SelectorLoValue].Values = value; }
         }
-        public uint SelectorLTValue
+        public uint[] SelectorLTValue
         {
-            get { return DicomAttributeProvider[DicomTags.SelectorLtValue].GetUInt32(0, 0); }
-            set { DicomAttributeProvider[DicomTags.SelectorLtValue].SetUInt32(0, value); }
-        }
-
-        public uint SelectorPNValue
-        {
-            get { return DicomAttributeProvider[DicomTags.SelectorPnValue].GetUInt32(0, 0); }
-            set { DicomAttributeProvider[DicomTags.SelectorPnValue].SetUInt32(0, value); }
-        }
-        public uint SelectorSHValue
-        {
-            get { return DicomAttributeProvider[DicomTags.SelectorShValue].GetUInt32(0, 0); }
-            set { DicomAttributeProvider[DicomTags.SelectorShValue].SetUInt32(0, value); }
+            get { return DicomAttributeProvider[DicomTags.SelectorLtValue].Values as uint[]; }
+            set { DicomAttributeProvider[DicomTags.SelectorLtValue].Values = value; }
         }
 
-        public uint SelectorSTValue
+        public uint[] SelectorPNValue
         {
-            get { return DicomAttributeProvider[DicomTags.SelectorStValue].GetUInt32(0, 0); }
-            set { DicomAttributeProvider[DicomTags.SelectorStValue].SetUInt32(0, value); }
+            get { return DicomAttributeProvider[DicomTags.SelectorPnValue].Values as uint[]; }
+            set { DicomAttributeProvider[DicomTags.SelectorPnValue].Values = value; }
+        }
+        public uint[] SelectorSHValue
+        {
+            get { return DicomAttributeProvider[DicomTags.SelectorShValue].Values as uint[]; }
+            set { DicomAttributeProvider[DicomTags.SelectorShValue].Values = value; }
         }
 
-        public uint SelectorUTValue
+        public uint[] SelectorSTValue
         {
-            get { return DicomAttributeProvider[DicomTags.SelectorUtValue].GetUInt32(0, 0); }
-            set { DicomAttributeProvider[DicomTags.SelectorUtValue].SetUInt32(0, value); }
+            get { return DicomAttributeProvider[DicomTags.SelectorStValue].Values as uint[]; }
+            set { DicomAttributeProvider[DicomTags.SelectorStValue].Values = value; }
         }
 
-        public uint SelectorDSValue
+        public uint[] SelectorUTValue
         {
-            get { return DicomAttributeProvider[DicomTags.SelectorDsValue].GetUInt32(0, 0); }
-            set { DicomAttributeProvider[DicomTags.SelectorDsValue].SetUInt32(0, value); }
+            get { return DicomAttributeProvider[DicomTags.SelectorUtValue].Values as uint[]; }
+            set { DicomAttributeProvider[DicomTags.SelectorUtValue].Values = value; }
         }
 
-        public uint SelectorFDValue
+        public uint[] SelectorDSValue
         {
-            get { return DicomAttributeProvider[DicomTags.SelectorFdValue].GetUInt32(0, 0); }
-            set { DicomAttributeProvider[DicomTags.SelectorFdValue].SetUInt32(0, value); }
+            get { return DicomAttributeProvider[DicomTags.SelectorDsValue].Values as uint[]; }
+            set { DicomAttributeProvider[DicomTags.SelectorDsValue].Values = value; }
         }
 
-        public uint SelectorFLValue
+        public uint[] SelectorFDValue
         {
-            get { return DicomAttributeProvider[DicomTags.SelectorFlValue].GetUInt32(0, 0); }
-            set { DicomAttributeProvider[DicomTags.SelectorFlValue].SetUInt32(0, value); }
+            get { return DicomAttributeProvider[DicomTags.SelectorFdValue].Values as uint[]; }
+            set { DicomAttributeProvider[DicomTags.SelectorFdValue].Values = value; }
         }
 
-        public uint SelectorULValue
+        public uint[] SelectorFLValue
         {
-            get { return DicomAttributeProvider[DicomTags.SelectorUlValue].GetUInt32(0, 0); }
-            set { DicomAttributeProvider[DicomTags.SelectorUlValue].SetUInt32(0, value); }
+            get { return DicomAttributeProvider[DicomTags.SelectorFlValue].Values as uint[]; }
+            set { DicomAttributeProvider[DicomTags.SelectorFlValue].Values = value; }
         }
 
-        public uint SelectorUSValue
+        public uint[] SelectorULValue
         {
-            get { return DicomAttributeProvider[DicomTags.SelectorUsValue].GetUInt32(0, 0); }
-            set { DicomAttributeProvider[DicomTags.SelectorUsValue].SetUInt32(0, value); }
+            get { return DicomAttributeProvider[DicomTags.SelectorUlValue].Values as uint[]; }
+            set { DicomAttributeProvider[DicomTags.SelectorUlValue].Values = value; }
         }
 
-        public uint SelectorSLValue
+        public uint[] SelectorUSValue
         {
-            get { return DicomAttributeProvider[DicomTags.SelectorSlValue].GetUInt32(0, 0); }
-            set { DicomAttributeProvider[DicomTags.SelectorSlValue].SetUInt32(0, value); }
+            get { return DicomAttributeProvider[DicomTags.SelectorUsValue].Values as uint[]; }
+            set { DicomAttributeProvider[DicomTags.SelectorUsValue].Values = value; }
         }
 
-        public uint SelectorSSValue
+        public uint[] SelectorSLValue
         {
-            get { return DicomAttributeProvider[DicomTags.SelectorSsValue].GetUInt32(0, 0); }
-            set { DicomAttributeProvider[DicomTags.SelectorSsValue].SetUInt32(0, value); }
+            get { return DicomAttributeProvider[DicomTags.SelectorSlValue].Values as uint[]; }
+            set { DicomAttributeProvider[DicomTags.SelectorSlValue].Values = value; }
+        }
+
+        public uint[] SelectorSSValue
+        {
+            get { return DicomAttributeProvider[DicomTags.SelectorSsValue].Values as uint[]; }
+            set { DicomAttributeProvider[DicomTags.SelectorSsValue].Values = value; }
         }
 
         /// <summary>
         /// Gets or sets the value of SelectorCodeSequenceValue in the underlying collection. Type 1C.
         /// </summary>
-        public CodeSequenceMacro SelectorCodeSequenceValue
+        public CodeSequenceMacro[] SelectorCodeSequenceValue
         {
             get
             {
@@ -272,17 +272,27 @@ namespace ClearCanvas.Dicom.Iod.Sequences
                 {
                     return null;
                 }
-                return new CodeSequenceMacro(((DicomSequenceItem[])dicomAttribute.Values)[0]);
+
+                CodeSequenceMacro[] result = new CodeSequenceMacro[dicomAttribute.Count];
+                DicomSequenceItem[] items = (DicomSequenceItem[])dicomAttribute.Values;
+                for (int n = 0; n < items.Length; n++)
+                    result[n] = new CodeSequenceMacro(items[n]);
+
+                return result;
             }
             set
             {
-                DicomAttribute dicomAttribute = base.DicomAttributeProvider[DicomTags.SelectorCodeSequenceValue];
-                if (value == null)
+                if (value == null || value.Length == 0)
                 {
                     base.DicomAttributeProvider[DicomTags.SelectorCodeSequenceValue] = null;
                     return;
                 }
-                dicomAttribute.Values = new DicomSequenceItem[] { value.DicomSequenceItem };
+
+                DicomSequenceItem[] result = new DicomSequenceItem[value.Length];
+                for (int n = 0; n < value.Length; n++)
+                    result[n] = value[n].DicomSequenceItem;
+
+                base.DicomAttributeProvider[DicomTags.SelectorCodeSequenceValue].Values = result;
             }
         }
 

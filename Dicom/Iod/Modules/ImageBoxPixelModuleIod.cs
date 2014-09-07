@@ -128,11 +128,11 @@ namespace ClearCanvas.Dicom.Iod.Modules
         /// Gets the basic grayscale image sequence list.
         /// </summary>
         /// <value>The basic grayscale image sequence list.</value>
-        public SequenceIodList<BasicGrayscaleImageSequence> BasicGrayscaleImageSequenceList
+        public SequenceIodList<BasicGrayscaleImageSequenceIod> BasicGrayscaleImageSequenceList
         {
             get
             {
-                return new SequenceIodList<BasicGrayscaleImageSequence>(base.DicomAttributeProvider[DicomTags.BasicGrayscaleImageSequence] as DicomAttributeSQ);
+                return new SequenceIodList<BasicGrayscaleImageSequenceIod>(base.DicomAttributeProvider[DicomTags.BasicGrayscaleImageSequence] as DicomAttributeSQ);
             }
         }
 

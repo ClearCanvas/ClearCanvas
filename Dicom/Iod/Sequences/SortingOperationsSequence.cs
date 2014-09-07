@@ -70,19 +70,19 @@ namespace ClearCanvas.Dicom.Iod.Sequences
         /// <summary>
         /// Gets or sets the value of SelectorSequencePointer in the underlying collection. Type 1C.
         /// </summary>
-        public uint SelectorSequencePointer
+        public uint? SelectorSequencePointer
         {
-            get { return DicomAttributeProvider[DicomTags.SelectorSequencePointer].GetUInt32(0, 0); }
-            set { DicomAttributeProvider[DicomTags.SelectorSequencePointer].SetUInt32(0, value); }
+            get { return DicomAttributeProvider[DicomTags.SelectorSequencePointer].Values as uint?; }
+            set { DicomAttributeProvider[DicomTags.SelectorSequencePointer].Values = value; }
         }
 
         /// <summary>
         /// Gets or sets the value of FunctionalGroupPointer in the underlying collection. Type 1C.
         /// </summary>
-        public uint FunctionalGroupPointer
+        public uint? FunctionalGroupPointer
         {
-            get { return DicomAttributeProvider[DicomTags.FunctionalGroupPointer].GetUInt32(0, 0); }
-            set { DicomAttributeProvider[DicomTags.FunctionalGroupPointer].SetUInt32(0, value); }
+            get { return DicomAttributeProvider[DicomTags.FunctionalGroupPointer].Values as uint?; }
+            set { DicomAttributeProvider[DicomTags.FunctionalGroupPointer].Values = value; }
         }
 
         /// <summary>

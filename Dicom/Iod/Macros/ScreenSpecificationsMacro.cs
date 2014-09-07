@@ -78,30 +78,30 @@ namespace ClearCanvas.Dicom.Iod.Macros
         /// Gets or sets the ScreenMinimumGrayscaleBitDepth.Type 1C.
         /// </summary>
         /// <value>The ScreenMinimumGrayscaleBitDepth.</value>
-        public ushort ScreenMinimumGrayscaleBitDepth
+        public ushort? ScreenMinimumGrayscaleBitDepth
         {
-            get { return base.DicomAttributeProvider[DicomTags.ScreenMinimumGrayscaleBitDepth].GetUInt16(0, 0); }
-            set { base.DicomAttributeProvider[DicomTags.ScreenMinimumGrayscaleBitDepth].SetUInt16(0, value); }
+            get { return base.DicomAttributeProvider[DicomTags.ScreenMinimumGrayscaleBitDepth].Values as uint?; }
+            set { base.DicomAttributeProvider[DicomTags.ScreenMinimumGrayscaleBitDepth].Values = value; }
         }
 
         /// <summary>
         /// Gets or sets the ScreenMinimumColorBitDepth.Type 1C.
         /// </summary>
         /// <value>The ScreenMinimumColorBitDepth.</value>
-        public ushort ScreenMinimumColorBitDepth
+        public ushort? ScreenMinimumColorBitDepth
         {
-            get { return base.DicomAttributeProvider[DicomTags.ScreenMinimumColorBitDepth].GetUInt16(0, 0); }
-            set { base.DicomAttributeProvider[DicomTags.ScreenMinimumColorBitDepth].SetUInt16(0, value); }
+            get { return base.DicomAttributeProvider[DicomTags.ScreenMinimumColorBitDepth].Values as uint?; }
+            set { base.DicomAttributeProvider[DicomTags.ScreenMinimumColorBitDepth].Values = value; }
         }
 
         /// <summary>
         /// Gets or sets the ApplicationMaximumRepaintTime.Type 3.
         /// </summary>
         /// <value>The ApplicationMaximumRepaintTime.</value>
-        public ushort ApplicationMaximumRepaintTime
+        public ushort? ApplicationMaximumRepaintTime
         {
-            get { return base.DicomAttributeProvider[DicomTags.ApplicationMaximumRepaintTime].GetUInt16(0, 0); }
-            set { base.DicomAttributeProvider[DicomTags.ApplicationMaximumRepaintTime].SetUInt16(0, value); }
+            get { return base.DicomAttributeProvider[DicomTags.ApplicationMaximumRepaintTime].Values as uint?; }
+            set { base.DicomAttributeProvider[DicomTags.ApplicationMaximumRepaintTime].Values = value; }
         }
 
         #endregion
