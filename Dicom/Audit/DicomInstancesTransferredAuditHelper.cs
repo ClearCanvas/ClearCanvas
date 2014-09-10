@@ -48,9 +48,9 @@ namespace ClearCanvas.Dicom.Audit
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-        public DicomInstancesTransferredAuditHelper(DicomAuditSource auditSource, EventIdentificationContentsEventOutcomeIndicator outcome,
-			EventIdentificationContentsEventActionCode action,
-			AssociationParameters parms)
+		public DicomInstancesTransferredAuditHelper(DicomAuditSource auditSource, EventIdentificationContentsEventOutcomeIndicator outcome,
+		                                            EventIdentificationContentsEventActionCode action,
+		                                            AssociationParameters parms)
 			: base("DicomInstancesTransferred")
 		{
 			AuditMessage.EventIdentification = new EventIdentificationContents();
@@ -68,9 +68,9 @@ namespace ClearCanvas.Dicom.Audit
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-        public DicomInstancesTransferredAuditHelper(DicomAuditSource auditSource, EventIdentificationContentsEventOutcomeIndicator outcome,
-			EventIdentificationContentsEventActionCode action,
-			string sourceAE, string sourceHost, string destinationAE, string destinationHost)
+		public DicomInstancesTransferredAuditHelper(DicomAuditSource auditSource, EventIdentificationContentsEventOutcomeIndicator outcome,
+		                                            EventIdentificationContentsEventActionCode action,
+		                                            string sourceAE, string sourceHost, string destinationAE, string destinationHost)
 			: base("DicomInstancesTransferred")
 		{
 			AuditMessage.EventIdentification = new EventIdentificationContents();
@@ -97,10 +97,13 @@ namespace ClearCanvas.Dicom.Audit
 		/// <summary>
 		/// Add details of a Patient.
 		/// </summary>
-		/// <param name="study"></param>
+		/// <param name="patient"></param>
 		public void AddPatientParticipantObject(AuditPatientParticipantObject patient)
 		{
-			InternalAddParticipantObject(patient.PatientId + patient.PatientsName, patient);
+			// if the participant object contains no identifying information anyway, there's no need to add it to the audit message
+			var key = patient.PatientId + patient.PatientsName;
+			if (!string.IsNullOrEmpty(key))
+				InternalAddParticipantObject(key, patient);
 		}
 
 		/// <summary>
@@ -109,7 +112,10 @@ namespace ClearCanvas.Dicom.Audit
 		/// <param name="study"></param>
 		public void AddStudyParticipantObject(AuditStudyParticipantObject study)
 		{
-			InternalAddParticipantObject(study.StudyInstanceUid, study);
+			// if the participant object contains no identifying information anyway, there's no need to add it to the audit message
+			var key = study.StudyInstanceUid;
+			if (!string.IsNullOrEmpty(key))
+				InternalAddParticipantObject(key, study);
 		}
 
 		/// <summary>
