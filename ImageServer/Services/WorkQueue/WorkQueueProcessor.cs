@@ -162,8 +162,9 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue
 						Model.WorkQueue queueListItem = GetWorkQueueItem(ServerPlatform.ProcessorId);
 						if (queueListItem == null)
 						{
-							/* No result found, or reach max queue entries for each type */
-							_terminateEvent.WaitOne(WorkQueueSettings.Instance.WorkQueueQueryDelay, false);
+							/* No result found, or MemoryLimited threads not available, and no non-memory limited WorkQueue items */
+							WaitHandle.WaitAny(new WaitHandle[] { _threadStop, _terminateEvent }, WorkQueueSettings.Instance.WorkQueueQueryDelay, false);
+							_threadStop.Reset();
 							continue;
 						}
 
