@@ -27,7 +27,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Xml;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
@@ -214,16 +213,6 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReprocessStudy
             Platform.CheckForNullReference(item, "item");
             Platform.CheckForNullReference(item.StudyStorageKey, "item.StudyStorageKey");
 
-            var context = new StudyProcessorContext(StorageLocation, WorkQueueItem);
-            
-            // TODO: Should we enforce the patient's name rule?
-            // If we do, the Study record will have the new patient's name 
-            // but how should we handle the name in the Patient record?
-            const bool enforceNameRules = false;
-            var processor = new SopInstanceProcessor(context) { EnforceNameRules = enforceNameRules};
-
-            var seriesMap = new Dictionary<string, List<string>>();
-
             bool successful = true;
             string failureDescription = null;
             
@@ -316,6 +305,17 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReprocessStudy
                              Study.AccessionNumber, ServerPartition.Description);
                 
             }
+
+			// As per #12583, Creation of the SopInstanceProcessor should occur after the CleanupDatabase() call.
+			var context = new StudyProcessorContext(StorageLocation, WorkQueueItem);
+
+			// TODO: Should we enforce the patient's name rule?
+			// If we do, the Study record will have the new patient's name 
+			// but how should we handle the name in the Patient record?
+			const bool enforceNameRules = false;
+			var processor = new SopInstanceProcessor(context) { EnforceNameRules = enforceNameRules };
+
+			var seriesMap = new Dictionary<string, List<string>>();
 
             StudyXml studyXml = LoadStudyXml();
 
