@@ -44,6 +44,7 @@ namespace ClearCanvas.ImageServer.Services.Common.Shreds
 		private readonly string _className;
 
 		private Timer _timer;
+		private readonly TimeSpan _oneMinute = TimeSpan.FromSeconds(60);
 		private readonly TimeSpan _repeatEvery24Hours = TimeSpan.FromHours(24);
 		private ShredStartupHelper _shredStartupHelper;
 
@@ -72,8 +73,7 @@ namespace ClearCanvas.ImageServer.Services.Common.Shreds
 
 			try
 			{
-				VerifyManifest();
-				_timer = new Timer(OnTimer, null, _repeatEvery24Hours, _repeatEvery24Hours);
+				_timer = new Timer(OnTimer, null, _oneMinute, _repeatEvery24Hours);
 			}
 			catch (Exception e)
 			{
