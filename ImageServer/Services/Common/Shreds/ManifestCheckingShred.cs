@@ -123,9 +123,14 @@ namespace ClearCanvas.ImageServer.Services.Common.Shreds
 
 		private void VerifyManifest()
 		{
+			Platform.Log(LogLevel.Info, "Checking manifest...");
 			if (ServerPlatform.IsManifestVerified)
+			{
+				Platform.Log(LogLevel.Info, "Manifest is OK.");
 				return;
+			}
 
+			Platform.Log(LogLevel.Warn, "Manifest is broken!");
 			var componentName = string.IsNullOrEmpty(ProductInformation.SubComponent)
 									? ProductInformation.Component
 									: string.Format("{0} {1}", ProductInformation.Component, ProductInformation.SubComponent);
