@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -13,7 +14,7 @@
     <AssemblyName>ClearCanvas.ImageServer.Web.Application.Assembly</AssemblyName>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
-    <OldToolsVersion>3.5</OldToolsVersion>
+    <OldToolsVersion>4.0</OldToolsVersion>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
@@ -666,12 +667,20 @@
     <Compile Include="Pages\Studies\SeriesDetails\StudySummaryPanel.ascx.designer.cs">
       <DependentUpon>StudySummaryPanel.ascx</DependentUpon>
     </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Code\CompressionHistoryRendererFactory.cs" />
     <Compile Include="Pages\Studies\StudyDetails\Controls\AddAuthorityGroupsDialog.ascx.cs">
       <DependentUpon>AddAuthorityGroupsDialog.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Pages\Studies\StudyDetails\Controls\AddAuthorityGroupsDialog.ascx.designer.cs">
       <DependentUpon>AddAuthorityGroupsDialog.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\CompressionHistory.ascx.cs">
+      <DependentUpon>CompressionHistory.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Studies\StudyDetails\Controls\CompressionHistory.ascx.designer.cs">
+      <DependentUpon>CompressionHistory.ascx</DependentUpon>
     </Compile>
     <Compile Include="Pages\Studies\StudyDetails\Controls\UpdateAuthorityGroupDialog.ascx.cs">
       <DependentUpon>UpdateAuthorityGroupDialog.ascx</DependentUpon>
@@ -1560,6 +1569,7 @@
     <Content Include="Pages\Queues\StudyIntegrityQueue\SIQEntryTooltip.ascx" />
     <Content Include="Pages\Queues\WorkQueue\Edit\EditWorkQueueDetailsView.ascx" />
     <Content Include="Pages\Studies\StudyDetails\Controls\AddAuthorityGroupsDialog.ascx" />
+    <Content Include="Pages\Studies\StudyDetails\Controls\CompressionHistory.ascx" />
     <Content Include="Pages\Studies\StudyDetails\Controls\UpdateAuthorityGroupDialog.ascx" />
     <EmbeddedResource Include="App_GlobalResources\ColumnHeaders.resx">
       <Generator>GlobalResourceProxyGenerator</Generator>
@@ -2077,8 +2087,13 @@
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <DistributionBuild>false</DistributionBuild>
@@ -2131,5 +2146,6 @@
 
 C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe  "$(SolutionDir)\$(SolutionName)_WebPostBuild.proj" "/property:$(ImageServerWebProperties)"</PostBuildEvent>
   </PropertyGroup>
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
 </Project>

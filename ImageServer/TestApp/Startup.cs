@@ -24,6 +24,8 @@
 
 using System;
 using System.Windows.Forms;
+using ClearCanvas.ImageServer.TestApp.PerfCFind;
+using ClearCanvas.ImageServer.TestApp.PerfMon;
 
 namespace ClearCanvas.ImageServer.TestApp
 {
@@ -89,5 +91,16 @@ namespace ClearCanvas.ImageServer.TestApp
             var form = new GenerateDatabase();
             form.Show();
         }
+
+		private void _archiveTestBtn_Click(object sender, EventArgs e)
+		{
+			var form = new ArchiveTestForm();
+			form.Show();
+		}
+
+		private void _perfMon_Click(object sender, EventArgs e)
+		{
+			new CFindPerformanceTestForm().Show();
+		}
     }
 }

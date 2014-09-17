@@ -7,6 +7,7 @@
 		<script type="text/javascript" src="../js/jsml.js"></script>
 		<script type="text/javascript" src="../js/ui.js"></script>
 		<script type="text/javascript" src="../js/ris.js"></script>
+		<script type="text/javascript" src="../js/SR.js"></script>
 		<script type="text/javascript" src="../js/preview.js"></script>
 		<script type="text/javascript" >
 			var errorProvider = new ErrorProvider();
@@ -17,44 +18,36 @@
 				if(!Ris)
 					return;
 
-				try
+				var context = Ris.getHealthcareContext();
+				if (context == null)
 				{
-					var context = Ris.getHealthcareContext();
-					if (context == null)
-					{
-						Field.setValue($("myForm"), "");
-						return;
-					}
-
-					// construct request object
-					var request = {
-						GetOrderDetailRequest:
-						{ 
-							OrderRef: context.OrderRef,
-							IncludeProcedures: true,
-							IncludeNotes: true
-						},
-						GetReportDetailRequest: { ReportRef: context.ReportRef }
-					};
-
-					var service = Ris.getPatientDataService();
-					var data = service.getData(request);
-
-					var report = data.GetReportDetailResponse.Report;
-					Preview.ReportPreview.create($("reportSection"), report);
-
-					var orderDetail = data.GetOrderDetailResponse.Order;
-					var notes = orderDetail.Notes.select(function(note) { return note.Category == "PrelimDiagnosis"; });
-					Preview.OrderNotesTable.create($("prelimDiagnosisNotesSection"), notes, "Preliminary Diagnosis", false);
-
-					notes = orderDetail.Notes.select(function(note) { return note.Category == "General"; });
-					Preview.OrderNotesTable.create($("generalNotesSection"), notes, "Order Notes", true);
+					Field.setValue($("myForm"), "");
+					return;
 				}
-				catch(e)
-				{
-					var message = "Failed to load preview page.	An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
-					Field.setValue($("myForm"), message);
-				}
+
+				// construct request object
+				var request = {
+					GetOrderDetailRequest:
+					{ 
+						OrderRef: context.OrderRef,
+						IncludeProcedures: true,
+						IncludeNotes: true
+					},
+					GetReportDetailRequest: { ReportRef: context.ReportRef }
+				};
+
+				var service = Ris.getPatientDataService();
+				var data = service.getData(request);
+
+				var report = data.GetReportDetailResponse.Report;
+				Preview.ReportPreview.create($("reportSection"), report);
+
+				var orderDetail = data.GetOrderDetailResponse.Order;
+				var notes = orderDetail.Notes.select(function(note) { return note.Category == "PrelimDiagnosis"; });
+				Preview.OrderNotesTable.create($("prelimDiagnosisNotesSection"), notes, SR.OrderNotes.PreliminaryDiagnosis, false);
+
+				notes = orderDetail.Notes.select(function(note) { return note.Category == "General"; });
+				Preview.OrderNotesTable.create($("generalNotesSection"), notes, SR.OrderNotes.OrderNotes, true);
 			}
 		</script>
 	</head>

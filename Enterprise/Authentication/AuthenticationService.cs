@@ -24,17 +24,17 @@
 
 using System;
 using System.Web.Security;
-using ClearCanvas.Enterprise.Common.Authentication;
-using ClearCanvas.Enterprise.Core;
-using ClearCanvas.Enterprise.Authentication.Brokers;
 using ClearCanvas.Common;
+using ClearCanvas.Enterprise.Authentication.Brokers;
 using ClearCanvas.Enterprise.Common;
-using ClearCanvas.Enterprise.Core.Mail;
+using ClearCanvas.Enterprise.Common.Authentication;
+using ClearCanvas.Enterprise.Common.Mail;
+using ClearCanvas.Enterprise.Core;
 
 namespace ClearCanvas.Enterprise.Authentication
 {
-	[ExtensionOf(typeof(CoreServiceExtensionPoint))]
-	[ServiceImplementsContract(typeof(IAuthenticationService))]
+	[ExtensionOf(typeof (CoreServiceExtensionPoint))]
+	[ServiceImplementsContract(typeof (IAuthenticationService))]
 	public class AuthenticationService : AuthenticationServiceBase, IAuthenticationService
 	{
 		#region IAuthenticationService Members
@@ -86,49 +86,49 @@ namespace ClearCanvas.Enterprise.Authentication
 			return new ChangePasswordResponse();
 		}
 
-        [UpdateOperation(ChangeSetAuditable = false)]
-        public ResetPasswordResponse ResetPassword(ResetPasswordRequest request)
-        {
-            Platform.CheckForNullReference(request, "request");
-            Platform.CheckMemberIsSet(request.UserName, "UserName");
+		[UpdateOperation(ChangeSetAuditable = false)]
+		public ResetPasswordResponse ResetPassword(ResetPasswordRequest request)
+		{
+			Platform.CheckForNullReference(request, "request");
+			Platform.CheckMemberIsSet(request.UserName, "UserName");
 
-            var now = Platform.Time;
-            var user = GetUser(request.UserName);
+			var now = Platform.Time;
+			var user = GetUser(request.UserName);
 
-            // ensure user found, account is active and the current password is correct
-            if (string.IsNullOrEmpty(user.EmailAddress))
-            {
-                throw new RequestValidationException(SR.MessageEmailAddressNotConfigured);
-            }
+			// ensure user found, account is active and the current password is correct
+			if (string.IsNullOrEmpty(user.EmailAddress))
+			{
+				throw new RequestValidationException(SR.MessageEmailAddressNotConfigured);
+			}
 
-            // ensure user found, account is active and the current password is correct
-            if (user == null || !user.IsActive(now))
-            {
-                // no such user, account not active, or invalid password
-                // the error message is deliberately vague
-                throw new UserAccessDeniedException();
-            }
+			// ensure user found, account is active and the current password is correct
+			if (user == null || !user.IsActive(now))
+			{
+				// no such user, account not active, or invalid password
+				// the error message is deliberately vague
+				throw new UserAccessDeniedException();
+			}
 
-            // Just use the .NET routine
-            var newPassword = Membership.GeneratePassword(8,1);
+			// Just use the .NET routine
+			var newPassword = Membership.GeneratePassword(8, 1);
 
-            var expiryTime = Platform.Time;
+			var expiryTime = Platform.Time;
 
-            // change the password
-            user.ChangePassword(newPassword, expiryTime);
+			// change the password
+			user.ChangePassword(newPassword, expiryTime);
 
 			// send email
-        	var settings = new PasswordResetEmailSettings();
+			var settings = new PasswordResetEmailSettings();
 			var mail = new OutgoingMailMessage(
 				settings.FromAddress,
 				user.EmailAddress,
 				settings.SubjectTemplate.Replace("$USER", user.DisplayName),
-                settings.BodyTemplate.Replace("$USER", user.DisplayName).Replace("$PASSWORD", newPassword),
+				settings.BodyTemplate.Replace("$USER", user.DisplayName).Replace("$PASSWORD", newPassword),
 				settings.BodyTemplate.ToLower().Contains("html"));
-            mail.Enqueue();
+			mail.Enqueue(OutgoingMailClassification.Normal);
 
-            return new ResetPasswordResponse(user.EmailAddress);
-        }
+			return new ResetPasswordResponse(user.EmailAddress);
+		}
 
 		[UpdateOperation(ChangeSetAuditable = false)]
 		[ResponseCaching("GetSessionTokenCacheDirective")]
@@ -147,19 +147,19 @@ namespace ClearCanvas.Enterprise.Authentication
 			session.Validate(request.UserName, this.Settings.UserSessionTimeoutEnabled);
 
 			// renew
-            if (!request.ValidateOnly)
-			    session.Renew(GetSessionTimeout());
+			if (!request.ValidateOnly)
+				session.Renew(GetSessionTimeout());
 
 			// get authority tokens if requested
 			var authorizations = request.GetAuthorizations ?
-				PersistenceContext.GetBroker<IAuthorityTokenBroker>().FindTokensByUserName(request.UserName) : new string[0];
+			                                               	PersistenceContext.GetBroker<IAuthorityTokenBroker>().FindTokensByUserName(request.UserName) : new string[0];
 
-            // Get DataAccess authority groups if requested
-            var groups = request.GetAuthorizations
-                             ? PersistenceContext.GetBroker<IAuthorityGroupBroker>().FindDataGroupsByUserName(request.UserName)
-                             : new Guid[0];
+			// Get DataAccess authority groups if requested
+			var groups = request.GetAuthorizations
+			             	? PersistenceContext.GetBroker<IAuthorityGroupBroker>().FindDataGroupsByUserName(request.UserName)
+			             	: new Guid[0];
 
-            return new ValidateSessionResponse(session.GetToken(), authorizations, groups);
+			return new ValidateSessionResponse(session.GetToken(), authorizations, groups);
 		}
 
 		[UpdateOperation(ChangeSetAuditable = false)]
@@ -192,7 +192,6 @@ namespace ClearCanvas.Enterprise.Authentication
 			return new TerminateSessionResponse();
 		}
 
-
 		[ReadOperation]
 		[ResponseCaching("GetAuthorityTokenCacheDirective")]
 		public GetAuthorizationsResponse GetAuthorizations(GetAuthorizationsRequest request)
@@ -211,7 +210,6 @@ namespace ClearCanvas.Enterprise.Authentication
 		}
 
 		#endregion
-
 
 		/// <summary>
 		/// Gets the session token response caching directive.

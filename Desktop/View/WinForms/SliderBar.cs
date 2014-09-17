@@ -98,7 +98,11 @@ namespace ClearCanvas.Desktop.View.WinForms
 			get { return _thumbSize; }
 			set
 			{
-				if (value < 1) throw new ArgumentOutOfRangeException("value", value, "ThumbSize must be at least 1.");
+				if (value < 1)
+				{
+					const string message = "ThumbSize must be at least 1.";
+					throw new ArgumentOutOfRangeException("value", value, message);
+				}
 				if (_thumbSize == value) return;
 				_thumbSize = value;
 				Invalidate();
@@ -117,7 +121,11 @@ namespace ClearCanvas.Desktop.View.WinForms
 			get { return _trackSize; }
 			set
 			{
-				if (value < 1) throw new ArgumentOutOfRangeException("value", value, "TrackSize must be at least 1.");
+				if (value < 1)
+				{
+					const string message = "TrackSize must be at least 1.";
+					throw new ArgumentOutOfRangeException("value", value, message);
+				}
 				if (_trackSize == value) return;
 				_trackSize = value;
 				Invalidate();

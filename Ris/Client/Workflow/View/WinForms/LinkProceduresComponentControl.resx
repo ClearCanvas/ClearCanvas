@@ -112,9 +112,210 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="_worklistItemTableView.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left, Right</value>
+  </data>
+  <data name="_worklistItemTableView.ColumnHeaderTooltip" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="_worklistItemTableView.Location" type="System.Drawing.Point, System.Drawing">
+    <value>13, 140</value>
+  </data>
+  <data name="_worklistItemTableView.Size" type="System.Drawing.Size, System.Drawing">
+    <value>725, 308</value>
+  </data>
+  <data name="_worklistItemTableView.SortButtonTooltip" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="_worklistItemTableView.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;_worklistItemTableView.Name" xml:space="preserve">
+    <value>_worklistItemTableView</value>
+  </data>
+  <data name="&gt;&gt;_worklistItemTableView.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.TableView, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_worklistItemTableView.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_worklistItemTableView.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="_okButton.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Right</value>
+  </data>
+  <data name="_okButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>662, 465</value>
+  </data>
+  <data name="_okButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="_okButton.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="_okButton.Text" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="&gt;&gt;_okButton.Name" xml:space="preserve">
+    <value>_okButton</value>
+  </data>
+  <data name="&gt;&gt;_okButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_okButton.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_okButton.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="_instructionsLabel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left</value>
+  </data>
+  <data name="_instructionsLabel.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_instructionsLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>10, 117</value>
+  </data>
+  <data name="_instructionsLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>324, 13</value>
+  </data>
+  <data name="_instructionsLabel.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="_instructionsLabel.Text" xml:space="preserve">
+    <value>Check any additional procedures that should be linked to this report</value>
+  </data>
+  <data name="&gt;&gt;_instructionsLabel.Name" xml:space="preserve">
+    <value>_instructionsLabel</value>
+  </data>
+  <data name="&gt;&gt;_instructionsLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_instructionsLabel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_instructionsLabel.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="_heading.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_heading.Location" type="System.Drawing.Point, System.Drawing">
+    <value>10, 9</value>
+  </data>
+  <data name="_heading.Size" type="System.Drawing.Size, System.Drawing">
+    <value>56, 13</value>
+  </data>
+  <data name="_heading.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="_heading.Text" xml:space="preserve">
+    <value>Reporting:</value>
+  </data>
+  <data name="&gt;&gt;_heading.Name" xml:space="preserve">
+    <value>_heading</value>
+  </data>
+  <data name="&gt;&gt;_heading.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_heading.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_heading.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="_sourceWorklistItem.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="_sourceWorklistItem.ColumnHeaderTooltip" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="_sourceWorklistItem.Location" type="System.Drawing.Point, System.Drawing">
+    <value>13, 26</value>
+  </data>
+  <data name="_sourceWorklistItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>725, 71</value>
+  </data>
+  <data name="_sourceWorklistItem.SortButtonTooltip" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="_sourceWorklistItem.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;_sourceWorklistItem.Name" xml:space="preserve">
+    <value>_sourceWorklistItem</value>
+  </data>
+  <data name="&gt;&gt;_sourceWorklistItem.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.TableView, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_sourceWorklistItem.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_sourceWorklistItem.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_makePrimaryButton.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Right</value>
+  </data>
+  <data name="_makePrimaryButton.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="_makePrimaryButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>706, 103</value>
+  </data>
+  <data name="_makePrimaryButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>31, 31</value>
+  </data>
+  <data name="_makePrimaryButton.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <metadata name="_toolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <data name="_makePrimaryButton.ToolTip" xml:space="preserve">
+    <value>Make the selected procedure the primary</value>
+  </data>
+  <data name="&gt;&gt;_makePrimaryButton.Name" xml:space="preserve">
+    <value>_makePrimaryButton</value>
+  </data>
+  <data name="&gt;&gt;_makePrimaryButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_makePrimaryButton.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_makePrimaryButton.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
+    <value>754, 501</value>
+  </data>
+  <data name="&gt;&gt;_toolTip.Name" xml:space="preserve">
+    <value>_toolTip</value>
+  </data>
+  <data name="&gt;&gt;_toolTip.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>LinkProceduresComponentControl</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.ApplicationComponentUserControl, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
 </root>

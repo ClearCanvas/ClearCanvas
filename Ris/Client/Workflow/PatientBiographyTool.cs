@@ -33,12 +33,12 @@ using ClearCanvas.Ris.Application.Common;
 
 namespace ClearCanvas.Ris.Client.Workflow
 {
-	[ButtonAction("view", "folderexplorer-items-toolbar/Patient Biography", "View")]
-	[MenuAction("view", "folderexplorer-items-contextmenu/Patient Biography", "View")]
-	[ButtonAction("view", "patientsearch-items-toolbar/Patient Biography", "View")]
-	[MenuAction("view", "patientsearch-items-contextmenu/Patient Biography", "View")]
+	[ButtonAction("view", "folderexplorer-items-toolbar/MenuPatientBiography", "View")]
+	[MenuAction("view", "folderexplorer-items-contextmenu/MenuPatientBiography", "View")]
+	[ButtonAction("view", "patientsearch-items-toolbar/MenuPatientBiography", "View")]
+	[MenuAction("view", "patientsearch-items-contextmenu/MenuPatientBiography", "View")]
 	[EnabledStateObserver("view", "Enabled", "EnabledChanged")]
-	[Tooltip("view", "Open patient biography")]
+	[Tooltip("view", "TooltipPatientBiography")]
 	[IconSet("view", "PatientDetailsToolSmall.png", "PatientDetailsToolMedium.png", "PatientDetailsToolLarge.png")]
 	[ActionPermission("view", ClearCanvas.Ris.Application.Common.AuthorityTokens.Workflow.PatientBiography.View)]
 	[ExtensionOf(typeof(RegistrationWorkflowItemToolExtensionPoint))]

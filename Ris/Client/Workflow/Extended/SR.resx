@@ -351,4 +351,7 @@ Choose "No" to verify this report without further action.</value>
   <data name="MessagePrintWorklist" xml:space="preserve">
     <value>You are about to print out information that contains confidential patient data.  Do you want to continue?</value>
   </data>
+  <data name="TitleDetails">
+    <value xml:space="preserve">Details</value>
+  </data>
 </root>

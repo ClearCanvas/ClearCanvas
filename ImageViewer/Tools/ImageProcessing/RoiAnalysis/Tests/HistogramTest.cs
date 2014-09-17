@@ -53,7 +53,7 @@ namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis
 		[Test]
 		public void Histogram()
 		{
-			int[] data = { 10, 20, 30, 40, 10, 20, 30, 40, 50, 50, 10, 20, 30 };
+			double[] data = { 10, 20, 30, 40, 10, 20, 30, 40, 50, 50, 10, 20, 30 };
 			Histogram histogram = new Histogram(0, 60, 5, data);
 
 			int[] bins = histogram.Bins;

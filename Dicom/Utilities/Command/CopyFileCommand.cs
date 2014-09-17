@@ -104,12 +104,17 @@ namespace ClearCanvas.Dicom.Utilities.Command
 
         #region IDisposable Members
 
-        public void Dispose()
-        {
-            if (File.Exists(_destBackupFile))
-                File.Delete(_destBackupFile);
-        }
+	    public void Dispose()
+	    {
+		    try
+		    {
+			    FileUtils.Delete(_destBackupFile);
+		    }
+		    catch (Exception)
+		    {
+		    }
+	    }
 
-        #endregion
+	    #endregion
     }
 }

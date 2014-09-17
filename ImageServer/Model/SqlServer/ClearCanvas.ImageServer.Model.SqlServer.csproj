@@ -15,7 +15,7 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -42,6 +42,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -51,6 +52,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -62,6 +64,7 @@
   <ItemGroup>
     <Compile Include="Brokers\PostponeWorkQueue.cs" />
     <Compile Include="Brokers\QueryCurrentStudyMove.cs" />
+    <Compile Include="Brokers\QueryQCStatistics.cs" />
     <Compile Include="Brokers\WebResetWorkQueue.cs" />
     <Compile Include="Brokers\WorkQueueProcessorIDs.cs" />
     <Compile Include="Brokers\CreatePatientForStudy.cs" />
@@ -125,10 +128,14 @@
     <Compile Include="EntityBrokers\FilesystemQueueTypeEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\FilesystemTierEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\NotificationQueueEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\OrderEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\OrderStatusEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\PartitionArchiveEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\PartitionSopClassEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\PartitionTransferSyntaxEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\PatientEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\ProcedureCodeEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\QCStatusEnumBroker.cs" />
     <Compile Include="EntityBrokers\QueueStudyStateEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\RequestAttributesEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\RestoreQueueEntityBroker.gen.cs" />
@@ -146,6 +153,7 @@
     <Compile Include="EntityBrokers\ServiceLockEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\ServiceLockTypeEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\FilesystemStudyStorageEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\StaffEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\StudyDataAccessEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\StudyDeleteRecordEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\StudyEntityBroker.gen.cs" />
@@ -172,6 +180,7 @@
     <Compile Include="RunSqlScriptApplication.cs" />
     <Compile Include="UpgradeScripts\UpgradeFrom_10_0_11128_314.cs" />
     <Compile Include="UpgradeScripts\UpgradeFrom_10_1_13120_656.cs" />
+    <Compile Include="UpgradeScripts\UpgradeFrom_11_0_14821_1095.cs" />
     <Compile Include="UpgradeScripts\UpgradeFrom_4_0_5014_9549.cs" />
     <Compile Include="UpgradeScripts\UpgradeFrom_1_3_8146_27242.cs" />
     <Compile Include="UpgradeScripts\UpgradeFrom_1_4_9277_29698.cs" />
@@ -255,6 +264,9 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UpgradeScripts\UpgradeFrom_11_0_14821_1095.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

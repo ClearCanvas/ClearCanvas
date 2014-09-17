@@ -37,12 +37,12 @@ namespace ClearCanvas.Ris.Client
 	}
 
 	[MenuAction("launch", "global-menus/MenuFile/MenuHome", "Launch")]
-	[Tooltip("launch", "Go to home page")]
+	[Tooltip("launch", "TooltipGoToHomepage")]
 	[IconSet("launch", "Icons.GlobalHomeToolSmall.png", "Icons.GlobalHomeToolMedium.png", "Icons.GlobalHomeToolLarge.png")]
 	[VisibleStateObserver("launch", "Visible", "VisibleChanged")]
 	[ActionPermission("launch", ClearCanvas.Ris.Application.Common.AuthorityTokens.Workflow.HomePage.View)]
 
-	[MenuAction("toggleDowntimeMode", "global-menus/MenuTools/MenuDowntimeRecoveryMode", "ToggleDowntimeMode", Flags = ClickActionFlags.CheckAction)]
+	[MenuAction("toggleDowntimeMode", "global-menus/MenuTools/MenuDowntime/MenuDowntimeRecoveryMode", "ToggleDowntimeMode", Flags = ClickActionFlags.CheckAction)]
 	[CheckedStateObserver("toggleDowntimeMode", "DowntimeModeChecked", "DowntimeModeCheckedChanged")]
 	[ActionPermission("toggleDowntimeMode", ClearCanvas.Ris.Application.Common.AuthorityTokens.Workflow.HomePage.View,
 		ClearCanvas.Ris.Application.Common.AuthorityTokens.Workflow.Downtime.RecoveryOperations)]

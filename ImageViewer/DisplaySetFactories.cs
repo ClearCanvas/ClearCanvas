@@ -707,9 +707,9 @@ namespace ClearCanvas.ImageViewer
 				// make sure we number them in a logical order - since the multiframe echo/stack indices don't have any meaning outside the context in which it was used,
 				// we'll sort by the first instance number in which the index was used, then order by the actual echo index value, and finally by actual stack index value
 				results.AddRange(imagesByEchoDimension
-				                 	.OrderBy(k => k.Value.Select(i => ((IImageSopProvider) i).ImageSop.InstanceNumber).Min())
-				                 	.ThenBy(k => k.Key.EchoIndexValue.GetValueOrDefault(-1))
-				                 	.ThenBy(k => k.Key.StackIndexValue.GetValueOrDefault(-1)));
+					                 .OrderBy(k => k.Value.Select(i => ((IImageSopProvider) i).ImageSop.InstanceNumber).Min())
+					                 .ThenBy(k => k.Key.EchoIndexValue.GetValueOrDefault(-1))
+					                 .ThenBy(k => k.Key.StackIndexValue.GetValueOrDefault(-1)));
 			}
 
 			return results;
@@ -935,8 +935,8 @@ namespace ClearCanvas.ImageViewer
 				// make sure we number them in a logical order - since the multiframe stack indices don't have any meaning outside the context in which it was used,
 				// we'll sort by the first instance number in which the index was used, then order by the actual index value
 				results.AddRange(imagesByStackDimension
-				                 	.OrderBy(k => k.Value.Select(i => ((IImageSopProvider) i).ImageSop.InstanceNumber).Min())
-				                 	.ThenBy(k => k.Key.StackIndexValue.GetValueOrDefault(-1)));
+					                 .OrderBy(k => k.Value.Select(i => ((IImageSopProvider) i).ImageSop.InstanceNumber).Min())
+					                 .ThenBy(k => k.Key.StackIndexValue.GetValueOrDefault(-1)));
 			}
 
 			return results;
@@ -1320,7 +1320,10 @@ namespace ClearCanvas.ImageViewer
 				    || sop.SopClassUid == SopClass.BlendingSoftcopyPresentationStateStorageSopClassUid)
 					continue;
 
-				images.Add(new PlaceholderPresentationImage(sop));
+				var sopClass = SopClass.GetSopClass(sop.SopClassUid);
+				var sopClassDescription = sopClass != null ? sopClass.Name : SR.LabelUnknown;
+				images.Add(new PlaceholderPresentationImage(sop, string.Format(SR.MessageUnsupportedImageType, sopClassDescription)));
+				Platform.Log(LogLevel.Warn, "Unsupported SOP Class \"{0} ({1})\" (SOP Instance {2})", sopClassDescription, sop.SopClassUid, sop.SopInstanceUid);
 			}
 
 			if (images.Count > 0)
@@ -1335,23 +1338,28 @@ namespace ClearCanvas.ImageViewer
 			return new List<IDisplaySet>();
 		}
 
+		internal static IPresentationImage CreatePlaceholderImage(Sop sop, string message)
+		{
+			return new PlaceholderPresentationImage(sop, message);
+		}
+
 		#region PlaceholderPresentationImage Class
 
 		[Cloneable]
 		private sealed class PlaceholderPresentationImage : BasicPresentationImage, ISopProvider
 		{
+			private readonly string _message;
+
 			[CloneIgnore]
 			private ISopReference _sopReference;
 
-			public PlaceholderPresentationImage(Sop sop)
+			public PlaceholderPresentationImage(Sop sop, string message)
 				: base(new GrayscaleImageGraphic(1, 1))
 			{
 				_sopReference = sop.CreateTransientReference();
+				_message = message;
 
-				var sopClass = SopClass.GetSopClass(sop.SopClassUid);
-				var sopClassDescription = sopClass != null ? sopClass.Name : SR.LabelUnknown;
-				CompositeImageGraphic.Graphics.Add(new ErrorMessageGraphic {Text = string.Format(SR.MessageUnsupportedImageType, sopClassDescription), Color = Color.WhiteSmoke});
-				Platform.Log(LogLevel.Warn, "Unsupported SOP Class \"{0} ({1})\" (SOP Instance {2})", sopClassDescription, sop.SopClassUid, sop.SopInstanceUid);
+				CompositeImageGraphic.Graphics.Add(new ErrorMessageGraphic {Text = message, Color = Color.WhiteSmoke});
 			}
 
 			/// <summary>
@@ -1389,7 +1397,7 @@ namespace ClearCanvas.ImageViewer
 
 			public override IPresentationImage CreateFreshCopy()
 			{
-				return new PlaceholderPresentationImage(_sopReference.Sop);
+				return new PlaceholderPresentationImage(_sopReference.Sop, _message);
 			}
 
 			public override Size SceneSize

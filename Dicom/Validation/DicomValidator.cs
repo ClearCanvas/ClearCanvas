@@ -204,7 +204,7 @@ namespace ClearCanvas.Dicom.Validation
 		/// <summary>
 		/// Validate the specified uid conforms to the Dicom standard.
 		/// </summary>
-		public static void ValidateUid(string uid)
+		public static void ValidateUid(string uid, bool validatePattern=true)
 		{
 			if (String.IsNullOrEmpty(uid) || uid.TrimEnd(' ').Length == 0)
 				return;// ok
@@ -212,7 +212,7 @@ namespace ClearCanvas.Dicom.Validation
 			if (uid.Length > 64)
 				throw new DicomDataException(String.Format(SR.ExceptionGeneralUIDLength, uid));
 
-			if (!UidValidationRegex.IsMatch(uid))
+			if (validatePattern && !UidValidationRegex.IsMatch(uid))
 			{
 				throw new DicomDataException(String.Format(SR.ExceptionGeneralUIDFormat, uid));
 			}
@@ -221,12 +221,12 @@ namespace ClearCanvas.Dicom.Validation
 		/// <summary>
 		/// Validate that the Transfer Syntax UID conforms to the Dicom standard.
 		/// </summary>
-		public static void ValidateTransferSyntaxUID(string uid)
+        public static void ValidateTransferSyntaxUID(string uid, bool validatePattern = true)
 		{
 
 			try
 			{
-				ValidateUid(uid);
+				ValidateUid(uid, validatePattern);
 			}
 			catch (DicomDataException e)
 			{
@@ -241,12 +241,12 @@ namespace ClearCanvas.Dicom.Validation
 		/// <summary>
 		/// Validate that the Sop Class UID conforms to the Dicom standard.
 		/// </summary>
-		public static void ValidateSopClassUid(string uid)
+        public static void ValidateSopClassUid(string uid, bool validatePattern = true)
 		{
 
 			try
 			{
-				ValidateUid(uid);
+                ValidateUid(uid, validatePattern);
 			}
 			catch (DicomDataException e)
 			{
@@ -260,11 +260,11 @@ namespace ClearCanvas.Dicom.Validation
 		/// <summary>
 		/// Validate that the Study Instance UID conforms to the Dicom standard.
 		/// </summary>
-		public static void ValidateStudyInstanceUID(string uid)
+        public static void ValidateStudyInstanceUID(string uid, bool validatePattern = true)
 		{
 			try
 			{
-				ValidateUid(uid);
+                ValidateUid(uid, validatePattern);
 			}
 			catch (DicomDataException e)
 			{
@@ -280,11 +280,11 @@ namespace ClearCanvas.Dicom.Validation
 		/// <summary>
 		/// Validate that the Series Instance UID conforms to the Dicom standard.
 		/// </summary>
-		public static void ValidateSeriesInstanceUID(string uid)
+        public static void ValidateSeriesInstanceUID(string uid, bool validatePattern = true)
 		{
 			try
 			{
-				ValidateUid(uid);
+                ValidateUid(uid, validatePattern);
 			}
 			catch (DicomDataException e)
 			{
@@ -300,12 +300,12 @@ namespace ClearCanvas.Dicom.Validation
 		/// <summary>
 		/// Validate that the Sop Instance UID conforms to the Dicom standard.
 		/// </summary>
-		public static void ValidateSOPInstanceUID(string uid)
+        public static void ValidateSOPInstanceUID(string uid, bool validatePattern = true)
 		{
             
 			try
 			{
-				ValidateUid(uid);
+				ValidateUid(uid, validatePattern);
 			}
 			catch (DicomDataException e)
 			{

@@ -34,8 +34,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <DicomAssemblyFiles Include="$(SolutionDir)\..\..\..\Dicom\bin\$(Configuration)\ClearCanvas.Dicom.dll" />
-    <DicomAssemblyFiles Include="$(SolutionDir)\..\..\..\Dicom\DataStore\bin\$(Configuration)\ClearCanvas.Dicom.DataStore.dll" />
+    <PluginFiles Include="$(SolutionDir)\..\..\..\Dicom\bin\$(Configuration)\ClearCanvas.Dicom.dll" />
+    <PluginFiles Include="$(SolutionDir)\..\..\..\Dicom\DataStore\bin\$(Configuration)\ClearCanvas.Dicom.DataStore.dll" />
   </ItemGroup>
 
   <Target Name="Build BuildTasks">
@@ -57,6 +57,9 @@
       <Output ItemName="AllCommonFiles" TaskParameter="Include" />
     </CreateItem>
     <Copy SourceFiles="@(AllCommonFiles)" DestinationFolder="$(CommonDirectory)" />
+
+    <!-- Copy plugin files -->
+    <Copy SourceFiles="@(PluginFiles)" DestinationFolder="$(PluginsDirectory)" />
 
     <!-- Copy Hibernate configuration file -->
     <Copy SourceFiles="$(HibernateConfigurationFileSource)" DestinationFolder="$(DistributionDirectory)" />

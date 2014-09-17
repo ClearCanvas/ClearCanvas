@@ -48,8 +48,8 @@ namespace ClearCanvas.Ris.Client
 	{
 		public StaffSelectorTable()
 		{
-			this.Columns.Add(new TableColumn<StaffSummary, string>(SR.ColumnName, item => PersonNameFormat.Format(item.Name), 1.0f));
-			this.Columns.Add(new TableColumn<StaffSummary, string>(SR.ColumnRole, item => item.StaffType.Value, 0.5f));
+			this.Columns.Add(new TableColumn<StaffSummary, string>(SR.ColumnStaffName, item => PersonNameFormat.Format(item.Name), 1.0f));
+			this.Columns.Add(new TableColumn<StaffSummary, string>(SR.ColumnStaffRole, item => item.StaffType.Value, 0.5f));
 		}
 	}
 
@@ -62,7 +62,7 @@ namespace ClearCanvas.Ris.Client
 		{
 			public ProcedureTypeGroupTable()
 			{
-				this.Columns.Add(new TableColumn<ProcedureTypeGroupSummary, string>(SR.ColumnName, summary => summary.Name));
+				this.Columns.Add(new TableColumn<ProcedureTypeGroupSummary, string>(SR.ColumnProcedureTypeGroupName, summary => summary.Name));
 			}
 		}
 
@@ -70,7 +70,7 @@ namespace ClearCanvas.Ris.Client
 		{
 			public DepartmentTable()
 			{
-				this.Columns.Add(new TableColumn<DepartmentSummary, string>(SR.ColumnName, summary => summary.Name));
+				this.Columns.Add(new TableColumn<DepartmentSummary, string>(SR.ColumnDepartmentName, summary => summary.Name));
 				this.Columns.Add(new TableColumn<DepartmentSummary, string>(SR.ColumnFacility, summary => summary.FacilityName));
 			}
 		}
@@ -79,7 +79,7 @@ namespace ClearCanvas.Ris.Client
 		{
 			public LocationTable()
 			{
-				this.Columns.Add(new TableColumn<LocationSummary, string>(SR.ColumnName, summary => summary.Name));
+				this.Columns.Add(new TableColumn<LocationSummary, string>(SR.ColumnLocationName, summary => summary.Name));
 			}
 		}
 
@@ -87,7 +87,7 @@ namespace ClearCanvas.Ris.Client
 		{
 			public StaffGroupTable()
 			{
-				this.Columns.Add(new TableColumn<StaffGroupSummary, string>(SR.ColumnName, item => item.Name, 1.0f));
+				this.Columns.Add(new TableColumn<StaffGroupSummary, string>(SR.ColumnStaffGroupName, item => item.Name, 1.0f));
 			}
 		}
 
@@ -95,7 +95,7 @@ namespace ClearCanvas.Ris.Client
 		{
 			public ProcedureTypeTable()
 			{
-				this.Columns.Add(new TableColumn<ProcedureTypeSummary, string>(SR.ColumnName, rpt => string.Format("{0} ({1})", rpt.Name, rpt.Id), 1.0f));
+				this.Columns.Add(new TableColumn<ProcedureTypeSummary, string>(SR.ColumnProcedureTypeName, rpt => string.Format("{0} ({1})", rpt.Name, rpt.Id), 1.0f));
 
 				var invisibleIDColumn = new TableColumn<ProcedureTypeSummary, string>(SR.ColumnID, rpt => rpt.Id, 1.0f)
 					{

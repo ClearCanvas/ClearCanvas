@@ -32,22 +32,22 @@ namespace ClearCanvas.Ris.Client.Admin
     {
         public WorklistAdminSummaryTable()
         {
-            this.Columns.Add(new TableColumn<WorklistAdminSummary, string>("Name",
+            this.Columns.Add(new TableColumn<WorklistAdminSummary, string>(SR.ColumnName,
                 delegate(WorklistAdminSummary summary) { return summary.DisplayName; },
                 0.5f));
 
-            this.Columns.Add(new TableColumn<WorklistAdminSummary, string>("Class",
+            this.Columns.Add(new TableColumn<WorklistAdminSummary, string>(SR.ColumnClass,
                 delegate(WorklistAdminSummary summary)
                 {
                      return string.Format("{0} - {1}", summary.WorklistClass.CategoryName, summary.WorklistClass.DisplayName);
                 },
                 0.5f));
 
-            this.Columns.Add(new TableColumn<WorklistAdminSummary, string>("Description",
+            this.Columns.Add(new TableColumn<WorklistAdminSummary, string>(SR.ColumnDescription,
                 delegate(WorklistAdminSummary summary) { return summary.Description; },
                 1.5f));
 
-            this.Columns.Add(new TableColumn<WorklistAdminSummary, string>("Owner",
+            this.Columns.Add(new TableColumn<WorklistAdminSummary, string>(SR.ColumnOwner,
                 delegate(WorklistAdminSummary summary)
                 {
                     if (summary.OwnerStaff != null)

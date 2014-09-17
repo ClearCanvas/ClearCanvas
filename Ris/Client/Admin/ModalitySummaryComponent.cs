@@ -36,7 +36,7 @@ using ClearCanvas.Ris.Application.Common.Admin.ModalityAdmin;
 
 namespace ClearCanvas.Ris.Client.Admin
 {
-    [MenuAction("launch", "global-menus/Admin/Modalities", "Launch")]
+    [MenuAction("launch", "global-menus/MenuAdmin/MenuModalities", "Launch")]
     [ActionPermission("launch", ClearCanvas.Ris.Application.Common.AuthorityTokens.Admin.Data.Modality)]
 	[ExtensionOf(typeof(DesktopToolExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]
     public class ModalitySummaryTool : Tool<IDesktopToolContext>
@@ -160,7 +160,7 @@ namespace ClearCanvas.Ris.Client.Admin
 
 			ModalityEditorComponent editor = new ModalityEditorComponent(item.ModalityRef);
 			ApplicationComponentExitCode exitCode = ApplicationComponent.LaunchAsDialog(
-				this.Host.DesktopWindow, editor, SR.TitleUpdateModality + " - " + "("+item.Id+") "+ item.Name);
+				this.Host.DesktopWindow, editor, string.Format(SR.FormatTitleCodeSubtitle, SR.TitleUpdateModality, item.Id, item.Name));
 			if (exitCode == ApplicationComponentExitCode.Accepted)
 			{
 				editedItems.Add(editor.ModalitySummary);

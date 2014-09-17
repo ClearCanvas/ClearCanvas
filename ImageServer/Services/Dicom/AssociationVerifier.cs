@@ -48,9 +48,9 @@ namespace ClearCanvas.ImageServer.Services.Dicom
         public static bool Verify(DicomScpContext context, ServerAssociationParameters assocParms, out DicomRejectResult result, out DicomRejectReason reason)
         {
             bool isNew;
-            Device device = DeviceManager.LookupDevice(context.Partition, assocParms, out isNew);
+            context.Device = DeviceManager.LookupDevice(context.Partition, assocParms, out isNew);
 
-			if (device==null)
+			if (context.Device == null)
             {
 				if (context.Partition.AcceptAnyDevice)
 				{
@@ -64,7 +64,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom
                 return false;
             }
 
-            if (device.Enabled==false)
+			if (context.Device.Enabled == false)
             {
             
                 Platform.Log(LogLevel.Error,
@@ -77,12 +77,10 @@ namespace ClearCanvas.ImageServer.Services.Dicom
                 
             }
 
-           
             reason = DicomRejectReason.NoReasonGiven;
             result = DicomRejectResult.Permanent;
 
             return true;
         }
-
     }
 }

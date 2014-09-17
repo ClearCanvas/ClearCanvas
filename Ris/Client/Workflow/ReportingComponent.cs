@@ -629,7 +629,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 
 		public string ProceduresText
 		{
-			get { return "Reported Procedure(s): " + _proceduresText; }
+			get { return string.Format(SR.FormatReportedProcedures, _proceduresText); }
 		}
 
 		public bool ReportNextItem
@@ -1175,6 +1175,20 @@ namespace ClearCanvas.Ris.Client.Workflow
 			}
 		}
 
+		private static IEnumerable<ProcedureDetail> ReorderProcedures(IEnumerable<ProcedureDetail> procedures, string primaryProcedureName)
+		{
+			// Take the source list and move the item matching primaryProcedureName to the first item
+			var newProcedures = new List<ProcedureDetail>();
+			newProcedures.AddRange(procedures);
+
+			var index = newProcedures.FindIndex(p => Equals(p.Type.Name, primaryProcedureName));
+			var primaryProcedure = newProcedures[index];
+			newProcedures.RemoveAt(index);
+			newProcedures.Insert(0, primaryProcedure);
+
+			return newProcedures;
+		}
+
 		private void StartReportingWorklistItem()
 		{
 			ClaimAndLinkWorklistItem(this.WorklistItem);
@@ -1196,7 +1210,8 @@ namespace ClearCanvas.Ris.Client.Workflow
 				_priorityChoices = response.PriorityChoices;
 
 				var sb = new StringBuilder();
-				foreach (var procedureDetail in _report.Procedures)
+				var procedures = ReorderProcedures(_report.Procedures, this.WorklistItem.ProcedureName);
+				foreach (var procedureDetail in procedures)
 				{
 					sb.Append(ProcedureFormat.Format(procedureDetail) + ", ");
 				}
@@ -1318,15 +1333,23 @@ namespace ClearCanvas.Ris.Client.Workflow
 					throw new UserSkippedItemWithIncompleteDocumentationException();
 
 				// if creating a new report, check for linked interpretations
+				ReportingWorklistItemSummary primaryItem;
 				List<ReportingWorklistItemSummary> linkedInterpretations;
 				List<ReportingWorklistItemSummary> candidateInterpretations;
-				PromptForLinkedInterpretations(item, out linkedInterpretations, out candidateInterpretations);
+				PromptForLinkedInterpretations(item, out primaryItem, out linkedInterpretations, out candidateInterpretations);
+				if (!Equals(item, primaryItem))
+				{
+					_worklistItemManager.SwapCurentItem(primaryItem);
+				}
 
 				try
 				{
 					// start the interpretation step
 					// note: updating only the ProcedureStepRef is hacky - the service should return an updated item
-					item.ProcedureStepRef = StartInterpretation(item, linkedInterpretations, out _assignedStaff);
+					primaryItem.ProcedureStepRef = StartInterpretation(primaryItem, linkedInterpretations, out _assignedStaff);
+
+					// Mark any of the linked items as ignored, so we don't visit them again
+					_worklistItemManager.IgnoreWorklistItems(linkedInterpretations);
 				}
 				catch
 				{
@@ -1387,8 +1410,9 @@ namespace ClearCanvas.Ris.Client.Workflow
 			return isIncomplete;
 		}
 
-		private void PromptForLinkedInterpretations(ReportingWorklistItemSummary item, out List<ReportingWorklistItemSummary> linkedItems, out List<ReportingWorklistItemSummary> candidateItems)
+		private void PromptForLinkedInterpretations(ReportingWorklistItemSummary item, out ReportingWorklistItemSummary primaryItem, out List<ReportingWorklistItemSummary> linkedItems, out List<ReportingWorklistItemSummary> candidateItems)
 		{
+			primaryItem = item;
 			linkedItems = new List<ReportingWorklistItemSummary>();
 			candidateItems = new List<ReportingWorklistItemSummary>();
 
@@ -1411,7 +1435,12 @@ namespace ClearCanvas.Ris.Client.Workflow
 			var exitCode = LaunchAsDialog(this.Host.DesktopWindow, component, SR.TitleLinkProcedures);
 			if (exitCode == ApplicationComponentExitCode.Accepted)
 			{
-				linkedItems.AddRange(component.SelectedItems);
+				primaryItem = component.PrimaryItem;
+				linkedItems.Clear();
+				linkedItems.AddRange(component.CheckedItems);
+
+				candidateItems.Clear();
+				candidateItems.AddRange(component.UncheckedItems);
 			}
 		}
 

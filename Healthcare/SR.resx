@@ -564,4 +564,265 @@
   <data name="VerificationStep" xml:space="preserve">
     <value>Verification</value>
   </data>
+  <data name="ActiveAdmitted" xml:space="preserve">
+    <value>Active/Admitted</value>
+  </data>
+  <data name="Admitting" xml:space="preserve">
+    <value>Admitting</value>
+  </data>
+  <data name="Any" xml:space="preserve">
+    <value>Any</value>
+  </data>
+  <data name="Attending" xml:space="preserve">
+    <value>Attending</value>
+  </data>
+  <data name="AwaitingApproval" xml:space="preserve">
+    <value>Awaiting Approval</value>
+  </data>
+  <data name="Bilateral" xml:space="preserve">
+    <value>Bilateral</value>
+  </data>
+  <data name="Canceled" xml:space="preserve">
+    <value>Canceled</value>
+  </data>
+  <data name="Cancelled" xml:space="preserve">
+    <value>Cancelled</value>
+  </data>
+  <data name="Cellphone" xml:space="preserve">
+    <value>Cellphone</value>
+  </data>
+  <data name="Complete" xml:space="preserve">
+    <value>Complete</value>
+  </data>
+  <data name="Completed" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="Consulting" xml:space="preserve">
+    <value>Consulting</value>
+  </data>
+  <data name="Corrected" xml:space="preserve">
+    <value>Corrected</value>
+  </data>
+  <data name="Current" xml:space="preserve">
+    <value>Current</value>
+  </data>
+  <data name="Discharged" xml:space="preserve">
+    <value>Discharged</value>
+  </data>
+  <data name="Discontinued" xml:space="preserve">
+    <value>Discontinued</value>
+  </data>
+  <data name="Draft" xml:space="preserve">
+    <value>Draft</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Fax" xml:space="preserve">
+    <value>Fax</value>
+  </data>
+  <data name="Female" xml:space="preserve">
+    <value>Female</value>
+  </data>
+  <data name="Final" xml:space="preserve">
+    <value>Final</value>
+  </data>
+  <data name="Ghost" xml:space="preserve">
+    <value>Ghost</value>
+  </data>
+  <data name="Healthcard" xml:space="preserve">
+    <value>Healthcard</value>
+  </data>
+  <data name="High" xml:space="preserve">
+    <value>High</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Indeterminate" xml:space="preserve">
+    <value>Indeterminate</value>
+  </data>
+  <data name="InProgress" xml:space="preserve">
+    <value>In Progress</value>
+  </data>
+  <data name="Left" xml:space="preserve">
+    <value>Left</value>
+  </data>
+  <data name="Low" xml:space="preserve">
+    <value>Low</value>
+  </data>
+  <data name="Mail" xml:space="preserve">
+    <value>Mail</value>
+  </data>
+  <data name="Mailing" xml:space="preserve">
+    <value>Mailing</value>
+  </data>
+  <data name="Male" xml:space="preserve">
+    <value>Male</value>
+  </data>
+  <data name="Merged" xml:space="preserve">
+    <value>Merged</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="Normal" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="NotApplicable" xml:space="preserve">
+    <value>Not applicable</value>
+  </data>
+  <data name="OrderStatusCanceledDescription" xml:space="preserve">
+    <value>Order was canceled</value>
+  </data>
+  <data name="OrderStatusCompletedDescription" xml:space="preserve">
+    <value>Order is completed</value>
+  </data>
+  <data name="OrderStatusDiscontinuedDescription" xml:space="preserve">
+    <value>Order was discontinued</value>
+  </data>
+  <data name="OrderStatusInProgressDescription" xml:space="preserve">
+    <value>In process, unspecified</value>
+  </data>
+  <data name="OrderStatusMergedDescription" xml:space="preserve">
+    <value>Order was merged into another order</value>
+  </data>
+  <data name="OrderStatusReplacedDescription" xml:space="preserve">
+    <value>Order was replaced</value>
+  </data>
+  <data name="OrderStatusScheduledDescription" xml:space="preserve">
+    <value>In process, scheduled</value>
+  </data>
+  <data name="Other" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="Pager" xml:space="preserve">
+    <value>Pager</value>
+  </data>
+  <data name="Partial" xml:space="preserve">
+    <value>Partial</value>
+  </data>
+  <data name="Pending" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="PreAdmit" xml:space="preserve">
+    <value>Pre-Admit</value>
+  </data>
+  <data name="PreAdmitCancelled" xml:space="preserve">
+    <value>Pre-Admit - Cancelled</value>
+  </data>
+  <data name="Preliminary" xml:space="preserve">
+    <value>Preliminary</value>
+  </data>
+  <data name="Prior" xml:space="preserve">
+    <value>Prior</value>
+  </data>
+  <data name="ProcedureStatusCanceledDescription" xml:space="preserve">
+    <value>Procedure was canceled</value>
+  </data>
+  <data name="ProcedureStatusCompletedDescription" xml:space="preserve">
+    <value>Procedure is completed, including report publishing</value>
+  </data>
+  <data name="ProcedureStatusDiscontinuedDescription" xml:space="preserve">
+    <value>Procedure was discontinued</value>
+  </data>
+  <data name="ProcedureStatusGhostDescription" xml:space="preserve">
+    <value>Ghost of procedure that was moved to another order</value>
+  </data>
+  <data name="ProcedureStatusInProgressDescription" xml:space="preserve">
+    <value>In process, unspecified</value>
+  </data>
+  <data name="ProcedureStatusScheduledDescription" xml:space="preserve">
+    <value>In process, scheduled</value>
+  </data>
+  <data name="Protocolled" xml:space="preserve">
+    <value>Protocolled</value>
+  </data>
+  <data name="Referring" xml:space="preserve">
+    <value>Referring</value>
+  </data>
+  <data name="Rejected" xml:space="preserve">
+    <value>Rejected</value>
+  </data>
+  <data name="Replaced" xml:space="preserve">
+    <value>Replaced</value>
+  </data>
+  <data name="ReportStatusCancelledDescription" xml:space="preserve">
+    <value>Report is cancelled</value>
+  </data>
+  <data name="ReportStatusCorrectedDescription" xml:space="preserve">
+    <value>Corrected (report has one or more addenda)</value>
+  </data>
+  <data name="ReportStatusDraftDescription" xml:space="preserve">
+    <value>Draft</value>
+  </data>
+  <data name="ReportStatusFinalDescription" xml:space="preserve">
+    <value>Final (report has been verified)</value>
+  </data>
+  <data name="ReportStatusPreliminaryDescription" xml:space="preserve">
+    <value>Preliminary (report has not been verified)</value>
+  </data>
+  <data name="Right" xml:space="preserve">
+    <value>Right</value>
+  </data>
+  <data name="Routine" xml:space="preserve">
+    <value>Routine</value>
+  </data>
+  <data name="Scheduled" xml:space="preserve">
+    <value>Scheduled</value>
+  </data>
+  <data name="Stat" xml:space="preserve">
+    <value>Stat</value>
+  </data>
+  <data name="Telephone" xml:space="preserve">
+    <value>Telephone</value>
+  </data>
+  <data name="Temporary" xml:space="preserve">
+    <value>Temporary</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="Urgent" xml:space="preserve">
+    <value>Urgent</value>
+  </data>
+  <data name="Work" xml:space="preserve">
+    <value>Work</value>
+  </data>
+  <data name="Zero" xml:space="preserve">
+    <value>Zero</value>
+  </data>
+  <data name="OrderNoteAutoGeneratedNote" xml:space="preserve">
+    <value>Auto-generated note: {0}</value>
+  </data>
+  <data name="OrderNoteOrderMergeFrom" xml:space="preserve">
+    <value>Order {0} is merged into this order.</value>
+  </data>
+  <data name="OrderNoteOrderMergeTo" xml:space="preserve">
+    <value>This order is merged into order {0}.</value>
+  </data>
+  <data name="OrderNoteOrderReplacedBy" xml:space="preserve">
+    <value>Order {0} is replaced by this order.</value>
+  </data>
+  <data name="OrderNoteOrderReplacedByReason" xml:space="preserve">
+    <value>This order is replaced by order {0}. Reason: {1}</value>
+  </data>
+  <data name="OrderNoteOrdersMergeFrom" xml:space="preserve">
+    <value>Orders {0} are merged into this order.</value>
+  </data>
+  <data name="MessageOrderCannotMergeSameAccessionNumber" xml:space="preserve">
+    <value>Orders with the same accession number cannot be merged.</value>
+  </data>
+  <data name="MessageOrderCannotMergeOrderAlreadyStarted" xml:space="preserve">
+    <value>Orders that have already been started cannot be merged.</value>
+  </data>
+  <data name="MessageOrderCannotMergeDifferentPatientOrders" xml:space="preserve">
+    <value>Orders that belong to different patients cannot be merged.</value>
+  </data>
+  <data name="MessageOrderCannotMergeDifferentOrderingFacilityOrders" xml:space="preserve">
+    <value>Orders with different ordering facilities cannot be merged.</value>
+  </data>
+  <data name="MessageOrderCannotMergeDowntimeOrders" xml:space="preserve">
+    <value>Downtime orders cannot be merged.</value>
+  </data>
 </root>

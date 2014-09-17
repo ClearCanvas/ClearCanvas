@@ -115,7 +115,7 @@ namespace ClearCanvas.Enterprise.Desktop
                 if (selectedUser == null) return;
 
                 var component = new UserSessionManagmentComponent(selectedUser);
-                LaunchAsDialog(this.Host.DesktopWindow, component, "User Sessions");
+                LaunchAsDialog(this.Host.DesktopWindow, component, SR.TitleUserSessions);
             }
             catch (Exception e)
             {
@@ -132,7 +132,7 @@ namespace ClearCanvas.Enterprise.Desktop
 				if (selectedUser == null) return;
 
                 // confirm this action
-				if (this.Host.ShowMessageBox(string.Format("Reset password for user {0}?", selectedUser.UserName), MessageBoxActions.OkCancel) == DialogBoxAction.Cancel)
+				if (this.Host.ShowMessageBox(string.Format(SR.FormatMessageResetPassword, selectedUser.UserName), MessageBoxActions.OkCancel) == DialogBoxAction.Cancel)
                     return;
 
                 Platform.GetService<IUserAdminService>(
@@ -176,7 +176,7 @@ namespace ClearCanvas.Enterprise.Desktop
 			_resetPasswordAction = model.AddAction("resetPassword", SR.TitleResetPassword, "Icons.ResetToolSmall.png",
 				SR.TitleResetPassword, ResetUserPassword, ClearCanvas.Enterprise.Common.AuthorityTokens.Admin.Security.User);
 
-            _viewSessionsAction = model.AddAction("viewSessions", "View Sessions", "Icons.ViewUserSessionsSmall.png",
+            _viewSessionsAction = model.AddAction("viewSessions", SR.LabelViewSessions, "Icons.ViewUserSessionsSmall.png",
                SR.TitleViewUserSessions, ViewUserSessions, ClearCanvas.Enterprise.Common.AuthorityTokens.Admin.Security.User);
 
 			model.Add.SetPermissibility(ClearCanvas.Enterprise.Common.AuthorityTokens.Admin.Security.User);
@@ -243,7 +243,7 @@ namespace ClearCanvas.Enterprise.Desktop
 
 			UserEditorComponent editor = new UserEditorComponent(item.UserName);
 			ApplicationComponentExitCode exitCode = LaunchAsDialog(
-				this.Host.DesktopWindow, editor, SR.TitleUpdateUser + " - " + item.UserName);
+				this.Host.DesktopWindow, editor, string.Format(SR.FormatTitleSubtitle, SR.TitleUpdateUser, item.UserName));
 			if (exitCode == ApplicationComponentExitCode.Accepted)
 			{
 				editedItems.Add(editor.UserSummary);

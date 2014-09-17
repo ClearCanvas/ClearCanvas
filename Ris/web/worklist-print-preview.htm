@@ -7,6 +7,7 @@
 		<script type="text/javascript" src="js/jsml.js"></script>
 		<script type="text/javascript" src="js/ui.js"></script>
 		<script type="text/javascript" src="js/ris.js"></script>
+		<script type="text/javascript" src="js/SR.js"></script>
 		<script type="text/javascript" src="js/preview.js"></script>
 		<script type="text/javascript" src="js/layout.js"></script>
 		<script type="text/javascript" >
@@ -15,22 +16,14 @@
 				if(!Ris)
 					return;
 
-				try
+				var context = Ris.getHealthcareContext();
+				if (context == null)
 				{
-					var context = Ris.getHealthcareContext();
-					if (context == null)
-					{
-						Field.setValue($("myForm"), "");
-						return;
-					}
+					Field.setValue($("myForm"), "");
+					return;
+				}
 
-					Preview.WorklistItemsPreview.create($("worklistItemsSection"), context);
-				}
-				catch(e)
-				{
-					var message = "Failed to load editor page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
-					Field.setValue($("myForm"), message);
-				}
+				Preview.WorklistItemsPreview.create($("worklistItemsSection"), context);
 			}
 		</script>
 	</head>

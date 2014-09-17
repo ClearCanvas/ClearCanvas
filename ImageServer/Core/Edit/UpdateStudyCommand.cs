@@ -35,7 +35,6 @@ using ClearCanvas.Dicom.Utilities.Xml;
 using ClearCanvas.Dicom.Utilities.Command;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
-using ClearCanvas.ImageServer.Core.Command;
 using ClearCanvas.ImageServer.Core.Diagnostics;
 using ClearCanvas.ImageServer.Core.Events;
 using ClearCanvas.ImageServer.Enterprise;
@@ -58,8 +57,8 @@ namespace ClearCanvas.ImageServer.Core.Edit
 	/// </remarks>
 	public class UpdateStudyCommand : ServerDatabaseCommand, IDisposable
 	{
-        const string UTF8 = "ISO_IR 192";
-                            
+		private const string UTF8 = "ISO_IR 192";
+
 		#region Private Members
 
 		private readonly List<InstanceInfo> _updatedSopList = new List<InstanceInfo>();
@@ -78,26 +77,27 @@ namespace ClearCanvas.ImageServer.Core.Edit
 		private Patient _curPatient;
 		private Patient _newPatient;
 		private StudyStorage _storage;
-		private WorkQueue _workQueue;
+		private readonly WorkQueue _workQueue;
 
 		private readonly UpdateStudyStatistics _statistics;
 		private int _totalSopCount;
 		private bool _restored;
 		private bool _deleteOriginalFolder;
 
-		private bool _patientInfoIsNotChanged;
+		private bool _patientInfoChanged;
 		private readonly ServerRulesEngine _rulesEngine;
 
-        private bool atLeastOneFileUpdatedToUTF8 = false;
+		private bool atLeastOneFileUpdatedToUTF8 = false;
+
 		#endregion
 
 		#region Constructors
 
-		public UpdateStudyCommand(ServerPartition partition, 
+		public UpdateStudyCommand(ServerPartition partition,
 		                          StudyStorageLocation studyLocation,
 		                          IList<BaseImageLevelUpdateCommand> imageLevelCommands,
-								  ServerRuleApplyTimeEnum applyTime,
-								  WorkQueue workQueue) 
+		                          ServerRuleApplyTimeEnum applyTime,
+		                          WorkQueue workQueue)
 			: base("Update existing study")
 		{
 			_partition = partition;
@@ -130,7 +130,7 @@ namespace ClearCanvas.ImageServer.Core.Edit
 		protected override void OnExecute(CommandProcessor theProcessor, IUpdateContext updateContext)
 		{
 			Statistics.ProcessTime.Start();
-            
+
 			Initialize();
 
 			PrintUpdateCommands();
@@ -139,7 +139,7 @@ namespace ClearCanvas.ImageServer.Core.Edit
 				BackupFilesystem();
 
 			UpdateFilesystem();
-	  
+
 			UpdateDatabase();
 
 			Statistics.ProcessTime.End();
@@ -163,65 +163,65 @@ namespace ClearCanvas.ImageServer.Core.Edit
 		{
 			_backupDir = ProcessorContext.BackupDirectory;
 
-				_oldStudyPath = _oldStudyLocation.GetStudyPath();
-				_oldStudyInstanceUid = _oldStudyLocation.StudyInstanceUid;
-				_oldStudyFolder = _oldStudyLocation.StudyFolder;
-				_newStudyInstanceUid = _oldStudyInstanceUid;
+			_oldStudyPath = _oldStudyLocation.GetStudyPath();
+			_oldStudyInstanceUid = _oldStudyLocation.StudyInstanceUid;
+			_oldStudyFolder = _oldStudyLocation.StudyFolder;
+			_newStudyInstanceUid = _oldStudyInstanceUid;
 
 			_study = _oldStudyLocation.LoadStudy(ServerExecutionContext.Current.ReadContext);
-				_totalSopCount = _study.NumberOfStudyRelatedInstances;
+			_totalSopCount = _study.NumberOfStudyRelatedInstances;
 			_curPatient = _study.LoadPatient(ServerExecutionContext.Current.ReadContext);
-				_oldPatientInfo = new PatientInfo
-				                  	{
-				                  		Name = _curPatient.PatientsName,
-				                  		PatientId = _curPatient.PatientId,
-				                  		IssuerOfPatientId = _curPatient.IssuerOfPatientId
-				                  	};
-
-				_newPatientInfo = new PatientInfo(_oldPatientInfo);
-				Debug.Assert(_newPatientInfo.Equals(_oldPatientInfo));
-
-				foreach (BaseImageLevelUpdateCommand command in _commands)
+			_oldPatientInfo = new PatientInfo
 				{
-					ImageLevelUpdateEntry imageLevelUpdate = command.UpdateEntry;
-					if (imageLevelUpdate == null)
-						continue;
+					PatientsName = _curPatient.PatientsName,
+					PatientId = _curPatient.PatientId,
+					IssuerOfPatientId = _curPatient.IssuerOfPatientId
+				};
 
-					if (imageLevelUpdate.TagPath.Tag.TagValue == DicomTags.StudyInstanceUid)
-					{
-						_newStudyInstanceUid = imageLevelUpdate.GetStringValue();
-					}
-					else if (imageLevelUpdate.TagPath.Tag.TagValue == DicomTags.PatientId)
-					{
-						_newPatientInfo.PatientId = imageLevelUpdate.GetStringValue();
-					}
-					else if (imageLevelUpdate.TagPath.Tag.TagValue == DicomTags.IssuerOfPatientId)
-					{
-						_newPatientInfo.IssuerOfPatientId = imageLevelUpdate.GetStringValue();
-					}
-					else if (imageLevelUpdate.TagPath.Tag.TagValue == DicomTags.PatientsName)
-					{
-						_newPatientInfo.Name = imageLevelUpdate.GetStringValue();
-					}
+			_newPatientInfo = new PatientInfo(_oldPatientInfo);
+			Debug.Assert(_newPatientInfo.Equals(_oldPatientInfo));
+
+			foreach (BaseImageLevelUpdateCommand command in _commands)
+			{
+				ImageLevelUpdateEntry imageLevelUpdate = command.UpdateEntry;
+				if (imageLevelUpdate == null)
+					continue;
+
+				if (imageLevelUpdate.TagPath.Tag.TagValue == DicomTags.StudyInstanceUid)
+				{
+					_newStudyInstanceUid = imageLevelUpdate.GetStringValue();
 				}
+				else if (imageLevelUpdate.TagPath.Tag.TagValue == DicomTags.PatientId)
+				{
+					_newPatientInfo.PatientId = imageLevelUpdate.GetStringValue();
+				}
+				else if (imageLevelUpdate.TagPath.Tag.TagValue == DicomTags.IssuerOfPatientId)
+				{
+					_newPatientInfo.IssuerOfPatientId = imageLevelUpdate.GetStringValue();
+				}
+				else if (imageLevelUpdate.TagPath.Tag.TagValue == DicomTags.PatientsName)
+				{
+					_newPatientInfo.PatientsName = imageLevelUpdate.GetStringValue();
+				}
+			}
 
-				Platform.CheckForNullReference(_newStudyInstanceUid, "_newStudyInstanceUid");
+			Platform.CheckForNullReference(_newStudyInstanceUid, "_newStudyInstanceUid");
 
-				NewStudyPath = Path.Combine(_oldStudyLocation.FilesystemPath, _partition.PartitionFolder);
-				NewStudyPath = Path.Combine(NewStudyPath, _oldStudyFolder);
-				NewStudyPath = Path.Combine(NewStudyPath, _newStudyInstanceUid);
+			NewStudyPath = Path.Combine(_oldStudyLocation.FilesystemPath, _partition.PartitionFolder);
+			NewStudyPath = Path.Combine(NewStudyPath, _oldStudyFolder);
+			NewStudyPath = Path.Combine(NewStudyPath, _newStudyInstanceUid);
 
 			_newPatient = FindPatient(_newPatientInfo, ServerExecutionContext.Current.ReadContext);
-				_patientInfoIsNotChanged = _newPatientInfo.Equals(_oldPatientInfo);
+			_patientInfoChanged = !_newPatientInfo.AreSame(_oldPatientInfo, false);
 
-				Statistics.InstanceCount = _study.NumberOfStudyRelatedInstances;
-				Statistics.StudySize = (ulong) _oldStudyLocation.LoadStudyXml().GetStudySize();
+			Statistics.InstanceCount = _study.NumberOfStudyRelatedInstances;
+			Statistics.StudySize = (ulong) _oldStudyLocation.LoadStudyXml().GetStudySize();
 
-				// The study path will be changed. We will need to delete the original folder at the end.
-				// May be too simple to test if two paths are the same. But let's assume it is good enough for 99% of the time.
-				_deleteOriginalFolder = NewStudyPath != _oldStudyPath;
-				_initialized = true;
-			}
+			// The study path will be changed. We will need to delete the original folder at the end.
+			// May be too simple to test if two paths are the same. But let's assume it is good enough for 99% of the time.
+			_deleteOriginalFolder = NewStudyPath != _oldStudyPath;
+			_initialized = true;
+		}
 
 		private void CleanupBackupFiles()
 		{
@@ -230,16 +230,16 @@ namespace ClearCanvas.ImageServer.Core.Edit
 
 		private static Patient FindPatient(PatientInfo patientInfo, IPersistenceContext context)
 		{
-            IPatientEntityBroker patientFindBroker = context.GetBroker<IPatientEntityBroker>();
-			PatientSelectCriteria criteria = new PatientSelectCriteria();
+			var patientFindBroker = context.GetBroker<IPatientEntityBroker>();
+			var criteria = new PatientSelectCriteria();
 
 			if (!String.IsNullOrEmpty(patientInfo.PatientId))
 				criteria.PatientId.EqualTo(patientInfo.PatientId);
 			else
 				criteria.PatientId.IsNull();
 
-			if (!String.IsNullOrEmpty(patientInfo.Name))
-                criteria.PatientsName.EqualTo(patientInfo.Name);
+			if (!String.IsNullOrEmpty(patientInfo.PatientsName))
+				criteria.PatientsName.EqualTo(patientInfo.PatientsName);
 			else
 				criteria.PatientsName.IsNull();
 
@@ -248,7 +248,7 @@ namespace ClearCanvas.ImageServer.Core.Edit
 
 		private void PrintUpdateCommands()
 		{
-			StringBuilder log = new StringBuilder();
+			var log = new StringBuilder();
 			log.AppendLine(String.Format("Study to be updated:"));
 			log.AppendLine(String.Format("\tServer Partition: {0}", _partition.AeTitle));
 			log.AppendLine(String.Format("\tStorage GUID: {0}", _oldStudyLocation.Key.Key));
@@ -257,8 +257,8 @@ namespace ClearCanvas.ImageServer.Core.Edit
 			log.AppendLine(String.Format("\tAccession #: {0}", _study.AccessionNumber));
 			log.AppendLine(String.Format("\tStudy ID : {0}", _study.StudyId));
 			log.AppendLine(String.Format("\tStudy Date : {0}", _study.StudyDate));
-            log.AppendLine(String.Format("\tPatient's Birth Date : {0}", _study.PatientsBirthDate));
-            log.AppendLine(String.Format("\tStudy Instance Uid: {0}", _study.StudyInstanceUid));
+			log.AppendLine(String.Format("\tPatient's Birth Date : {0}", _study.PatientsBirthDate));
+			log.AppendLine(String.Format("\tStudy Instance Uid: {0}", _study.StudyInstanceUid));
 			log.AppendLine(String.Format("\tInstance Count: {0}", _study.NumberOfStudyRelatedInstances));
 			log.AppendLine(String.Format("\tCurrent location: {0}", _oldStudyPath));
 			log.AppendLine();
@@ -267,7 +267,7 @@ namespace ClearCanvas.ImageServer.Core.Edit
 			{
 				log.AppendLine(String.Format("\t{0}", cmd));
 			}
-            
+
 			log.AppendLine(String.Format("\tNew location: {0}", NewStudyPath));
 			Platform.Log(LogLevel.Info, log);
 		}
@@ -285,7 +285,8 @@ namespace ClearCanvas.ImageServer.Core.Edit
 				Platform.Log(LogLevel.Info, "Restoring old study header...");
 
 				FileUtils.Copy(Path.Combine(_backupDir, _study.StudyInstanceUid + ".xml"), _oldStudyLocation.GetStudyXmlPath(), true);
-				FileUtils.Copy(Path.Combine(_backupDir, _study.StudyInstanceUid + ".xml.gz"), _oldStudyLocation.GetCompressedStudyXmlPath(), true);
+				FileUtils.Copy(Path.Combine(_backupDir, _study.StudyInstanceUid + ".xml.gz"),
+				               _oldStudyLocation.GetCompressedStudyXmlPath(), true);
 
 				// restore updated SOPs
 				Platform.Log(LogLevel.Info, "Restoring old study folder... {0} sop need to be restored", _updatedSopList.Count);
@@ -294,10 +295,11 @@ namespace ClearCanvas.ImageServer.Core.Edit
 				{
 					string backupSopPath = Path.Combine(_backupDir, sop.SopInstanceUid + ServerPlatform.DicomFileExtension);
 
-					FileUtils.Copy(backupSopPath,_oldStudyLocation.GetSopInstancePath(sop.SeriesInstanceUid, sop.SopInstanceUid), true);
+					FileUtils.Copy(backupSopPath, _oldStudyLocation.GetSopInstancePath(sop.SeriesInstanceUid, sop.SopInstanceUid), true);
 
 					restoredCount++;
-					Platform.Log(ServerPlatform.InstanceLogLevel, "Restored SOP {0} [{1} of {2}]", sop.SopInstanceUid, restoredCount, _updatedSopList.Count);
+					Platform.Log(ServerPlatform.InstanceLogLevel, "Restored SOP {0} [{1} of {2}]", sop.SopInstanceUid, restoredCount,
+					             _updatedSopList.Count);
 
 					SimulateErrors();
 				}
@@ -336,25 +338,25 @@ namespace ClearCanvas.ImageServer.Core.Edit
 					if (!String.IsNullOrEmpty(value) && !value.ToUpper().Equals("M") && !value.ToUpper().Equals("F"))
 						value = "O";
 				}
-                int maxLength = tag.VR.Equals(DicomVr.PNvr) ? 64 : (int)tag.VR.MaximumLength;
-                if (value != null && value.Length > maxLength)
-                {
-                    Platform.Log(LogLevel.Warn, "Truncating value to VR Length: {0}: {1}", tag.VR.Name, value);
-                    if (!entityMap.Populate(entity, entry.TagPath.Tag, value.Substring(0, maxLength)))
-                        throw new ApplicationException(String.Format("Unable to update {0}. See log file for details.", entity.Name));
-                }
-                else
-                {
-                    if (!entityMap.Populate(entity, entry.TagPath.Tag, value))
-                        throw new ApplicationException(String.Format("Unable to update {0}. See log file for details.", entity.Name));
-                }				
+				int maxLength = tag.VR.Equals(DicomVr.PNvr) ? 64 : (int) tag.VR.MaximumLength;
+				if (value != null && value.Length > maxLength)
+				{
+					Platform.Log(LogLevel.Warn, "Truncating value to VR Length: {0}: {1}", tag.VR.Name, value);
+					if (!entityMap.Populate(entity, entry.TagPath.Tag, value.Substring(0, maxLength)))
+						throw new ApplicationException(String.Format("Unable to update {0}. See log file for details.", entity.Name));
+				}
+				else
+				{
+					if (!entityMap.Populate(entity, entry.TagPath.Tag, value))
+						throw new ApplicationException(String.Format("Unable to update {0}. See log file for details.", entity.Name));
+				}
 			}
 		}
 
-        private static bool IsUTF8(string characterSet)
-        {
-            return string.Equals(characterSet, UTF8, StringComparison.InvariantCulture);
-        }
+		private static bool IsUTF8(string characterSet)
+		{
+			return string.Equals(characterSet, UTF8, StringComparison.InvariantCulture);
+		}
 
 		private void LoadEntities()
 		{
@@ -362,48 +364,24 @@ namespace ClearCanvas.ImageServer.Core.Edit
 			_study = _storage.LoadStudy(UpdateContext);
 		}
 
-        private void  SetStudyEncoding(Study study)
-        {
-            // set the SpecificCharacterSet of the patient and study record. This will update the database
-            // and force Patient/Study/Series level query response to be encoded in UTF8. Image level responses
-            // will be encoded using the character set in the image (see QueryScpExtension) 
-            //
-            if (atLeastOneFileUpdatedToUTF8)
-            {
-                // Only update the db if necessary                
-                if (!IsUTF8(study.SpecificCharacterSet))
-                {
-                    Platform.Log(LogLevel.Info, "Updating encoding for study information in the database to UTF8 [ UID={0} ]", study.StudyInstanceUid);
-                    study.SpecificCharacterSet = UTF8; // db update happens later
-                }
-            }
-        }
-        private void UpdatePatientEncoding(Patient patient)
-        {
-            // Note: patient can be an existing one or a new one
-
-            // set the SpecificCharacterSet of the patient and study record. This will update the database
-            // and force Patient/Study/Series level query response to be encoded in UTF8. Image level responses
-            // will be encoded using the character set in the image (see QueryScpExtension) 
-            //
-            if (atLeastOneFileUpdatedToUTF8)
-            {
-                // Only update the db if necessary
-                if (!IsUTF8(patient.SpecificCharacterSet))
-                {
-                    Platform.Log(LogLevel.Info, "Updating encoding for patient information in the database to UTF8 [ Name={0}, ID={1} ]", patient.Name, patient.PatientId);
-                    
-                    // update to UTF8
-                    patient.SpecificCharacterSet = UTF8;
-
-                    // This method is called at the very end of UpdateDatabase(), update the database now
-                    IPatientEntityBroker broker = UpdateContext.GetBroker<IPatientEntityBroker>();
-                    PatientUpdateColumns columns = new PatientUpdateColumns() { SpecificCharacterSet = UTF8 };
-                    broker.Update(patient.Key, columns);
-                }
-            }
-        }
-
+		private void SetStudyEncoding(Study study)
+		{
+			// set the SpecificCharacterSet of the patient and study record. This will update the database
+			// and force Patient/Study/Series level query response to be encoded in UTF8. Image level responses
+			// will be encoded using the character set in the image (see QueryScpExtension) 
+			//
+			if (atLeastOneFileUpdatedToUTF8)
+			{
+				// Only update the db if necessary                
+				if (!IsUTF8(study.SpecificCharacterSet))
+				{
+					Platform.Log(LogLevel.Info, "Updating encoding for study information in the database to UTF8 [ UID={0} ]",
+					             study.StudyInstanceUid);
+					study.SpecificCharacterSet = UTF8; // db update happens later
+				}
+			}
+		}
+		
 
 		private void UpdateDatabase()
 		{
@@ -414,14 +392,17 @@ namespace ClearCanvas.ImageServer.Core.Edit
 			UpdateEntity(_curPatient);
 			UpdateEntity(_storage);
 
-            SetStudyEncoding(_study);
-            
+			SetStudyEncoding(_study);
+
+			var order = FindOrderForStudy();
+			_study.OrderKey = order == null ? null : order.Key;
+
 			// Update the Study table
-			IStudyEntityBroker studyUpdateBroker = UpdateContext.GetBroker<IStudyEntityBroker>();
+			var studyUpdateBroker = UpdateContext.GetBroker<IStudyEntityBroker>();
 			studyUpdateBroker.Update(_study);
-            
+
 			// Update the StudyStorage table
-			IStudyStorageEntityBroker storageUpdateBroker = UpdateContext.GetBroker<IStudyStorageEntityBroker>();
+			var storageUpdateBroker = UpdateContext.GetBroker<IStudyStorageEntityBroker>();
 			storageUpdateBroker.Update(_storage);
 
 			// Update Patient level info. Different cases can occur here: 
@@ -432,67 +413,84 @@ namespace ClearCanvas.ImageServer.Core.Edit
 			//      C) New patient demographics doesn't match any patient in the database
 			//              ==> A new patient should be created for this study. The study count on the current patient should be updated
 			//                  and the patient should also be deleted if this is the only study attached to it.
-			if (_patientInfoIsNotChanged)
+			if (!_patientInfoChanged)
 			{
-				UpdateCurrentPatient();
-                UpdatePatientEncoding(_curPatient);
+				UpdatePatientDemographics(_curPatient.GetKey(), _newPatientInfo);
 			}
 			else if (_newPatient == null)
 			{
 				// No matching patient in the database. We should create a new patient for this study
 				_newPatient = CreateNewPatient(_newPatientInfo);
-                UpdatePatientEncoding(_newPatient);
+				UpdatePatientDemographics(_newPatient.GetKey(), _newPatientInfo);
 			}
 			else
 			{
 				// There's already patient in the database with the new patient demographics
 				// The study should be attached to that patient.
 				TransferStudy(_study.Key, _oldPatientInfo, _newPatient);
-                UpdatePatientEncoding(_newPatient);
+				UpdatePatientDemographics(_newPatient.GetKey(), _newPatientInfo);
 			}
+		}
 
+		private void UpdatePatientDemographics(ServerEntityKey patientEntityKey, PatientInfo patientInfo)
+		{
+			Platform.Log(LogLevel.Info, "Update patient record...");
+			var patientUpdateBroker = UpdateContext.GetBroker<IPatientEntityBroker>();
+			var columns = new PatientUpdateColumns();
+			columns.IssuerOfPatientId = patientInfo.IssuerOfPatientId;
+			columns.PatientId = patientInfo.PatientId;
+			columns.PatientsName = patientInfo.PatientsName;
+			if (atLeastOneFileUpdatedToUTF8) 
+				columns.SpecificCharacterSet = UTF8;
+			
+			patientUpdateBroker.Update(patientEntityKey, columns);
+
+		}
+
+		private Order FindOrderForStudy()
+		{
+			var select = new OrderSelectCriteria();
+			select.ServerPartitionKey.EqualTo(_study.ServerPartitionKey);
+			select.AccessionNumber.EqualTo(_study.AccessionNumber);
+			select.PatientId.EqualTo(_study.PatientId);
+
+			var broker = UpdateContext.GetBroker<IOrderEntityBroker>();
+			return broker.FindOne(select);
 		}
 
 		private Patient CreateNewPatient(PatientInfo patientInfo)
 		{
 			Platform.Log(LogLevel.Info, "Creating new patient {0}", patientInfo.PatientId);
 
-			ICreatePatientForStudy createStudyBroker = UpdateContext.GetBroker<ICreatePatientForStudy>();
-			CreatePatientForStudyParameters parms = new CreatePatientForStudyParameters
-			                                        	{
-			                                        		IssuerOfPatientId = patientInfo.IssuerOfPatientId,
-			                                        		PatientId = patientInfo.PatientId,
-			                                        		PatientsName = patientInfo.Name,
-                                                            SpecificCharacterSet = _curPatient.SpecificCharacterSet, // this will be updated at the end if necessary
-			                                        		StudyKey = _study.GetKey()
-			                                        	};
+			var createStudyBroker = UpdateContext.GetBroker<ICreatePatientForStudy>();
+			var parms = new CreatePatientForStudyParameters
+				{
+					IssuerOfPatientId = patientInfo.IssuerOfPatientId,
+					PatientId = patientInfo.PatientId,
+					PatientsName = patientInfo.PatientsName,
+					SpecificCharacterSet = _curPatient.SpecificCharacterSet, // this will be updated at the end if necessary
+					StudyKey = _study.GetKey()
+				};
 			Patient newPatient = createStudyBroker.FindOne(parms);
-			if (newPatient==null)
+			if (newPatient == null)
 				throw new ApplicationException("Unable to create patient for the study");
 
 			return newPatient;
 		}
 
-		private void UpdateCurrentPatient()
-		{
-            Platform.Log(LogLevel.Info, "Update current patient record...");
-            IPatientEntityBroker patientUpdateBroker = UpdateContext.GetBroker<IPatientEntityBroker>();
-			patientUpdateBroker.Update(_curPatient);
-            
-		}
 
 		private void TransferStudy(ServerEntityKey studyKey, PatientInfo oldPatient, Patient newPatient)
 		{
 			Platform.Log(LogLevel.Info, "Transferring study from {0} [ID={1}] to {2} [ID={3}]",
-			             oldPatient.Name, oldPatient.PatientId, newPatient.PatientsName, newPatient.PatientId);
+			             oldPatient.PatientsName, oldPatient.PatientId, newPatient.PatientsName, newPatient.PatientId);
 
-            IAttachStudyToPatient attachStudyToPatientBroker = UpdateContext.GetBroker<IAttachStudyToPatient>();
-			AttachStudyToPatientParamaters parms = new AttachStudyToPatientParamaters
-			                                       	{
-			                                       		StudyKey = studyKey,
-			                                       		NewPatientKey = newPatient.GetKey()
-			                                       	};
-			attachStudyToPatientBroker.Execute(parms);            
+			var attachStudyToPatientBroker = UpdateContext.GetBroker<IAttachStudyToPatient>();
+			var parms = new AttachStudyToPatientParamaters
+				{
+					StudyKey = studyKey,
+					NewPatientKey = newPatient.GetKey()
+				};
+			attachStudyToPatientBroker.Execute(parms);
 		}
 
 		private void UpdateFilesystem()
@@ -501,8 +499,8 @@ namespace ClearCanvas.ImageServer.Core.Edit
 			StudyXml studyXml = _oldStudyLocation.LoadStudyXml();
 			StudyXmlOutputSettings outputSettings = ImageServerCommonConfiguration.DefaultStudyXmlOutputSettings;
 
-			StudyXml newStudyXml = new StudyXml();
-            foreach (SeriesXml seriesXml in studyXml)
+			var newStudyXml = new StudyXml();
+			foreach (SeriesXml seriesXml in studyXml)
 			{
 				foreach (InstanceXml instanceXml in seriesXml)
 				{
@@ -510,56 +508,64 @@ namespace ClearCanvas.ImageServer.Core.Edit
 					path = Path.Combine(path, instanceXml.SopInstanceUid);
 					path += ServerPlatform.DicomFileExtension;
 
-                    if (!File.Exists(path))
-                    {
-                        Platform.Log(LogLevel.Info, "SOP {0} is referenced in study xml but does not exist. It will be removed");
-                        continue; // file was removed but xml was not updated?
-                    }
+					if (!File.Exists(path))
+					{
+						Platform.Log(LogLevel.Info, "SOP {0} is referenced in study xml but does not exist. It will be removed");
+						continue; // file was removed but xml was not updated?
+					}
 
-                    try
-                    {                        
-                        DicomFile file = new DicomFile(path);
-                        file.Load();
+					try
+					{
+						var file = new DicomFile(path);
+						file.Load();
 
-                        InstanceInfo instance = new InstanceInfo
-                        {
-                            SeriesInstanceUid = file.DataSet[DicomTags.SeriesInstanceUid].GetString(0, String.Empty),
-                            SopInstanceUid = file.DataSet[DicomTags.SopInstanceUid].GetString(0, String.Empty)
-                        };
-                        
-                        UpdateDicomFile(file);
+						var instance = new InstanceInfo
+							{
+								SeriesInstanceUid = file.DataSet[DicomTags.SeriesInstanceUid].GetString(0, String.Empty),
+								SopInstanceUid = file.DataSet[DicomTags.SopInstanceUid].GetString(0, String.Empty)
+							};
 
-                        // Add into the temporary study xml
-                        long fileSize = 0;
-                        if (File.Exists(file.Filename))
-                        {
-                            FileInfo finfo = new FileInfo(file.Filename);
-                            fileSize = finfo.Length;
-                        }
-                        newStudyXml.AddFile(file, fileSize, outputSettings);
+						UpdateDicomFile(file);
 
-                        
-                        _updatedSopList.Add(instance);
-                        Platform.Log(ServerPlatform.InstanceLogLevel, "SOP {0} has been updated [{1} of {2}].", instance.SopInstanceUid, _updatedSopList.Count, _totalSopCount);
+						// Add into the temporary study xml
+						long fileSize = 0;
+						var finfo = new FileInfo(file.Filename);
+						if (finfo.Exists)
+							fileSize = finfo.Length;
+						newStudyXml.AddFile(file, fileSize, outputSettings);
 
-						EventManager.FireEvent(this, new UpdateSopEventArgs { File = file, ServerPartitionEntry = _partition, WorkQueueUidEntry = null, WorkQueueEntry = _workQueue, FileLength = (ulong)fileSize });
 
-                    }
-                    catch (Exception)
-                    {
-                        File.Delete(Path.Combine(_backupDir, instanceXml.SopInstanceUid) + ".bak"); //dont' need to restore this file
-                        throw;
-                    }
-                }                
+						_updatedSopList.Add(instance);
+						Platform.Log(ServerPlatform.InstanceLogLevel, "SOP {0} has been updated [{1} of {2}].", instance.SopInstanceUid,
+						             _updatedSopList.Count, _totalSopCount);
+
+						EventManager.FireEvent(this,
+						                       new UpdateSopEventArgs
+							                       {
+								                       File = file,
+								                       ServerPartitionEntry = _partition,
+								                       WorkQueueUidEntry = null,
+								                       WorkQueueEntry = _workQueue,
+								                       FileLength = (ulong) fileSize
+							                       });
+
+					}
+					catch (Exception)
+					{
+						FileUtils.Delete(Path.Combine(_backupDir, instanceXml.SopInstanceUid) + ".bak"); //dont' need to restore this file
+						throw;
+					}
+				}
 			}
 
-            // Log any study-level warnings
+			// Log any study-level warnings
 			if (_updatedSopList.Count != _totalSopCount)
 			{
-				Platform.Log(LogLevel.Warn, "Inconsistent data: expected {0} instances to be updated / Found {1}.", _totalSopCount, _updatedSopList.Count);
+				Platform.Log(LogLevel.Warn, "Inconsistent data: expected {0} instances to be updated / Found {1}.", _totalSopCount,
+				             _updatedSopList.Count);
 			}
 
-            // update the header
+			// update the header
 			Platform.Log(LogLevel.Info, "Generating new study header...");
 			string newStudyXmlPath = Path.Combine(NewStudyPath, _newStudyInstanceUid + ".xml");
 			string gzipStudyXmlPath = Path.Combine(NewStudyPath, _newStudyInstanceUid + ".xml.gz");
@@ -572,47 +578,48 @@ namespace ClearCanvas.ImageServer.Core.Edit
 			}
 		}
 
-        private void UpdateDicomFile(DicomFile file)
-        {
-            var originalCS = file.DataSet.SpecificCharacterSet;
+		private void UpdateDicomFile(DicomFile file)
+		{
+			var originalCS = file.DataSet.SpecificCharacterSet;
 
 			var sq = new OriginalAttributesSequence
-			{
-				ModifiedAttributesSequence = new DicomSequenceItem(),
-				ModifyingSystem = ProductInformation.Component,
-				ReasonForTheAttributeModification = "CORRECT",
-				AttributeModificationDatetime = Platform.Time,
-				SourceOfPreviousValues = file.SourceApplicationEntityTitle
-			};
+				{
+					ModifiedAttributesSequence = new DicomSequenceItem(),
+					ModifyingSystem = ProductInformation.Component,
+					ReasonForTheAttributeModification = "CORRECT",
+					AttributeModificationDatetime = Platform.Time,
+					SourceOfPreviousValues = file.SourceApplicationEntityTitle
+				};
 
-            foreach (BaseImageLevelUpdateCommand command in _commands)
-            {
-                command.File = file;
-                command.Apply(file, sq);
-            }
+			foreach (BaseImageLevelUpdateCommand command in _commands)
+			{
+				command.File = file;
+				command.Apply(file, sq);
+			}
 
 			var sqAttrib = file.DataSet[DicomTags.OriginalAttributesSequence] as DicomAttributeSQ;
 			if (sqAttrib != null)
 				sqAttrib.AddSequenceItem(sq.DicomSequenceItem);
 
-            var newCS = file.DataSet.SpecificCharacterSet;
+			var newCS = file.DataSet.SpecificCharacterSet;
 
-            if (!string.Equals(originalCS, newCS))
-            {
-                if (Platform.IsLogLevelEnabled(ServerPlatform.InstanceLogLevel))
-                {
-                    Platform.Log(ServerPlatform.InstanceLogLevel, "Specific Character Set for SOP {0} has been updated [{1}->{2}]", file.MediaStorageSopInstanceUid, originalCS, newCS);
-                }
+			if (!string.Equals(originalCS, newCS))
+			{
+				if (Platform.IsLogLevelEnabled(ServerPlatform.InstanceLogLevel))
+				{
+					Platform.Log(ServerPlatform.InstanceLogLevel, "Specific Character Set for SOP {0} has been updated [{1}->{2}]",
+					             file.MediaStorageSopInstanceUid, originalCS, newCS);
+				}
 
-                if (!Common.Settings.Default.AllowedConvertToUnicodeOnEdit)
-                {
-                    Platform.Log(LogLevel.Warn, "File was converted to unicode but AllowedConvertToUnicodeOnEdit is false");
-                }
-                atLeastOneFileUpdatedToUTF8 = IsUTF8(newCS);
-            }
+				if (!Common.Settings.Default.AllowedConvertToUnicodeOnEdit)
+				{
+					Platform.Log(LogLevel.Warn, "File was converted to unicode but AllowedConvertToUnicodeOnEdit is false");
+				}
+				atLeastOneFileUpdatedToUTF8 = atLeastOneFileUpdatedToUTF8 || IsUTF8(newCS);
+			}
 
-            SaveFile(file);
-        }
+			SaveFile(file);
+		}
 
 		private void SaveFile(DicomFile file)
 		{
@@ -620,8 +627,8 @@ namespace ClearCanvas.ImageServer.Core.Edit
 			String sopInstanceUid = file.DataSet[DicomTags.SopInstanceUid].GetString(0, String.Empty);
 
 			String destPath = _oldStudyLocation.FilesystemPath;
-			
-			using (ServerCommandProcessor filesystemUpdateProcessor = new ServerCommandProcessor("Update Study"))
+
+			using (var filesystemUpdateProcessor = new ServerCommandProcessor("Update Study"))
 			{
 				filesystemUpdateProcessor.AddCommand(new CreateDirectoryCommand(destPath));
 
@@ -641,20 +648,22 @@ namespace ClearCanvas.ImageServer.Core.Edit
 				destPath += ServerPlatform.DicomFileExtension;
 
 				// Overwrite the prior file
-				SaveDicomFileCommand saveCommand = new SaveDicomFileCommand(destPath, file, false);
+				var saveCommand = new SaveDicomFileCommand(destPath, file, false);
 				filesystemUpdateProcessor.AddCommand(saveCommand);
 
 				if (_rulesEngine != null)
 				{
-					ServerActionContext context = new ServerActionContext(file, _oldStudyLocation.FilesystemKey, _partition, _oldStudyLocation.Key, filesystemUpdateProcessor);
-					_rulesEngine.Execute(context); 
+					var context = new ServerActionContext(file, _oldStudyLocation.FilesystemKey, _partition, _oldStudyLocation.Key,
+					                                      filesystemUpdateProcessor);
+					_rulesEngine.Execute(context);
 				}
 
 				if (!filesystemUpdateProcessor.Execute())
 				{
-					throw new ApplicationException(String.Format("Unable to update image {0} : {1}", file.Filename, filesystemUpdateProcessor.FailureReason));
+					throw new ApplicationException(String.Format("Unable to update image {0} : {1}", file.Filename,
+					                                             filesystemUpdateProcessor.FailureReason));
 				}
-			}            
+			}
 		}
 
 		private void BackupFilesystem()
@@ -662,16 +671,17 @@ namespace ClearCanvas.ImageServer.Core.Edit
 			Platform.Log(LogLevel.Info, "Backing up current study folder to {0}", _backupDir);
 			StudyXml studyXml = _oldStudyLocation.LoadStudyXml();
 			FileUtils.Copy(_oldStudyLocation.GetStudyXmlPath(), Path.Combine(_backupDir, _study.StudyInstanceUid + ".xml"), true);
-			FileUtils.Copy(_oldStudyLocation.GetCompressedStudyXmlPath(), Path.Combine(_backupDir, _study.StudyInstanceUid + ".xml.gz"), true);
+			FileUtils.Copy(_oldStudyLocation.GetCompressedStudyXmlPath(),
+			               Path.Combine(_backupDir, _study.StudyInstanceUid + ".xml.gz"), true);
 
-			foreach(SeriesXml seriesXml in studyXml)
+			foreach (SeriesXml seriesXml in studyXml)
 			{
-				foreach(InstanceXml instanceXml in seriesXml)
+				foreach (InstanceXml instanceXml in seriesXml)
 				{
 					string existingFile = _oldStudyLocation.GetSopInstancePath(seriesXml.SeriesInstanceUid, instanceXml.SopInstanceUid);
 
-					FileInfo backupPath = new FileInfo(Path.Combine(_backupDir, instanceXml.SopInstanceUid + ServerPlatform.DicomFileExtension));
-					FileUtils.Copy(existingFile, backupPath.FullName, true );
+					var backupPath = new FileInfo(Path.Combine(_backupDir, instanceXml.SopInstanceUid + ServerPlatform.DicomFileExtension));
+					FileUtils.Copy(existingFile, backupPath.FullName, true);
 				}
 			}
 
@@ -696,7 +706,7 @@ namespace ClearCanvas.ImageServer.Core.Edit
 					Platform.Log(LogLevel.Info, "Removing old study folder...");
 					DirectoryUtility.DeleteIfExists(_oldStudyPath, true);
 				}
-                
+
 				CleanupBackupFiles();
 			}
 		}

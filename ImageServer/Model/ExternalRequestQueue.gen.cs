@@ -44,7 +44,8 @@ namespace ClearCanvas.ImageServer.Model
             ,XmlDocument _requestXml_
             ,DateTime _insertTime_
             ,Int32 _revision_
-            ,DateTime _deletionTime_
+            ,DateTime _scheduledTime_
+            ,DateTime? _deletionTime_
             ,XmlDocument _stateXml_
             ,String _operationToken_
             ,String _requestId_
@@ -55,6 +56,7 @@ namespace ClearCanvas.ImageServer.Model
             RequestXml = _requestXml_;
             InsertTime = _insertTime_;
             Revision = _revision_;
+            ScheduledTime = _scheduledTime_;
             DeletionTime = _deletionTime_;
             StateXml = _stateXml_;
             OperationToken = _operationToken_;
@@ -78,8 +80,11 @@ namespace ClearCanvas.ImageServer.Model
         [EntityFieldDatabaseMappingAttribute(TableName="ExternalRequestQueue", ColumnName="Revision")]
         public Int32 Revision
         { get; set; }
+        [EntityFieldDatabaseMappingAttribute(TableName="ExternalRequestQueue", ColumnName="ScheduledTime")]
+        public DateTime ScheduledTime
+        { get; set; }
         [EntityFieldDatabaseMappingAttribute(TableName="ExternalRequestQueue", ColumnName="DeletionTime")]
-        public DateTime DeletionTime
+        public DateTime? DeletionTime
         { get; set; }
         [EntityFieldDatabaseMappingAttribute(TableName="ExternalRequestQueue", ColumnName="StateXml")]
         public XmlDocument StateXml
@@ -128,6 +133,7 @@ namespace ClearCanvas.ImageServer.Model
             updateColumns.RequestXml = entity.RequestXml;
             updateColumns.InsertTime = entity.InsertTime;
             updateColumns.Revision = entity.Revision;
+            updateColumns.ScheduledTime = entity.ScheduledTime;
             updateColumns.DeletionTime = entity.DeletionTime;
             updateColumns.StateXml = entity.StateXml;
             updateColumns.OperationToken = entity.OperationToken;

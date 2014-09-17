@@ -26,11 +26,10 @@ using System;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Codec;
-using ClearCanvas.Dicom.IO;
 using ClearCanvas.Dicom.Iod;
 using ClearCanvas.Dicom.Iod.Modules;
-using ClearCanvas.ImageViewer.Imaging;
 using ClearCanvas.ImageViewer.Common;
+using ClearCanvas.ImageViewer.Imaging;
 
 namespace ClearCanvas.ImageViewer.StudyManagement
 {
@@ -65,11 +64,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		{
 			// TODO: not actually thread-safe because client code can use indexers on "SourceMessage",
 			// triggering empty attributes to be inserted.
-
-			get
-			{
-				return GetSourceMessage(true);
-			}
+			get { return GetSourceMessage(true); }
 			protected set
 			{
 				lock (SyncLock)
@@ -107,7 +102,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		//TODO: is there a better way to do this?
 		private void Load()
 		{
-			lock(SyncLock)
+			lock (SyncLock)
 			{
 				if (_loaded || _loading)
 					return;
@@ -269,19 +264,19 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 				_frameIndex = frameNumber - 1;
 			}
 
-            /// <summary>
-            /// Constructs a new <see cref="DicomMessageSopFrameData"/>
-            /// </summary>
-            /// <param name="frameNumber">The 1-based number of this frame.</param>
-            /// <param name="parent">The parent <see cref="DicomMessageSopDataSource"/> that this frame belongs to.</param>
-            /// <exception cref="ArgumentNullException">Thrown if <paramref name="parent"/> is null.</exception>
-            /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="frameNumber"/> is zero or negative.</exception>
-            /// <param name="regenerationCost">The approximate cost to regenerate the pixel and/or overlay data.</param>
-            public DicomMessageSopFrameData(int frameNumber, DicomMessageSopDataSource parent, RegenerationCost regenerationCost)
-                : base(frameNumber, parent, regenerationCost)
-            {
-                _frameIndex = frameNumber - 1;
-            }
+			/// <summary>
+			/// Constructs a new <see cref="DicomMessageSopFrameData"/>
+			/// </summary>
+			/// <param name="frameNumber">The 1-based number of this frame.</param>
+			/// <param name="parent">The parent <see cref="DicomMessageSopDataSource"/> that this frame belongs to.</param>
+			/// <exception cref="ArgumentNullException">Thrown if <paramref name="parent"/> is null.</exception>
+			/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="frameNumber"/> is zero or negative.</exception>
+			/// <param name="regenerationCost">The approximate cost to regenerate the pixel and/or overlay data.</param>
+			public DicomMessageSopFrameData(int frameNumber, DicomMessageSopDataSource parent, RegenerationCost regenerationCost)
+				: base(frameNumber, parent, regenerationCost)
+			{
+				_frameIndex = frameNumber - 1;
+			}
 
 			/// <summary>
 			/// Gets the parent <see cref="DicomMessageSopDataSource"/> to which this frame belongs.
@@ -298,11 +293,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			/// <returns>A new byte buffer containing the normalized pixel data.</returns>
 			protected override byte[] CreateNormalizedPixelData()
 			{
-				DicomMessageBase message = this.Parent.SourceMessage;
-
+				DicomMessageBase message = Parent.SourceMessage;
+#if DEBUG
 				CodeClock clock = new CodeClock();
 				clock.Start();
-
+#endif
 				PhotometricInterpretation photometricInterpretation;
 				byte[] rawPixelData = null;
 
@@ -332,10 +327,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 					rawPixelData = ToArgb(message.DataSet, rawPixelData, photometricInterpretation);
 				else
 					NormalizeGrayscalePixels(message.DataSet, rawPixelData);
-
+#if DEBUG
 				clock.Stop();
 				PerformanceReportBroker.PublishReport("DicomMessageSopDataSource", "CreateFrameNormalizedPixelData", clock.Seconds);
-
+#endif
 				return rawPixelData;
 			}
 
@@ -432,19 +427,6 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 		#endregion
 
-		#region Unit Test Entry Points
-
-#if UNIT_TESTS
-
-		internal static void TestNormalizeGrayscalePixels(IDicomAttributeProvider dicomAttributeProvider, byte[] pixelData, Endian endian)
-		{
-			NormalizeGrayscalePixels(dicomAttributeProvider, pixelData, endian);
-		}
-
-#endif
-
-		#endregion
-
 		#region Pixel Data Processing Functions
 
 		/// <summary>
@@ -464,18 +446,20 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </para>
 		/// </remarks>
 		/// <param name="dicomAttributeProvider">A dataset containing information about the representation of pixels in the <paramref name="pixelData"/>.</param>
-		/// <param name="pixelData">The pixel data buffer to normalize.</param>
-		protected static void NormalizeGrayscalePixels(IDicomAttributeProvider dicomAttributeProvider, byte[] pixelData)
+		/// <param name="pixelData">The pixel data buffer to normalize (for 16-bit samples, the data should be in machine order).</param>
+		protected internal static void NormalizeGrayscalePixels(IDicomAttributeProvider dicomAttributeProvider, byte[] pixelData)
 		{
-			NormalizeGrayscalePixels(dicomAttributeProvider, pixelData, ByteBuffer.LocalMachineEndian);
-		}
-
-		private static void NormalizeGrayscalePixels(IDicomAttributeProvider dicomAttributeProvider, byte[] pixelData, Endian endian)
-		{
+            //TODO (CR Orion): these are retrieved again with default values directly below.
 			if (dicomAttributeProvider[DicomTags.BitsAllocated].IsEmpty)
-				throw new ArgumentNullException("dicomAttributeProvider", "BitsAllocated must not be empty.");
+			{
+				const string msg = "BitsAllocated must not be empty.";
+				throw new ArgumentNullException("dicomAttributeProvider", msg);
+			}
 			if (dicomAttributeProvider[DicomTags.BitsStored].IsEmpty)
-				throw new ArgumentNullException("dicomAttributeProvider", "BitsStored must not be empty.");
+			{
+				const string msg = "BitsStored must not be empty.";
+				throw new ArgumentNullException("dicomAttributeProvider", msg);
+			}
 
 			int bitsAllocated = dicomAttributeProvider[DicomTags.BitsAllocated].GetInt32(0, -1);
 			int bitsStored = dicomAttributeProvider[DicomTags.BitsStored].GetInt32(0, -1);
@@ -483,118 +467,20 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			bool isSigned = dicomAttributeProvider[DicomTags.PixelRepresentation].GetInt32(0, 0) > 0;
 
 			if (bitsAllocated != 8 && bitsAllocated != 16)
-				throw new ArgumentException("BitsAllocated must be either 8 or 16.", "dicomAttributeProvider");
+			{
+				const string msg = "BitsAllocated must be either 8 or 16.";
+				throw new ArgumentException(msg, "dicomAttributeProvider");
+			}
+			if (bitsAllocated == 16 && pixelData.Length%2 != 0)
+			{
+				const string msg = "Pixel data length must be even.";
+				throw new ArgumentException(msg, "pixelData");
+			}
+
 			if (highBit + 1 < bitsStored || highBit >= bitsAllocated)
 				highBit = bitsStored - 1; // #10029 - if high bit is out of range for some reason, just assume bits stored - 1 (which is probably the case for 99% of all DICOM images)
 
-			unsafe
-			{
-				// TODO (CR Aug 2013): Replace with DicomUncompressedPixelData.NormalizePixelData.
-
-				//TODO (CR May 2011): this is not as efficient as it could be, and more confusing than it needs to be.
-				//It could mostly be done with bit-wise operators if we cast the pixel data pointer to the correct type
-				//right off the bat (short* or byte*), and we could optimize for the case where no right shift is necessary (high bit = bits stored - 1).
-				//For signed data, there is also a trick that can be done where you left shift the value, then immediately
-				//right shift it again in order to fill the high order bits with 1s.
-				int shift = highBit + 1 - bitsStored;
-				if (bitsAllocated == 16)
-				{
-					if (pixelData.Length%2 != 0)
-						throw new ArgumentException("Pixel data length must be even.", "pixelData");
-
-					ushort mask = (ushort) ((1 << bitsStored) - 1); // this is the mask of data bits when the LSB is at 0
-					ushort inputMask = (ushort) (mask << shift); // this is the mask of data bits in the input window
-					int length = pixelData.Length;
-					fixed (byte* data = pixelData)
-					{
-						ushort window;
-
-						if (isSigned)
-						{
-							ushort signMask = (ushort) (1 << (bitsStored - 1)); // this is the mask of the sign bit when the LSB is at 0
-							ushort signFill = (ushort) ~mask; // this is the mask of the sign bits used to fill the high-order non-data bits
-
-							if (endian == Endian.Little)
-							{
-								for (int n = 0; n < length; n += 2)
-								{
-									window = (ushort) ((data[n + 1] << 8) + data[n]);
-									window = (ushort) ((window & inputMask) >> shift);
-									if ((window & signMask) > 0)
-										window = (ushort) (window | signFill);
-									data[n] = (byte) (window & 0x00ff);
-									data[n + 1] = (byte) ((window & 0xff00) >> 8);
-								}
-							}
-							else
-							{
-								for (int n = 0; n < length; n += 2)
-								{
-									window = (ushort) ((data[n] << 8) + data[n + 1]);
-									window = (ushort) ((window & inputMask) >> shift);
-									if ((window & signMask) > 0)
-										window = (ushort) (window | signFill);
-									data[n + 1] = (byte) (window & 0x00ff);
-									data[n] = (byte) ((window & 0xff00) >> 8);
-								}
-							}
-						}
-						else
-						{
-							if (endian == Endian.Little)
-							{
-								for (int n = 0; n < length; n += 2)
-								{
-									window = (ushort) ((data[n + 1] << 8) + data[n]);
-									window = (ushort) ((window & inputMask) >> shift);
-									data[n] = (byte) (window & 0x00ff);
-									data[n + 1] = (byte) ((window & 0xff00) >> 8);
-								}
-							}
-							else
-							{
-								for (int n = 0; n < length; n += 2)
-								{
-									window = (ushort) ((data[n] << 8) + data[n + 1]);
-									window = (ushort) ((window & inputMask) >> shift);
-									data[n + 1] = (byte) (window & 0x00ff);
-									data[n] = (byte) ((window & 0xff00) >> 8);
-								}
-							}
-						}
-					}
-				}
-				else
-				{
-					byte mask = (byte) ((1 << bitsStored) - 1); // this is the mask of data bits when the LSB is at 0
-					byte inputMask = (byte) (mask << shift); // this is the mask of data bits in the input window
-					int length = pixelData.Length;
-					fixed (byte* data = pixelData)
-					{
-						if (isSigned)
-						{
-							byte signMask = (byte) (1 << (bitsStored - 1)); // this is the mask of the sign bit when the LSB is at 0
-							byte signFill = (byte) ~mask; // this is the mask of the sign bits used to fill the high-order non-data bits
-
-							for (int n = 0; n < length; n++)
-							{
-								byte window = data[n];
-								window = (byte) ((window & inputMask) >> shift);
-								if ((window & signMask) > 0)
-									window = (byte) (window | signFill);
-								data[n] = window;
-							}
-						}
-						else
-						{
-							for (int n = 0; n < length; n++)
-							{
-								data[n] = (byte) ((data[n] & inputMask) >> shift);
-							}
-						}
-					}
-				}
-			}
+			DicomUncompressedPixelData.NormalizePixelData(pixelData, bitsAllocated, bitsStored, highBit, isSigned);
 		}
 
 		/// <summary>
@@ -602,12 +488,13 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		protected static byte[] ToArgb(IDicomAttributeProvider dicomAttributeProvider, byte[] pixelData, PhotometricInterpretation photometricInterpretation)
 		{
+#if DEBUG
 			CodeClock clock = new CodeClock();
 			clock.Start();
-
+#endif
 			int rows = dicomAttributeProvider[DicomTags.Rows].GetInt32(0, 0);
 			int columns = dicomAttributeProvider[DicomTags.Columns].GetInt32(0, 0);
-			int sizeInBytes = rows * columns * 4;
+			int sizeInBytes = rows*columns*4;
 			byte[] argbPixelData = MemoryManager.Allocate<byte>(sizeInBytes);
 
 			// Convert palette colour images to ARGB so we don't get interpolation artifacts
@@ -624,7 +511,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 					argbPixelData,
 					PaletteColorMap.Create(dicomAttributeProvider));
 			}
-			// Convert RGB and YBR variants to ARGB
+				// Convert RGB and YBR variants to ARGB
 			else
 			{
 				int planarConfiguration = dicomAttributeProvider[DicomTags.PlanarConfiguration].GetInt32(0, 0);
@@ -636,9 +523,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 					argbPixelData);
 			}
 
+#if DEBUG
 			clock.Stop();
 			PerformanceReportBroker.PublishReport("DicomMessageSopDataSource", "ToArgb", clock.Seconds);
-
+#endif
 			return argbPixelData;
 		}
 

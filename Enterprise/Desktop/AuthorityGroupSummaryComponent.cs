@@ -216,7 +216,7 @@ namespace ClearCanvas.Enterprise.Desktop
 
 			var editor = new AuthorityGroupEditorComponent(item, false);
 			var exitCode = LaunchAsDialog(
-				Host.DesktopWindow, editor, SR.TitleUpdateAuthorityGroup + " - " + item.Name);
+				Host.DesktopWindow, editor, string.Format(SR.FormatTitleSubtitle, SR.TitleUpdateAuthorityGroup, item.Name));
 			if (exitCode == ApplicationComponentExitCode.Accepted)
 			{
 				editedItems.Add(editor.AuthorityGroupSummary);

@@ -559,7 +559,7 @@ namespace ClearCanvas.Ris.Application.Services.ReportingWorkflow
 
 				// ideally this should not happen, but what do we do if it does?
 				if (interpStep == null)
-					throw new RequestValidationException("Report cannot be submitted for this procedure.  It may have been submitted previously.");
+					throw new RequestValidationException(SR.InvalidRequest_ReportCannotBeSubmittedForProcedure);
 
 				// start interpretation, using specified interpreter
 				// the report will end up in their drafts folder

@@ -117,4 +117,220 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="_overviewLayoutPanel.ColumnCount" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="_bannerPanel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="_bannerPanel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 3</value>
+  </data>
+  <data name="_bannerPanel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1027, 89</value>
+  </data>
+  <data name="_bannerPanel.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;_bannerPanel.Name" xml:space="preserve">
+    <value>_bannerPanel</value>
+  </data>
+  <data name="&gt;&gt;_bannerPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_bannerPanel.Parent" xml:space="preserve">
+    <value>_overviewLayoutPanel</value>
+  </data>
+  <data name="&gt;&gt;_bannerPanel.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_btnComplete.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Right</value>
+  </data>
+  <data name="_btnComplete.Location" type="System.Drawing.Point, System.Drawing">
+    <value>838, 19</value>
+  </data>
+  <data name="_btnComplete.Size" type="System.Drawing.Size, System.Drawing">
+    <value>105, 23</value>
+  </data>
+  <data name="_btnComplete.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="_btnComplete.Text" xml:space="preserve">
+    <value>Complete</value>
+  </data>
+  <data name="&gt;&gt;_btnComplete.Name" xml:space="preserve">
+    <value>_btnComplete</value>
+  </data>
+  <data name="&gt;&gt;_btnComplete.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_btnComplete.Parent" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="&gt;&gt;_btnComplete.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_btnSave.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Right</value>
+  </data>
+  <data name="_btnSave.Location" type="System.Drawing.Point, System.Drawing">
+    <value>949, 19</value>
+  </data>
+  <data name="_btnSave.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="_btnSave.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="_btnSave.Text" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="&gt;&gt;_btnSave.Name" xml:space="preserve">
+    <value>_btnSave</value>
+  </data>
+  <data name="&gt;&gt;_btnSave.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_btnSave.Parent" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="&gt;&gt;_btnSave.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_assignedRadiologistLookup.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Right</value>
+  </data>
+  <data name="_assignedRadiologistLookup.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_assignedRadiologistLookup.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="_assignedRadiologistLookup.LabelText" xml:space="preserve">
+    <value>Assigned Radiologist:</value>
+  </data>
+  <data name="_assignedRadiologistLookup.Location" type="System.Drawing.Point, System.Drawing">
+    <value>576, 0</value>
+  </data>
+  <data name="_assignedRadiologistLookup.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_assignedRadiologistLookup.Size" type="System.Drawing.Size, System.Drawing">
+    <value>230, 43</value>
+  </data>
+  <data name="_assignedRadiologistLookup.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;_assignedRadiologistLookup.Name" xml:space="preserve">
+    <value>_assignedRadiologistLookup</value>
+  </data>
+  <data name="&gt;&gt;_assignedRadiologistLookup.Type" xml:space="preserve">
+    <value>ClearCanvas.Ris.Client.View.WinForms.LookupField, ClearCanvas.Ris.Client.View.WinForms, Version=1.0.5246.18702, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_assignedRadiologistLookup.Parent" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="&gt;&gt;_assignedRadiologistLookup.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="panel1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="panel1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 580</value>
+  </data>
+  <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1027, 45</value>
+  </data>
+  <data name="panel1.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;panel1.Name" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="&gt;&gt;panel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;panel1.Parent" xml:space="preserve">
+    <value>_overviewLayoutPanel</value>
+  </data>
+  <data name="&gt;&gt;panel1.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_orderDocumentationPanel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_orderDocumentationPanel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 98</value>
+  </data>
+  <data name="_orderDocumentationPanel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1027, 476</value>
+  </data>
+  <data name="_orderDocumentationPanel.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;_orderDocumentationPanel.Name" xml:space="preserve">
+    <value>_orderDocumentationPanel</value>
+  </data>
+  <data name="&gt;&gt;_orderDocumentationPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_orderDocumentationPanel.Parent" xml:space="preserve">
+    <value>_overviewLayoutPanel</value>
+  </data>
+  <data name="&gt;&gt;_orderDocumentationPanel.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="_overviewLayoutPanel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_overviewLayoutPanel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="_overviewLayoutPanel.RowCount" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="_overviewLayoutPanel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1033, 628</value>
+  </data>
+  <data name="_overviewLayoutPanel.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;_overviewLayoutPanel.Name" xml:space="preserve">
+    <value>_overviewLayoutPanel</value>
+  </data>
+  <data name="&gt;&gt;_overviewLayoutPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TableLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_overviewLayoutPanel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_overviewLayoutPanel.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_overviewLayoutPanel.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="_bannerPanel" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="panel1" Row="2" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_orderDocumentationPanel" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,100" /&gt;&lt;Rows Styles="Absolute,95,Percent,100,AutoSize,0" /&gt;&lt;/TableLayoutSettings&gt;</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="$this.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1033, 628</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>PerformingDocumentationComponentControl</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.ApplicationComponentUserControl, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
 </root>

@@ -42,16 +42,14 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// <summary>
 		/// Initializes a new instance of <see cref="CompositeGraphic"/>.
 		/// </summary>
-		public CompositeGraphic()
-		{
-		}
+		public CompositeGraphic() {}
 
 		/// <summary>
 		/// Gets a collection of this <see cref="CompositeGraphic"/>'s child graphics.
 		/// </summary>
 		public GraphicCollection Graphics
 		{
-			get 
+			get
 			{
 				if (_graphics == null)
 				{
@@ -223,7 +221,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// Moves the <see cref="CompositeGraphic"/> by a specified delta.
 		/// </summary>
 		/// <param name="delta">The distance to move.</param>
- 		/// <remarks>
+		/// <remarks>
 		/// Depending on the value of <see cref="CoordinateSystem"/>,
 		/// <paramref name="delta"/> will be interpreted in either source
 		/// or destination coordinates.
@@ -251,19 +249,17 @@ namespace ClearCanvas.ImageViewer.Graphics
 
 		private void OnGraphicAdded(object sender, ListEventArgs<IGraphic> e)
 		{
-			Graphic graphic = (Graphic)e.Item;
+			Graphic graphic = (Graphic) e.Item;
 
 			graphic.SetParentGraphic(this);
 			graphic.SetParentPresentationImage(this.ParentPresentationImage);
 			graphic.SetImageViewer(this.ImageViewer);
 			graphic.CoordinateSystem = this.CoordinateSystem;
-			graphic.VisualStateChanged += OnGraphicVisualStateChanged;
 		}
 
 		private void OnGraphicRemoved(object sender, ListEventArgs<IGraphic> e)
 		{
-			Graphic graphic = (Graphic)e.Item;
-			graphic.VisualStateChanged -= OnGraphicVisualStateChanged;
+			Graphic graphic = (Graphic) e.Item;
 
 			if (graphic is ISelectableGraphic)
 				((ISelectableGraphic) graphic).Selected = false;
@@ -273,11 +269,6 @@ namespace ClearCanvas.ImageViewer.Graphics
 			graphic.SetParentGraphic(null);
 			graphic.SetParentPresentationImage(null);
 			graphic.SetImageViewer(null);
-		}
-
-		private void OnGraphicVisualStateChanged(object sender, VisualStateChangedEventArgs e)
-		{
-			base.NotifyVisualStateChanged(e);
 		}
 
 		[CloneInitialize]
@@ -298,9 +289,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// <returns>An enumeration of child graphics.</returns>
 		public IEnumerable<IGraphic> EnumerateChildGraphics(bool reverse)
 		{
-		    return reverse ? Graphics.Reverse() : Graphics;
+			return reverse ? Graphics.Reverse() : Graphics;
 		}
 	}
 }
-
-

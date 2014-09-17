@@ -12,6 +12,7 @@
 		<script type="text/javascript" src="../js/jsml.js"></script>
 		<script type="text/javascript" src="../js/ui.js"></script>
 		<script type="text/javascript" src="../js/ris.js"></script>
+		<script type="text/javascript" src="../js/SR.js"></script>
 		<script type="text/javascript" src="../js/layout.js"></script>
 		<script type="text/javascript" src="../js/tabs.js"></script>
 		<script type="text/javascript" >
@@ -44,35 +45,27 @@
 
 			function onBodyLoad()
 			{
-				try
+				scaleWidth();
+
+				if(Ris)
 				{
-					scaleWidth();
-
-					if(Ris)
-					{
-						data = JSML.parse(Ris.getTag("PreExamDetails")) || {};
-					}
-
-					// Vitals Tab
-					data.vitals = data.vitals || {};
-					data.patientScreening = data.patientScreening || {};
-					data.labResults = data.labResults || {};
-					data.translation = data.translation || {};
-
-					data.patientScreening.drugAllergies = data.patientScreening.drugAllergies || [];
-					data.labResults.creatinineLevel = data.labResults.creatinineLevel || [];
-					data.labResults.psa = data.labResults.psa || [];
-
-					initVitalsTable();
-					initPatientScreeningTable();
-					initLabResultsTable();
-					initTranslationTable();
+					data = JSML.parse(Ris.getTag("PreExamDetails")) || {};
 				}
-				catch(e)
-				{
-					var message = "Failed to load details page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
-					Field.setValue($("myForm"), message);
-				}
+
+				// Vitals Tab
+				data.vitals = data.vitals || {};
+				data.patientScreening = data.patientScreening || {};
+				data.labResults = data.labResults || {};
+				data.translation = data.translation || {};
+
+				data.patientScreening.drugAllergies = data.patientScreening.drugAllergies || [];
+				data.labResults.creatinineLevel = data.labResults.creatinineLevel || [];
+				data.labResults.psa = data.labResults.psa || [];
+
+				initVitalsTable();
+				initPatientScreeningTable();
+				initLabResultsTable();
+				initTranslationTable();
 			}
 
 			function initVitalsTable()

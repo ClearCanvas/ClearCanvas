@@ -59,6 +59,7 @@ namespace ClearCanvas.Ris.Client.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DateTimeEntryComponentControl));
 			this._time = new ClearCanvas.Desktop.View.WinForms.DateTimeField();
 			this._date = new ClearCanvas.Desktop.View.WinForms.DateTimeField();
 			this._okButton = new System.Windows.Forms.Button();
@@ -67,60 +68,45 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			// 
 			// _time
 			// 
-			this._time.LabelText = "Time";
-			this._time.Location = new System.Drawing.Point(172, 26);
-			this._time.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._time, "_time");
 			this._time.Maximum = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
 			this._time.Minimum = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
 			this._time.Name = "_time";
 			this._time.ShowDate = false;
 			this._time.ShowTime = true;
-			this._time.Size = new System.Drawing.Size(150, 41);
-			this._time.TabIndex = 7;
 			this._time.Value = new System.DateTime(2008, 8, 5, 10, 14, 18, 62);
 			// 
 			// _date
 			// 
-			this._date.LabelText = "Date";
-			this._date.Location = new System.Drawing.Point(18, 26);
-			this._date.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._date, "_date");
 			this._date.Maximum = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
 			this._date.Minimum = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
 			this._date.Name = "_date";
-			this._date.Size = new System.Drawing.Size(150, 41);
-			this._date.TabIndex = 6;
 			this._date.Value = new System.DateTime(2008, 8, 5, 10, 14, 18, 62);
 			// 
 			// _okButton
 			// 
-			this._okButton.Location = new System.Drawing.Point(172, 84);
+			resources.ApplyResources(this._okButton, "_okButton");
 			this._okButton.Name = "_okButton";
-			this._okButton.Size = new System.Drawing.Size(75, 23);
-			this._okButton.TabIndex = 8;
-			this._okButton.Text = "OK";
 			this._okButton.UseVisualStyleBackColor = true;
 			this._okButton.Click += new System.EventHandler(this._okButton_Click);
 			// 
 			// _cancelButton
 			// 
-			this._cancelButton.Location = new System.Drawing.Point(248, 84);
+			resources.ApplyResources(this._cancelButton, "_cancelButton");
 			this._cancelButton.Name = "_cancelButton";
-			this._cancelButton.Size = new System.Drawing.Size(75, 23);
-			this._cancelButton.TabIndex = 9;
-			this._cancelButton.Text = "Cancel";
 			this._cancelButton.UseVisualStyleBackColor = true;
 			this._cancelButton.Click += new System.EventHandler(this._cancelButton_Click);
 			// 
 			// DateTimeEntryComponentControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this._cancelButton);
 			this.Controls.Add(this._okButton);
 			this.Controls.Add(this._time);
 			this.Controls.Add(this._date);
 			this.Name = "DateTimeEntryComponentControl";
-			this.Size = new System.Drawing.Size(342, 118);
 			this.ResumeLayout(false);
 
         }

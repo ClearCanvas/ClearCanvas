@@ -1,0 +1,14 @@
+﻿<!-- 
+This rule instructs the server to auto-route studies from the MR_MODALITY or CT_MODALITY AE.  The auto-route will only be performed if the QCStatus is Passed for the study, and will be performed after a delay of 2 minutes.  Note that the delay is optional and can be removed from the XML.
+-->
+<rule>
+	<condition expressionLanguage="dicom">
+	<or>
+		<equal test="$SourceApplicationEntityTitle" refValue="MR_MODALITY" />
+		<equal test="$SourceApplicationEntityTitle" refValue="CT_MODALITY" />
+	</or>
+	</condition>
+	<action>
+		<study-auto-route device="CLEARCANVAS" qcStatus="Passed"  delayInMinutes="2"/>
+	</action>
+</rule>

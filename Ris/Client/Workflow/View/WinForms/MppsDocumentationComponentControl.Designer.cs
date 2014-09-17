@@ -59,6 +59,7 @@ namespace ClearCanvas.Ris.Client.Workflow.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MppsDocumentationComponentControl));
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this._label = new System.Windows.Forms.Label();
 			this._comments = new System.Windows.Forms.RichTextBox();
@@ -67,43 +68,27 @@ namespace ClearCanvas.Ris.Client.Workflow.View.WinForms
 			// 
 			// tableLayoutPanel1
 			// 
-			this.tableLayoutPanel1.ColumnCount = 1;
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			resources.ApplyResources(this.tableLayoutPanel1, "tableLayoutPanel1");
 			this.tableLayoutPanel1.Controls.Add(this._label, 0, 0);
 			this.tableLayoutPanel1.Controls.Add(this._comments, 0, 1);
-			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-			this.tableLayoutPanel1.RowCount = 2;
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(749, 294);
-			this.tableLayoutPanel1.TabIndex = 0;
 			// 
 			// _label
 			// 
-			this._label.AutoSize = true;
-			this._label.Location = new System.Drawing.Point(3, 0);
+			resources.ApplyResources(this._label, "_label");
 			this._label.Name = "_label";
-			this._label.Size = new System.Drawing.Size(35, 13);
-			this._label.TabIndex = 0;
-			this._label.Text = "label1";
 			// 
 			// _comments
 			// 
 			this._comments.AcceptsTab = true;
-			this._comments.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._comments.Location = new System.Drawing.Point(3, 16);
+			resources.ApplyResources(this._comments, "_comments");
 			this._comments.Name = "_comments";
-			this._comments.Size = new System.Drawing.Size(743, 275);
-			this._comments.TabIndex = 1;
-			this._comments.Text = "";
 			// 
 			// MppsDocumentationComponentControl
 			// 
 			this.Controls.Add(this.tableLayoutPanel1);
 			this.Name = "MppsDocumentationComponentControl";
-			this.Size = new System.Drawing.Size(749, 294);
+			resources.ApplyResources(this, "$this");
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
 			this.ResumeLayout(false);

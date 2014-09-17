@@ -33,6 +33,7 @@ namespace ClearCanvas.Ris.Shreds.Merge
 	/// </summary>
 	[ExtensionOf(typeof(ShredExtensionPoint))]
 	[ExtensionOf(typeof(ApplicationRootExtensionPoint))]
+	[ShredIsolation(Level = ShredIsolationLevel.None)]
 	public class MergeShred : QueueProcessorShred, IApplicationRoot
 	{
 		public override string GetDisplayName()

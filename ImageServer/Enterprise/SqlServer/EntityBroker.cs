@@ -90,7 +90,7 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
             // recurse on subCriteria
             foreach (SearchCriteria subCriteria in criteria.EnumerateSubCriteria())
             {
-                string variable = string.Format("{0}.{1}", entity, subCriteria.GetKey());
+                string variable = string.Format("[{0}].{1}", entity, subCriteria.GetKey());
                 var sc = subCriteria as SearchConditionBase;
                 if (sc != null)
                 {
@@ -136,6 +136,8 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
             int j = sqlColumnName.IndexOf(".");
             string sqlParmName = j != -1 
                                      ? sqlColumnName.Remove(j, 1) : sqlColumnName;
+            if (sqlParmName.Contains("[")) sqlParmName = sqlParmName.Remove(sqlParmName.IndexOf("["), 1);
+            if (sqlParmName.Contains("]")) sqlParmName = sqlParmName.Remove(sqlParmName.IndexOf("]"), 1);
 
             // Now go through the actual input parameters.  Replace references to ServerEntityKey with
             // the GUID itself for these parameters, and replace ServerEnum derived references with the 
@@ -289,10 +291,10 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
                         string sql;
                         if (String.Format("{0}GUID", notExistsSubCriteria.GetKey()).Equals(relatedTableColumn))
                             sql = GetSelectSql(notExistsSubCriteria.GetKey(), command, notExistsSubCriteria, null, null,
-                                               String.Format("{0}.{2} = {1}.GUID", variable, notExistsSubCriteria.GetKey(), baseTableColumn));
+                                               String.Format("[{0}].{2} = [{1}].GUID", variable, notExistsSubCriteria.GetKey(), baseTableColumn));
                         else
                             sql = GetSelectSql(notExistsSubCriteria.GetKey(), command, notExistsSubCriteria, null, null,
-                                               String.Format("{0}.{2} = {1}.{3}", variable, notExistsSubCriteria.GetKey(), baseTableColumn, relatedTableColumn));
+                                               String.Format("[{0}].{2} = [{1}].{3}", variable, notExistsSubCriteria.GetKey(), baseTableColumn, relatedTableColumn));
 
                         sb.AppendFormat("NOT EXISTS ({0})", sql);
                         break;
@@ -314,11 +316,11 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
                         string existsSql;
                         if (String.Format("{0}GUID",existsSubCriteria.GetKey()).Equals(relatedTableColumn))
                             existsSql = GetSelectSql(existsSubCriteria.GetKey(), command, existsSubCriteria, null, null,
-                                                     String.Format("{0}.{2} = {1}.GUID", variable, existsSubCriteria.GetKey(),
+                                                     String.Format("[{0}].{2} = [{1}].GUID", variable, existsSubCriteria.GetKey(),
                                                                    baseTableColumn));
                         else
                             existsSql = GetSelectSql(existsSubCriteria.GetKey(), command, existsSubCriteria, null, null,
-                                                     String.Format("{0}.{2} = {1}.{3}", variable, existsSubCriteria.GetKey(),
+                                                     String.Format("[{0}].{2} = [{1}].{3}", variable, existsSubCriteria.GetKey(),
                                                                    baseTableColumn, relatedTableColumn));
                         sb.AppendFormat("EXISTS ({0})", existsSql);
                         break;
@@ -364,10 +366,10 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
                     string subQualifier;
                     if (subCriteria is RelatedEntityCondition<EntitySelectCriteria>)
                     {
-                        subQualifier = qualifier;   
+                        subQualifier = qualifier;
                     }
                     else
-                        subQualifier = string.Format("{0}.{1}", qualifier, subCriteria.GetKey());
+                        subQualifier = string.Format("[{0}].{1}", qualifier, subCriteria.GetKey());
 
                     list.AddRange(GetWhereSearchCriteria(subQualifier, subCriteria, command));
                 }
@@ -402,21 +404,21 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
 
             var sb = new StringBuilder();
             if (maxRows == null || startIndex == null)
-                sb.AppendFormat("SELECT * FROM {0}", entityName);
+                sb.AppendFormat("SELECT * FROM [{0}]", entityName);
                 // had a bug at the tail end of the 1.5 release where Web GUI queries w/ paging did not work properly
                 // using the TOP syntax for the selects was not giving the same results as the ROW_NUMBER() syntax.
                 // Since this code is also used extensively when we do a FindOne() call, made it so in that case we
                 // still do the TOP, but use ROW_NUMBER syntax for other situations, which would include the web gui.
             else if (startIndex.Value == 0 && maxRows.Value == 1)
-                sb.AppendFormat("SELECT TOP {0} * FROM {1}", maxRows, entityName);
+                sb.AppendFormat("SELECT TOP {0} * FROM [{1}]", maxRows, entityName);
             else
             {
                 if (orderBy.Length > 0)
-                    sb.AppendFormat("SELECT {0}.*,ROW_NUMBER() OVER({1}) as RowNum FROM {0}", entityName, orderBy);
+                    sb.AppendFormat("SELECT [{0}].*,ROW_NUMBER() OVER({1}) as RowNum FROM [{0}]", entityName, orderBy);
                 else
                 {
                     // no OrderBy clause to sort the list, just assign row number to 1 to keep their order as is
-                    sb.AppendFormat("SELECT {0}.*,ROW_NUMBER() OVER( ORDER BY {0}.GUID ) as RowNum FROM {0}", entityName);
+                    sb.AppendFormat("SELECT [{0}].*,ROW_NUMBER() OVER( ORDER BY [{0}].GUID ) as RowNum FROM [{0}]", entityName);
                 }
             }
             // Generate an array of the WHERE clauses to be used.
@@ -478,7 +480,7 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
                                                 String subWhere)
         {
             var sb = new StringBuilder();
-            sb.AppendFormat("SELECT COUNT(*) FROM {0}", entityName);
+            sb.AppendFormat("SELECT COUNT(*) FROM [{0}]", entityName);
 
             // Generate an array of the WHERE clauses to be used.
             String[] where = GetWhereSearchCriteria(entityName, criteria, command);
@@ -640,7 +642,7 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
                 {
                     var p = parm as EntityUpdateColumn<ServerEntityKey>;
                     ServerEntityKey key = p.Value;
-                    command.Parameters.AddWithValue("@" + sqlParmName, key.Key);
+                    command.Parameters.AddWithValue("@" + sqlParmName, key == null ? DBNull.Value : key.Key);
                 }
                 else if (parm is EntityUpdateColumn<DateTime?>)
                 {
@@ -659,7 +661,7 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
                         command.Parameters.AddWithValue("@" + sqlParmName, v.Enum);
                     }
                     else
-                        command.Parameters.AddWithValue("@" + sqlParmName, parm.Value);
+                        command.Parameters.AddWithValue("@" + sqlParmName, parm.Value ?? DBNull.Value);
                 }
 
                 string text = String.Format("[{0}]=@{0}", sqlParmName);
@@ -776,7 +778,7 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
             
             
             var sql = new StringBuilder();
-            sql.AppendFormat("UPDATE {0} SET {1} WHERE {2}", entity.Name, set, where);
+            sql.AppendFormat("UPDATE [{0}] SET {1} WHERE {2}", entity.Name, set, where);
 
             return sql.ToString();
         }
@@ -934,7 +936,7 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
 
             try
             {
-                command = new SqlCommand(String.Format("SELECT * FROM {0} WHERE GUID = @GUID",
+                command = new SqlCommand(String.Format("SELECT * FROM [{0}] WHERE GUID = @GUID",
                                                        _entityName), Context.Connection)
                               {
                                   CommandType = CommandType.Text,
@@ -1073,7 +1075,7 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
                 if (update != null)
                     command.Transaction = update.Transaction;
 
-                command.CommandText = String.Format("delete from {0} where GUID = '{1}'", _entityName, key.Key);
+                command.CommandText = String.Format("delete from [{0}] where GUID = '{1}'", _entityName, key.Key);
 
                 if (Platform.IsLogLevelEnabled(LogLevel.Debug))
                     Platform.Log(LogLevel.Debug, command.CommandText);
@@ -1431,8 +1433,8 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
                 string deleteWhereClause = GetDeleteWhereClause(_entityName, command, criteria, null);
                     
                 command.CommandText = String.IsNullOrEmpty(deleteWhereClause) 
-                    ? String.Format("DELETE FROM {0}", _entityName) 
-                    : String.Format("DELETE FROM {0} WHERE {1}", _entityName, deleteWhereClause);
+                    ? String.Format("DELETE FROM [{0}]", _entityName) 
+                    : String.Format("DELETE FROM [{0}] WHERE {1}", _entityName, deleteWhereClause);
 
                 if (Platform.IsLogLevelEnabled(LogLevel.Debug))
                     Platform.Log(LogLevel.Debug, command.CommandText);

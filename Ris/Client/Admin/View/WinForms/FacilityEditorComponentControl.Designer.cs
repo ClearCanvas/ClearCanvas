@@ -59,6 +59,7 @@ namespace ClearCanvas.Ris.Client.Admin.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FacilityEditorComponentControl));
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
 			this._cancelButton = new System.Windows.Forms.Button();
@@ -66,8 +67,8 @@ namespace ClearCanvas.Ris.Client.Admin.View.WinForms
 			this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
 			this._code = new ClearCanvas.Desktop.View.WinForms.TextField();
 			this._name = new ClearCanvas.Desktop.View.WinForms.TextField();
-			this._informationAuthority = new ClearCanvas.Desktop.View.WinForms.ComboBoxField();
 			this._description = new ClearCanvas.Desktop.View.WinForms.TextAreaField();
+			this._informationAuthority = new ClearCanvas.Desktop.View.WinForms.ComboBoxField();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.flowLayoutPanel1.SuspendLayout();
 			this.flowLayoutPanel2.SuspendLayout();
@@ -75,124 +76,78 @@ namespace ClearCanvas.Ris.Client.Admin.View.WinForms
 			// 
 			// tableLayoutPanel1
 			// 
-			this.tableLayoutPanel1.ColumnCount = 1;
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			resources.ApplyResources(this.tableLayoutPanel1, "tableLayoutPanel1");
 			this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 0, 1);
 			this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel2, 0, 0);
-			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-			this.tableLayoutPanel1.RowCount = 2;
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(245, 248);
-			this.tableLayoutPanel1.TabIndex = 0;
 			// 
 			// flowLayoutPanel1
 			// 
-			this.flowLayoutPanel1.AutoSize = true;
-			this.flowLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			resources.ApplyResources(this.flowLayoutPanel1, "flowLayoutPanel1");
 			this.flowLayoutPanel1.Controls.Add(this._cancelButton);
 			this.flowLayoutPanel1.Controls.Add(this._acceptButton);
-			this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 216);
 			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-			this.flowLayoutPanel1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-			this.flowLayoutPanel1.Size = new System.Drawing.Size(239, 29);
-			this.flowLayoutPanel1.TabIndex = 1;
 			// 
 			// _cancelButton
 			// 
-			this._cancelButton.Location = new System.Drawing.Point(161, 3);
+			resources.ApplyResources(this._cancelButton, "_cancelButton");
 			this._cancelButton.Name = "_cancelButton";
-			this._cancelButton.Size = new System.Drawing.Size(75, 23);
-			this._cancelButton.TabIndex = 1;
-			this._cancelButton.Text = "Cancel";
 			this._cancelButton.UseVisualStyleBackColor = true;
 			this._cancelButton.Click += new System.EventHandler(this._cancelButton_Click);
 			// 
 			// _acceptButton
 			// 
-			this._acceptButton.Location = new System.Drawing.Point(80, 3);
+			resources.ApplyResources(this._acceptButton, "_acceptButton");
 			this._acceptButton.Name = "_acceptButton";
-			this._acceptButton.Size = new System.Drawing.Size(75, 23);
-			this._acceptButton.TabIndex = 0;
-			this._acceptButton.Text = "OK";
 			this._acceptButton.UseVisualStyleBackColor = true;
 			this._acceptButton.Click += new System.EventHandler(this._acceptButton_Click);
 			// 
 			// flowLayoutPanel2
 			// 
-			this.flowLayoutPanel2.AutoSize = true;
-			this.flowLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			resources.ApplyResources(this.flowLayoutPanel2, "flowLayoutPanel2");
 			this.flowLayoutPanel2.Controls.Add(this._code);
 			this.flowLayoutPanel2.Controls.Add(this._name);
 			this.flowLayoutPanel2.Controls.Add(this._description);
 			this.flowLayoutPanel2.Controls.Add(this._informationAuthority);
-			this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 3);
 			this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-			this.flowLayoutPanel2.Size = new System.Drawing.Size(239, 207);
-			this.flowLayoutPanel2.TabIndex = 0;
 			// 
 			// _code
 			// 
-			this._code.LabelText = "Code";
-			this._code.Location = new System.Drawing.Point(2, 2);
-			this._code.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._code, "_code");
 			this._code.Mask = "";
 			this._code.Name = "_code";
-			this._code.PasswordChar = '\0';
-			this._code.Size = new System.Drawing.Size(220, 41);
-			this._code.TabIndex = 0;
-			this._code.ToolTip = null;
 			this._code.Value = null;
 			// 
 			// _name
 			// 
-			this._name.LabelText = "Name";
-			this._name.Location = new System.Drawing.Point(2, 47);
-			this._name.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._name, "_name");
 			this._name.Mask = "";
 			this._name.Name = "_name";
-			this._name.PasswordChar = '\0';
-			this._name.Size = new System.Drawing.Size(220, 41);
-			this._name.TabIndex = 1;
-			this._name.ToolTip = null;
 			this._name.Value = null;
+			// 
+			// _description
+			// 
+			resources.ApplyResources(this._description, "_description");
+			this._description.Name = "_description";
+			this._description.Value = null;
 			// 
 			// _informationAuthority
 			// 
 			this._informationAuthority.DataSource = null;
 			this._informationAuthority.DisplayMember = "";
 			this._informationAuthority.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this._informationAuthority.LabelText = "Information Authority";
-			this._informationAuthority.Location = new System.Drawing.Point(2, 159);
-			this._informationAuthority.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._informationAuthority, "_informationAuthority");
 			this._informationAuthority.Name = "_informationAuthority";
-			this._informationAuthority.Size = new System.Drawing.Size(220, 41);
-			this._informationAuthority.TabIndex = 3;
 			this._informationAuthority.Value = null;
-			// 
-			// _description
-			// 
-			this._description.LabelText = "Description";
-			this._description.Location = new System.Drawing.Point(2, 92);
-			this._description.Margin = new System.Windows.Forms.Padding(2);
-			this._description.Name = "_description";
-			this._description.Size = new System.Drawing.Size(220, 63);
-			this._description.TabIndex = 2;
-			this._description.Value = null;
 			// 
 			// FacilityEditorComponentControl
 			// 
 			this.AcceptButton = this._acceptButton;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this._cancelButton;
 			this.Controls.Add(this.tableLayoutPanel1);
 			this.Name = "FacilityEditorComponentControl";
-			this.Size = new System.Drawing.Size(245, 248);
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
 			this.flowLayoutPanel1.ResumeLayout(false);

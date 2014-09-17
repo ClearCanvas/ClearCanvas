@@ -26,13 +26,15 @@ using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using ClearCanvas.Common;
+using ClearCanvas.ImageServer.Common.StudyHistory;
 using ClearCanvas.ImageServer.Common.Utilities;
 using ClearCanvas.ImageServer.Core.Edit;
 using ClearCanvas.ImageServer.Model;
 
 namespace ClearCanvas.ImageServer.Core.Data
 {
-    public class ProcessDuplicateChangeLog
+	[ImageServerStudyHistoryType("FD296EB8-97A1-419F-845C-C971CB768836")]
+    public class ProcessDuplicateChangeLog : ImageServerStudyHistory
     {
         #region Constructors
 

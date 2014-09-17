@@ -67,7 +67,7 @@
     <tr>
         <td style="border-bottom:none; padding-bottom:5px" valign="top">
             <table border="0" width="100%">
-                <tr><td class="HistoryDetailsLabel" style="border-bottom:dashed 1px #c0c0c0;"><%= Labels.StudyDetails_History_Reconcile_StudySnapshot %>Study (Snapshot):</td></tr>
+                <tr><td class="HistoryDetailsLabel" style="border-bottom:dashed 1px #c0c0c0;"><%= Labels.StudyDetails_History_Reconcile_StudySnapshot %>:</td></tr>
                 <tr><td style="border:none">
                     <div>
                         <table cellpadding="0" cellspacing="0">

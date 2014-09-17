@@ -7,6 +7,7 @@
 		<script type="text/javascript" src="js/jsml.js"></script>
 		<script type="text/javascript" src="js/ui.js"></script>
 		<script type="text/javascript" src="js/ris.js"></script>
+		<script type="text/javascript" src="js/SR.js"></script>
 		<script type="text/javascript" src="js/layout.js"></script>
 		<script type="text/javascript" >			
 			function onBodyLoad()
@@ -20,52 +21,45 @@
 				
 				if(!Ris)
 					return;
-				try
+					
+				var context = Ris.getHealthcareContext();
+				if(context === null)
 				{
-					var context = Ris.getHealthcareContext();
-					if(context === null)
+					Field.setValue($("myForm"), "");
+					return;
+				}
+				var html = "<tr class='row1'><td class='tableheading'>Profile Authority</td>";
+				context.ProfileAuthorities.each(function(s) { html += "<td class='tableheading'>" + s  + "</td>"; });
+				html += "</tr>";
+				for(var i=0; i < context.Fields.length; i++)
+				{
+					var field = context.Fields[i];
+					var htmlTableRows = ((i%2 == 0)) ? "<tr class='row0'><td class='propertyname'>" + field.Heading + "</td>" :
+													   "<tr class='row1'><td class='propertyname'>" + field.Heading + "</td>";
+					for(var v = 0; v < field.Values.length; v++)
 					{
-						Field.setValue($("myForm"), "");
-						return;
-					}
-					var html = "<tr class='row1'><td class='tableheading'>Profile Authority</td>";
-					context.ProfileAuthorities.each(function(s) { html += "<td class='tableheading'>" + s  + "</td>"; });
-					html += "</tr>";
-					for(var i=0; i < context.Fields.length; i++)
-					{
-						var field = context.Fields[i];
-						var htmlTableRows = ((i%2 == 0)) ? "<tr class='row0'><td class='propertyname'>" + field.Heading + "</td>" :
-														   "<tr class='row1'><td class='propertyname'>" + field.Heading + "</td>";
-						for(var v = 0; v < field.Values.length; v++)
+						var value = field.Values[v];
+						var tdcell = "";
+						for(var s=0; s < value.Segments.length; s++)
 						{
-							var value = field.Values[v];
-							var tdcell = "";
-							for(var s=0; s < value.Segments.length; s++)
+							var segment = value.Segments[s];
+							if (segment.IsDiscrepant)
 							{
-								var segment = value.Segments[s];
-								if (segment.IsDiscrepant)
-								{
-									tdcell += "<span class='discrepancy'>" + format(segment.Text) + "</span>";
-								}
-								else
-								{
-									tdcell += "<span class=''>" + format(segment.Text) + "</span>";
-								}
+								tdcell += "<span class='discrepancy'>" + format(segment.Text) + "</span>";
 							}
-							htmlTableRows += "<td>"+tdcell+"</td>";
+							else
+							{
+								tdcell += "<span class=''>" + format(segment.Text) + "</span>";
+							}
 						}
-						htmlTableRows += "</tr>";
-						
-						html += htmlTableRows;
+						htmlTableRows += "<td>"+tdcell+"</td>";
 					}
-					html = "<table border='0'>" + html + "</table>";
-					$("diffTable").innerHTML = html;
+					htmlTableRows += "</tr>";
+					
+					html += htmlTableRows;
 				}
-				catch(e)
-				{
-					var message = "Failed to load preview page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
-					Field.setValue($("myForm"), message);
-				}
+				html = "<table border='0'>" + html + "</table>";
+				$("diffTable").innerHTML = html;
 			}
 			
 		</script>

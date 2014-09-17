@@ -59,6 +59,7 @@ namespace ClearCanvas.Ris.Client.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BiographyDemographicComponentControl));
 			this._selectedProfile = new ClearCanvas.Desktop.View.WinForms.ComboBoxField();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this._demoHostPanel = new System.Windows.Forms.Panel();
@@ -70,53 +71,30 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			this._selectedProfile.DataSource = null;
 			this._selectedProfile.DisplayMember = "";
 			this._selectedProfile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this._selectedProfile.LabelText = "Selected Profile";
-			this._selectedProfile.Location = new System.Drawing.Point(0, 0);
-			this._selectedProfile.Margin = new System.Windows.Forms.Padding(0);
+			resources.ApplyResources(this._selectedProfile, "_selectedProfile");
 			this._selectedProfile.Name = "_selectedProfile";
-			this._selectedProfile.Size = new System.Drawing.Size(262, 41);
-			this._selectedProfile.TabIndex = 3;
 			this._selectedProfile.Value = null;
 			// 
 			// tableLayoutPanel1
 			// 
-			this.tableLayoutPanel1.ColumnCount = 1;
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			resources.ApplyResources(this.tableLayoutPanel1, "tableLayoutPanel1");
 			this.tableLayoutPanel1.Controls.Add(this._demoHostPanel, 0, 1);
 			this.tableLayoutPanel1.Controls.Add(this._selectedProfile, 0, 0);
-			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel1.Location = new System.Drawing.Point(1, 2);
-			this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-			this.tableLayoutPanel1.RowCount = 2;
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(703, 558);
-			this.tableLayoutPanel1.TabIndex = 4;
 			// 
 			// _demoHostPanel
 			// 
-			this._demoHostPanel.AutoSize = true;
-			this._demoHostPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			resources.ApplyResources(this._demoHostPanel, "_demoHostPanel");
 			this._demoHostPanel.BackColor = System.Drawing.SystemColors.ControlDark;
-			this._demoHostPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._demoHostPanel.Location = new System.Drawing.Point(3, 41);
-			this._demoHostPanel.Margin = new System.Windows.Forms.Padding(3, 0, 0, 0);
 			this._demoHostPanel.Name = "_demoHostPanel";
-			this._demoHostPanel.Padding = new System.Windows.Forms.Padding(1);
-			this._demoHostPanel.Size = new System.Drawing.Size(700, 517);
-			this._demoHostPanel.TabIndex = 4;
 			// 
 			// BiographyDemographicComponentControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.Control;
 			this.Controls.Add(this.tableLayoutPanel1);
-			this.Margin = new System.Windows.Forms.Padding(0);
 			this.Name = "BiographyDemographicComponentControl";
-			this.Padding = new System.Windows.Forms.Padding(1, 2, 2, 7);
-			this.Size = new System.Drawing.Size(706, 567);
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
 			this.ResumeLayout(false);

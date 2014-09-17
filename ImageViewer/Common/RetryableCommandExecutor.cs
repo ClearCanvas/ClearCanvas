@@ -36,9 +36,8 @@ namespace ClearCanvas.ImageViewer.Common
 			private bool _needMoreMemory;
 
 			private readonly RetryableCommand _retryableCommand;
-			//TODO (CR March 2011): Use Environment.TickCount.
 			private readonly TimeSpan _maxWaitTime;
-			private DateTime _startTime;
+			private int _startTicks;
 			private TimeSpan _waitTimeRemaining;
 
 			public RetryableCommandExecutor(RetryableCommand retryableCommand, TimeSpan maxWaitTime)
@@ -53,7 +52,7 @@ namespace ClearCanvas.ImageViewer.Common
 			
 			public void Execute()
 			{
-				_startTime = DateTime.Now;
+                _startTicks = Environment.TickCount;
 
 				try
 				{
@@ -111,7 +110,7 @@ namespace ClearCanvas.ImageViewer.Common
 				int retryNumber = 0;
 				while (true)
 				{
-					DateTime begin = DateTime.Now;
+                    var begin = Environment.TickCount;
 					++retryNumber;
 
 					Platform.Log(LogLevel.Debug, "Waiting for memory collected signal before retrying command.");
@@ -122,7 +121,7 @@ namespace ClearCanvas.ImageViewer.Common
 						_retryableCommand();
 						if (Platform.IsLogLevelEnabled(LogLevel.Debug))
 						{
-							TimeSpan elapsed = DateTime.Now - begin;
+							var elapsed = TimeSpan.FromMilliseconds(Environment.TickCount - begin);
 							Platform.Log(LogLevel.Debug, "Retry #{0} succeeded and took {0} seconds.", retryNumber, elapsed.TotalSeconds);
 						}
 
@@ -141,9 +140,9 @@ namespace ClearCanvas.ImageViewer.Common
 
 						if (Platform.IsLogLevelEnabled(LogLevel.Debug))
 						{
-							TimeSpan elapsed = DateTime.Now - begin;
+							var elapsed = Environment.TickCount - begin;
 							Platform.Log(LogLevel.Debug, "Retry #{0} failed and took {1} seconds; wait time remaining is {2} seconds.",
-							retryNumber, elapsed.TotalSeconds, _waitTimeRemaining.TotalSeconds);
+							retryNumber, elapsed, _waitTimeRemaining.TotalSeconds);
 						}
 					}
 					finally
@@ -155,7 +154,7 @@ namespace ClearCanvas.ImageViewer.Common
 
 			private void UpdateWaitTimeRemaining()
 			{
-				TimeSpan elapsed = DateTime.Now - _startTime;
+				var elapsed = TimeSpan.FromMilliseconds(Environment.TickCount - _startTicks);
 				_waitTimeRemaining = _maxWaitTime - elapsed;
 				if (_waitTimeRemaining < TimeSpan.Zero)
 					_waitTimeRemaining = TimeSpan.Zero;

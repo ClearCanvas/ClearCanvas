@@ -38,7 +38,7 @@ namespace ClearCanvas.Healthcare {
         /// <summary>
         /// MRN - Medical Record Number
         /// </summary>
-        [EnumValue("MRN", Description="Medical Record Number")]
+        [EnumValue("Mrn", Description="Medical Record Number")]
         MR,
 
         /// <summary>

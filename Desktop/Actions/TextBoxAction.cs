@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.ComponentModel;
 using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Desktop.Actions
@@ -42,9 +43,7 @@ namespace ClearCanvas.Desktop.Actions
 		/// <param name="path"></param>
 		/// <param name="resourceResolver"></param>
 		public TextBoxAction(string actionID, ActionPath path, IResourceResolver resourceResolver)
-			: base(actionID, path, resourceResolver)
-		{
-		}
+			: base(actionID, path, resourceResolver) {}
 
 		#region Implementation of ITextBoxAction
 
@@ -60,8 +59,8 @@ namespace ClearCanvas.Desktop.Actions
 		{
 			get { return _textValue; }
 			set
-			{ 
-				if(value != _textValue)
+			{
+				if (value != _textValue)
 				{
 					_textValue = value;
 					EventsHelper.Fire(TextValueChanged, this, EventArgs.Empty);
@@ -77,6 +76,7 @@ namespace ClearCanvas.Desktop.Actions
 		/// <summary>
 		/// Gets or sets the cue text displayed in the text box when it does not have focus.
 		/// </summary>
+		[Localizable(true)]
 		public string CueText
 		{
 			get { return _cueText; }

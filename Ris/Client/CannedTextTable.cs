@@ -22,6 +22,7 @@
 
 #endregion
 
+using System;
 using ClearCanvas.Desktop.Tables;
 using ClearCanvas.Ris.Application.Common.CannedTextService;
 
@@ -31,20 +32,21 @@ namespace ClearCanvas.Ris.Client
 	{
 		public CannedTextTable()
 		{
-			this.Columns.Add(new TableColumn<CannedTextSummary, string>(SR.ColumnName, c => c.Name, 1.0f));
-			this.Columns.Add(new TableColumn<CannedTextSummary, string>(SR.ColumnCategory, c => c.Category, 1.0f));
-			this.Columns.Add(new TableColumn<CannedTextSummary, string>(SR.ColumnText, c => FormatCannedTextSnippet(c.TextSnippet), 3.0f));
-			this.Columns.Add(new TableColumn<CannedTextSummary, string>(SR.ColumnCannedTextOwner,
-				item => item.IsPersonal ? SR.ColumnPersonal : item.StaffGroup.Name, 1.0f));
+			this.Columns.Add(new TableColumn<CannedTextSummary, string>("Name", SR.ColumnCannedTextName, c => c.Name, 1.0f));
+			this.Columns.Add(new TableColumn<CannedTextSummary, string>("Category", SR.ColumnCannedTextCategory, c => c.Category, 1.0f));
+			this.Columns.Add(new TableColumn<CannedTextSummary, string>("Text", SR.ColumnCannedTextText, c => FormatCannedTextSnippet(c.TextSnippet), 3.0f));
+			this.Columns.Add(new TableColumn<CannedTextSummary, string>("Owner", SR.ColumnCannedTextOwner,
+			                                                            item => item.IsPersonal ? SR.ColumnPersonal : item.StaffGroup.Name, 1.0f));
 
 			// Apply sort from settings
 			var sortColumnIndex = this.Columns.FindIndex(column => column.Name.Equals(CannedTextSettings.Default.SummarySortColumnName));
+			if (sortColumnIndex < 0) sortColumnIndex = 0;
 			this.Sort(new TableSortParams(this.Columns[sortColumnIndex], CannedTextSettings.Default.SummarySortAscending));
 
 			this.Sorted += OnCannedTextTableSorted;
 		}
 
-		private void OnCannedTextTableSorted(object sender, System.EventArgs e)
+		private void OnCannedTextTableSorted(object sender, EventArgs e)
 		{
 			if (this.SortParams == null)
 				return;

@@ -37,31 +37,31 @@ namespace ClearCanvas.Healthcare {
         /// <summary>
         /// Draft
         /// </summary>
-        [EnumValue("Draft", Description = "Draft")]
+		[EnumValue("Draft", Description = "DraftDescription")]
         D,
 
         /// <summary>
         /// Preliminary
         /// </summary>
-        [EnumValue("Preliminary", Description = "Preliminary (report has not been verified)")]
+		[EnumValue("Preliminary", Description = "PreliminaryDescription")]
         P,
  
         /// <summary>
         /// Final
         /// </summary>
-        [EnumValue("Final", Description = "Final (report has been verified)")]
+		[EnumValue("Final", Description = "FinalDescription")]
         F,
 
         /// <summary>
         /// Corrected
         /// </summary>
-        [EnumValue("Corrected", Description = "Corrected (report has one or more addenda)")]
+		[EnumValue("Corrected", Description = "CorrectedDescription")]
         C,
 
         /// <summary>
         /// Cancelled
         /// </summary>
-        [EnumValue("Cancelled", Description = "Report is cancelled")]
+		[EnumValue("Canceled", Description = "CanceledDescription")]
         X
 	}
 }

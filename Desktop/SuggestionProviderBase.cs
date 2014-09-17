@@ -213,7 +213,7 @@ namespace ClearCanvas.Desktop
 						{
 							context.Error(e);
 						}
-					}, false, _query);
+					}, false, _query) { ThreadUICulture = Desktop.Application.CurrentUICulture };
 				_task.Terminated += OnTerminated;
 				_task.Run();
 			}

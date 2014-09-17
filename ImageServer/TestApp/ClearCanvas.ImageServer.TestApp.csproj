@@ -56,23 +56,45 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArchiveTestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ArchiveTestForm.Designer.cs">
+      <DependentUpon>ArchiveTestForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CheckableGroupBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomProgressBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomProgressBar.Designer.cs">
+      <DependentUpon>CustomProgressBar.cs</DependentUpon>
+    </Compile>
     <Compile Include="GenerateDatabase.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -91,12 +113,36 @@
     <Compile Include="ImageStreamingStressTest.Designer.cs">
       <DependentUpon>ImageStreamingStressTest.cs</DependentUpon>
     </Compile>
+    <Compile Include="PerfCFind\CFindPerformanceTestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PerfCFind\CFindPerformanceTestForm.Designer.cs">
+      <DependentUpon>CFindPerformanceTestForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PerfMon\ImageServerDB.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ImageServerDB.dbml</DependentUpon>
+    </Compile>
+    <Compile Include="PerfMon\WorkQueuePerfMon.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PerfMon\WorkQueuePerfMon.Designer.cs">
+      <DependentUpon>WorkQueuePerfMon.cs</DependentUpon>
+    </Compile>
     <Compile Include="ProductVerificationTest.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ProductVerificationTest.Designer.cs">
       <DependentUpon>ProductVerificationTest.cs</DependentUpon>
     </Compile>
+    <Compile Include="ProgressDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProgressDialog.Designer.cs">
+      <DependentUpon>ProgressDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Service References\services.cs">
       <DependentUpon>services.map</DependentUpon>
     </Compile>
@@ -156,6 +202,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="ArchiveTestForm.resx">
+      <DependentUpon>ArchiveTestForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomProgressBar.resx">
+      <DependentUpon>CustomProgressBar.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GenerateDatabase.resx">
       <DependentUpon>GenerateDatabase.cs</DependentUpon>
     </EmbeddedResource>
@@ -163,8 +215,20 @@
       <SubType>Designer</SubType>
       <DependentUpon>ImageStreamingStressTest.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="PerfMon\ImageServerDB.dbml.layout">
+      <DependentUpon>ImageServerDB.dbml</DependentUpon>
+    </None>
+    <EmbeddedResource Include="PerfCFind\CFindPerformanceTestForm.resx">
+      <DependentUpon>CFindPerformanceTestForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PerfMon\WorkQueuePerfMon.resx">
+      <DependentUpon>WorkQueuePerfMon.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ProductVerificationTest.resx">
       <DependentUpon>ProductVerificationTest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProgressDialog.resx">
+      <DependentUpon>ProgressDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="StreamingTest.resx">
       <SubType>Designer</SubType>
@@ -218,6 +282,11 @@
     </None>
     <None Include="ImageServerDataSet.xss">
       <DependentUpon>ImageServerDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="PerfMon\ImageServerDB.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>ImageServerDB.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </None>
     <None Include="PostBuild_dist.proj" />
     <None Include="Properties\Settings.settings">
@@ -344,6 +413,9 @@
   <ItemGroup>
     <Folder Include="Streaming\" />
   </ItemGroup>
+  <ItemGroup>
+    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -359,6 +431,6 @@
     </CreateProperty>
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>$(MSBuildBinPath)\Msbuild $(ProjectDir)\PostBuild_dist.proj /p:SolutionDir=$(SolutionDir);SolutionName=$(SolutionName);TargetPlatform=$(TargetPlatform);Configuration=$(ConfigurationName);ProjectName=$(ProjectName);ProjectDir=$(ProjectDir);OutDir=$(OutDir);StrongNameKeyFile=$(AssemblyOriginatorKeyFile);DistributionDir=$(DistributionDir);DistributionBuild=$(DistributionBuild)</PostBuildEvent>
+    <PostBuildEvent>"$(MSBuildBinPath)\Msbuild" $(ProjectDir)\PostBuild_dist.proj /p:SolutionDir=$(SolutionDir);SolutionName=$(SolutionName);TargetPlatform=$(TargetPlatform);Configuration=$(ConfigurationName);ProjectName=$(ProjectName);ProjectDir=$(ProjectDir);OutDir=$(OutDir);StrongNameKeyFile=$(AssemblyOriginatorKeyFile);DistributionDir=$(DistributionDir);DistributionBuild=$(DistributionBuild)</PostBuildEvent>
   </PropertyGroup>
 </Project>

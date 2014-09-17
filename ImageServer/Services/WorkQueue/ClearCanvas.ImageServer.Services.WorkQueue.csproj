@@ -94,6 +94,8 @@
     <Compile Include="ReconcileStudyPostProcessing\ReconcilePostProcessingProcessorFactoryExtension.cs" />
     <Compile Include="ReconcileStudy\ReconcileStudyFactoryExtension.cs" />
     <Compile Include="RecoveryModes.cs" />
+    <Compile Include="StudyAutoRoute\StudyAutoRouteFactoryExtension.cs" />
+    <Compile Include="StudyAutoRoute\StudyAutoRouteItemProcessor.cs" />
     <Compile Include="StudyIntegrityValidationAttribute.cs" />
     <Compile Include="WebDeleteStudy\DeleteSeriesFromDBCommand.cs" />
     <Compile Include="WebDeleteStudy\Extensions\LogHistory\LogHistoryExtension.cs" />

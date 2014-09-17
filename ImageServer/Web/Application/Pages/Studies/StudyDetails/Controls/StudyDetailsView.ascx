@@ -25,8 +25,6 @@
 <%@ Control Language="C#" AutoEventWireup="true" CodeBehind="StudyDetailsView.ascx.cs" Inherits="ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Controls.StudyDetailsView" %>
 
 <div class="GridViewBorder">
-	<asp:TableRow VerticalAlign="top">
-		<asp:TableCell VerticalAlign="top">
 <asp:DetailsView ID="StudyDetailView" runat="server" AutoGenerateRows="False" GridLines="Horizontal" CellPadding="4" 
      CssClass="GlobalGridView" Width="100%">
     <Fields>
@@ -91,6 +89,4 @@
     <AlternatingRowStyle CssClass="GlobalGridViewAlternatingRow" />
     
 </asp:DetailsView>
-                    		</asp:TableCell>
-	</asp:TableRow>
 </div>

@@ -59,6 +59,7 @@ namespace ClearCanvas.Ris.Client.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CancelOrderComponentControl));
 			this._cancelButton = new System.Windows.Forms.Button();
 			this._okButton = new System.Windows.Forms.Button();
 			this._cancelReason = new ClearCanvas.Desktop.View.WinForms.ComboBoxField();
@@ -69,23 +70,15 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			// 
 			// _cancelButton
 			// 
-			this._cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this._cancelButton.Location = new System.Drawing.Point(319, 280);
+			resources.ApplyResources(this._cancelButton, "_cancelButton");
 			this._cancelButton.Name = "_cancelButton";
-			this._cancelButton.Size = new System.Drawing.Size(75, 23);
-			this._cancelButton.TabIndex = 5;
-			this._cancelButton.Text = "Cancel";
 			this._cancelButton.UseVisualStyleBackColor = true;
 			this._cancelButton.Click += new System.EventHandler(this._cancelButton_Click);
 			// 
 			// _okButton
 			// 
-			this._okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this._okButton.Location = new System.Drawing.Point(238, 280);
+			resources.ApplyResources(this._okButton, "_okButton");
 			this._okButton.Name = "_okButton";
-			this._okButton.Size = new System.Drawing.Size(75, 23);
-			this._okButton.TabIndex = 4;
-			this._okButton.Text = "Confirm";
 			this._okButton.UseVisualStyleBackColor = true;
 			this._okButton.Click += new System.EventHandler(this._okButton_Click);
 			// 
@@ -94,48 +87,31 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			this._cancelReason.DataSource = null;
 			this._cancelReason.DisplayMember = "";
 			this._cancelReason.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this._cancelReason.LabelText = "Cancel Reason";
-			this._cancelReason.Location = new System.Drawing.Point(6, 223);
-			this._cancelReason.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._cancelReason, "_cancelReason");
 			this._cancelReason.Name = "_cancelReason";
-			this._cancelReason.Size = new System.Drawing.Size(386, 41);
-			this._cancelReason.TabIndex = 3;
 			this._cancelReason.Value = null;
 			// 
 			// _proceduresTableView
 			// 
-			this._proceduresTableView.ColumnHeaderTooltip = null;
-			this._proceduresTableView.FilterTextBoxWidth = 132;
-			this._proceduresTableView.Location = new System.Drawing.Point(6, 31);
-			this._proceduresTableView.Margin = new System.Windows.Forms.Padding(0);
+			resources.ApplyResources(this._proceduresTableView, "_proceduresTableView");
 			this._proceduresTableView.Name = "_proceduresTableView";
+			this._proceduresTableView.ReadOnly = false;
 			this._proceduresTableView.ShowToolbar = false;
-			this._proceduresTableView.Size = new System.Drawing.Size(386, 147);
-			this._proceduresTableView.SortButtonTooltip = null;
-			this._proceduresTableView.TabIndex = 1;
 			// 
 			// label1
 			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(5, 9);
+			resources.ApplyResources(this.label1, "label1");
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(281, 13);
-			this.label1.TabIndex = 0;
-			this.label1.Text = "Canceling this order will cancel all procedures (listed here):";
 			// 
 			// label2
 			// 
-			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(5, 186);
+			resources.ApplyResources(this.label2, "label2");
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(290, 13);
-			this.label2.TabIndex = 2;
-			this.label2.Text = "(To cancel individual procedures, use Modify Order instead.)";
 			// 
 			// CancelOrderComponentControl
 			// 
 			this.AcceptButton = this._okButton;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this._cancelButton;
 			this.Controls.Add(this.label2);
@@ -145,7 +121,6 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			this.Controls.Add(this._cancelReason);
 			this.Controls.Add(this._okButton);
 			this.Name = "CancelOrderComponentControl";
-			this.Size = new System.Drawing.Size(401, 314);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

@@ -134,7 +134,7 @@ namespace ClearCanvas.Enterprise.Desktop
 			{
 				if (toggleActivation)
 				{
-					this.AddAction(ToggleActivationKey, "Toggle Activation", "Icons.ToggleActivationSmall.png");
+					this.AddAction(ToggleActivationKey, SR.LabelToggleActivation, "Icons.ToggleActivationSmall.png");
 				}
 			}
 
@@ -218,7 +218,7 @@ namespace ClearCanvas.Enterprise.Desktop
 			// add the "Active" column if needed
 			if (SupportsDeactivation && IncludeDeactivatedItems)
 			{
-				_summaryTable.Columns.Add(new TableColumn<TSummary, bool>("Active", item => !GetItemDeactivated(item), 0.15f));
+				_summaryTable.Columns.Add(new TableColumn<TSummary, bool>(SR.ColumnActive, item => !GetItemDeactivated(item), 0.15f));
 			}
 
 			// build the action model

@@ -122,6 +122,7 @@
     <Compile Include="DiskspaceMonitor.cs" />
     <Compile Include="DisposableList.cs" />
     <Compile Include="ExtensionData.cs" />
+    <Compile Include="FastDateTime.cs" />
     <Compile Include="FilteredGroup.cs" />
     <Compile Include="IBlockingEnumerator.cs" />
     <Compile Include="ImageProcessingSettings.cs" />
@@ -200,6 +201,7 @@
     <Compile Include="Tests\DiskspaceTests.cs" />
     <Compile Include="StudyManagement\TimeOrigin.cs" />
     <Compile Include="StudyManagement\TimeUnit.cs" />
+    <Compile Include="Tests\FastDateTimeTests.cs" />
     <Compile Include="Tests\MemoryManagementTests.cs" />
     <Compile Include="Utilities\Imaging\JpegCompressor.cs" />
     <Compile Include="Utilities\Imaging\PngEncoder.cs" />

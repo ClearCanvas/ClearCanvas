@@ -59,6 +59,7 @@ namespace ClearCanvas.Ris.Client.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CannedTextCategoryEditorComponentControl));
 			this._acceptButton = new System.Windows.Forms.Button();
 			this._cancelButton = new System.Windows.Forms.Button();
 			this._category = new ClearCanvas.Desktop.View.WinForms.ComboBoxField();
@@ -66,21 +67,15 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			// 
 			// _acceptButton
 			// 
-			this._acceptButton.Location = new System.Drawing.Point(229, 60);
+			resources.ApplyResources(this._acceptButton, "_acceptButton");
 			this._acceptButton.Name = "_acceptButton";
-			this._acceptButton.Size = new System.Drawing.Size(75, 23);
-			this._acceptButton.TabIndex = 3;
-			this._acceptButton.Text = "OK";
 			this._acceptButton.UseVisualStyleBackColor = true;
 			this._acceptButton.Click += new System.EventHandler(this._acceptButton_Click);
 			// 
 			// _cancelButton
 			// 
-			this._cancelButton.Location = new System.Drawing.Point(310, 60);
+			resources.ApplyResources(this._cancelButton, "_cancelButton");
 			this._cancelButton.Name = "_cancelButton";
-			this._cancelButton.Size = new System.Drawing.Size(75, 23);
-			this._cancelButton.TabIndex = 4;
-			this._cancelButton.Text = "Cancel";
 			this._cancelButton.UseVisualStyleBackColor = true;
 			this._cancelButton.Click += new System.EventHandler(this._cancelButton_Click);
 			// 
@@ -89,23 +84,18 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			this._category.DataSource = null;
 			this._category.DisplayMember = "";
 			this._category.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
-			this._category.LabelText = "Category";
-			this._category.Location = new System.Drawing.Point(8, 8);
-			this._category.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._category, "_category");
 			this._category.Name = "_category";
-			this._category.Size = new System.Drawing.Size(377, 47);
-			this._category.TabIndex = 6;
 			this._category.Value = null;
 			// 
 			// CannedTextCategoryEditorComponentControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this._category);
 			this.Controls.Add(this._acceptButton);
 			this.Controls.Add(this._cancelButton);
 			this.Name = "CannedTextCategoryEditorComponentControl";
-			this.Size = new System.Drawing.Size(414, 93);
 			this.ResumeLayout(false);
 
         }

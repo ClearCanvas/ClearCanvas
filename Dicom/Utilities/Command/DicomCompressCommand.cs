@@ -40,6 +40,7 @@ namespace ClearCanvas.Dicom.Utilities.Command
 		private readonly DicomCodecParameters _parms;
 		private readonly TransferSyntax _syntax;
 		private readonly TimeSpanStatistics _timeSpan = new TimeSpanStatistics("CompressTime");
+		private readonly bool _failOnCodecException;
 
 		public TimeSpanStatistics CompressTime
 		{
@@ -54,12 +55,14 @@ namespace ClearCanvas.Dicom.Utilities.Command
 			_syntax = syntax;
 			_codec = codec;
 			_parms = parms;
+			_failOnCodecException = true;
 		}
 
-		public DicomCompressCommand(DicomMessageBase file, XmlDocument parms)
+		public DicomCompressCommand(DicomMessageBase file, XmlDocument parms, bool failOnCodecException)
 			: base("DICOM Compress Command", true)
 		{
 			_file = file;
+			_failOnCodecException = failOnCodecException;
 
 			XmlElement element = parms.DocumentElement;
 
@@ -102,13 +105,25 @@ namespace ClearCanvas.Dicom.Utilities.Command
 
 			_timeSpan.Start();
 
-			// Check for decompression first
-			if (_file.TransferSyntax.Encapsulated)
-				_file.ChangeTransferSyntax(TransferSyntax.ExplicitVrLittleEndian);
+			try
+			{
+				// Check for decompression first
+				if (_file.TransferSyntax.Encapsulated)
+					_file.ChangeTransferSyntax(TransferSyntax.ExplicitVrLittleEndian);
 
-			_file.ChangeTransferSyntax(_syntax, _codec, _parms);
+				_file.ChangeTransferSyntax(_syntax, _codec, _parms);
+			}
+			catch (Exception x)
+			{
+				if (_failOnCodecException)
+					throw;
 
-			_timeSpan.End();
+				Platform.Log(LogLevel.Warn, "Unexpected exception compressing SOP: {0}", x.Message);
+			}
+			finally
+			{
+				_timeSpan.End();
+			}
 		}
 
 		protected override void OnUndo()

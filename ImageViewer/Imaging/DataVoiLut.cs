@@ -60,6 +60,11 @@ namespace ClearCanvas.ImageViewer.Imaging
 			get { return this[(int) Math.Round(input)]; }
 		}
 
+		void IComposableLut.LookupValues(double[] input, double[] output, int count)
+		{
+			LutFunctions.LookupLut(input, output, count, Data, FirstMappedPixelValue, LastMappedPixelValue);
+		}
+
 		public new IVoiLut Clone()
 		{
 			return (IVoiLut) base.Clone();

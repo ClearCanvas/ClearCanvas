@@ -45,6 +45,7 @@ namespace ClearCanvas.Common
 
 		private static void Dump()
 		{
+// ReSharper disable LocalizableElement
 			var settings = new DecryptedProductSettings();
 			Console.WriteLine(@"Name: {0}", settings.Name);
 			Console.WriteLine(@"Family: {0}", settings.FamilyName);
@@ -57,6 +58,7 @@ namespace ClearCanvas.Common
 			Console.WriteLine(@"Release: {0}", settings.Release);
 			Console.WriteLine(@"Copyright:\n{0}", settings.Copyright);
 			Console.WriteLine(@"\nLicense:\n{0}", settings.License);
+// ReSharper restore LocalizableElement
 		}
 
 		#endregion

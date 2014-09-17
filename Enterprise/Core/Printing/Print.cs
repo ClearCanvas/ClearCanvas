@@ -46,7 +46,7 @@ namespace ClearCanvas.Enterprise.Core.Printing
 		class HttpServer
 		{
 			private readonly Dictionary<Guid, Page> _runningJobs = new Dictionary<Guid, Page>();
-			private readonly HttpListener _httpListener;
+			private HttpListener _httpListener;
 			private string _host;
 			private Thread _listenerThread;
 
@@ -75,7 +75,7 @@ namespace ClearCanvas.Enterprise.Core.Printing
 					_listenerThread.Start();
 					return;
 				}
-				throw new PrintException(string.Format("Unable to start HTTP print server on any port in range {0}.", portRange));
+				throw new PrintException(string.Format("Unable to start HTTP print server on any port in range {0}.", settings.HttpProxyServerPortRange));
 			}
 
 			public void Stop()
@@ -217,6 +217,14 @@ namespace ClearCanvas.Enterprise.Core.Printing
 				catch (HttpListenerException)
 				{
 					host = null;
+					// The existing HttpListener is actually disposed internally and no longer usable, create a new one instead
+					_httpListener = new HttpListener();
+					return false;
+				}
+				catch (ObjectDisposedException)
+				{
+					host = null;
+					_httpListener = new HttpListener();
 					return false;
 				}
 			}

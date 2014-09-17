@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using ClearCanvas.Common;
 using ClearCanvas.Common.Audit;
 using ClearCanvas.Common.Serialization;
 using ClearCanvas.Enterprise.Common;
@@ -37,6 +38,7 @@ namespace ClearCanvas.Enterprise.Common.Audit
 	{
 		public WriteEntryRequest(AuditEntryInfo logEntry)
 		{
+            Platform.CheckForNullReference(logEntry, "logEntry");
 			LogEntry = logEntry;
 		}
 

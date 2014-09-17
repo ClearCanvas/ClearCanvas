@@ -23,6 +23,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace ClearCanvas.Desktop
 {
@@ -36,7 +37,7 @@ namespace ClearCanvas.Desktop
 		/// </summary>
 		/// <param name="filter"></param>
 		/// <param name="description"></param>
-		public FileExtensionFilter(string filter, string description)
+		public FileExtensionFilter(string filter, [param : Localizable(true)] string description)
 		{
 			Filter = filter;
 			Description = description;
@@ -50,9 +51,9 @@ namespace ClearCanvas.Desktop
 		/// <summary>
 		/// Gets or sets the value displayed for the filter, e.g. Text files (*.txt).
 		/// </summary>
+		[Localizable(true)]
 		public string Description { get; set; }
 	}
-
 
 	/// <summary>
 	/// Holds parameters that initialize the display of a common file dialog.
@@ -73,7 +74,7 @@ namespace ClearCanvas.Desktop
 			Directory = directory;
 			FileName = filename;
 			FileExtension = fileExtension;
-			PreventSaveToInstallPath = true;	// default to true, since this is good policy in the majority of use cases
+			PreventSaveToInstallPath = true; // default to true, since this is good policy in the majority of use cases
 			_filters = new List<FileExtensionFilter>(filters);
 		}
 
@@ -82,19 +83,13 @@ namespace ClearCanvas.Desktop
 		/// </summary>
 		/// <param name="filename"></param>
 		public FileDialogCreationArgs(string filename)
-			: this(filename, null, null, new FileExtensionFilter[] { })
-		{
-
-		}
+			: this(filename, null, null, new FileExtensionFilter[] {}) {}
 
 		/// <summary>
 		/// Constructor
 		/// </summary>
 		public FileDialogCreationArgs()
-			: this(null, null, null, new FileExtensionFilter[] { })
-		{
-			
-		}
+			: this(null, null, null, new FileExtensionFilter[] {}) {}
 
 		/// <summary>
 		/// Gets or sets the default extension to append to the filename, if not specified by user.
@@ -114,6 +109,7 @@ namespace ClearCanvas.Desktop
 		/// <summary>
 		/// Gets or sets the title of the file dialog.
 		/// </summary>
+		[Localizable(true)]
 		public string Title { get; set; }
 
 		/// <summary>

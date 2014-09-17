@@ -34,214 +34,216 @@ using ClearCanvas.ImageViewer.StudyManagement.Core.Storage;
 
 namespace ClearCanvas.ImageViewer.StudyManagement.Core
 {
-    /// <summary>
-    /// Utility for processing files within a study.
-    /// </summary>
-    public class ProcessStudyUtility
-    {           
-        #region Subclass
-        /// <summary>
-        /// Represents a file to be processed by <see cref="ProcessStudyUtility"/>
-        /// </summary>
-        public class ProcessorFile : IDisposable
-        {
-            public ProcessorFile(DicomFile file, WorkItemUid uid)
-            {
-                File = file;
-                ItemUid = uid;
-            }
+	/// <summary>
+	/// Utility for processing files within a study.
+	/// </summary>
+	public class ProcessStudyUtility
+	{
+		#region Subclass
 
-            public ProcessorFile(string path, WorkItemUid uid)
-            {
-                FilePath = path;
-                ItemUid = uid;
-            }
+		/// <summary>
+		/// Represents a file to be processed by <see cref="ProcessStudyUtility"/>
+		/// </summary>
+		public class ProcessorFile : IDisposable
+		{
+			public ProcessorFile(DicomFile file, WorkItemUid uid)
+			{
+				File = file;
+				ItemUid = uid;
+			}
 
-            /// <summary>
-            /// Path to the <see cref="DicomFile"/> to process.  Can be used instead of <see cref="File"/>.
-            /// </summary>
-            public string FilePath { get; set; }
+			public ProcessorFile(string path, WorkItemUid uid)
+			{
+				FilePath = path;
+				ItemUid = uid;
+			}
 
-            /// <summary>
-            /// The DICOM File to process.  Can be used instead of <see cref="FilePath"/>.
-            /// </summary>
-            public DicomFile File { get; set; }
+			/// <summary>
+			/// Path to the <see cref="DicomFile"/> to process.  Can be used instead of <see cref="File"/>.
+			/// </summary>
+			public string FilePath { get; set; }
 
-            /// <summary>
-            /// An optional <see cref="WorkItemUid"/> associated with the file to be processed.  Will be updated appropriately.
-            /// </summary>
-            public WorkItemUid ItemUid { get; set; }
+			/// <summary>
+			/// The DICOM File to process.  Can be used instead of <see cref="FilePath"/>.
+			/// </summary>
+			public DicomFile File { get; set; }
 
-            public void Dispose()
-            {
-                File = null;
-                ItemUid = null;
-            }
-        }
-        #endregion
+			/// <summary>
+			/// An optional <see cref="WorkItemUid"/> associated with the file to be processed.  Will be updated appropriately.
+			/// </summary>
+			public WorkItemUid ItemUid { get; set; }
 
-        #region Public Properties
-        
-        /// <summary>
-        /// The <see cref="StudyLocation"/> for the study being processed.
-        /// </summary>
-        public StudyLocation StudyLocation { get; private set; }
+			public void Dispose()
+			{
+				File = null;
+				ItemUid = null;
+			}
+		}
 
-        public bool IsReprocess { get; set; }
+		#endregion
 
-        #endregion
+		#region Public Properties
 
-        #region Constructors
+		/// <summary>
+		/// The <see cref="StudyLocation"/> for the study being processed.
+		/// </summary>
+		public StudyLocation StudyLocation { get; private set; }
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// Note that all SOP Instances processed must be from the same study.
-        /// </para>
-        /// </remarks>
-        /// <param name="location">The StudyLocation for the study being processed</param>
-        public ProcessStudyUtility(StudyLocation location)
-        {
-            Platform.CheckForNullReference(location, "location");
-            StudyLocation = location;
-        }
+		public bool IsReprocess { get; set; }
 
-        #endregion
+		#endregion
 
-        #region Public Methods
+		#region Constructors
 
-        /// <summary>
-        /// Process a specific DICOM file which may be related to a <see cref="WorkItem"/> request.
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// On success and if <see cref="uid"/> is set, the <see cref="WorkItemUid"/> field is marked as complete.  If processing fails, 
-        /// the FailureCount field is incremented for the <see cref="WorkItemUid"/>.
-        /// </para>
-        /// </remarks>
-        /// <param name="studyXml">The <see cref="StudyXml"/> file to update with information from the file.</param>
-        /// <param name="file">The file to process.</param>
-        /// <param name="uid">An optional WorkQueueUid associated with the entry, that will be deleted upon success or failed on failure.</param>
-        /// <exception cref="ApplicationException"/>
-        /// <exception cref="DicomDataException"/>
-        public void ProcessFile(DicomFile file, StudyXml studyXml, WorkItemUid uid)
-        {
-            Platform.CheckForNullReference(file, "file");
-            Platform.CheckForNullReference(studyXml, "studyXml");
-            var processFile = new ProcessorFile(file, uid);
-            InsertBatch(new List<ProcessorFile> {processFile}, studyXml);
-        }
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Note that all SOP Instances processed must be from the same study.
+		/// </para>
+		/// </remarks>
+		/// <param name="location">The StudyLocation for the study being processed</param>
+		public ProcessStudyUtility(StudyLocation location)
+		{
+			Platform.CheckForNullReference(location, "location");
+			StudyLocation = location;
+		}
 
-        /// <summary>
-        /// Process a batch of DICOM Files related to a specific Study.  Updates for all the files will be processed together.
-        /// </summary>
-        /// <param name="list">The list of files to batch together.</param>
-        /// <param name="studyXml">The <see cref="StudyXml"/> file to update with information from the file.</param>
-        public void ProcessBatch(IList<ProcessorFile> list, StudyXml studyXml)
-        {
-            Platform.CheckTrue(list.Count > 0,"list");
-            Platform.CheckForNullReference(studyXml, "studyXml");
-            InsertBatch(list, studyXml);
-        }
+		#endregion
 
-        #endregion
+		#region Public Methods
 
-        #region Private Methods
+		/// <summary>
+		/// Process a specific DICOM file which may be related to a <see cref="WorkItem"/> request.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// On success and if <see cref="uid"/> is set, the <see cref="WorkItemUid"/> field is marked as complete.  If processing fails, 
+		/// the FailureCount field is incremented for the <see cref="WorkItemUid"/>.
+		/// </para>
+		/// </remarks>
+		/// <param name="studyXml">The <see cref="StudyXml"/> file to update with information from the file.</param>
+		/// <param name="file">The file to process.</param>
+		/// <param name="uid">An optional WorkQueueUid associated with the entry, that will be deleted upon success or failed on failure.</param>
+		/// <exception cref="ApplicationException"/>
+		/// <exception cref="DicomDataException"/>
+		public void ProcessFile(DicomFile file, StudyXml studyXml, WorkItemUid uid)
+		{
+			Platform.CheckForNullReference(file, "file");
+			Platform.CheckForNullReference(studyXml, "studyXml");
+			var processFile = new ProcessorFile(file, uid);
+			InsertBatch(new List<ProcessorFile> {processFile}, studyXml);
+		}
 
-        private void InsertBatch(IList<ProcessorFile> list, StudyXml studyXml)
-        {
-            using (var processor = new ViewerCommandProcessor("Processing WorkItem DICOM file(s)"))
-            {
-                try
-                {
-                    // Create an AggregrateCommand where we batch together all the database updates
-                    // and execute them together as the last command.
-                    var batchDatabaseCommand = new AggregateCommand();
+		/// <summary>
+		/// Process a batch of DICOM Files related to a specific Study.  Updates for all the files will be processed together.
+		/// </summary>
+		/// <param name="list">The list of files to batch together.</param>
+		/// <param name="studyXml">The <see cref="StudyXml"/> file to update with information from the file.</param>
+		public void ProcessBatch(IList<ProcessorFile> list, StudyXml studyXml)
+		{
+			Platform.CheckTrue(list.Count > 0, "list");
+			Platform.CheckForNullReference(studyXml, "studyXml");
+			InsertBatch(list, studyXml);
+		}
 
-                    foreach (var file in list)
-                    {
-                        if(!string.IsNullOrEmpty(file.FilePath) && file.File == null)
-                        {
-                            try
-                            {
-                                file.File = new DicomFile(file.FilePath);
+		#endregion
 
-                                // WARNING:  If we ever do anything where we update files and save them,
-                                // we may have to change this.
-                                file.File.Load(DicomReadOptions.StorePixelDataReferences | DicomReadOptions.Default);
-                            }
-                            catch (FileNotFoundException)
-                            {
-                                Platform.Log(LogLevel.Warn, "File to be processed is not found, ignoring: {0}",
-                                             file.FilePath);
+		#region Private Methods
 
-                                if (file.ItemUid != null)
-                                    batchDatabaseCommand.AddSubCommand(new CompleteWorkItemUidCommand(file.ItemUid));
+		private void InsertBatch(IList<ProcessorFile> list, StudyXml studyXml)
+		{
+			using (var processor = new ViewerCommandProcessor("Processing WorkItem DICOM file(s)"))
+			{
+				try
+				{
+					// Create an AggregrateCommand where we batch together all the database updates
+					// and execute them together as the last command.
+					var batchDatabaseCommand = new AggregateCommand();
 
-                                continue;
-                            }
-                        }
-                        else
-                        {
-                            file.FilePath = file.File.Filename;
-                        }
-                        
-                        String seriesUid = file.File.DataSet[DicomTags.SeriesInstanceUid].GetString(0, String.Empty);
-                        String sopUid = file.File.DataSet[DicomTags.SopInstanceUid].GetString(0, String.Empty);
+					foreach (var file in list)
+					{
+						if (!string.IsNullOrEmpty(file.FilePath) && file.File == null)
+						{
+							try
+							{
+								file.File = new DicomFile(file.FilePath);
 
-                        String finalDest = StudyLocation.GetSopInstancePath(seriesUid, sopUid);
+								// WARNING:  If we ever do anything where we update files and save them,
+								// we may have to change this.
+								file.File.Load(DicomReadOptions.StorePixelDataReferences | DicomReadOptions.Default);
+							}
+							catch (FileNotFoundException)
+							{
+								Platform.Log(LogLevel.Warn, "File to be processed is not found, ignoring: {0}",
+								             file.FilePath);
 
-                        if (file.FilePath != finalDest)
-                        {
-                            processor.AddCommand(new RenameFileCommand(file.FilePath, finalDest, false));
-                        }
+								if (file.ItemUid != null)
+									batchDatabaseCommand.AddSubCommand(new CompleteWorkItemUidCommand(file.ItemUid));
 
-                        // Update the StudyStream object
-                        var insertStudyXmlCommand = new InsertStudyXmlCommand(file.File, studyXml, StudyLocation, false);
-                        processor.AddCommand(insertStudyXmlCommand);
+								continue;
+							}
+						}
+						else
+						{
+							file.FilePath = file.File.Filename;
+						}
 
-                        if (file.ItemUid != null)
-                            batchDatabaseCommand.AddSubCommand(new CompleteWorkItemUidCommand(file.ItemUid));
-                    }
+						String seriesUid = file.File.DataSet[DicomTags.SeriesInstanceUid].GetString(0, String.Empty);
+						String sopUid = file.File.DataSet[DicomTags.SopInstanceUid].GetString(0, String.Empty);
 
-                    // Now save the batched updates to the StudyXml file.
-                    processor.AddCommand(new SaveStudyXmlCommand(studyXml, StudyLocation));
+						String finalDest = StudyLocation.GetSopInstancePath(seriesUid, sopUid);
 
-                    // Update the Study table, based on the studyXml
-                    var updateReason = IsReprocess ? InsertOrUpdateStudyCommand.UpdateReason.Reprocessing
-                                             : InsertOrUpdateStudyCommand.UpdateReason.LiveImport;
+						if (file.FilePath != finalDest)
+						{
+							processor.AddCommand(CommandFactory.CreateRenameFileCommand(file.FilePath, finalDest, false));
+						}
 
-                    batchDatabaseCommand.AddSubCommand(new InsertOrUpdateStudyCommand(StudyLocation, studyXml, updateReason));
+						// Update the StudyStream object
+						var insertStudyXmlCommand = new InsertStudyXmlCommand(file.File, studyXml, StudyLocation, false);
+						processor.AddCommand(insertStudyXmlCommand);
 
-                    // Now, add all the batched database updates
-                    processor.AddCommand(batchDatabaseCommand);
+						if (file.ItemUid != null)
+							batchDatabaseCommand.AddSubCommand(new CompleteWorkItemUidCommand(file.ItemUid));
+					}
 
-                    // Do the actual processing
-                    if (!processor.Execute())
-                    {
-                        Platform.Log(LogLevel.Error, "Failure processing {0} for Study: {1}",
-                                     processor.Description, StudyLocation.Study.StudyInstanceUid);
-                        throw new ApplicationException(
-                            "Unexpected failure (" + processor.FailureReason + ") executing command for Study: " +
-                            StudyLocation.Study.StudyInstanceUid, processor.FailureException);
-                    }
+					// Now save the batched updates to the StudyXml file.
+					processor.AddCommand(new SaveStudyXmlCommand(studyXml, StudyLocation));
 
-                    StudyLocation.Study = processor.ViewerContext.ContextStudy;
+					// Update the Study table, based on the studyXml
+					var updateReason = IsReprocess ? InsertOrUpdateStudyCommand.UpdateReason.Reprocessing
+						: InsertOrUpdateStudyCommand.UpdateReason.LiveImport;
 
-                    Platform.Log(LogLevel.Info, "Processed {0} SOPs for Study {1}", list.Count,StudyLocation.Study.StudyInstanceUid );
+					batchDatabaseCommand.AddSubCommand(new InsertOrUpdateStudyCommand(StudyLocation, studyXml, updateReason));
 
-                }
-                catch (Exception e)
-                {
-                    Platform.Log(LogLevel.Error, e, "Unexpected exception when {0}.  Rolling back operation.",
-                                 processor.Description);
-                    processor.Rollback();
-                    throw new ApplicationException("Unexpected exception when processing file.", e);
-                }
-            }
-        }
-        #endregion
-    }
+					// Now, add all the batched database updates
+					processor.AddCommand(batchDatabaseCommand);
+
+					// Do the actual processing
+					if (!processor.Execute())
+					{
+						Platform.Log(LogLevel.Error, "Failure processing {0} for Study: {1}",
+						             processor.Description, StudyLocation.Study.StudyInstanceUid);
+						throw new ApplicationException(
+							"Unexpected failure (" + processor.FailureReason + ") executing command for Study: " +
+							StudyLocation.Study.StudyInstanceUid, processor.FailureException);
+					}
+
+					StudyLocation.Study = processor.ViewerContext.ContextStudy;
+
+					Platform.Log(LogLevel.Info, "Processed {0} SOPs for Study {1}", list.Count, StudyLocation.Study.StudyInstanceUid);
+				}
+				catch (Exception e)
+				{
+					Platform.Log(LogLevel.Error, e, "Unexpected exception when {0}.  Rolling back operation.",
+					             processor.Description);
+					processor.Rollback();
+					throw new ApplicationException("Unexpected exception when processing file.", e);
+				}
+			}
+		}
+
+		#endregion
+	}
 }

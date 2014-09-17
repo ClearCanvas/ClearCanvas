@@ -37,7 +37,7 @@ using ClearCanvas.Ris.Application.Common.Admin.LocationAdmin;
 
 namespace ClearCanvas.Ris.Client.Admin
 {
-    [MenuAction("launch", "global-menus/Admin/Locations", "Launch")]
+    [MenuAction("launch", "global-menus/MenuAdmin/MenuLocations", "Launch")]
     [VisibleStateObserver("launch", "Visible")]
 	[ActionPermission("launch", ClearCanvas.Ris.Application.Common.AuthorityTokens.Admin.Data.Location)]
 	[ExtensionOf(typeof(DesktopToolExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]
@@ -227,7 +227,7 @@ namespace ClearCanvas.Ris.Client.Admin
 
 			LocationEditorComponent editor = new LocationEditorComponent(item.LocationRef);
 			ApplicationComponentExitCode exitCode = ApplicationComponent.LaunchAsDialog(
-				this.Host.DesktopWindow, editor, SR.TitleUpdateLocation + " - " + "("+item.Id+") " +item.Name);
+				this.Host.DesktopWindow, editor, string.Format(SR.FormatTitleCodeSubtitle, SR.TitleUpdateLocation, item.Id, item.Name));
 			if (exitCode == ApplicationComponentExitCode.Accepted)
 			{
 				editedItems.Add(editor.LocationSummary);

@@ -31,7 +31,7 @@ using ClearCanvas.Ris.Application.Common;
 
 namespace ClearCanvas.Ris.Client.Admin
 {
-	[MenuAction("launch", "global-menus/Admin/Work Queue", "Launch")]
+	[MenuAction("launch", "global-menus/MenuAdmin/MenuWorkQueue", "Launch")]
 	[ActionPermission("launch", ClearCanvas.Ris.Application.Common.AuthorityTokens.Management.WorkQueue)]
 	[ExtensionOf(typeof(DesktopToolExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]
 	class WorkQueueSummaryTool : Tool<IDesktopToolContext>

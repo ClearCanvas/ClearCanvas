@@ -147,14 +147,19 @@ namespace ClearCanvas.ImageServer.Services.Streaming.ImageStreaming
 
         private static void HandleRequest(HttpListenerContext context)
         {
-            WADORequestProcessorStatistics statistics = new WADORequestProcessorStatistics("Image Streaming");
-            statistics.TotalProcessTime.Start();
-        	
-			if (Platform.IsLogLevelEnabled(LogLevel.Debug))
-			{
-				//Don't hold up this thread for logging.
-				Task.Factory.StartNew(() => LogRequest(context));
-			}
+            WADORequestProcessorStatistics statistics;
+
+            if (Platform.IsLogLevelEnabled(LogLevel.Debug))
+            {
+                statistics = new WADORequestProcessorStatistics("Image Streaming");
+                statistics.TotalProcessTime.Start();
+                //Don't hold up this thread for logging.
+                Task.Factory.StartNew(() => LogRequest(context));
+            }
+            else
+            {
+                statistics = null;
+            }
             
 			try
             {
@@ -173,13 +178,16 @@ namespace ClearCanvas.ImageServer.Services.Streaming.ImageStreaming
                     {
                         if (response != null)
                         {
-                            statistics.TransmissionSpeed.Start();
+                            if (statistics != null)
+                                statistics.TransmissionSpeed.Start();
+                            
                             SendWADOResponse(response, context);
-                            statistics.TransmissionSpeed.End();
-                            if (response.Output != null)
-                            {
+                            
+                            if (statistics != null)
+                                statistics.TransmissionSpeed.End();
+
+                            if (statistics != null && response.Output != null)
                                 statistics.TransmissionSpeed.SetData(response.Output.Length);
-                            }
                         }
                     }
 
@@ -190,7 +198,8 @@ namespace ClearCanvas.ImageServer.Services.Streaming.ImageStreaming
                 SendError(error.HttpError, context);
             }
 
-            statistics.TotalProcessTime.End();
+            if (statistics != null)
+                statistics.TotalProcessTime.End();
 
 			//Seems like something you'd only want to log if there was a problem.
 			if (Platform.IsLogLevelEnabled(LogLevel.Debug))

@@ -33,8 +33,8 @@ namespace ClearCanvas.ImageViewer
 	/// <summary>
 	/// Defines an image viewer.
 	/// </summary>
-    public interface IImageViewer : IDisposable
-    {
+	public interface IImageViewer : IDisposable
+	{
 		/// <summary>
 		/// Get the host <see cref="IDesktopWindow"/>.
 		/// </summary>
@@ -46,56 +46,59 @@ namespace ClearCanvas.ImageViewer
 		StudyTree StudyTree { get; }
 
 		/// <summary> 
- 		/// Gets the <see cref="ILayoutManager"/> associated with this image viewer. 
- 		/// </summary> 
- 		ILayoutManager LayoutManager { get; } 
+		/// Gets the <see cref="ILayoutManager"/> associated with this image viewer. 
+		/// </summary> 
+		ILayoutManager LayoutManager { get; }
 
-        /// <summary>
-        /// Gets the <see cref="PhysicalWorkspace"/>.
-        /// </summary>
-        IPhysicalWorkspace PhysicalWorkspace { get; }
+		/// <summary>
+		/// Gets the <see cref="PhysicalWorkspace"/>.
+		/// </summary>
+		IPhysicalWorkspace PhysicalWorkspace { get; }
 
-        /// <summary>
-        /// Gets the <see cref="LogicalWorkspace"/>.
-        /// </summary>
-        ILogicalWorkspace LogicalWorkspace { get; }
+		/// <summary>
+		/// Gets the <see cref="LogicalWorkspace"/>.
+		/// </summary>
+		ILogicalWorkspace LogicalWorkspace { get; }
 
-        /// <summary>
-        /// Gets the <see cref="EventBroker"/>.
-        /// </summary>
-        EventBroker EventBroker { get; }
+		/// <summary>
+		/// Gets the <see cref="EventBroker"/>.
+		/// </summary>
+		EventBroker EventBroker { get; }
 
+		/// <summary>
+		/// Occurs when the <see cref="IImageViewer"/> is in the process of closing.
+		/// </summary>
+		/// <remarks>
+		/// This event is separate and distinct from <see cref="IImageViewerToolContext.ViewerClosing"/> which is fired before the viewer
+		/// closes and provides a mechanism for viewer tools to abort closing the viewer.
+		/// </remarks>
+		event EventHandler Closing;
 
-        /// <summary>
-        /// Occurs when the <see cref="IImageViewer"/> is about to close.
-        /// </summary>
-        event EventHandler Closing;
-
-        /// <summary>
-        /// Gets the currently selected <see cref="IImageBox"/>
-        /// </summary>
-        /// <value>The currently selected <see cref="IImageBox"/>, or <b>null</b> if
+		/// <summary>
+		/// Gets the currently selected <see cref="IImageBox"/>
+		/// </summary>
+		/// <value>The currently selected <see cref="IImageBox"/>, or <b>null</b> if
 		/// no <see cref="IImageBox"/> is currently selected.</value>
-        IImageBox SelectedImageBox { get; }
+		IImageBox SelectedImageBox { get; }
 
-        /// <summary>
-        /// Gets the currently selected <see cref="ITile"/>
-        /// </summary>
+		/// <summary>
+		/// Gets the currently selected <see cref="ITile"/>
+		/// </summary>
 		/// <value>The currently selected <see cref="ITile"/>, or <b>null</b> if
 		/// no <see cref="ITile"/> is currently selected.</value>
 		ITile SelectedTile { get; }
 
-        /// <summary>
-        /// Gets the currently selected <see cref="IPresentationImage"/>
-        /// </summary>
+		/// <summary>
+		/// Gets the currently selected <see cref="IPresentationImage"/>
+		/// </summary>
 		/// <value>The currently selected <see cref="IPresentationImage"/>, or <b>null</b> if
 		/// no <see cref="IPresentationImage"/> is currently selected.</value>
 		IPresentationImage SelectedPresentationImage { get; }
 
-        /// <summary>
-        /// Gets the <see cref="CommandHistory"/> for this image viewer.
-        /// </summary>
-        CommandHistory CommandHistory { get; }
+		/// <summary>
+		/// Gets the <see cref="CommandHistory"/> for this image viewer.
+		/// </summary>
+		CommandHistory CommandHistory { get; }
 
 		/// <summary>
 		/// Gets a string containing the patients currently loaded in this
@@ -137,9 +140,9 @@ namespace ClearCanvas.ImageViewer
 		/// </summary>
 		IPriorStudyLoader PriorStudyLoader { get; }
 
-        /// <summary>
-        /// A place for extensions to store custom data about the viewer.
-        /// </summary>
+		/// <summary>
+		/// A place for extensions to store custom data about the viewer.
+		/// </summary>
 		ExtensionData ExtensionData { get; }
 
 		/// <summary>
@@ -189,5 +192,5 @@ namespace ClearCanvas.ImageViewer
 		/// the current layout manager.
 		/// </summary>
 		void Layout();
-    }
+	}
 }

@@ -23,9 +23,11 @@
 #endregion
 
 using System;
+using System.Threading;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Shreds;
 using ClearCanvas.ImageServer.Common;
+using ClearCanvas.ImageServer.Core.Helpers;
 using ClearCanvas.ImageServer.Enterprise;
 using ClearCanvas.Server.ShredHost;
 
@@ -35,6 +37,7 @@ namespace ClearCanvas.ImageServer.Services.Common.Shreds
 	/// Plugin to host ImageServer-specific web services.
 	/// </summary>
 	[ExtensionOf(typeof (ShredExtensionPoint))]
+	[ShredIsolation(Level = ShredIsolationLevel.None)]
 	public class RemoteServicesServer : WcfShred
 	{
 
@@ -42,7 +45,7 @@ namespace ClearCanvas.ImageServer.Services.Common.Shreds
 
 		private readonly string _className;
 		private ServiceMount _serviceMount;
-
+		private ShredStartupHelper _shredStartupHelper = null;
 		#endregion
 
 		#region Constructors
@@ -59,7 +62,13 @@ namespace ClearCanvas.ImageServer.Services.Common.Shreds
 		public override void Start()
 		{
 			Platform.Log(LogLevel.Debug, "{0}[{1}]: Start invoked", _className, AppDomain.CurrentDomain.FriendlyName);
-
+			_shredStartupHelper = new ShredStartupHelper(GetDisplayName());
+			
+			_shredStartupHelper.Initialize();
+			if (_shredStartupHelper.StopFlag)
+				return;
+			_shredStartupHelper = null;
+			
 			try
 			{
 				MountWebServices();
@@ -74,8 +83,8 @@ namespace ClearCanvas.ImageServer.Services.Common.Shreds
 		{
 			_serviceMount = new ServiceMount(new Uri(WebServicesSettings.Default.BaseUri), typeof (ServerWsHttpConfiguration).AssemblyQualifiedName)
 			                	{
-			                		MaxReceivedMessageSize = WebServicesSettings.Default.MaxReceivedMessageSize,
-			                		SendTimeoutSeconds = WebServicesSettings.Default.SendTimeoutSeconds
+			                		MaxReceivedMessageSize = EnterpriseImageServerServiceSettings.Default.MaxReceivedMessageSize,
+									SendTimeoutSeconds = EnterpriseImageServerServiceSettings.Default.SendTimeoutSeconds
 			                	};
 
 			_serviceMount.AddServices(new ApplicationServiceExtensionPoint());
@@ -85,6 +94,10 @@ namespace ClearCanvas.ImageServer.Services.Common.Shreds
 		public override void Stop()
 		{
 			Platform.Log(LogLevel.Info, "{0}[{1}]: Stop invoked", _className, AppDomain.CurrentDomain.FriendlyName);
+			
+			if (_shredStartupHelper != null)
+				_shredStartupHelper.StopService();
+
 			if (_serviceMount != null)
 				_serviceMount.CloseServices();
 		}

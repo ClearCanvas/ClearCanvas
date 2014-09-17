@@ -173,24 +173,37 @@ namespace ClearCanvas.ImageViewer
 			}
 			else
 			{
-				IList<IKeyObjectContentItem> content = new KeyImageDeserializer(keyObjectDocument).Deserialize();
-				var evidence = new HierarchicalSopInstanceReferenceDictionary(keyObjectDocument.KeyObjectDocument.CurrentRequestedProcedureEvidenceSequence);
-				foreach (IKeyObjectContentItem item in content)
+				try
 				{
-					try
+					IList<IKeyObjectContentItem> content = new KeyImageDeserializer(keyObjectDocument).Deserialize();
+					var evidence = new HierarchicalSopInstanceReferenceDictionary(keyObjectDocument.KeyObjectDocument.CurrentRequestedProcedureEvidenceSequence);
+					foreach (IKeyObjectContentItem item in content)
 					{
-						if (item is KeyImageContentItem)
-							images.AddRange(CreateImages((KeyImageContentItem) item, evidence));
-						else
-							Platform.Log(LogLevel.Warn, "Unsupported key object content value type");
+						try
+						{
+							var contentItem = item as KeyImageContentItem;
+							if (contentItem != null)
+								images.AddRange(CreateImages(contentItem, evidence));
+							else
+								Platform.Log(LogLevel.Warn, "Unsupported key object content value type");
+						}
+						catch (Exception ex)
+						{
+							// catches KO errors with individual content items, allowing as many items as possible to be created
+							Platform.Log(LogLevel.Warn, ex, SR.MessageKeyObjectDeserializeFailure);
+						}
 					}
-					catch (Exception ex)
-					{
-						Platform.Log(LogLevel.Warn, ex, SR.MessageKeyObjectDeserializeFailure);
-					}
+				}
+				catch (Exception ex)
+				{
+					// catches KO errors with the entire document
+					Platform.Log(LogLevel.Warn, ex, SR.MessageKeyObjectDeserializeFailure);
 				}
 			}
 
+			// return a KO error placeholder, otherwise the sop will be treated later as an unsupported sop class
+			if (images.Count == 0 && keyObjectDocument.DataSource is Sop)
+				images.Add(PlaceholderDisplaySetFactory.CreatePlaceholderImage((Sop) keyObjectDocument.DataSource, SR.MessageKeyObjectDeserializeFailure));
 			return images;
 		}
 

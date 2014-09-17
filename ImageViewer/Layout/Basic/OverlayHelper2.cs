@@ -155,7 +155,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
 			public void ShowSelected(bool draw)
 			{
-				foreach (ImageOverlay overlay in _overlays)
+				foreach (var overlay in _overlays)
 					overlay.ShowIfSelected();
 
 				if (draw)
@@ -164,7 +164,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
 			public void HideUnimportant(bool draw)
 			{
-				foreach (ImageOverlay overlay in _overlays)
+				foreach (var overlay in _overlays)
 				{
 					if (!overlay.IsImportant)
 						overlay.Hide();
@@ -178,7 +178,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
 			public void HideAll(bool draw)
 			{
-				foreach (ImageOverlay overlay in _overlays)
+				foreach (var overlay in _overlays)
 					overlay.Hide();
 
 				if (draw)

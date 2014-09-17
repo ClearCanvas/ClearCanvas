@@ -48,17 +48,18 @@ namespace ClearCanvas.ImageViewer.Common
 
 			try
 			{
-				foreach (T[] buffer in _buffers)
+				for(var i = 0; i < _buffers.Count; ++i)
 				{
+				    var buffer = _buffers[i];
 					if (buffer.Length == length)
 					{
-						_buffers.Remove(buffer);
-						//Trace.WriteLine("BufferCache: allocated from cache", "Memory");
+
+                        //RemoveAt is faster than Remove.
+						_buffers.RemoveAt(i);
 						return buffer;
 					}
 				}
 
-				//Trace.WriteLine("BufferCache: allocated from MemoryManager", "Memory");
 				return MemoryManager.Allocate<T>(length);
 			}
 			finally
@@ -78,7 +79,6 @@ namespace ClearCanvas.ImageViewer.Common
 				if (_buffers.Count >= _maxSize)
 					_buffers.RemoveAt(0);
 
-				//Trace.WriteLine("BufferCache: buffer returned", "Memory");
 				_buffers.Add(buffer);
 			}
 			finally

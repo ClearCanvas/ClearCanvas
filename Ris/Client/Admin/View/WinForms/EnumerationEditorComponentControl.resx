@@ -112,9 +112,204 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="_code.LabelText" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="_code.Location" type="System.Drawing.Point, System.Drawing">
+    <value>22, 17</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="_code.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="_code.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
+    <value />
+  </data>
+  <data name="_code.Size" type="System.Drawing.Size, System.Drawing">
+    <value>262, 41</value>
+  </data>
+  <data name="_code.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="_code.ToolTip" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="&gt;&gt;_code.Name" xml:space="preserve">
+    <value>_code</value>
+  </data>
+  <data name="&gt;&gt;_code.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.TextField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_code.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_code.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="_displayValue.LabelText" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="_displayValue.Location" type="System.Drawing.Point, System.Drawing">
+    <value>22, 80</value>
+  </data>
+  <data name="_displayValue.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_displayValue.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
+    <value />
+  </data>
+  <data name="_displayValue.Size" type="System.Drawing.Size, System.Drawing">
+    <value>262, 41</value>
+  </data>
+  <data name="_displayValue.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="_displayValue.ToolTip" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="&gt;&gt;_displayValue.Name" xml:space="preserve">
+    <value>_displayValue</value>
+  </data>
+  <data name="&gt;&gt;_displayValue.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.TextField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_displayValue.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_displayValue.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="_description.LabelText" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="_description.Location" type="System.Drawing.Point, System.Drawing">
+    <value>22, 145</value>
+  </data>
+  <data name="_description.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_description.Size" type="System.Drawing.Size, System.Drawing">
+    <value>262, 79</value>
+  </data>
+  <data name="_description.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;_description.Name" xml:space="preserve">
+    <value>_description</value>
+  </data>
+  <data name="&gt;&gt;_description.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.TextAreaField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_description.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_description.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="_cancelButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>209, 306</value>
+  </data>
+  <data name="_cancelButton.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_cancelButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="_cancelButton.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="_cancelButton.Text" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="&gt;&gt;_cancelButton.Name" xml:space="preserve">
+    <value>_cancelButton</value>
+  </data>
+  <data name="&gt;&gt;_cancelButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_cancelButton.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_cancelButton.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="_okButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>130, 306</value>
+  </data>
+  <data name="_okButton.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_okButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="_okButton.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="_okButton.Text" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="&gt;&gt;_okButton.Name" xml:space="preserve">
+    <value>_okButton</value>
+  </data>
+  <data name="&gt;&gt;_okButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_okButton.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_okButton.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_insertAfter.LabelText" xml:space="preserve">
+    <value>Position After</value>
+  </data>
+  <data name="_insertAfter.Location" type="System.Drawing.Point, System.Drawing">
+    <value>22, 243</value>
+  </data>
+  <data name="_insertAfter.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_insertAfter.Size" type="System.Drawing.Size, System.Drawing">
+    <value>262, 41</value>
+  </data>
+  <data name="_insertAfter.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;_insertAfter.Name" xml:space="preserve">
+    <value>_insertAfter</value>
+  </data>
+  <data name="&gt;&gt;_insertAfter.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.ComboBoxField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_insertAfter.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_insertAfter.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
+    <value>314, 349</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>EnumerationEditorComponentControl</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.ApplicationComponentUserControl, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
 </root>

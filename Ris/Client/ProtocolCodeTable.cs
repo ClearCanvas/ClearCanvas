@@ -31,7 +31,7 @@ namespace ClearCanvas.Ris.Client
     {
         public ProtocolCodeTable()
         {
-            this.Columns.Add(new TableColumn<ProtocolCodeSummary, string>("Code",
+            this.Columns.Add(new TableColumn<ProtocolCodeSummary, string>(SR.ColumnCode,
 											 delegate(ProtocolCodeSummary detail)
                                                  { return detail.Name; },
                                              0.5f));

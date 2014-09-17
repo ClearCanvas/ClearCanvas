@@ -59,6 +59,7 @@ namespace ClearCanvas.Ris.Client.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BiographyOrderReportsComponentControl));
 			this._reportPreviewPanel = new System.Windows.Forms.Panel();
 			this._reports = new ClearCanvas.Desktop.View.WinForms.ComboBoxField();
 			this._toolstrip = new System.Windows.Forms.ToolStrip();
@@ -66,59 +67,37 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			// 
 			// _reportPreviewPanel
 			// 
-			this._reportPreviewPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+			resources.ApplyResources(this._reportPreviewPanel, "_reportPreviewPanel");
 			this._reportPreviewPanel.BackColor = System.Drawing.SystemColors.ControlDark;
-			this._reportPreviewPanel.Location = new System.Drawing.Point(7, 86);
 			this._reportPreviewPanel.Name = "_reportPreviewPanel";
-			this._reportPreviewPanel.Padding = new System.Windows.Forms.Padding(1);
-			this._reportPreviewPanel.Size = new System.Drawing.Size(334, 405);
-			this._reportPreviewPanel.TabIndex = 1;
 			// 
 			// _reports
 			// 
-			this._reports.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+			resources.ApplyResources(this._reports, "_reports");
 			this._reports.DataSource = null;
 			this._reports.DisplayMember = "";
 			this._reports.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this._reports.LabelText = "Reports";
-			this._reports.Location = new System.Drawing.Point(7, 4);
-			this._reports.Margin = new System.Windows.Forms.Padding(0);
 			this._reports.Name = "_reports";
-			this._reports.Size = new System.Drawing.Size(334, 41);
-			this._reports.TabIndex = 2;
 			this._reports.Value = null;
 			// 
 			// _toolstrip
 			// 
 			this._toolstrip.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
-			this._toolstrip.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this._toolstrip.AutoSize = false;
-			this._toolstrip.Dock = System.Windows.Forms.DockStyle.None;
+			resources.ApplyResources(this._toolstrip, "_toolstrip");
 			this._toolstrip.GripMargin = new System.Windows.Forms.Padding(0);
 			this._toolstrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this._toolstrip.ImageScalingSize = new System.Drawing.Size(24, 24);
-			this._toolstrip.Location = new System.Drawing.Point(7, 51);
 			this._toolstrip.Name = "_toolstrip";
-			this._toolstrip.Size = new System.Drawing.Size(334, 32);
-			this._toolstrip.TabIndex = 3;
-			this._toolstrip.Text = "toolStrip1";
 			// 
 			// BiographyOrderReportsComponentControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.AutoSize = true;
 			this.BackColor = System.Drawing.Color.Transparent;
 			this.Controls.Add(this._toolstrip);
 			this.Controls.Add(this._reports);
 			this.Controls.Add(this._reportPreviewPanel);
 			this.Name = "BiographyOrderReportsComponentControl";
-			this.Padding = new System.Windows.Forms.Padding(4, 2, 2, 7);
-			this.Size = new System.Drawing.Size(346, 501);
 			this.ResumeLayout(false);
 
         }

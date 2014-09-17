@@ -58,12 +58,33 @@
 </style>
 
 <script type="text/javascript">
+
+	window.onload = function() {
+		var lastUpdate = new Date().getTime();
+		var lastKeyPress = false;
+		var checkInterval = setInterval(function() {
+			if (lastKeyPress == true) {
+				var currentTime = new Date().getTime();
+				if (currentTime - lastUpdate > 5000) {
+					keepSessionAlive();
+					lastKeyPress = false;
+					lastUpdate = currentTime;
+				}
+			}
+		}, 2500); // 5 seconds
+
+		$(document).keydown(function() {
+			lastKeyPress = true;
+		});
+	};
+
 	function OnRuleXmlTabActivated() {
 		
 		setTimeout(function() {
 			CodeMirrorEditor.refresh();
 		}, 200);
 	}
+	
 	function HighlightXML() {
 		var textBoxId = "<%= RuleXmlTextBox.ClientID %>";
 		var textbox = document.getElementById(textBoxId);
@@ -74,6 +95,11 @@
 			value: textbox.value
 		});
 		
+	}
+	
+	function keepSessionAlive() {
+		var url = '<%= Page.ResolveClientUrl("~/KeepSessionAlive.aspx") %>';
+	    	$.ajax({ type: 'GET', url: url, async: true });
 	}
 </script>
 

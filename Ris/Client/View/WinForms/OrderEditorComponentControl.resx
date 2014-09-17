@@ -118,31 +118,1039 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="_cancelButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>81, 2</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="_cancelButton.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_cancelButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="_cancelButton.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="_cancelButton.Text" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="&gt;&gt;_cancelButton.Name" xml:space="preserve">
+    <value>_cancelButton</value>
+  </data>
+  <data name="&gt;&gt;_cancelButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_cancelButton.Parent" xml:space="preserve">
+    <value>flowLayoutPanel1</value>
+  </data>
+  <data name="&gt;&gt;_cancelButton.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_acceptButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>2, 2</value>
+  </data>
+  <data name="_acceptButton.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_acceptButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="_acceptButton.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="_acceptButton.Text" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="&gt;&gt;_acceptButton.Name" xml:space="preserve">
+    <value>_acceptButton</value>
+  </data>
+  <data name="&gt;&gt;_acceptButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_acceptButton.Parent" xml:space="preserve">
+    <value>flowLayoutPanel1</value>
+  </data>
+  <data name="&gt;&gt;_acceptButton.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="flowLayoutPanel1.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="flowLayoutPanel1.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="flowLayoutPanel1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>517, 588</value>
+  </data>
+  <data name="flowLayoutPanel1.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
+    <value>Yes</value>
+  </data>
+  <data name="flowLayoutPanel1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>158, 27</value>
+  </data>
+  <data name="flowLayoutPanel1.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanel1.Name" xml:space="preserve">
+    <value>flowLayoutPanel1</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.FlowLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanel1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;flowLayoutPanel1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="tableLayoutPanel3.AutoScroll" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="tableLayoutPanel3.AutoScrollMinSize" type="System.Drawing.Size, System.Drawing">
+    <value>-1, 450</value>
+  </data>
+  <data name="tableLayoutPanel3.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="tableLayoutPanel3.ColumnCount" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="_patient.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_patient.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="_patient.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_patient.LabelText" xml:space="preserve">
+    <value>Patient</value>
+  </data>
+  <data name="_patient.Location" type="System.Drawing.Point, System.Drawing">
+    <value>2, 2</value>
+  </data>
+  <data name="_patient.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_patient.Size" type="System.Drawing.Size, System.Drawing">
+    <value>642, 43</value>
+  </data>
+  <data name="_patient.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;_patient.Name" xml:space="preserve">
+    <value>_patient</value>
+  </data>
+  <data name="&gt;&gt;_patient.Type" xml:space="preserve">
+    <value>ClearCanvas.Ris.Client.View.WinForms.LookupField, ClearCanvas.Ris.Client.View.WinForms, Version=1.0.5246.18702, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_patient.Parent" xml:space="preserve">
+    <value>tableLayoutPanel3</value>
+  </data>
+  <data name="&gt;&gt;_patient.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_orderingPractitionerContactPoint.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_orderingPractitionerContactPoint.LabelText" xml:space="preserve">
+    <value>Ordering Practitioner Contact Point</value>
+  </data>
+  <data name="_orderingPractitionerContactPoint.Location" type="System.Drawing.Point, System.Drawing">
+    <value>2, 188</value>
+  </data>
+  <data name="_orderingPractitionerContactPoint.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_orderingPractitionerContactPoint.Size" type="System.Drawing.Size, System.Drawing">
+    <value>642, 46</value>
+  </data>
+  <data name="_orderingPractitionerContactPoint.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;_orderingPractitionerContactPoint.Name" xml:space="preserve">
+    <value>_orderingPractitionerContactPoint</value>
+  </data>
+  <data name="&gt;&gt;_orderingPractitionerContactPoint.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.ComboBoxField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_orderingPractitionerContactPoint.Parent" xml:space="preserve">
+    <value>tableLayoutPanel3</value>
+  </data>
+  <data name="&gt;&gt;_orderingPractitionerContactPoint.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="tableLayoutPanel4.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="tableLayoutPanel4.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="tableLayoutPanel4.ColumnCount" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="_visit.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_visit.LabelText" xml:space="preserve">
+    <value>Visit</value>
+  </data>
+  <data name="_visit.Location" type="System.Drawing.Point, System.Drawing">
+    <value>2, 2</value>
+  </data>
+  <data name="_visit.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_visit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>612, 41</value>
+  </data>
+  <data name="_visit.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;_visit.Name" xml:space="preserve">
+    <value>_visit</value>
+  </data>
+  <data name="&gt;&gt;_visit.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.ComboBoxField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_visit.Parent" xml:space="preserve">
+    <value>tableLayoutPanel4</value>
+  </data>
+  <data name="&gt;&gt;_visit.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_visitSummaryButton.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
   <data name="_visitSummaryButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        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
+        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
+        AAAAAElFTkSuQmCC
 </value>
+  </data>
+  <data name="_visitSummaryButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>619, 18</value>
+  </data>
+  <data name="_visitSummaryButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>24, 24</value>
+  </data>
+  <data name="_visitSummaryButton.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;_visitSummaryButton.Name" xml:space="preserve">
+    <value>_visitSummaryButton</value>
+  </data>
+  <data name="&gt;&gt;_visitSummaryButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_visitSummaryButton.Parent" xml:space="preserve">
+    <value>tableLayoutPanel4</value>
+  </data>
+  <data name="&gt;&gt;_visitSummaryButton.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="tableLayoutPanel4.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="tableLayoutPanel4.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 280</value>
+  </data>
+  <data name="tableLayoutPanel4.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="tableLayoutPanel4.RowCount" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="tableLayoutPanel4.Size" type="System.Drawing.Size, System.Drawing">
+    <value>646, 45</value>
+  </data>
+  <data name="tableLayoutPanel4.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel4.Name" xml:space="preserve">
+    <value>tableLayoutPanel4</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel4.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TableLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel4.Parent" xml:space="preserve">
+    <value>tableLayoutPanel3</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel4.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="tableLayoutPanel4.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="_visit" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_visitSummaryButton" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,100,AutoSize,0" /&gt;&lt;Rows Styles="AutoSize,0" /&gt;&lt;/TableLayoutSettings&gt;</value>
+  </data>
+  <data name="_schedulingRequestTime.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_schedulingRequestTime.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="_schedulingRequestTime.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_schedulingRequestTime.LabelText" xml:space="preserve">
+    <value>Requested Schedule Time</value>
+  </data>
+  <data name="_schedulingRequestTime.Location" type="System.Drawing.Point, System.Drawing">
+    <value>325, 327</value>
+  </data>
+  <data name="_schedulingRequestTime.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_schedulingRequestTime.Size" type="System.Drawing.Size, System.Drawing">
+    <value>319, 40</value>
+  </data>
+  <data name="_schedulingRequestTime.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="&gt;&gt;_schedulingRequestTime.Name" xml:space="preserve">
+    <value>_schedulingRequestTime</value>
+  </data>
+  <data name="&gt;&gt;_schedulingRequestTime.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.DateTimeField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_schedulingRequestTime.Parent" xml:space="preserve">
+    <value>tableLayoutPanel3</value>
+  </data>
+  <data name="&gt;&gt;_schedulingRequestTime.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="_diagnosticService.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_diagnosticService.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="_diagnosticService.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_diagnosticService.LabelText" xml:space="preserve">
+    <value>Imaging Service</value>
+  </data>
+  <data name="_diagnosticService.Location" type="System.Drawing.Point, System.Drawing">
+    <value>2, 94</value>
+  </data>
+  <data name="_diagnosticService.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_diagnosticService.Size" type="System.Drawing.Size, System.Drawing">
+    <value>642, 43</value>
+  </data>
+  <data name="_diagnosticService.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;_diagnosticService.Name" xml:space="preserve">
+    <value>_diagnosticService</value>
+  </data>
+  <data name="&gt;&gt;_diagnosticService.Type" xml:space="preserve">
+    <value>ClearCanvas.Ris.Client.View.WinForms.LookupField, ClearCanvas.Ris.Client.View.WinForms, Version=1.0.5246.18702, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_diagnosticService.Parent" xml:space="preserve">
+    <value>tableLayoutPanel3</value>
+  </data>
+  <data name="&gt;&gt;_diagnosticService.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="_schedulingRequestDate.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_schedulingRequestDate.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="_schedulingRequestDate.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_schedulingRequestDate.LabelText" xml:space="preserve">
+    <value>Requested Schedule Date</value>
+  </data>
+  <data name="_schedulingRequestDate.Location" type="System.Drawing.Point, System.Drawing">
+    <value>2, 327</value>
+  </data>
+  <data name="_schedulingRequestDate.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_schedulingRequestDate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>319, 40</value>
+  </data>
+  <data name="_schedulingRequestDate.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;_schedulingRequestDate.Name" xml:space="preserve">
+    <value>_schedulingRequestDate</value>
+  </data>
+  <data name="&gt;&gt;_schedulingRequestDate.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.DateTimeField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_schedulingRequestDate.Parent" xml:space="preserve">
+    <value>tableLayoutPanel3</value>
+  </data>
+  <data name="&gt;&gt;_schedulingRequestDate.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="_priority.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_priority.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="_priority.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_priority.LabelText" xml:space="preserve">
+    <value>Priority</value>
+  </data>
+  <data name="_priority.Location" type="System.Drawing.Point, System.Drawing">
+    <value>2, 141</value>
+  </data>
+  <data name="_priority.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_priority.Size" type="System.Drawing.Size, System.Drawing">
+    <value>319, 43</value>
+  </data>
+  <data name="_priority.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;_priority.Name" xml:space="preserve">
+    <value>_priority</value>
+  </data>
+  <data name="&gt;&gt;_priority.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.ComboBoxField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_priority.Parent" xml:space="preserve">
+    <value>tableLayoutPanel3</value>
+  </data>
+  <data name="&gt;&gt;_priority.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="_orderingPractitioner.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_orderingPractitioner.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="_orderingPractitioner.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_orderingPractitioner.LabelText" xml:space="preserve">
+    <value>Ordering Practitioner</value>
+  </data>
+  <data name="_orderingPractitioner.Location" type="System.Drawing.Point, System.Drawing">
+    <value>325, 141</value>
+  </data>
+  <data name="_orderingPractitioner.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_orderingPractitioner.Size" type="System.Drawing.Size, System.Drawing">
+    <value>319, 43</value>
+  </data>
+  <data name="_orderingPractitioner.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;_orderingPractitioner.Name" xml:space="preserve">
+    <value>_orderingPractitioner</value>
+  </data>
+  <data name="&gt;&gt;_orderingPractitioner.Type" xml:space="preserve">
+    <value>ClearCanvas.Ris.Client.View.WinForms.LookupField, ClearCanvas.Ris.Client.View.WinForms, Version=1.0.5246.18702, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_orderingPractitioner.Parent" xml:space="preserve">
+    <value>tableLayoutPanel3</value>
+  </data>
+  <data name="&gt;&gt;_orderingPractitioner.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="_indication.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_indication.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="_indication.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_indication.LabelText" xml:space="preserve">
+    <value>Indication</value>
+  </data>
+  <data name="_indication.Location" type="System.Drawing.Point, System.Drawing">
+    <value>2, 238</value>
+  </data>
+  <data name="_indication.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_indication.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
+    <value />
+  </data>
+  <data name="_indication.Size" type="System.Drawing.Size, System.Drawing">
+    <value>642, 40</value>
+  </data>
+  <data name="_indication.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="_indication.ToolTip" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="&gt;&gt;_indication.Name" xml:space="preserve">
+    <value>_indication</value>
+  </data>
+  <data name="&gt;&gt;_indication.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.TextField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_indication.Parent" xml:space="preserve">
+    <value>tableLayoutPanel3</value>
+  </data>
+  <data name="&gt;&gt;_indication.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="_orderingFacility.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_orderingFacility.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="_orderingFacility.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_orderingFacility.LabelText" xml:space="preserve">
+    <value>Ordering Facility</value>
+  </data>
+  <data name="_orderingFacility.Location" type="System.Drawing.Point, System.Drawing">
+    <value>2, 49</value>
+  </data>
+  <data name="_orderingFacility.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_orderingFacility.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
+    <value />
+  </data>
+  <data name="_orderingFacility.Size" type="System.Drawing.Size, System.Drawing">
+    <value>319, 41</value>
+  </data>
+  <data name="_orderingFacility.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="_orderingFacility.ToolTip" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="&gt;&gt;_orderingFacility.Name" xml:space="preserve">
+    <value>_orderingFacility</value>
+  </data>
+  <data name="&gt;&gt;_orderingFacility.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.TextField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_orderingFacility.Parent" xml:space="preserve">
+    <value>tableLayoutPanel3</value>
+  </data>
+  <data name="&gt;&gt;_orderingFacility.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="_downtimeAccession.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_downtimeAccession.LabelText" xml:space="preserve">
+    <value>Downtime Accession #</value>
+  </data>
+  <data name="_downtimeAccession.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="_downtimeAccession.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_downtimeAccession.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
+    <value />
+  </data>
+  <data name="_downtimeAccession.Size" type="System.Drawing.Size, System.Drawing">
+    <value>333, 39</value>
+  </data>
+  <data name="_downtimeAccession.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="_downtimeAccession.ToolTip" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="&gt;&gt;_downtimeAccession.Name" xml:space="preserve">
+    <value>_downtimeAccession</value>
+  </data>
+  <data name="&gt;&gt;_downtimeAccession.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.TextField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_downtimeAccession.Parent" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="&gt;&gt;_downtimeAccession.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_reorderReason.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_reorderReason.LabelText" xml:space="preserve">
+    <value>Re-order Reason</value>
+  </data>
+  <data name="_reorderReason.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="_reorderReason.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_reorderReason.Size" type="System.Drawing.Size, System.Drawing">
+    <value>333, 39</value>
+  </data>
+  <data name="_reorderReason.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;_reorderReason.Name" xml:space="preserve">
+    <value>_reorderReason</value>
+  </data>
+  <data name="&gt;&gt;_reorderReason.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.ComboBoxField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_reorderReason.Parent" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="&gt;&gt;_reorderReason.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="panel1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="panel1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>326, 50</value>
+  </data>
+  <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>333, 39</value>
+  </data>
+  <data name="panel1.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;panel1.Name" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="&gt;&gt;panel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;panel1.Parent" xml:space="preserve">
+    <value>tableLayoutPanel3</value>
+  </data>
+  <data name="&gt;&gt;panel1.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="_proceduresTableView.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left, Right</value>
+  </data>
+  <data name="_proceduresTableView.ColumnHeaderTooltip" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="_proceduresTableView.FilterTextBoxWidth" type="System.Int32, mscorlib">
+    <value>132</value>
+  </data>
+  <data name="_proceduresTableView.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 369</value>
+  </data>
+  <data name="_proceduresTableView.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="_proceduresTableView.Size" type="System.Drawing.Size, System.Drawing">
+    <value>646, 182</value>
+  </data>
+  <data name="_proceduresTableView.SortButtonTooltip" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="_proceduresTableView.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="&gt;&gt;_proceduresTableView.Name" xml:space="preserve">
+    <value>_proceduresTableView</value>
+  </data>
+  <data name="&gt;&gt;_proceduresTableView.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.TableView, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_proceduresTableView.Parent" xml:space="preserve">
+    <value>tableLayoutPanel3</value>
+  </data>
+  <data name="&gt;&gt;_proceduresTableView.ZOrder" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="tableLayoutPanel3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 3</value>
+  </data>
+  <data name="tableLayoutPanel3.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="tableLayoutPanel3.RowCount" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="tableLayoutPanel3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>662, 551</value>
+  </data>
+  <data name="tableLayoutPanel3.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel3.Name" xml:space="preserve">
+    <value>tableLayoutPanel3</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TableLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel3.Parent" xml:space="preserve">
+    <value>_generalPage</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel3.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="tableLayoutPanel3.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="_patient" Row="0" RowSpan="1" Column="0" ColumnSpan="2" /&gt;&lt;Control Name="_orderingPractitionerContactPoint" Row="4" RowSpan="1" Column="0" ColumnSpan="2" /&gt;&lt;Control Name="tableLayoutPanel4" Row="6" RowSpan="1" Column="0" ColumnSpan="2" /&gt;&lt;Control Name="_schedulingRequestTime" Row="7" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="_diagnosticService" Row="2" RowSpan="1" Column="0" ColumnSpan="2" /&gt;&lt;Control Name="_schedulingRequestDate" Row="7" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_priority" Row="3" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_orderingPractitioner" Row="3" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="_indication" Row="5" RowSpan="1" Column="0" ColumnSpan="2" /&gt;&lt;Control Name="_orderingFacility" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="panel1" Row="1" RowSpan="1" Column="1" ColumnSpan="2" /&gt;&lt;Control Name="_proceduresTableView" Row="8" RowSpan="1" Column="0" ColumnSpan="2" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,50,Percent,50,Absolute,16" /&gt;&lt;Rows Styles="AutoSize,0,AutoSize,0,AutoSize,0,AutoSize,0,Absolute,50,AutoSize,0,AutoSize,0,AutoSize,0,Percent,100" /&gt;&lt;/TableLayoutSettings&gt;</value>
+  </data>
+  <data name="tableLayoutPanel1.ColumnCount" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="_recipientContactPoint.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Left, Right</value>
+  </data>
+  <data name="_recipientContactPoint.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_recipientContactPoint.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="_recipientContactPoint.LabelText" xml:space="preserve">
+    <value>Practitioner Contact Point</value>
+  </data>
+  <data name="_recipientContactPoint.Location" type="System.Drawing.Point, System.Drawing">
+    <value>2, 49</value>
+  </data>
+  <data name="_recipientContactPoint.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_recipientContactPoint.Size" type="System.Drawing.Size, System.Drawing">
+    <value>576, 41</value>
+  </data>
+  <data name="_recipientContactPoint.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;_recipientContactPoint.Name" xml:space="preserve">
+    <value>_recipientContactPoint</value>
+  </data>
+  <data name="&gt;&gt;_recipientContactPoint.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.ComboBoxField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_recipientContactPoint.Parent" xml:space="preserve">
+    <value>tableLayoutPanel1</value>
+  </data>
+  <data name="&gt;&gt;_recipientContactPoint.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_recipientLookup.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Left, Right</value>
+  </data>
+  <data name="_recipientLookup.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_recipientLookup.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="_recipientLookup.LabelText" xml:space="preserve">
+    <value>Find Practitioner</value>
+  </data>
+  <data name="_recipientLookup.Location" type="System.Drawing.Point, System.Drawing">
+    <value>2, 2</value>
+  </data>
+  <data name="_recipientLookup.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_recipientLookup.Size" type="System.Drawing.Size, System.Drawing">
+    <value>576, 43</value>
+  </data>
+  <data name="_recipientLookup.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;_recipientLookup.Name" xml:space="preserve">
+    <value>_recipientLookup</value>
+  </data>
+  <data name="&gt;&gt;_recipientLookup.Type" xml:space="preserve">
+    <value>ClearCanvas.Ris.Client.View.WinForms.LookupField, ClearCanvas.Ris.Client.View.WinForms, Version=1.0.5246.18702, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_recipientLookup.Parent" xml:space="preserve">
+    <value>tableLayoutPanel1</value>
+  </data>
+  <data name="&gt;&gt;_recipientLookup.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_recipientsTableView.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_recipientsTableView.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="_recipientsTableView.ColumnHeaderTooltip" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="_recipientsTableView.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_recipientsTableView.FilterTextBoxWidth" type="System.Int32, mscorlib">
+    <value>132</value>
+  </data>
+  <data name="_recipientsTableView.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 92</value>
+  </data>
+  <data name="_recipientsTableView.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="_recipientsTableView.Size" type="System.Drawing.Size, System.Drawing">
+    <value>659, 459</value>
+  </data>
+  <data name="_recipientsTableView.SortButtonTooltip" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="_recipientsTableView.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;_recipientsTableView.Name" xml:space="preserve">
+    <value>_recipientsTableView</value>
+  </data>
+  <data name="&gt;&gt;_recipientsTableView.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.TableView, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_recipientsTableView.Parent" xml:space="preserve">
+    <value>tableLayoutPanel1</value>
+  </data>
+  <data name="&gt;&gt;_recipientsTableView.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="_addConsultantButton.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Left</value>
+  </data>
+  <data name="_addConsultantButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>582, 65</value>
+  </data>
+  <data name="_addConsultantButton.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 4</value>
+  </data>
+  <data name="_addConsultantButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="_addConsultantButton.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="_addConsultantButton.Text" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="&gt;&gt;_addConsultantButton.Name" xml:space="preserve">
+    <value>_addConsultantButton</value>
+  </data>
+  <data name="&gt;&gt;_addConsultantButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_addConsultantButton.Parent" xml:space="preserve">
+    <value>tableLayoutPanel1</value>
+  </data>
+  <data name="&gt;&gt;_addConsultantButton.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="tableLayoutPanel1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="tableLayoutPanel1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 3</value>
+  </data>
+  <data name="tableLayoutPanel1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="tableLayoutPanel1.RowCount" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="tableLayoutPanel1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>659, 551</value>
+  </data>
+  <data name="tableLayoutPanel1.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel1.Name" xml:space="preserve">
+    <value>tableLayoutPanel1</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TableLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel1.Parent" xml:space="preserve">
+    <value>_copiesToRecipients</value>
+  </data>
+  <data name="&gt;&gt;tableLayoutPanel1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="tableLayoutPanel1.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="_recipientContactPoint" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_recipientLookup" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="_recipientsTableView" Row="2" RowSpan="1" Column="0" ColumnSpan="2" /&gt;&lt;Control Name="_addConsultantButton" Row="1" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,100,AutoSize,0" /&gt;&lt;Rows Styles="AutoSize,0,AutoSize,0,Percent,100,Absolute,20" /&gt;&lt;/TableLayoutSettings&gt;</value>
+  </data>
+  <data name="_generalPage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
+  </data>
+  <data name="_generalPage.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="_generalPage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>665, 557</value>
+  </data>
+  <data name="_generalPage.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="_generalPage.Text" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="&gt;&gt;_generalPage.Name" xml:space="preserve">
+    <value>_generalPage</value>
+  </data>
+  <data name="&gt;&gt;_generalPage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_generalPage.Parent" xml:space="preserve">
+    <value>_mainTab</value>
+  </data>
+  <data name="&gt;&gt;_generalPage.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_notesPage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
+  </data>
+  <data name="_notesPage.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="_notesPage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>665, 557</value>
+  </data>
+  <data name="_notesPage.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="_notesPage.Text" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="&gt;&gt;_notesPage.Name" xml:space="preserve">
+    <value>_notesPage</value>
+  </data>
+  <data name="&gt;&gt;_notesPage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_notesPage.Parent" xml:space="preserve">
+    <value>_mainTab</value>
+  </data>
+  <data name="&gt;&gt;_notesPage.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_copiesToRecipients.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
+  </data>
+  <data name="_copiesToRecipients.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="_copiesToRecipients.Size" type="System.Drawing.Size, System.Drawing">
+    <value>665, 557</value>
+  </data>
+  <data name="_copiesToRecipients.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="_copiesToRecipients.Text" xml:space="preserve">
+    <value>Copies To</value>
+  </data>
+  <data name="&gt;&gt;_copiesToRecipients.Name" xml:space="preserve">
+    <value>_copiesToRecipients</value>
+  </data>
+  <data name="&gt;&gt;_copiesToRecipients.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_copiesToRecipients.Parent" xml:space="preserve">
+    <value>_mainTab</value>
+  </data>
+  <data name="&gt;&gt;_copiesToRecipients.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="_attachmentsPage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
+  </data>
+  <data name="_attachmentsPage.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="_attachmentsPage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>665, 557</value>
+  </data>
+  <data name="_attachmentsPage.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="_attachmentsPage.Text" xml:space="preserve">
+    <value>Attachments</value>
+  </data>
+  <data name="&gt;&gt;_attachmentsPage.Name" xml:space="preserve">
+    <value>_attachmentsPage</value>
+  </data>
+  <data name="&gt;&gt;_attachmentsPage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_attachmentsPage.Parent" xml:space="preserve">
+    <value>_mainTab</value>
+  </data>
+  <data name="&gt;&gt;_attachmentsPage.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="_mainTab.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 3</value>
+  </data>
+  <data name="_mainTab.Size" type="System.Drawing.Size, System.Drawing">
+    <value>673, 583</value>
+  </data>
+  <data name="_mainTab.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;_mainTab.Name" xml:space="preserve">
+    <value>_mainTab</value>
+  </data>
+  <data name="&gt;&gt;_mainTab.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_mainTab.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_mainTab.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
+    <value>678, 623</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>OrderEditorComponentControl</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.ApplicationComponentUserControl, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
   </data>
 </root>

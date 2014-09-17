@@ -40,18 +40,17 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile />
     <DefineConstants>TRACE;DEBUG;UNIT_TESTS</DefineConstants>
     <DocumentationFile>
     </DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
-    <FileAlignment>4096</FileAlignment>
     <NoStdLib>false</NoStdLib>
     <NoWarn>
     </NoWarn>
@@ -68,13 +67,11 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile />
     <DefineConstants>TRACE</DefineConstants>
     <DocumentationFile>ClearCanvas.ImageViewer.xml</DocumentationFile>
     <DebugSymbols>false</DebugSymbols>
-    <FileAlignment>4096</FileAlignment>
     <NoStdLib>false</NoStdLib>
     <NoWarn>
     </NoWarn>
@@ -113,9 +110,7 @@
     </Reference>
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceProcess" />
-    <Reference Include="System.Xml">
-      <Name>System.XML</Name>
-    </Reference>
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="StudyManagement\Icons\DeleteToolSmall.png" />
@@ -189,8 +184,15 @@
     <Compile Include="Graphics\ProtractorGraphic.cs" />
     <Compile Include="Graphics\Tests\ImageGraphicTests.cs" />
     <Compile Include="Imaging\ILutPipelineProvider.cs" />
+    <Compile Include="Imaging\IPresentationLut.cs" />
+    <Compile Include="Imaging\LutFunctions.cs" />
     <Compile Include="Imaging\MinMaxPixelLinearLut.cs" />
     <Compile Include="Imaging\PresentationLut.cs" />
+    <Compile Include="Imaging\PresentationLutLinear.cs" />
+    <Compile Include="Imaging\Tests\ComposableLutTests.cs" />
+    <Compile Include="Imaging\Tests\ComposedLutTests.cs" />
+    <Compile Include="Imaging\Tests\DataVoiLutTests.cs" />
+    <Compile Include="Imaging\Tests\LutTestHelper.cs" />
     <Compile Include="Imaging\Tests\PresentationLutLinearTests.cs" />
     <Compile Include="Imaging\Tests\VoiWindowTests.cs" />
     <Compile Include="InputManagement\MouseWheelCaptureChangedEventArgs.cs" />
@@ -223,6 +225,7 @@
     <Compile Include="InteractiveGraphics\IAnnotationGraphic.cs" />
     <Compile Include="InteractiveGraphics\Tests\InteractiveGraphicsDemoTool.cs" />
     <Compile Include="KeyObjects\SopInstanceReference.cs" />
+    <Compile Include="LaunchImageViewerArgs.cs" />
     <Compile Include="Layout\HpDataContractAttribute.cs" />
     <Compile Include="Layout\HpExtensionPoints.cs" />
     <Compile Include="Layout\HpApplicabilityResult.cs" />
@@ -247,8 +250,10 @@
     <Compile Include="PresentationStates\Dicom\Tests\OverlayPlanePresentationTests.cs" />
     <Compile Include="PresentationStates\GeometricShutterCache.cs" />
     <Compile Include="Rendering\GDI\FontFactory.cs" />
+    <Compile Include="Rendering\GDI\GdiObjectFactory.cs" />
     <Compile Include="Rendering\GDI\GdiRendererFactory.cs" />
     <Compile Include="Rendering\GDI\IGdiBuffer.cs" />
+    <Compile Include="Rendering\GDI\MruFactory.cs" />
     <Compile Include="Rendering\RendererBase2.cs" />
     <Compile Include="Rendering\RenderingSurfaceBase.cs" />
     <Compile Include="RoiGraphics\Analyzers\ProtractorAnalyzers.cs" />
@@ -271,6 +276,7 @@
     <Compile Include="StudyManagement\ActivityMonitorFailureWatcher.cs" />
     <Compile Include="StudyManagement\ActivityMonitorProgressBar.cs" />
     <Compile Include="StudyManagement\ActivityMonitorQuickLink.cs" />
+    <Compile Include="StudyManagement\Tests\XmlSopDataSourceTests.cs" />
     <Compile Include="StudyManagement\XmlSopDataSource.cs" />
     <Compile Include="StudyManagement\IPatientCoordinateMapping.cs" />
     <Compile Include="StudyManagement\IPatientCoordinateMappingProvider.cs" />
@@ -336,7 +342,7 @@
     <Compile Include="ImageSetFactory.cs" />
     <Compile Include="Imaging\IColorMapInstaller.cs" />
     <Compile Include="Imaging\IdentityVoiLinearLut.cs" />
-    <Compile Include="Imaging\Tests\IdentityVoiLinearLutTest.cs" />
+    <Compile Include="Imaging\Tests\IdentityVoiLinearLutTests.cs" />
     <Compile Include="Imaging\IVoiLutInstaller.cs" />
     <Compile Include="Rendering\Tests\ImageRendererVoiLutTests.cs" />
     <Compile Include="Tests\DisplaySetFactoryTests.cs" />
@@ -497,7 +503,7 @@
     <Compile Include="Imaging\DataLut.cs" />
     <Compile Include="Imaging\PaletteColorMap.cs" />
     <Compile Include="Imaging\SimpleDataLut.cs" />
-    <Compile Include="Imaging\Tests\MiscellaneousLutTests.cs" />
+    <Compile Include="Imaging\Tests\DataModalityLutTests.cs" />
     <Compile Include="InteractiveGraphics\StretchCursorTokenStrategy.cs" />
     <Compile Include="RoiGraphics\RoiTransformPolicy.cs" />
     <Compile Include="InteractiveGraphics\Tests\EllipseIntersectionTests.cs" />
@@ -752,10 +758,10 @@
     <Compile Include="Imaging\ComposableLut.cs" />
     <Compile Include="Imaging\ComposableLutBase.cs" />
     <Compile Include="Imaging\ModalityLutLinear.cs" />
-    <Compile Include="Imaging\Tests\CompositeLUTTest.cs" />
-    <Compile Include="Imaging\Tests\ModalityLUTLinearTest.cs" />
+    <Compile Include="Imaging\Tests\LutComposerTests.cs" />
+    <Compile Include="Imaging\Tests\ModalityLutLinearTests.cs" />
     <Compile Include="Imaging\Tests\NormalizationLutLinearTests.cs" />
-    <Compile Include="Imaging\Tests\VoiLutLinearTests.cs" />
+    <Compile Include="Imaging\Tests\BasicVoiLutLinearTests.cs" />
     <Compile Include="Annotations\AnnotationBox.cs" />
     <Compile Include="Graphics\GraphicCollection.cs" />
     <Compile Include="Graphics\VectorGraphic.cs" />
@@ -843,6 +849,7 @@
     <Compile Include="Volumes\VolumeSlice.cs" />
     <Compile Include="Volumes\VolumeSliceFactory.cs" />
     <Compile Include="Volumes\VolumeSliceArgs.cs" />
+    <Compile Include="WindowBehaviour.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\ClearCanvas.Common.csproj">

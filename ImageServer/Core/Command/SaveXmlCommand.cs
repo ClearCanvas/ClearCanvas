@@ -25,7 +25,6 @@
 using System;
 using System.IO;
 using System.Threading;
-using System.Xml;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom.Utilities.Command;
@@ -117,7 +116,7 @@ namespace ClearCanvas.ImageServer.Core.Command
 
         private void WriteStudyStream(string streamFile, string gzStreamFile, StudyXml theStream)
         {
-            XmlDocument doc = theStream.GetMemento(_outputSettings);
+            var theMemento = theStream.GetMemento(_outputSettings);
 
             // allocate the random number generator here, in case we need it below
             var rand = new Random();
@@ -126,26 +125,26 @@ namespace ClearCanvas.ImageServer.Core.Command
             for (int i = 0; ; i++)
                 try
                 {
-                    if (File.Exists(tmpStreamFile))
-                        FileUtils.Delete(tmpStreamFile);
-                    if (File.Exists(tmpGzStreamFile))
-                        FileUtils.Delete(tmpGzStreamFile);
+					//FileUtils.Delete checks for existence
+                    FileUtils.Delete(tmpStreamFile);
+                    FileUtils.Delete(tmpGzStreamFile);
 
                     _fileSaved = true;
 
                     using (FileStream xmlStream = FileStreamOpener.OpenForSoleUpdate(tmpStreamFile, FileMode.CreateNew),
                                       gzipStream = FileStreamOpener.OpenForSoleUpdate(tmpGzStreamFile, FileMode.CreateNew))
                     {
-                        StudyXmlIo.WriteXmlAndGzip(doc, xmlStream, gzipStream);
+                        StudyXmlIo.WriteXmlAndGzip(theMemento, xmlStream, gzipStream);
                         xmlStream.Close();
                         gzipStream.Close();
                     }
 
-                    if (File.Exists(streamFile))
-                        FileUtils.Delete(streamFile);
+					//FileUtils.Delete checks for existence
+                    FileUtils.Delete(streamFile);
                     File.Move(tmpStreamFile, streamFile);
-                    if (File.Exists(_gzPath))
-                        FileUtils.Delete(_gzPath);
+
+					//FileUtils.Delete checks for existence
+                    FileUtils.Delete(_gzPath);
                     File.Move(tmpGzStreamFile, _gzPath);
                     return;
                 }
@@ -174,7 +173,7 @@ namespace ClearCanvas.ImageServer.Core.Command
 
         protected override void OnUndo()
         {
-            if (File.Exists(_xmlPath) && _fileSaved)
+            if (_fileSaved)
                 FileUtils.Delete(_xmlPath);
 
             if (false == String.IsNullOrEmpty(_xmlBackupPath) && File.Exists(_xmlBackupPath))
@@ -183,7 +182,7 @@ namespace ClearCanvas.ImageServer.Core.Command
                 File.Copy(_xmlBackupPath, _xmlPath, true);
             }
 
-            if (File.Exists(_gzPath) && _fileSaved)
+            if (_fileSaved)
                 FileUtils.Delete(_gzPath);
 
             if (false == String.IsNullOrEmpty(_gzBackupPath) && File.Exists(_gzBackupPath))
@@ -197,11 +196,11 @@ namespace ClearCanvas.ImageServer.Core.Command
 
         public void Dispose()
         {
-            if (false == String.IsNullOrEmpty(_xmlBackupPath) && File.Exists(_xmlBackupPath))
+            if (false == String.IsNullOrEmpty(_xmlBackupPath))
             {
                 FileUtils.Delete(_xmlBackupPath);
             }
-            if (false == String.IsNullOrEmpty(_gzBackupPath) && File.Exists(_gzBackupPath))
+            if (false == String.IsNullOrEmpty(_gzBackupPath))
             {
                 FileUtils.Delete(_gzBackupPath);
             }

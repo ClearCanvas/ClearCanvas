@@ -64,7 +64,7 @@ namespace ClearCanvas.Workflow
             if (_transitionLogic != null)
             {
                 if (!_transitionLogic.IsAllowed(_state, state))
-                    throw new IllegalStateTransitionException(string.Format(SR.ExceptionIllegalStateTransition, _state, state));
+					throw new IllegalStateTransitionException(string.Format("Transition from {0} to {1} is not allowed", _state, state));
             }
 
             TStateEnum previousState = _state;

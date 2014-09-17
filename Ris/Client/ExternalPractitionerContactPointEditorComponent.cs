@@ -66,11 +66,10 @@ namespace ClearCanvas.Ris.Client
 
 		public override void Start()
 		{
-			const string rootPath = "Contact Point";
-			this.Pages.Add(new NavigatorPage(rootPath, _detailsEditor = new ExternalPractitionerContactPointDetailsEditorComponent(_contactPointDetail, _resultCommunicationModeChoices, _informationAuthorityChoices)));
-			this.Pages.Add(new NavigatorPage(rootPath + "/Addresses", _addressesSummary = new AddressesSummaryComponent(_addressTypeChoices)));
-			this.Pages.Add(new NavigatorPage(rootPath + "/Phone Numbers", _phoneNumbersSummary = new PhoneNumbersSummaryComponent(_phoneTypeChoices)));
-			this.Pages.Add(new NavigatorPage(rootPath + "/Email Addresses", _emailAddressesSummary = new EmailAddressesSummaryComponent()));
+			this.Pages.Add(new NavigatorPage("NodeContactPoint", _detailsEditor = new ExternalPractitionerContactPointDetailsEditorComponent(_contactPointDetail, _resultCommunicationModeChoices, _informationAuthorityChoices)));
+			this.Pages.Add(new NavigatorPage("NodeContactPoint/NodeAddresses", _addressesSummary = new AddressesSummaryComponent(_addressTypeChoices)));
+			this.Pages.Add(new NavigatorPage("NodeContactPoint/NodePhoneNumbers", _phoneNumbersSummary = new PhoneNumbersSummaryComponent(_phoneTypeChoices)));
+			this.Pages.Add(new NavigatorPage("NodeContactPoint/NodeEmailAddresses", _emailAddressesSummary = new EmailAddressesSummaryComponent()));
 
 			_addressesSummary.SetModifiedOnListChange = true;
 			_phoneNumbersSummary.SetModifiedOnListChange = true;

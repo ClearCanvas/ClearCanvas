@@ -83,7 +83,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Extended
 		}
 	}
 
-	[ExtensionOf(typeof(BookingWorkflowItemToolExtensionPoint))]
+	// [ExtensionOf(typeof(BookingWorkflowItemToolExtensionPoint))] // Disabled due to bug #12488
 	public class BookingUnmergeOrdersTool : UnmergeOrdersToolBase<RegistrationWorklistItemSummary, IRegistrationWorkflowItemToolContext>
 	{
 		protected override bool Execute(RegistrationWorklistItemSummary item)

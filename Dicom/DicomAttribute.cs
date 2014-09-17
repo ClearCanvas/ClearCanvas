@@ -686,7 +686,7 @@ namespace ClearCanvas.Dicom
         {
             Tag = attrib.Tag;
             _valueCount = attrib.Count;
-            _length = attrib.StreamLength;
+            _length = attrib._length;
         }
 
         #endregion

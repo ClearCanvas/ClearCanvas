@@ -43,7 +43,7 @@ namespace ClearCanvas.Ris.Client
 
 		public ExternalPractitionerContactPointTable()
 		{
-			this.Columns.Add(new TableColumn<ExternalPractitionerContactPointDetail, string>(SR.ColumnName, cp => cp.Name, 0.5f));
+			this.Columns.Add(new TableColumn<ExternalPractitionerContactPointDetail, string>(SR.ColulmnPractitionerName, cp => cp.Name, 0.5f));
 			this.Columns.Add(new TableColumn<ExternalPractitionerContactPointDetail, string>(SR.ColumnDescription, cp => cp.Description, 0.5f));
 			this.Columns.Add(new TableColumn<ExternalPractitionerContactPointDetail, bool>(SR.ColumnDefault, cp => cp.IsDefaultContactPoint, 0.15f));
 		}

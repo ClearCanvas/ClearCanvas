@@ -200,10 +200,10 @@ namespace ClearCanvas.Dicom.ServiceModel.Query
 				}
 			}
 
-			List<TIdentifier> results = new List<TIdentifier>();
+            var results = new List<TIdentifier>(scuResults.Count);
 			foreach (DicomAttributeCollection result in scuResults)
 			{
-				TIdentifier identifier = Identifier.FromDicomAttributeCollection<TIdentifier>(result);
+				var identifier = Identifier.FromDicomAttributeCollection<TIdentifier>(result);
                 if (String.IsNullOrEmpty(identifier.RetrieveAeTitle) || identifier.RetrieveAeTitle == _remoteAE.AETitle)
                     identifier.RetrieveAE = _remoteAE;
 

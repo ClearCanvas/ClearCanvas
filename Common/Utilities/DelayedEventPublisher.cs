@@ -58,7 +58,7 @@ namespace ClearCanvas.Common.Utilities
 		private int _timeoutMilliseconds;
 		private readonly DelayedEventPublisherTriggerMode _trigger;
 
-		private int _lastPublishTime;
+		private int _lastPublishTicks;
 		private object _lastSender;
 		private EventArgs _lastArgs;
 
@@ -77,8 +77,7 @@ namespace ClearCanvas.Common.Utilities
 			_timeoutMilliseconds = Math.Max(10, timeoutMilliseconds);
 			_trigger = trigger;
 
-			_timer = new Timer(OnTimer);
-			_timer.IntervalMilliseconds = 10;
+			_timer = new Timer(OnTimer) {IntervalMilliseconds = 10};
 		}
 
 		private void OnTimer(object nothing)
@@ -86,7 +85,7 @@ namespace ClearCanvas.Common.Utilities
 			if (_timer == null || !_timer.Enabled)
 				return;
 
-			if (Math.Abs(Environment.TickCount - _lastPublishTime) >= _timeoutMilliseconds)
+			if (Math.Abs(Environment.TickCount - _lastPublishTicks) >= _timeoutMilliseconds)
 				Publish();
 		}
 
@@ -99,7 +98,7 @@ namespace ClearCanvas.Common.Utilities
 			_lastArgs = null;
 
 			// for period trigger, reset the timeout now
-			if (_trigger == DelayedEventPublisherTriggerMode.Periodic) _lastPublishTime = Environment.TickCount;
+			if (_trigger == DelayedEventPublisherTriggerMode.Periodic) _lastPublishTicks = Environment.TickCount;
 		}
 
 		/// <summary>
@@ -138,7 +137,7 @@ namespace ClearCanvas.Common.Utilities
 		protected void PublishNowCore(object sender, EventArgs args)
 		{
 			// for inactivity trigger, reset the timeout now
-			if (_trigger == DelayedEventPublisherTriggerMode.Inactivity) _lastPublishTime = Environment.TickCount;
+			if (_trigger == DelayedEventPublisherTriggerMode.Inactivity) _lastPublishTicks = Environment.TickCount;
 
 			_lastSender = sender;
 			_lastArgs = args;
@@ -167,7 +166,7 @@ namespace ClearCanvas.Common.Utilities
 		protected void PublishCore(object sender, EventArgs args)
 		{
 			// for inactivity trigger, reset the timeout now
-			if (_trigger == DelayedEventPublisherTriggerMode.Inactivity) _lastPublishTime = Environment.TickCount;
+			if (_trigger == DelayedEventPublisherTriggerMode.Inactivity) _lastPublishTicks = Environment.TickCount;
 
 			_lastSender = sender;
 			_lastArgs = args;

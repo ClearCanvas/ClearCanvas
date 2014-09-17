@@ -45,6 +45,8 @@ namespace ClearCanvas.ImageServer.Services.Dicom
 
         #region Properties
 
+		public Device Device { get; set; }
+
         public ServerPartition Partition { get; set; }
 
         public ServerPartitionAlternateAeTitle AlternateAeTitle { get; set; }

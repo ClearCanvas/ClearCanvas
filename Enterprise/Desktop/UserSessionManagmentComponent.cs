@@ -49,10 +49,10 @@ namespace ClearCanvas.Enterprise.Desktop
 
         public UserSessionSummaryTable()
         {
-            Columns.Add(new TableColumn<UserSessionSummary, string>("Application", row => row.Application, 1.5f));
-            Columns.Add(new TableColumn<UserSessionSummary, string>("Hostname", row => row.HostName, 1f));
-            Columns.Add(new DateTimeTableColumn<UserSessionSummary>("Creation Time", row => row.CreationTime, 1f));
-            Columns.Add(new DateTimeTableColumn<UserSessionSummary>("Expiry Time", row => row.ExpiryTime, 1f));
+            Columns.Add(new TableColumn<UserSessionSummary, string>(SR.ColumnApplication, row => row.Application, 1.5f));
+            Columns.Add(new TableColumn<UserSessionSummary, string>(SR.ColumnHostname, row => row.HostName, 1f));
+            Columns.Add(new DateTimeTableColumn<UserSessionSummary>(SR.ColumnCreationTime, row => row.CreationTime, 1f));
+            Columns.Add(new DateTimeTableColumn<UserSessionSummary>(SR.ColumnExpiryTime, row => row.ExpiryTime, 1f));
         }
 
         #endregion

@@ -42,7 +42,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies
         {
             base.OnInit(e);
             
-            DeleteStudyConfirmDialog.StudyDeleted += DeleteStudyConfirmDialogStudyDeleted;
+			DeleteStudyConfirmDialog.StudyDeleted += DeleteStudyConfirmDialogStudyDeleted;
 
             ServerPartitionSelector.PartitionChanged += delegate(ServerPartition partition)
                                                             {

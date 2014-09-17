@@ -48,9 +48,9 @@ namespace ClearCanvas.ImageServer.Model.Parameters
             set { SubCriteria["WorkQueueStatusEnum"] = new ProcedureParameter<ServerEnum>("WorkQueueStatusEnum", value); }
         }
 
-        public DateTime ExpirationTime 
+        public DateTime? ExpirationTime
         {
-            set { SubCriteria["ExpirationTime"] = new ProcedureParameter<DateTime>("ExpirationTime", value); }
+            set { SubCriteria["ExpirationTime"] = new ProcedureParameter<DateTime?>("ExpirationTime", value); }
         }
 
         public DateTime ScheduledTime

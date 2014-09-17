@@ -144,8 +144,7 @@ namespace ClearCanvas.Ris.Client
 						|| Thread.CurrentPrincipal.IsInRole(ClearCanvas.Ris.Application.Common.AuthorityTokens.Workflow.Patient.Create))
 					{
 						this.Pages.Add(
-							new NavigatorPage(
-								"Patient",
+							new NavigatorPage("NodePatient",
 								_patientEditor =
 								new PatientProfileDetailsEditorComponent(
 									_isNew,
@@ -154,21 +153,20 @@ namespace ClearCanvas.Ris.Client
 									formData.MrnAssigningAuthorityChoices,
 									formData.HealthcardAssigningAuthorityChoices)));
 						this.Pages.Add(
-							new NavigatorPage(
-								"Patient/Addresses", _addressesSummary = new AddressesSummaryComponent(formData.AddressTypeChoices)));
+							new NavigatorPage("NodePatient/NodeAddresses",
+								_addressesSummary = new AddressesSummaryComponent(formData.AddressTypeChoices)));
 						this.Pages.Add(
-							new NavigatorPage(
-								"Patient/Phone Numbers", _phoneNumbersSummary = new PhoneNumbersSummaryComponent(formData.PhoneTypeChoices)));
+							new NavigatorPage("NodePatient/NodePhoneNumbers",
+								_phoneNumbersSummary = new PhoneNumbersSummaryComponent(formData.PhoneTypeChoices)));
 						this.Pages.Add(
-							new NavigatorPage("Patient/Email Addresses", _emailAddressesSummary = new EmailAddressesSummaryComponent()));
+							new NavigatorPage("NodePatient/NodeEmailAddresses",
+								_emailAddressesSummary = new EmailAddressesSummaryComponent()));
 						this.Pages.Add(
-							new NavigatorPage(
-								"Patient/Contact Persons",
+							new NavigatorPage("NodePatient/NodeContactPersons",
 								_contactPersonsSummary =
 								new ContactPersonsSummaryComponent(formData.ContactPersonTypeChoices, formData.ContactPersonRelationshipChoices)));
 						this.Pages.Add(
-							new NavigatorPage(
-								"Patient/Culture",
+							new NavigatorPage("NodePatient/NodeCulture",
 								_additionalPatientInfoSummary =
 								new PatientProfileAdditionalInfoEditorComponent(formData.ReligionChoices, formData.PrimaryLanguageChoices)));
 
@@ -191,11 +189,11 @@ namespace ClearCanvas.Ris.Client
 						|| Thread.CurrentPrincipal.IsInRole(ClearCanvas.Ris.Application.Common.AuthorityTokens.Workflow.Patient.Update))
 					{
 						this.Pages.Add(
-							new NavigatorPage("Patient/Notes", _notesSummary = new PatientNoteSummaryComponent(_profile.Notes, formData.NoteCategoryChoices)));
+							new NavigatorPage("NodePatient/NodeNotes",
+								_notesSummary = new PatientNoteSummaryComponent(_profile.Notes, formData.NoteCategoryChoices)));
 						_notesSummary.SetModifiedOnListChange = true;
 
-						var patientDocumentsPage = new NavigatorPage(
-							"Patient/Attachments",
+						var patientDocumentsPage = new NavigatorPage("NodePatient/NodeAttachments",
 							_documentSummary =
 							new AttachedDocumentPreviewComponent(false, AttachmentSite.Patient));
 						this.Pages.Add(patientDocumentsPage);

@@ -227,20 +227,20 @@ namespace ClearCanvas.ImageServer.Core.Command
             {
                 // restore original file
                 File.Copy(_backupPath, _path, true);
-                File.Delete(_backupPath);
+                FileUtils.Delete(_backupPath);
                 _backupPath = null;
             }
-            else if (File.Exists(_path) && _fileCreated)
-                File.Delete(_path);           
+            else if (_fileCreated)
+                FileUtils.Delete(_path);
 		}
 
         #region IDisposable Members
 
         public void Dispose()
         {
-            if (false == String.IsNullOrEmpty(_backupPath) && File.Exists(_backupPath))
+            if (false == String.IsNullOrEmpty(_backupPath))
             {
-                File.Delete(_backupPath);
+                FileUtils.Delete(_backupPath);
             }
         }
 

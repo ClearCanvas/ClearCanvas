@@ -31,6 +31,7 @@ namespace ClearCanvas.Ris.Shreds.HL7
 {
 	[ExtensionOf(typeof(ShredExtensionPoint))]
 	[ExtensionOf(typeof(ApplicationRootExtensionPoint))]
+	[ShredIsolation(Level = ShredIsolationLevel.None)]
 	public class LogicalHL7EventShred : QueueProcessorShred, IApplicationRoot
 	{
 		public LogicalHL7EventShred()

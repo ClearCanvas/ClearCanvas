@@ -22,6 +22,9 @@
 
 #endregion
 
+#pragma warning disable 1591
+// ReSharper disable LocalizableElement
+
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -201,3 +204,5 @@ namespace ClearCanvas.Desktop.View.WinForms
 		}
 	}
 }
+
+// ReSharper restore LocalizableElement

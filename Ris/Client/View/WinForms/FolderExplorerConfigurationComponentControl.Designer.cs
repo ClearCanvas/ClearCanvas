@@ -59,12 +59,14 @@ namespace ClearCanvas.Ris.Client.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FolderExplorerConfigurationComponentControl));
 			this._folders = new ClearCanvas.Desktop.View.WinForms.BindingTreeView();
 			this._folderSystemsGroupBox = new System.Windows.Forms.GroupBox();
 			this._folderSystems = new ClearCanvas.Ris.Client.View.WinForms.ListBoxView();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this._foldersGroupBox = new System.Windows.Forms.GroupBox();
 			this._folderSystemsGroupBox.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
@@ -75,14 +77,10 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			// 
 			this._folders.AllowDrop = true;
 			this._folders.CheckBoxes = true;
-			this._folders.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._folders.IconColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+			resources.ApplyResources(this._folders, "_folders");
+			this._folders.IconResourceSize = ClearCanvas.Desktop.IconSize.Medium;
 			this._folders.IconSize = new System.Drawing.Size(16, 16);
-			this._folders.Location = new System.Drawing.Point(3, 16);
-			this._folders.Margin = new System.Windows.Forms.Padding(2);
 			this._folders.Name = "_folders";
-			this._folders.Size = new System.Drawing.Size(374, 399);
-			this._folders.TabIndex = 0;
 			this._folders.TreeBackColor = System.Drawing.SystemColors.Window;
 			this._folders.TreeForeColor = System.Drawing.SystemColors.WindowText;
 			this._folders.TreeLineColor = System.Drawing.Color.Black;
@@ -92,28 +90,20 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			// _folderSystemsGroupBox
 			// 
 			this._folderSystemsGroupBox.Controls.Add(this._folderSystems);
-			this._folderSystemsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._folderSystemsGroupBox.Location = new System.Drawing.Point(0, 0);
+			resources.ApplyResources(this._folderSystemsGroupBox, "_folderSystemsGroupBox");
 			this._folderSystemsGroupBox.Name = "_folderSystemsGroupBox";
-			this._folderSystemsGroupBox.Size = new System.Drawing.Size(192, 418);
-			this._folderSystemsGroupBox.TabIndex = 0;
 			this._folderSystemsGroupBox.TabStop = false;
-			this._folderSystemsGroupBox.Text = "Folder Systems";
 			// 
 			// _folderSystems
 			// 
 			this._folderSystems.DataSource = null;
 			this._folderSystems.DisplayMember = "";
-			this._folderSystems.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._folderSystems.Location = new System.Drawing.Point(3, 16);
+			resources.ApplyResources(this._folderSystems, "_folderSystems");
 			this._folderSystems.Name = "_folderSystems";
-			this._folderSystems.Size = new System.Drawing.Size(186, 399);
-			this._folderSystems.TabIndex = 0;
 			// 
 			// splitContainer1
 			// 
-			this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+			resources.ApplyResources(this.splitContainer1, "splitContainer1");
 			this.splitContainer1.Name = "splitContainer1";
 			// 
 			// splitContainer1.Panel1
@@ -123,31 +113,24 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			// splitContainer1.Panel2
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this._foldersGroupBox);
-			this.splitContainer1.Size = new System.Drawing.Size(576, 418);
-			this.splitContainer1.SplitterDistance = 192;
-			this.splitContainer1.TabIndex = 3;
 			// 
 			// _foldersGroupBox
 			// 
 			this._foldersGroupBox.Controls.Add(this._folders);
-			this._foldersGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._foldersGroupBox.Location = new System.Drawing.Point(0, 0);
+			resources.ApplyResources(this._foldersGroupBox, "_foldersGroupBox");
 			this._foldersGroupBox.Name = "_foldersGroupBox";
-			this._foldersGroupBox.Size = new System.Drawing.Size(380, 418);
-			this._foldersGroupBox.TabIndex = 0;
 			this._foldersGroupBox.TabStop = false;
-			this._foldersGroupBox.Text = "Folders";
 			// 
 			// FolderExplorerConfigurationComponentControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this.splitContainer1);
 			this.Name = "FolderExplorerConfigurationComponentControl";
-			this.Size = new System.Drawing.Size(576, 418);
 			this._folderSystemsGroupBox.ResumeLayout(false);
 			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 			this.splitContainer1.ResumeLayout(false);
 			this._foldersGroupBox.ResumeLayout(false);
 			this.ResumeLayout(false);

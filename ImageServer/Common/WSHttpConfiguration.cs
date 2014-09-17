@@ -39,27 +39,51 @@ namespace ClearCanvas.ImageServer.Common
 
 		public void ConfigureServiceHost(ServiceHost host, ServiceHostConfigurationArgs args)
 		{
-			WSHttpBinding binding = new WSHttpBinding();
-			binding.MaxReceivedMessageSize = args.MaxReceivedMessageSize;
+			var settings = new EnterpriseImageServerServiceSettings();
+
+			// Per MSDN: Transport security is provided externally to WCF. If you are creating a self-hosted WCF application, you can bind an SSL certificate to the address using the HttpCfg.exe tool.
+			// The service may appears running but client will not be able to connect. For this reason, it's best to explicitly disallow this mode.
+			if (settings.SecurityMode == SecurityMode.Transport)
+			{
+				throw new Exception("Transport security is not supported. Please change EnterpriseImageServerServiceSettings.SecurityMode");
+			}
+			
+
+			var binding = new WSHttpBinding
+				{
+					MaxReceivedMessageSize = args.MaxReceivedMessageSize
+				};
 
 			if (args.SendTimeoutSeconds > 0)
 				binding.SendTimeout = TimeSpan.FromSeconds(args.SendTimeoutSeconds);
 
 			binding.ReaderQuotas.MaxStringContentLength = args.MaxReceivedMessageSize;
 			binding.ReaderQuotas.MaxArrayLength = args.MaxReceivedMessageSize;
-			binding.Security.Mode = WebServicesSettings.Default.SecurityMode;
+			binding.Security.Mode = settings.SecurityMode;
 			binding.Security.Message.ClientCredentialType = args.Authenticated
 			                                                	? MessageCredentialType.UserName
 			                                                	: MessageCredentialType.None;
+
+
+			// TransportWithMessageCredential cannot be used in conjuction with ClientCredentialType=None
+			if (binding.Security.Mode == SecurityMode.TransportWithMessageCredential &&
+			    binding.Security.Message.ClientCredentialType == MessageCredentialType.None)
+			{
+				throw new Exception(string.Format("TransportWithMessageCredential is not supported for '{0}' service. Please change EnterpriseImageServerServiceSettings.SecurityMode", args.ServiceContract.Name));
+			}
+			
+
 			// establish endpoint
 			host.AddServiceEndpoint(args.ServiceContract, binding, "");
 
 			// expose meta-data via HTTP GET
-			ServiceMetadataBehavior metadataBehavior = host.Description.Behaviors.Find<ServiceMetadataBehavior>();
+			var metadataBehavior = host.Description.Behaviors.Find<ServiceMetadataBehavior>();
 			if (metadataBehavior == null)
 			{
-				metadataBehavior = new ServiceMetadataBehavior();
-				metadataBehavior.HttpGetEnabled = true;
+				metadataBehavior = new ServiceMetadataBehavior
+					{
+						HttpGetEnabled = true
+					};
 				host.Description.Behaviors.Add(metadataBehavior);
 			}
 
@@ -69,8 +93,8 @@ namespace ClearCanvas.ImageServer.Common
 					operation.Behaviors.Find<DataContractSerializerOperationBehavior>().MaxItemsInObjectGraph = args.MaxReceivedMessageSize;
 
 			// set up the certificate 
-			if (WebServicesSettings.Default.SecurityMode == SecurityMode.Message
-			    || WebServicesSettings.Default.SecurityMode == SecurityMode.TransportWithMessageCredential)
+			if (settings.SecurityMode == SecurityMode.Message
+				|| settings.SecurityMode == SecurityMode.TransportWithMessageCredential)
 			{
 				host.Credentials.ServiceCertificate.SetCertificate(
 					StoreLocation.LocalMachine, StoreName.My, X509FindType.FindBySubjectName, args.HostUri.Host);
@@ -95,10 +119,18 @@ namespace ClearCanvas.ImageServer.Common
 		/// <returns></returns>
 		public ChannelFactory ConfigureChannelFactory(ServiceChannelConfigurationArgs args)
 		{
-			WSHttpBinding binding = new WSHttpBinding();
-			binding.Security.Mode = WebServicesSettings.Default.SecurityMode;
-			binding.Security.Message.ClientCredentialType =
-				args.AuthenticationRequired ? MessageCredentialType.UserName : MessageCredentialType.None;
+			var settings = new EnterpriseImageServerServiceSettings();
+			var binding = new WSHttpBinding
+				{
+					Security =
+						{
+							Mode = settings.SecurityMode,
+							Message =
+								{
+									ClientCredentialType = args.AuthenticationRequired ? MessageCredentialType.UserName : MessageCredentialType.None
+								}
+						}
+				};
 			binding.MaxReceivedMessageSize = args.MaxReceivedMessageSize;
 
 			if (args.SendTimeoutSeconds > 0)
@@ -111,7 +143,7 @@ namespace ClearCanvas.ImageServer.Common
 			//binding.ReceiveTimeout = new TimeSpan(0, 0 , 20);
 			//binding.SendTimeout = new TimeSpan(0, 0, 10);
 
-			ChannelFactory channelFactory = (ChannelFactory) Activator.CreateInstance(args.ChannelFactoryClass, binding,
+			var channelFactory = (ChannelFactory) Activator.CreateInstance(args.ChannelFactoryClass, binding,
 			                                                                          new EndpointAddress(args.ServiceUri));
 			channelFactory.Credentials.ServiceCertificate.Authentication.CertificateValidationMode = args.CertificateValidationMode;
 			channelFactory.Credentials.ServiceCertificate.Authentication.RevocationMode = args.RevocationMode;

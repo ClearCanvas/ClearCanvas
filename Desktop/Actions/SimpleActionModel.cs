@@ -23,9 +23,10 @@
 #endregion
 
 using System.Collections.Generic;
+using System.ComponentModel;
 using ClearCanvas.Common;
-using ClearCanvas.Common.Utilities;
 using ClearCanvas.Common.Specifications;
+using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Desktop.Actions
 {
@@ -58,7 +59,7 @@ namespace ClearCanvas.Desktop.Actions
 		/// <param name="key">The action key, so that actions can be easily retrieve via the <see cref="SimpleActionModel.this"/> indexer.</param>
 		/// <param name="displayName">The display name for the action.</param>
 		/// <param name="icon">The resource name of the icon.</param>
-		public ClickAction AddAction(object key, string displayName, string icon)
+		public ClickAction AddAction(object key, [param : Localizable(true)] string displayName, string icon)
 		{
 			return AddActionHelper(key, displayName, icon, displayName, null, null);
 		}
@@ -70,7 +71,7 @@ namespace ClearCanvas.Desktop.Actions
 		/// <param name="displayName">The display name for the action.</param>
 		/// <param name="icon">The resource name of the icon.</param>
 		/// <param name="clickHandler">The click handler of the action.</param>
-		public ClickAction AddAction(object key, string displayName, string icon, ClickHandlerDelegate clickHandler)
+		public ClickAction AddAction(object key, [param : Localizable(true)] string displayName, string icon, ClickHandlerDelegate clickHandler)
 		{
 			return AddActionHelper(key, displayName, icon, displayName, clickHandler, null);
 		}
@@ -82,7 +83,7 @@ namespace ClearCanvas.Desktop.Actions
 		/// <param name="displayName">The display name for the action.</param>
 		/// <param name="icon">The resource name of the icon.</param>
 		/// <param name="tooltip">The action tooltip.</param>
-		public ClickAction AddAction(object key, string displayName, string icon, string tooltip)
+		public ClickAction AddAction(object key, [param : Localizable(true)] string displayName, string icon, [param : Localizable(true)] string tooltip)
 		{
 			return AddActionHelper(key, displayName, icon, tooltip, null, null);
 		}
@@ -95,7 +96,7 @@ namespace ClearCanvas.Desktop.Actions
 		/// <param name="icon">The resource name of the icon.</param>
 		/// <param name="tooltip">The action tooltip.</param>
 		/// <param name="clickHandler">The click handler of the action.</param>
-		public ClickAction AddAction(object key, string displayName, string icon, string tooltip, ClickHandlerDelegate clickHandler)
+		public ClickAction AddAction(object key, [param : Localizable(true)] string displayName, string icon, [param : Localizable(true)] string tooltip, ClickHandlerDelegate clickHandler)
 		{
 			return AddActionHelper(key, displayName, icon, tooltip, clickHandler, null);
 		}
@@ -109,7 +110,7 @@ namespace ClearCanvas.Desktop.Actions
 		/// <param name="tooltip">The action tooltip.</param>
 		/// <param name="clickHandler">The click handler of the action.</param>
 		/// <param name="authorityToken">The authority token for the action.</param>
-		public ClickAction AddAction(object key, string displayName, string icon, string tooltip, ClickHandlerDelegate clickHandler, string authorityToken)
+		public ClickAction AddAction(object key, [param : Localizable(true)] string displayName, string icon, [param : Localizable(true)] string tooltip, ClickHandlerDelegate clickHandler, string authorityToken)
 		{
 			return AddActionHelper(key, displayName, icon, tooltip, clickHandler, new PrincipalPermissionSpecification(authorityToken));
 		}
@@ -123,7 +124,7 @@ namespace ClearCanvas.Desktop.Actions
 		/// <param name="tooltip">The action tooltip.</param>
 		/// <param name="clickHandler">The click handler of the action.</param>
 		/// <param name="permissionSpec">The permission specification for the action.</param>
-		public ClickAction AddAction(object key, string displayName, string icon, string tooltip, ClickHandlerDelegate clickHandler, ISpecification permissionSpec)
+		public ClickAction AddAction(object key, [param : Localizable(true)] string displayName, string icon, [param : Localizable(true)] string tooltip, ClickHandlerDelegate clickHandler, ISpecification permissionSpec)
 		{
 			return AddActionHelper(key, displayName, icon, tooltip, clickHandler, permissionSpec);
 		}
@@ -135,12 +136,12 @@ namespace ClearCanvas.Desktop.Actions
 		/// <param name="tooltip"></param>
 		/// <param name="permissionSpec"></param>
 		/// <returns></returns>
-		public TextBoxAction AddTextBoxAction(object key, string tooltip, ISpecification permissionSpec)
+		public TextBoxAction AddTextBoxAction(object key, [param : Localizable(true)] string tooltip, ISpecification permissionSpec)
 		{
 			Platform.CheckForNullReference(key, "key");
 
 			var actionId = MakeAnonymousId();
-			var action = new TextBoxAction(actionId, MakePath(actionId), _resolver) { Tooltip = tooltip };
+			var action = new TextBoxAction(actionId, MakePath(actionId), _resolver) {Tooltip = tooltip};
 
 			if (permissionSpec != null)
 			{
@@ -175,10 +176,10 @@ namespace ClearCanvas.Desktop.Actions
 			Platform.CheckForNullReference(key, "key");
 
 			var action = new ClickAction(displayName, MakePath(displayName), ClickActionFlags.None, _resolver)
-							{
-								Tooltip = tooltip,
-								Label = displayName
-							};
+			             	{
+			             		Tooltip = tooltip,
+			             		Label = displayName
+			             	};
 			if (icon != null)
 				action.IconSet = new IconSet(icon, icon, icon);
 

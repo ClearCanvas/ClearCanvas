@@ -117,186 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ArchiveQueueStatusEnum_Pending_Description" xml:space="preserve">
-    <value>Pending</value>
-  </data>
-  <data name="ArchiveQueueStatusEnum_Pending_LongDescription" xml:space="preserve">
-    <value>Pending</value>
-  </data>
-  <data name="ArchiveQueueStatusEnum_In Progress_Description" xml:space="preserve">
-    <value>In Progress</value>
-  </data>
-  <data name="ArchiveQueueStatusEnum_In Progress_LongDescription" xml:space="preserve">
-    <value>In Progress</value>
-  </data>
-  <data name="ArchiveQueueStatusEnum_Completed_Description" xml:space="preserve">
-    <value>Completed</value>
-  </data>
-  <data name="ArchiveQueueStatusEnum_Completed_LongDescription" xml:space="preserve">
-    <value>The Queue entry is completed.</value>
-  </data>
-  <data name="ArchiveQueueStatusEnum_Failed_Description" xml:space="preserve">
-    <value>Failed</value>
-  </data>
-  <data name="ArchiveQueueStatusEnum_Failed_LongDescription" xml:space="preserve">
-    <value>The Queue entry has failed.</value>
-  </data>
-  <data name="DuplicateSopPolicyEnum_SendSuccess_Description" xml:space="preserve">
-    <value>Send Success</value>
-  </data>
-  <data name="DuplicateSopPolicyEnum_SendSuccess_LongDescription" xml:space="preserve">
-    <value>Send a DICOM C-STORE-RSP success status when receiving a duplicate, but ignore the file.</value>
-  </data>
-  <data name="DuplicateSopPolicyEnum_RejectDuplicates_Description" xml:space="preserve">
-    <value>Reject Duplicates</value>
-  </data>
-  <data name="DuplicateSopPolicyEnum_RejectDuplicates_LongDescription" xml:space="preserve">
-    <value>Send a DICOM C-STORE-RSP reject status when receiving a duplicate.</value>
-  </data>
-  <data name="DuplicateSopPolicyEnum_CompareDuplicates_Description" xml:space="preserve">
-    <value>Compare Duplicates</value>
-  </data>
-  <data name="DuplicateSopPolicyEnum_CompareDuplicates_LongDescription" xml:space="preserve">
-    <value>Process duplicate objects received and compare them to originals flagging any differences as a failure.</value>
-  </data>
-  <data name="DuplicateSopPolicyEnum_AcceptLatest_Description" xml:space="preserve">
-    <value>Accept Latest</value>
-  </data>
-  <data name="DuplicateSopPolicyEnum_AcceptLatest_LongDescription" xml:space="preserve">
-    <value>Process duplicate objects received and always accecpt the latest file received.</value>
-  </data>
-  <data name="RestoreQueueStatusEnum_Pending_Description" xml:space="preserve">
-    <value>Pending</value>
-  </data>
-  <data name="RestoreQueueStatusEnum_Pending_LongDescription" xml:space="preserve">
-    <value>Pending</value>
-  </data>
-  <data name="RestoreQueueStatusEnum_In Progress_Description" xml:space="preserve">
-    <value>In Progress</value>
-  </data>
-  <data name="RestoreQueueStatusEnum_In Progress_LongDescription" xml:space="preserve">
-    <value>In Progress</value>
-  </data>
-  <data name="RestoreQueueStatusEnum_Completed_Description" xml:space="preserve">
-    <value>Completed</value>
-  </data>
-  <data name="RestoreQueueStatusEnum_Completed_LongDescription" xml:space="preserve">
-    <value>The Queue entry is completed.</value>
-  </data>
-  <data name="RestoreQueueStatusEnum_Failed_Description" xml:space="preserve">
-    <value>Failed</value>
-  </data>
-  <data name="RestoreQueueStatusEnum_Failed_LongDescription" xml:space="preserve">
-    <value>The Queue entry has failed.</value>
-  </data>
-  <data name="RestoreQueueStatusEnum_Restoring_Description" xml:space="preserve">
-    <value>Restoring</value>
-  </data>
-  <data name="RestoreQueueStatusEnum_Restoring_LongDescription" xml:space="preserve">
-    <value>The Queue entry is waiting for the study to be restored by the archive.</value>
-  </data>
-  <data name="AlertCategoryEnum_System_Description" xml:space="preserve">
-    <value>System alert</value>
-  </data>
-  <data name="AlertCategoryEnum_System_LongDescription" xml:space="preserve">
-    <value>System alert</value>
-  </data>
-  <data name="AlertCategoryEnum_Application_Description" xml:space="preserve">
-    <value>Application alert</value>
-  </data>
-  <data name="AlertCategoryEnum_Application_LongDescription" xml:space="preserve">
-    <value>Application alert</value>
-  </data>
-  <data name="AlertCategoryEnum_Security_Description" xml:space="preserve">
-    <value>Security alert</value>
-  </data>
-  <data name="AlertCategoryEnum_Security_LongDescription" xml:space="preserve">
-    <value>Security alert</value>
-  </data>
-  <data name="AlertCategoryEnum_User_Description" xml:space="preserve">
-    <value>User alert</value>
-  </data>
-  <data name="AlertCategoryEnum_User_LongDescription" xml:space="preserve">
-    <value>User alert</value>
-  </data>
-  <data name="AlertLevelEnum_Informational_Description" xml:space="preserve">
-    <value>Informational</value>
-  </data>
-  <data name="AlertLevelEnum_Informational_LongDescription" xml:space="preserve">
-    <value>Informational alert</value>
-  </data>
-  <data name="AlertLevelEnum_Warning_Description" xml:space="preserve">
-    <value>Warning</value>
-  </data>
-  <data name="AlertLevelEnum_Warning_LongDescription" xml:space="preserve">
-    <value>Warning alert</value>
-  </data>
-  <data name="AlertLevelEnum_Error_Description" xml:space="preserve">
-    <value>Error</value>
-  </data>
-  <data name="AlertLevelEnum_Error_LongDescription" xml:space="preserve">
-    <value>Error alert</value>
-  </data>
-  <data name="AlertLevelEnum_Critical_Description" xml:space="preserve">
-    <value>Critical</value>
-  </data>
-  <data name="AlertLevelEnum_Critical_LongDescription" xml:space="preserve">
-    <value>Critical alert</value>
-  </data>
-  <data name="ServerPartitionTypeEnum_Standard_Description" xml:space="preserve">
-    <value>Standard</value>
-  </data>
-  <data name="ServerPartitionTypeEnum_Standard_LongDescription" xml:space="preserve">
-    <value>A standard ImageServer Partition</value>
-  </data>
-  <data name="ServerPartitionTypeEnum_VFS_Description" xml:space="preserve">
-    <value>VFS</value>
-  </data>
-  <data name="ServerPartitionTypeEnum_VFS_LongDescription" xml:space="preserve">
-    <value>An ImageServer Virtual File System Partition</value>
-  </data>
-  <data name="StudyIntegrityReasonEnum_InconsistentData_Description" xml:space="preserve">
-    <value>Inconsistent Data</value>
-  </data>
-  <data name="StudyIntegrityReasonEnum_InconsistentData_LongDescription" xml:space="preserve">
-    <value>Images must be reconciled because of inconsistent data.</value>
-  </data>
-  <data name="StudyIntegrityReasonEnum_Duplicate_Description" xml:space="preserve">
-    <value>Duplicate</value>
-  </data>
-  <data name="StudyIntegrityReasonEnum_Duplicate_LongDescription" xml:space="preserve">
-    <value>Duplicates were received and need to be reconciled.</value>
-  </data>
-  <data name="WorkQueueStatusEnum_Idle_Description" xml:space="preserve">
-    <value>Idle</value>
-  </data>
-  <data name="WorkQueueStatusEnum_Idle_LongDescription" xml:space="preserve">
-    <value>Waiting to expire or for more images</value>
-  </data>
-  <data name="WorkQueueStatusEnum_Pending_Description" xml:space="preserve">
-    <value>Pending</value>
-  </data>
-  <data name="WorkQueueStatusEnum_Pending_LongDescription" xml:space="preserve">
-    <value>Pending</value>
-  </data>
-  <data name="WorkQueueStatusEnum_In Progress_Description" xml:space="preserve">
-    <value>In Progress</value>
-  </data>
-  <data name="WorkQueueStatusEnum_In Progress_LongDescription" xml:space="preserve">
-    <value>In Progress</value>
-  </data>
-  <data name="WorkQueueStatusEnum_Completed_Description" xml:space="preserve">
-    <value>Completed</value>
-  </data>
-  <data name="WorkQueueStatusEnum_Completed_LongDescription" xml:space="preserve">
-    <value>The Queue entry is completed.</value>
-  </data>
-  <data name="WorkQueueStatusEnum_Failed_Description" xml:space="preserve">
-    <value>Failed</value>
-  </data>
-  <data name="WorkQueueStatusEnum_Failed_LongDescription" xml:space="preserve">
-    <value>The Queue entry has failed.</value>
-  </data>
   <data name="StudyStatusEnum_Online_Description" xml:space="preserve">
     <value>Online</value>
   </data>
@@ -507,6 +327,42 @@
   <data name="WorkQueueTypeEnum_ExternalEdit_LongDescription" xml:space="preserve">
     <value>Edit request trigger by an external application.</value>
   </data>
+  <data name="WorkQueueTypeEnum_StudyAutoRoute_Description" xml:space="preserve">
+    <value>Study Auto Route</value>
+  </data>
+  <data name="WorkQueueTypeEnum_StudyAutoRoute_LongDescription" xml:space="preserve">
+    <value>DICOM Auto-route request of a Study.</value>
+  </data>
+  <data name="QCStatusEnum_Processing_Description" xml:space="preserve">
+    <value>Processing</value>
+  </data>
+  <data name="QCStatusEnum_Processing_LongDescription" xml:space="preserve">
+    <value>Processing</value>
+  </data>
+  <data name="QCStatusEnum_NA_Description" xml:space="preserve">
+    <value>Not Applicable</value>
+  </data>
+  <data name="QCStatusEnum_NA_LongDescription" xml:space="preserve">
+    <value>Not Applicable</value>
+  </data>
+  <data name="QCStatusEnum_Passed_Description" xml:space="preserve">
+    <value>Passed</value>
+  </data>
+  <data name="QCStatusEnum_Passed_LongDescription" xml:space="preserve">
+    <value>Passed</value>
+  </data>
+  <data name="QCStatusEnum_Failed_Description" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="QCStatusEnum_Failed_LongDescription" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="QCStatusEnum_Incomplete_Description" xml:space="preserve">
+    <value>Incomplete</value>
+  </data>
+  <data name="QCStatusEnum_Incomplete_LongDescription" xml:space="preserve">
+    <value>Incomplete (Missing required scans)</value>
+  </data>
   <data name="StudyHistoryTypeEnum_StudyReconciled_Description" xml:space="preserve">
     <value>Study was reconciled</value>
   </data>
@@ -542,6 +398,18 @@
   </data>
   <data name="StudyHistoryTypeEnum_ExternalEdit_LongDescription" xml:space="preserve">
     <value>Study was edited via an external request.</value>
+  </data>
+  <data name="StudyHistoryTypeEnum_StudyCompress_Description" xml:space="preserve">
+    <value>Study Compress</value>
+  </data>
+  <data name="StudyHistoryTypeEnum_StudyCompress_LongDescription" xml:space="preserve">
+    <value>Study was compressed.</value>
+  </data>
+  <data name="StudyHistoryTypeEnum_SopCompress_Description" xml:space="preserve">
+    <value>SOP Compress</value>
+  </data>
+  <data name="StudyHistoryTypeEnum_SopCompress_LongDescription" xml:space="preserve">
+    <value>Study was compressed by a SOP Compress rule.</value>
   </data>
   <data name="ServiceLockTypeEnum_FilesystemDelete_Description" xml:space="preserve">
     <value>Filesystem Watermark Check</value>
@@ -615,6 +483,12 @@
   <data name="ServiceLockTypeEnum_ExternalNotificationProcess_LongDescription" xml:space="preserve">
     <value>This service processes notifications to send to external applications.</value>
   </data>
+  <data name="ServiceLockTypeEnum_PartitionOrderPurge_Description" xml:space="preserve">
+    <value>Partition Order Purge</value>
+  </data>
+  <data name="ServiceLockTypeEnum_PartitionOrderPurge_LongDescription" xml:space="preserve">
+    <value>This service purges orders not linked to studies on a partition.</value>
+  </data>
   <data name="ServiceLockTypeEnum_PartitionReapplyRules_Description" xml:space="preserve">
     <value>Partition Reapply Rules</value>
   </data>
@@ -667,7 +541,13 @@
     <value>Study Quality Control</value>
   </data>
   <data name="ServerRuleTypeEnum_StudyQualityControl_LongDescription" xml:space="preserve">
-    <value>A rule that checks if the study meets certain requirements and generates a report.</value>
+    <value>A rule for quality control purposes when studies are received</value>
+  </data>
+  <data name="ServerRuleTypeEnum_StudyAutoRoute_Description" xml:space="preserve">
+    <value>Study Auto Routing</value>
+  </data>
+  <data name="ServerRuleTypeEnum_StudyAutoRoute_LongDescription" xml:space="preserve">
+    <value>A DICOM auto-routing rule for studies</value>
   </data>
   <data name="ServerRuleApplyTimeEnum_SopReceived_Description" xml:space="preserve">
     <value>SOP Received</value>
@@ -860,5 +740,209 @@
   </data>
   <data name="ArchiveTypeEnum_HsmArchive_LongDescription" xml:space="preserve">
     <value>Hierarchical storage management archive such as StorageTek QFS</value>
+  </data>
+  <data name="ArchiveQueueStatusEnum_Pending_Description" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="ArchiveQueueStatusEnum_Pending_LongDescription" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="ArchiveQueueStatusEnum_In Progress_Description" xml:space="preserve">
+    <value>In Progress</value>
+  </data>
+  <data name="ArchiveQueueStatusEnum_In Progress_LongDescription" xml:space="preserve">
+    <value>In Progress</value>
+  </data>
+  <data name="ArchiveQueueStatusEnum_Completed_Description" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="ArchiveQueueStatusEnum_Completed_LongDescription" xml:space="preserve">
+    <value>The Queue entry is completed.</value>
+  </data>
+  <data name="ArchiveQueueStatusEnum_Failed_Description" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="ArchiveQueueStatusEnum_Failed_LongDescription" xml:space="preserve">
+    <value>The Queue entry has failed.</value>
+  </data>
+  <data name="DuplicateSopPolicyEnum_SendSuccess_Description" xml:space="preserve">
+    <value>Send Success</value>
+  </data>
+  <data name="DuplicateSopPolicyEnum_SendSuccess_LongDescription" xml:space="preserve">
+    <value>Send a DICOM C-STORE-RSP success status when receiving a duplicate, but ignore the file.</value>
+  </data>
+  <data name="DuplicateSopPolicyEnum_RejectDuplicates_Description" xml:space="preserve">
+    <value>Reject Duplicates</value>
+  </data>
+  <data name="DuplicateSopPolicyEnum_RejectDuplicates_LongDescription" xml:space="preserve">
+    <value>Send a DICOM C-STORE-RSP reject status when receiving a duplicate.</value>
+  </data>
+  <data name="DuplicateSopPolicyEnum_CompareDuplicates_Description" xml:space="preserve">
+    <value>Compare Duplicates</value>
+  </data>
+  <data name="DuplicateSopPolicyEnum_CompareDuplicates_LongDescription" xml:space="preserve">
+    <value>Process duplicate objects received and compare them to originals flagging any differences as a failure.</value>
+  </data>
+  <data name="DuplicateSopPolicyEnum_AcceptLatest_Description" xml:space="preserve">
+    <value>Accept Latest</value>
+  </data>
+  <data name="DuplicateSopPolicyEnum_AcceptLatest_LongDescription" xml:space="preserve">
+    <value>Process duplicate objects received and always accecpt the latest file received.</value>
+  </data>
+  <data name="RestoreQueueStatusEnum_Pending_Description" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="RestoreQueueStatusEnum_Pending_LongDescription" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="RestoreQueueStatusEnum_In Progress_Description" xml:space="preserve">
+    <value>In Progress</value>
+  </data>
+  <data name="RestoreQueueStatusEnum_In Progress_LongDescription" xml:space="preserve">
+    <value>In Progress</value>
+  </data>
+  <data name="RestoreQueueStatusEnum_Completed_Description" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="RestoreQueueStatusEnum_Completed_LongDescription" xml:space="preserve">
+    <value>The Queue entry is completed.</value>
+  </data>
+  <data name="RestoreQueueStatusEnum_Failed_Description" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="RestoreQueueStatusEnum_Failed_LongDescription" xml:space="preserve">
+    <value>The Queue entry has failed.</value>
+  </data>
+  <data name="RestoreQueueStatusEnum_Restoring_Description" xml:space="preserve">
+    <value>Restoring</value>
+  </data>
+  <data name="RestoreQueueStatusEnum_Restoring_LongDescription" xml:space="preserve">
+    <value>The Queue entry is waiting for the study to be restored by the archive.</value>
+  </data>
+  <data name="AlertCategoryEnum_System_Description" xml:space="preserve">
+    <value>System alert</value>
+  </data>
+  <data name="AlertCategoryEnum_System_LongDescription" xml:space="preserve">
+    <value>System alert</value>
+  </data>
+  <data name="AlertCategoryEnum_Application_Description" xml:space="preserve">
+    <value>Application alert</value>
+  </data>
+  <data name="AlertCategoryEnum_Application_LongDescription" xml:space="preserve">
+    <value>Application alert</value>
+  </data>
+  <data name="AlertCategoryEnum_Security_Description" xml:space="preserve">
+    <value>Security alert</value>
+  </data>
+  <data name="AlertCategoryEnum_Security_LongDescription" xml:space="preserve">
+    <value>Security alert</value>
+  </data>
+  <data name="AlertCategoryEnum_User_Description" xml:space="preserve">
+    <value>User alert</value>
+  </data>
+  <data name="AlertCategoryEnum_User_LongDescription" xml:space="preserve">
+    <value>User alert</value>
+  </data>
+  <data name="AlertLevelEnum_Informational_Description" xml:space="preserve">
+    <value>Informational</value>
+  </data>
+  <data name="AlertLevelEnum_Informational_LongDescription" xml:space="preserve">
+    <value>Informational alert</value>
+  </data>
+  <data name="AlertLevelEnum_Warning_Description" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="AlertLevelEnum_Warning_LongDescription" xml:space="preserve">
+    <value>Warning alert</value>
+  </data>
+  <data name="AlertLevelEnum_Error_Description" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="AlertLevelEnum_Error_LongDescription" xml:space="preserve">
+    <value>Error alert</value>
+  </data>
+  <data name="AlertLevelEnum_Critical_Description" xml:space="preserve">
+    <value>Critical</value>
+  </data>
+  <data name="AlertLevelEnum_Critical_LongDescription" xml:space="preserve">
+    <value>Critical alert</value>
+  </data>
+  <data name="ServerPartitionTypeEnum_Standard_Description" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="ServerPartitionTypeEnum_Standard_LongDescription" xml:space="preserve">
+    <value>A standard ImageServer Partition</value>
+  </data>
+  <data name="ServerPartitionTypeEnum_VFS_Description" xml:space="preserve">
+    <value>VFS</value>
+  </data>
+  <data name="ServerPartitionTypeEnum_VFS_LongDescription" xml:space="preserve">
+    <value>An ImageServer Virtual File System Partition</value>
+  </data>
+  <data name="OrderStatusEnum_New_Description" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="OrderStatusEnum_New_LongDescription" xml:space="preserve">
+    <value>New Order</value>
+  </data>
+  <data name="OrderStatusEnum_Canceled_Description" xml:space="preserve">
+    <value>Canceled</value>
+  </data>
+  <data name="OrderStatusEnum_Canceled_LongDescription" xml:space="preserve">
+    <value>Order Cancelled</value>
+  </data>
+  <data name="OrderStatusEnum_Complete_Description" xml:space="preserve">
+    <value>Complete</value>
+  </data>
+  <data name="OrderStatusEnum_Complete_LongDescription" xml:space="preserve">
+    <value>Order Completed</value>
+  </data>
+  <data name="OrderStatusEnum_InProcess_Description" xml:space="preserve">
+    <value>In Process</value>
+  </data>
+  <data name="OrderStatusEnum_InProcess_LongDescription" xml:space="preserve">
+    <value>Order In Process</value>
+  </data>
+  <data name="StudyIntegrityReasonEnum_InconsistentData_Description" xml:space="preserve">
+    <value>Inconsistent Data</value>
+  </data>
+  <data name="StudyIntegrityReasonEnum_InconsistentData_LongDescription" xml:space="preserve">
+    <value>Images must be reconciled because of inconsistent data.</value>
+  </data>
+  <data name="StudyIntegrityReasonEnum_Duplicate_Description" xml:space="preserve">
+    <value>Duplicate</value>
+  </data>
+  <data name="StudyIntegrityReasonEnum_Duplicate_LongDescription" xml:space="preserve">
+    <value>Duplicates were received and need to be reconciled.</value>
+  </data>
+  <data name="WorkQueueStatusEnum_Idle_Description" xml:space="preserve">
+    <value>Idle</value>
+  </data>
+  <data name="WorkQueueStatusEnum_Idle_LongDescription" xml:space="preserve">
+    <value>Waiting to expire or for more images</value>
+  </data>
+  <data name="WorkQueueStatusEnum_Pending_Description" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="WorkQueueStatusEnum_Pending_LongDescription" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="WorkQueueStatusEnum_In Progress_Description" xml:space="preserve">
+    <value>In Progress</value>
+  </data>
+  <data name="WorkQueueStatusEnum_In Progress_LongDescription" xml:space="preserve">
+    <value>In Progress</value>
+  </data>
+  <data name="WorkQueueStatusEnum_Completed_Description" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="WorkQueueStatusEnum_Completed_LongDescription" xml:space="preserve">
+    <value>The Queue entry is completed.</value>
+  </data>
+  <data name="WorkQueueStatusEnum_Failed_Description" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="WorkQueueStatusEnum_Failed_LongDescription" xml:space="preserve">
+    <value>The Queue entry has failed.</value>
   </data>
 </root>

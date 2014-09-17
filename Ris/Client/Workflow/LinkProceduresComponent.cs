@@ -22,6 +22,7 @@
 
 #endregion
 
+using System.Collections;
 using System.Collections.Generic;
 using ClearCanvas.Common;
 using ClearCanvas.Desktop;
@@ -49,8 +50,9 @@ namespace ClearCanvas.Ris.Client.Workflow
 		private Table<Checkable<ReportingWorklistItemSummary>> _candidateTable;
 		private readonly List<ReportingWorklistItemSummary> _candidates;
 
-		private readonly ReportingWorklistItemSummary _sourceItem;
+		private ReportingWorklistItemSummary _primaryItem;
 		private ReportingWorklistTable _sourceTable;
+		private Checkable<ReportingWorklistItemSummary> _selectedCandidate;
 
 		private readonly string _instructions;
 		private readonly string _heading;
@@ -61,7 +63,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 		public LinkProceduresComponent(ReportingWorklistItemSummary sourceItem, List<ReportingWorklistItemSummary> candidateItems, string instructions, string heading)
 		{
 			_candidates = candidateItems;
-			_sourceItem = sourceItem;
+			_primaryItem = sourceItem;
 			_instructions = instructions;
 			_heading = heading;
 		}
@@ -74,7 +76,8 @@ namespace ClearCanvas.Ris.Client.Workflow
 		public override void Start()
 		{
 			_candidateTable = new Table<Checkable<ReportingWorklistItemSummary>>();
-			_candidateTable.Columns.Add(new TableColumn<Checkable<ReportingWorklistItemSummary>, bool>(".",
+			const string checkedColumnName = ".";
+			_candidateTable.Columns.Add(new TableColumn<Checkable<ReportingWorklistItemSummary>, bool>(checkedColumnName,
 				delegate(Checkable<ReportingWorklistItemSummary> item) { return item.IsChecked; },
 				delegate(Checkable<ReportingWorklistItemSummary> item, bool value) { item.IsChecked = value; }, 0.20f));
 			_candidateTable.Columns.Add(new TableColumn<Checkable<ReportingWorklistItemSummary>, string>(SR.ColumnProcedure,
@@ -88,19 +91,35 @@ namespace ClearCanvas.Ris.Client.Workflow
 			}
 
 			_sourceTable = new ReportingWorklistTable();
-			_sourceTable.Items.Add(_sourceItem);
+			_sourceTable.Items.Add(_primaryItem);
+
+			_selectedCandidate = CollectionUtils.FirstElement(_candidateTable.Items);
 
 			base.Start();
 		}
 
-		public List<ReportingWorklistItemSummary> SelectedItems
+		public ReportingWorklistItemSummary PrimaryItem
+		{
+			get { return _primaryItem; }
+		}
+
+		public List<ReportingWorklistItemSummary> UncheckedItems
 		{
 			get
 			{
 				return CollectionUtils.Map<Checkable<ReportingWorklistItemSummary>, ReportingWorklistItemSummary>(
-					CollectionUtils.Select(_candidateTable.Items,
-						delegate(Checkable<ReportingWorklistItemSummary> item) { return item.IsChecked; }),
-							delegate(Checkable<ReportingWorklistItemSummary> checkableItem) { return checkableItem.Item; });
+					CollectionUtils.Select(_candidateTable.Items, item => !item.IsChecked),
+					checkableItem => checkableItem.Item);
+			}			
+		}
+
+		public List<ReportingWorklistItemSummary> CheckedItems
+		{
+			get
+			{
+				return CollectionUtils.Map<Checkable<ReportingWorklistItemSummary>, ReportingWorklistItemSummary>(
+					CollectionUtils.Select(_candidateTable.Items, item => item.IsChecked),
+					checkableItem => checkableItem.Item);
 			}
 		}
 
@@ -114,6 +133,32 @@ namespace ClearCanvas.Ris.Client.Workflow
 		public ITable CandidateTable
 		{
 			get { return _candidateTable; }
+		}
+
+		public ISelection CandidateTableSelection
+		{
+			get
+			{
+				return new Selection(_selectedCandidate);
+			}
+			set
+			{
+				var previousSelection = new Selection(_selectedCandidate);
+				if (previousSelection.Equals(value))
+					return;
+
+				_selectedCandidate = (Checkable<ReportingWorklistItemSummary>)value.Item;
+				NotifyPropertyChanged("CandidateTableSelection");
+			}
+		}
+
+		public bool MakePrimaryEnabled
+		{
+			get
+			{
+				return _candidateTable.Items.Count > 0
+					&& _selectedCandidate != null;
+			}
 		}
 
 		public string Instructions
@@ -130,6 +175,25 @@ namespace ClearCanvas.Ris.Client.Workflow
 		{
 			this.Exit(ApplicationComponentExitCode.Accepted);
 		}
+
+		public void MakePrimary()
+		{
+			// Swap the current primary item with the selected candidate item. Update both tables and selections
+			var originalSelectedCandidate = _selectedCandidate.Item;
+			var isChecked = _selectedCandidate.IsChecked;
+
+			var index = _candidateTable.Items.IndexOf(_selectedCandidate);
+			_candidateTable.Items.RemoveAt(index);
+			_selectedCandidate = new Checkable<ReportingWorklistItemSummary>(_primaryItem, isChecked);
+			_candidateTable.Items.Insert(index, _selectedCandidate);
+
+			_primaryItem = originalSelectedCandidate;
+			_sourceTable.Items.Clear();
+			_sourceTable.Items.Add(_primaryItem);
+
+			NotifyPropertyChanged("CandidateTableSelection");
+		}
+
 
 		#endregion
 	}

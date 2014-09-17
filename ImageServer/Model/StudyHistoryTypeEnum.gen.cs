@@ -42,6 +42,8 @@ public partial class StudyHistoryTypeEnum : ServerEnum
       private static readonly StudyHistoryTypeEnum _Reprocessed = GetEnum("Reprocessed");
       private static readonly StudyHistoryTypeEnum _SeriesDeleted = GetEnum("SeriesDeleted");
       private static readonly StudyHistoryTypeEnum _ExternalEdit = GetEnum("ExternalEdit");
+      private static readonly StudyHistoryTypeEnum _StudyCompress = GetEnum("StudyCompress");
+      private static readonly StudyHistoryTypeEnum _SopCompress = GetEnum("SopCompress");
       #endregion
 
       #region Public Static Properties
@@ -86,6 +88,20 @@ public partial class StudyHistoryTypeEnum : ServerEnum
       public static StudyHistoryTypeEnum ExternalEdit
       {
           get { return _ExternalEdit; }
+      }
+      /// <summary>
+      /// Study was compressed.
+      /// </summary>
+      public static StudyHistoryTypeEnum StudyCompress
+      {
+          get { return _StudyCompress; }
+      }
+      /// <summary>
+      /// Study was compressed by a SOP Compress rule.
+      /// </summary>
+      public static StudyHistoryTypeEnum SopCompress
+      {
+          get { return _SopCompress; }
       }
 
       #endregion

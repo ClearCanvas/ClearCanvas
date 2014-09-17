@@ -81,8 +81,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Command\CommandFactory.cs" />
     <Compile Include="Command\CompleteWorkItemUidCommand.cs" />
     <Compile Include="Command\DataAccessCommand.cs" />
+    <Compile Include="Command\FastRenameFileCommand.cs" />
+    <Compile Include="Command\FastSaveDicomFileCommand.cs" />
     <Compile Include="Command\InsertOrUpdateStudyCommand.cs" />
     <Compile Include="Command\InsertStudyXmlCommand.cs" />
     <Compile Include="Command\InsertWorkItemCommand.cs" />
@@ -108,6 +111,12 @@
     <Compile Include="DeleteSeriesUtility.cs" />
     <Compile Include="DeleteStudyUtility.cs" />
     <Compile Include="DicomFilePublisher.cs" />
+    <Compile Include="FileManagementSettings.cs" />
+    <Compile Include="FileManagementSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>FileManagementSettings.settings</DependentUpon>
+    </Compile>
     <Compile Include="ImageViewerMoveScu.cs" />
     <Compile Include="ImageViewerStorageScu.cs" />
     <Compile Include="ReapplyRulesUtility.cs" />
@@ -156,6 +165,9 @@
     <Compile Include="Storage\Broker.cs" />
     <Compile Include="Storage\DataAccessContext.cs" />
     <Compile Include="Storage\DeviceBroker.cs" />
+    <Compile Include="Storage\DicomStoreDataContext.cs">
+      <DependentUpon>DicomStoreDataContext.dbml</DependentUpon>
+    </Compile>
     <Compile Include="Storage\DicomStoreDataContext.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -171,7 +183,13 @@
     <Compile Include="Storage\StudyBroker.cs" />
     <Compile Include="Storage\StudyLocation.cs" />
     <Compile Include="Storage\Tests\SerializationTests.cs" />
+    <Compile Include="Storage\Tests\StudyBrokerTests.cs" />
+    <Compile Include="Storage\Tests\TestHelper.cs" />
+    <Compile Include="Storage\Tests\WorkItemBrokerTests.cs" />
+    <Compile Include="Storage\Tests\WorkItemUidBrokerTests.cs" />
+    <Compile Include="Storage\Utilities.cs" />
     <Compile Include="Storage\WorkItemStatusFilter.cs" />
+    <Compile Include="Storage\WorkItemUid.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="Storage\WorkItem.cs" />
     <Compile Include="Storage\WorkItemBroker.cs" />
@@ -237,6 +255,10 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Configuration\dbml_gen.bat" />
+    <None Include="FileManagementSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>FileManagementSettings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Storage\DicomQuery\Tests\test_store_insert_studies.sqlce" />
     <None Include="Storage\DicomStoreDataContext.dbml.layout">
       <DependentUpon>DicomStoreDataContext.dbml</DependentUpon>

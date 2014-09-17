@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Web;
 using ClearCanvas.Common;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Enterprise;
@@ -61,7 +62,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
 
         public IList<TServerEntity> Get()
         {
-            return Get(HttpContextData.Current.ReadContext);
+			return Get(HttpContext.Current.GetSharedPersistentContext());
         }
 		public IList<TServerEntity> Get(IPersistenceContext context)
 		{
@@ -78,7 +79,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
 
         public TServerEntity Get(ServerEntityKey key)
 		{
-            return Get(HttpContextData.Current.ReadContext, key);
+			return Get(HttpContext.Current.GetSharedPersistentContext(), key);
 		}
 
 		public TServerEntity Get(IPersistenceContext context, ServerEntityKey key)
@@ -90,7 +91,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
 
     	public IList<TServerEntity> Get(TCriteria criteria)
         {
-            return Get(HttpContextData.Current.ReadContext, criteria);
+            return Get(HttpContext.Current.GetSharedPersistentContext(), criteria);
         }
 
 		public IList<TServerEntity> Get(IPersistenceContext context, TCriteria criteria)
@@ -102,7 +103,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
 		}
 		public IList<TServerEntity> GetRange(TCriteria criteria, int startIndex, int maxRows)
 		{
-            return GetRange(HttpContextData.Current.ReadContext, criteria, startIndex, maxRows);
+            return GetRange(HttpContext.Current.GetSharedPersistentContext(), criteria, startIndex, maxRows);
 		}
 		public IList<TServerEntity> GetRange(IPersistenceContext context, TCriteria criteria, int startIndex, int maxRows)
 		{
@@ -116,14 +117,14 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
 
     	public int GetCount(TCriteria criteria)
 		{
-    	    OnQuerying(HttpContextData.Current.ReadContext, criteria);
-            TIEntity select = HttpContextData.Current.ReadContext.GetBroker<TIEntity>();
+    	    OnQuerying(HttpContext.Current.GetSharedPersistentContext(), criteria);
+            TIEntity select = HttpContext.Current.GetSharedPersistentContext().GetBroker<TIEntity>();
 			return select.Count(criteria);
 		}
 
 		public TServerEntity GetFirst(TCriteria criteria)
 		{
-            return GetFirst(HttpContextData.Current.ReadContext, criteria);
+            return GetFirst(HttpContext.Current.GetSharedPersistentContext(), criteria);
 		}
 
 		public TServerEntity GetFirst(IPersistenceContext context, TCriteria criteria)

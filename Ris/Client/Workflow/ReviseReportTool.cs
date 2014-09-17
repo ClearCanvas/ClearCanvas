@@ -32,8 +32,8 @@ using ClearCanvas.Ris.Application.Common.ReportingWorkflow;
 
 namespace ClearCanvas.Ris.Client.Workflow
 {
-	[MenuAction("apply", "folderexplorer-items-contextmenu/Revise Report", "Apply")]
-	[ButtonAction("apply", "folderexplorer-items-toolbar/Revise Report", "Apply")]
+	[MenuAction("apply", "folderexplorer-items-contextmenu/MenuReviseReport", "Apply")]
+	[ButtonAction("apply", "folderexplorer-items-toolbar/MenuReviseReport", "Apply")]
 	[IconSet("apply","Icons.EditReportToolSmall.png", "Icons.EditReportToolMedium.png", "Icons.EditReportToolLarge.png")]
 	[EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
 	[ActionPermission("apply", ClearCanvas.Ris.Application.Common.AuthorityTokens.Workflow.Report.Create)]
@@ -94,8 +94,8 @@ namespace ClearCanvas.Ris.Client.Workflow
 		}
 	}
 
-	[MenuAction("apply", "folderexplorer-items-contextmenu/Return to Interpreter", "Apply")]
-	[ButtonAction("apply", "folderexplorer-items-toolbar/Return to Interpreter", "Apply")]
+	[MenuAction("apply", "folderexplorer-items-contextmenu/MenuReturnToInterpreter", "Apply")]
+	[ButtonAction("apply", "folderexplorer-items-toolbar/MenuReturnToInterpreter", "Apply")]
 	[IconSet("apply", "Icons.AssignSmall.png", "Icons.AssignMedium.png", "Icons.AssignLarge.png")]
 	[VisibleStateObserver("apply", "Visible")]
 	[EnabledStateObserver("apply", "Enabled", "EnabledChanged")]

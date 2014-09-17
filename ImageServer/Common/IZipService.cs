@@ -28,6 +28,12 @@ using System.IO;
 
 namespace ClearCanvas.ImageServer.Common
 {
+	public class ProgressUpdatedEventArgs:EventArgs
+	{
+		public string Status { get; set; }
+		public float Percentage { get; set; }
+	}
+
     /// <summary>
     /// Interface for reading from Zip file.
     /// </summary>
@@ -53,6 +59,8 @@ namespace ClearCanvas.ImageServer.Common
         void AddFileStream(string directoryPathInArchive, Stream sourceFile, string comment);
         void AddDirectory(string sourceDirectory);
         void Save();
+
+		event EventHandler<ProgressUpdatedEventArgs> ProgressUpdated;
     }
 
     /// <summary>

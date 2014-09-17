@@ -89,16 +89,16 @@ namespace ClearCanvas.Dicom.Utilities.Command
         {
             if (_copied)
             {
-                if (Directory.Exists(_backupDestDir))
+                if (!string.IsNullOrEmpty(_backupDestDir) && Directory.Exists(_backupDestDir))
                 {
                     try
                     {
                         DirectoryUtility.DeleteIfExists(_dest);
                     }
-                    catch
+                    catch (Exception ex)
                     {
                     	// ignore it, will overwrite anyway
-                        Platform.Log(LogLevel.Warn, "Unexpected exeception attempting to delete: {0}", _dest);
+                        Platform.Log(LogLevel.Warn, "Unexpected exeception attempting to delete on undo '{0}': {1}", _dest, ex.Message);
                     }
 
                     // restore
@@ -108,7 +108,7 @@ namespace ClearCanvas.Dicom.Utilities.Command
                     }
                     catch (Exception ex)
                     {
-                        Platform.Log(LogLevel.Warn, "Error occurred when rolling back CopyDirectoryCommand: {0}", ex);
+                        Platform.Log(LogLevel.Warn, "Error occurred when rolling back CopyDirectoryCommand: {0}", ex.Message);
                     }
                 }
             }
@@ -123,9 +123,10 @@ namespace ClearCanvas.Dicom.Utilities.Command
             {
                 BackupTime.Start();
                 _backupDestDir = Path.Combine(ProcessorContext.BackupDirectory, "DestFolder");
-                Directory.CreateDirectory(_backupDestDir);
+
                 Platform.Log(LogLevel.Info, "Backing up original destination folder {0}", _dest);
-                DirectoryUtility.Copy(_dest, _backupDestDir);
+				// Will create the destination folder, if need be.
+				DirectoryUtility.Copy(_dest, _backupDestDir);
                 Platform.Log(LogLevel.Info, "Original destination folder {0} is backed up to {1}", _dest, _backupDestDir);
                 BackupTime.End();
             }
@@ -138,12 +139,13 @@ namespace ClearCanvas.Dicom.Utilities.Command
         {
             try
             {
-                DirectoryUtility.DeleteIfExists(_backupDestDir);
+				if (!string.IsNullOrEmpty(_backupDestDir))
+					DirectoryUtility.DeleteIfExists(_backupDestDir);
             }
-            catch
+            catch (Exception x)
             {
             	//ignore
-                Platform.Log(LogLevel.Warn, "Unexpected exeception attempting to delete: {0}", _dest);
+				Platform.Log(LogLevel.Warn, "Unexpected exeception attempting to delete backup directory '{0}': {1}", _backupDestDir, x.Message);
             }
         }
 

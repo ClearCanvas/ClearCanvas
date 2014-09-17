@@ -82,6 +82,7 @@
     <Compile Include="Misc\ProductVerificationService.cs" />
     <Compile Include="Misc\UsageTrackingService.cs" />
     <Compile Include="ServiceMount.cs" />
+    <Compile Include="Shreds\ManifestCheckingShred.cs" />
     <Compile Include="Shreds\RemoteServicesServer.cs" />
     <Compile Include="Misc\FilesystemInfoService.cs" />
     <Compile Include="Authentication\SessionTokenManager.cs" />

@@ -48,13 +48,13 @@ namespace ClearCanvas.ImageServer.Model
             ,Int32 _failureCount_
             ,DateTime _scheduledTime_
             ,DateTime _insertTime_
-            ,DateTime _lastUpdatedTime_
+            ,DateTime? _lastUpdatedTime_
             ,String _failureDescription_
             ,XmlDocument _data_
             ,ServerEntityKey _externalRequestQueueKey_
             ,String _processorID_
             ,String _groupID_
-            ,DateTime _expirationTime_
+            ,DateTime? _expirationTime_
             ,ServerEntityKey _deviceKey_
             ,ServerEntityKey _studyHistoryKey_
             ):base("WorkQueue")
@@ -105,7 +105,7 @@ namespace ClearCanvas.ImageServer.Model
         public DateTime InsertTime
         { get; set; }
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="LastUpdatedTime")]
-        public DateTime LastUpdatedTime
+        public DateTime? LastUpdatedTime
         { get; set; }
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="FailureDescription")]
         public String FailureDescription
@@ -125,7 +125,7 @@ namespace ClearCanvas.ImageServer.Model
         public String GroupID
         { get; set; }
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="ExpirationTime")]
-        public DateTime ExpirationTime
+        public DateTime? ExpirationTime
         { get; set; }
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="DeviceGUID")]
         public ServerEntityKey DeviceKey

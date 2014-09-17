@@ -92,11 +92,16 @@ namespace ClearCanvas.Enterprise.Common.Setup
 				{
 					SettingsMigrator.MigrateSharedSettings(group, previousExeConfigFilename);
 				}
+				catch (UnknownServiceException e)
+				{
+					//Failure to migrate a settings is not good enough reason to cause the whole app to fail.
+					//Some of the viewer settings classes SHOULD actually fail to migrate in the context of the ImageServer.
+					Platform.Log(LogLevel.Debug, e, "Failed to migrate settings '{0}'", group.AssemblyQualifiedTypeName);
+				}
 				catch (Exception e)
 				{
 					//Failure to migrate a settings is not good enough reason to cause the whole app to fail.
 					//Some of the viewer settings classes SHOULD actually fail to migrate in the context of the ImageServer.
-					//
 					Platform.Log(LogLevel.Warn, e, "Failed to migrate settings '{0}'", group.AssemblyQualifiedTypeName);
 				}
 			}

@@ -59,49 +59,42 @@ namespace ClearCanvas.Ris.Client.Workflow.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RichTextReportEditorComponentControl));
 			this._richText = new System.Windows.Forms.RichTextBox();
 			this._splitContainer = new System.Windows.Forms.SplitContainer();
+			((System.ComponentModel.ISupportInitialize)(this._splitContainer)).BeginInit();
 			this._splitContainer.Panel2.SuspendLayout();
 			this._splitContainer.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// _richText
 			// 
-			this._richText.Dock = System.Windows.Forms.DockStyle.Fill;
+			resources.ApplyResources(this._richText, "_richText");
 			this._richText.EnableAutoDragDrop = true;
-			this._richText.Location = new System.Drawing.Point(0, 0);
 			this._richText.Name = "_richText";
-			this._richText.Size = new System.Drawing.Size(449, 283);
-			this._richText.TabIndex = 0;
-			this._richText.Text = "";
 			// 
 			// _splitContainer
 			// 
-			this._splitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._splitContainer.Location = new System.Drawing.Point(0, 0);
+			resources.ApplyResources(this._splitContainer, "_splitContainer");
 			this._splitContainer.Name = "_splitContainer";
-			this._splitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
 			// 
 			// _splitContainer.Panel1
 			// 
-			this._splitContainer.Panel1.Padding = new System.Windows.Forms.Padding(0, 0, 15, 0);
+			resources.ApplyResources(this._splitContainer.Panel1, "_splitContainer.Panel1");
 			// 
 			// _splitContainer.Panel2
 			// 
 			this._splitContainer.Panel2.Controls.Add(this._richText);
-			this._splitContainer.Panel2.Padding = new System.Windows.Forms.Padding(0, 0, 15, 0);
-			this._splitContainer.Size = new System.Drawing.Size(464, 569);
-			this._splitContainer.SplitterDistance = 282;
-			this._splitContainer.TabIndex = 1;
+			resources.ApplyResources(this._splitContainer.Panel2, "_splitContainer.Panel2");
 			// 
-			// TranscriptionEditorComponentControl
+			// RichTextReportEditorComponentControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this._splitContainer);
-			this.Name = "TranscriptionEditorComponentControl";
-			this.Size = new System.Drawing.Size(464, 569);
+			this.Name = "RichTextReportEditorComponentControl";
 			this._splitContainer.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this._splitContainer)).EndInit();
 			this._splitContainer.ResumeLayout(false);
 			this.ResumeLayout(false);
 

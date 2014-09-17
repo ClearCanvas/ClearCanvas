@@ -7,6 +7,7 @@
 		<script type="text/javascript" src="../js/jsml.js"></script>
 		<script type="text/javascript" src="../js/ui.js"></script>
 		<script type="text/javascript" src="../js/ris.js"></script>
+		<script type="text/javascript" src="../js/SR.js"></script>
 		<script type="text/javascript" src="../js/layout.js"></script>
 		<script type="text/javascript" src="../js/pdfSupport.js"></script>
 		<script type="text/javascript" >
@@ -14,49 +15,41 @@
 		
 		function onBodyLoad()
 		{
-				try
-				{
-					if(!Ris)
-						return;
+			if(!Ris)
+				return;
 
-					var faxboxItem = Ris.getHealthcareContext();
+			var faxboxItem = Ris.getHealthcareContext();
 
-					var faxUrl = faxboxItem ? Ris.getAttachedDocumentUrl(faxboxItem.Document) : "about:blank";
-					
-					var urlExtension = faxUrl.substring(faxUrl.length - 3, faxUrl.length).toLowerCase();;
-					if (urlExtension == "pdf")
-					{
-						// show PDF in the embedded object.  Use exposed methods to hide toolbar
-						var pdfObject = PdfObject("PdfObject", faxUrl);
-						pdfObject.createToolbar("PdfButtons");
-					}
-					else
-					{
-						// redirect all other documents
-						window.location = faxUrl;
-					}
+			var faxUrl = faxboxItem ? Ris.getAttachedDocumentUrl(faxboxItem.Document) : "about:blank";
+			
+			var urlExtension = faxUrl.substring(faxUrl.length - 3, faxUrl.length).toLowerCase();;
+			if (urlExtension == "pdf")
+			{
+				// show PDF in the embedded object.  Use exposed methods to hide toolbar
+				var pdfObject = PdfObject("PdfObject", faxUrl);
+				pdfObject.createToolbar("PdfButtons");
+			}
+			else
+			{
+				// redirect all other documents
+				window.location = faxUrl;
+			}
 
-					if(faxboxItem != null)
-					{
-						Field.setValue($("senderNumber"), Ris.formatStringTelephone(faxboxItem.SenderNumber));
-						Field.setValue($("receivedAtNumber"), Ris.formatStringTelephone(faxboxItem.ReceivedAt.Number));
-						Field.setValue($("receivedTime"), Ris.formatDateTime(faxboxItem.ReceivedTime));
-						Field.setValue($("pages"), faxboxItem.Document.Pages);
-						Field.setValue($("status"), faxboxItem.Status.Value);
-					}
-					else
-					{
-						Field.setValue($("senderNumber"), "Not found.");
-						Field.setValue($("receivedAtNumber"), "Not found.");
-						Field.setValue($("pages"), "Not implemented yet.");
-						Field.setValue($("status"), "Not found.");
-					}
-				}
-				catch(e)
-				{
-					var message = "Failed to load details page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
-					Field.setValue($("errorMsg"), message);
-				}
+			if(faxboxItem != null)
+			{
+				Field.setValue($("senderNumber"), Ris.formatStringTelephone(faxboxItem.SenderNumber));
+				Field.setValue($("receivedAtNumber"), Ris.formatStringTelephone(faxboxItem.ReceivedAt.Number));
+				Field.setValue($("receivedTime"), Ris.formatDateTime(faxboxItem.ReceivedTime));
+				Field.setValue($("pages"), faxboxItem.Document.Pages);
+				Field.setValue($("status"), faxboxItem.Status.Value);
+			}
+			else
+			{
+				Field.setValue($("senderNumber"), "Not found.");
+				Field.setValue($("receivedAtNumber"), "Not found.");
+				Field.setValue($("pages"), "Not implemented yet.");
+				Field.setValue($("status"), "Not found.");
+			}
 		}
 
 		</script>

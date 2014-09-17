@@ -117,4 +117,511 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="_accession.LabelText" xml:space="preserve">
+    <value>Accession #</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="_accession.Location" type="System.Drawing.Point, System.Drawing">
+    <value>2, 2</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="_accession.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="_accession.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
+    <value />
+  </data>
+  <data name="_accession.Size" type="System.Drawing.Size, System.Drawing">
+    <value>206, 42</value>
+  </data>
+  <data name="_accession.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="_accession.ToolTip" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="&gt;&gt;_accession.Name" xml:space="preserve">
+    <value>_accession</value>
+  </data>
+  <data name="&gt;&gt;_accession.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.TextField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_accession.Parent" xml:space="preserve">
+    <value>_outerFlowLayoutPanel</value>
+  </data>
+  <data name="&gt;&gt;_accession.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_mrn.LabelText" xml:space="preserve">
+    <value>MRN</value>
+  </data>
+  <data name="_mrn.Location" type="System.Drawing.Point, System.Drawing">
+    <value>212, 2</value>
+  </data>
+  <data name="_mrn.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_mrn.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
+    <value />
+  </data>
+  <data name="_mrn.Size" type="System.Drawing.Size, System.Drawing">
+    <value>206, 42</value>
+  </data>
+  <data name="_mrn.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="_mrn.ToolTip" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="&gt;&gt;_mrn.Name" xml:space="preserve">
+    <value>_mrn</value>
+  </data>
+  <data name="&gt;&gt;_mrn.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.TextField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_mrn.Parent" xml:space="preserve">
+    <value>_outerFlowLayoutPanel</value>
+  </data>
+  <data name="&gt;&gt;_mrn.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_healthcard.LabelText" xml:space="preserve">
+    <value>Healthcard #</value>
+  </data>
+  <data name="_healthcard.Location" type="System.Drawing.Point, System.Drawing">
+    <value>2, 48</value>
+  </data>
+  <data name="_healthcard.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_healthcard.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
+    <value />
+  </data>
+  <data name="_healthcard.Size" type="System.Drawing.Size, System.Drawing">
+    <value>206, 42</value>
+  </data>
+  <data name="_healthcard.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="_healthcard.ToolTip" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="&gt;&gt;_healthcard.Name" xml:space="preserve">
+    <value>_healthcard</value>
+  </data>
+  <data name="&gt;&gt;_healthcard.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.TextField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_healthcard.Parent" xml:space="preserve">
+    <value>_outerFlowLayoutPanel</value>
+  </data>
+  <data name="&gt;&gt;_healthcard.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="_familyName.LabelText" xml:space="preserve">
+    <value>Family Name</value>
+  </data>
+  <data name="_familyName.Location" type="System.Drawing.Point, System.Drawing">
+    <value>212, 48</value>
+  </data>
+  <data name="_familyName.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_familyName.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
+    <value />
+  </data>
+  <data name="_familyName.Size" type="System.Drawing.Size, System.Drawing">
+    <value>206, 42</value>
+  </data>
+  <data name="_familyName.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="_familyName.ToolTip" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="&gt;&gt;_familyName.Name" xml:space="preserve">
+    <value>_familyName</value>
+  </data>
+  <data name="&gt;&gt;_familyName.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.TextField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_familyName.Parent" xml:space="preserve">
+    <value>_outerFlowLayoutPanel</value>
+  </data>
+  <data name="&gt;&gt;_familyName.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="_givenName.LabelText" xml:space="preserve">
+    <value>Given Name</value>
+  </data>
+  <data name="_givenName.Location" type="System.Drawing.Point, System.Drawing">
+    <value>2, 94</value>
+  </data>
+  <data name="_givenName.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_givenName.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
+    <value />
+  </data>
+  <data name="_givenName.Size" type="System.Drawing.Size, System.Drawing">
+    <value>206, 42</value>
+  </data>
+  <data name="_givenName.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="_givenName.ToolTip" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="&gt;&gt;_givenName.Name" xml:space="preserve">
+    <value>_givenName</value>
+  </data>
+  <data name="&gt;&gt;_givenName.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.TextField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_givenName.Parent" xml:space="preserve">
+    <value>_outerFlowLayoutPanel</value>
+  </data>
+  <data name="&gt;&gt;_givenName.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="_fromDate.LabelText" xml:space="preserve">
+    <value>From Date</value>
+  </data>
+  <data name="_fromDate.Location" type="System.Drawing.Point, System.Drawing">
+    <value>2, 186</value>
+  </data>
+  <data name="_fromDate.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_fromDate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>206, 42</value>
+  </data>
+  <data name="_fromDate.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="&gt;&gt;_fromDate.Name" xml:space="preserve">
+    <value>_fromDate</value>
+  </data>
+  <data name="&gt;&gt;_fromDate.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.DateTimeField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_fromDate.Parent" xml:space="preserve">
+    <value>_outerFlowLayoutPanel</value>
+  </data>
+  <data name="&gt;&gt;_fromDate.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="_untilDate.LabelText" xml:space="preserve">
+    <value>Until Date</value>
+  </data>
+  <data name="_untilDate.Location" type="System.Drawing.Point, System.Drawing">
+    <value>212, 186</value>
+  </data>
+  <data name="_untilDate.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_untilDate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>206, 42</value>
+  </data>
+  <data name="_untilDate.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="&gt;&gt;_untilDate.Name" xml:space="preserve">
+    <value>_untilDate</value>
+  </data>
+  <data name="&gt;&gt;_untilDate.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.DateTimeField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_untilDate.Parent" xml:space="preserve">
+    <value>_outerFlowLayoutPanel</value>
+  </data>
+  <data name="&gt;&gt;_untilDate.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="_keepOpen.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_keepOpen.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 21</value>
+  </data>
+  <data name="_keepOpen.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 6, 0, 0</value>
+  </data>
+  <data name="_keepOpen.Size" type="System.Drawing.Size, System.Drawing">
+    <value>109, 23</value>
+  </data>
+  <data name="_keepOpen.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="_keepOpen.Text" xml:space="preserve">
+    <value>Keep dialog open</value>
+  </data>
+  <data name="_keepOpen.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="&gt;&gt;_keepOpen.Name" xml:space="preserve">
+    <value>_keepOpen</value>
+  </data>
+  <data name="&gt;&gt;_keepOpen.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_keepOpen.Parent" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="&gt;&gt;_keepOpen.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_searchButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 19</value>
+  </data>
+  <data name="_searchButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>98, 24</value>
+  </data>
+  <data name="_searchButton.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="_searchButton.Text" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="&gt;&gt;_searchButton.Name" xml:space="preserve">
+    <value>_searchButton</value>
+  </data>
+  <data name="&gt;&gt;_searchButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_searchButton.Parent" xml:space="preserve">
+    <value>panel2</value>
+  </data>
+  <data name="&gt;&gt;_searchButton.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_clearButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>107, 19</value>
+  </data>
+  <data name="_clearButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>98, 24</value>
+  </data>
+  <data name="_clearButton.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="_clearButton.Text" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="&gt;&gt;_clearButton.Name" xml:space="preserve">
+    <value>_clearButton</value>
+  </data>
+  <data name="&gt;&gt;_clearButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_clearButton.Parent" xml:space="preserve">
+    <value>panel2</value>
+  </data>
+  <data name="&gt;&gt;_clearButton.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_orderingPractitioner.LabelText" xml:space="preserve">
+    <value>Ordered By</value>
+  </data>
+  <data name="_orderingPractitioner.Location" type="System.Drawing.Point, System.Drawing">
+    <value>212, 94</value>
+  </data>
+  <data name="_orderingPractitioner.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_orderingPractitioner.Size" type="System.Drawing.Size, System.Drawing">
+    <value>206, 42</value>
+  </data>
+  <data name="_orderingPractitioner.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;_orderingPractitioner.Name" xml:space="preserve">
+    <value>_orderingPractitioner</value>
+  </data>
+  <data name="&gt;&gt;_orderingPractitioner.Type" xml:space="preserve">
+    <value>ClearCanvas.Ris.Client.View.WinForms.LookupField, ClearCanvas.Ris.Client.View.WinForms, Version=1.0.5246.18702, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_orderingPractitioner.Parent" xml:space="preserve">
+    <value>_outerFlowLayoutPanel</value>
+  </data>
+  <data name="&gt;&gt;_orderingPractitioner.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="_diagnosticService.LabelText" xml:space="preserve">
+    <value>Imaging Service</value>
+  </data>
+  <data name="_diagnosticService.Location" type="System.Drawing.Point, System.Drawing">
+    <value>2, 140</value>
+  </data>
+  <data name="_diagnosticService.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_diagnosticService.Size" type="System.Drawing.Size, System.Drawing">
+    <value>206, 42</value>
+  </data>
+  <data name="_diagnosticService.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;_diagnosticService.Name" xml:space="preserve">
+    <value>_diagnosticService</value>
+  </data>
+  <data name="&gt;&gt;_diagnosticService.Type" xml:space="preserve">
+    <value>ClearCanvas.Ris.Client.View.WinForms.LookupField, ClearCanvas.Ris.Client.View.WinForms, Version=1.0.5246.18702, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_diagnosticService.Parent" xml:space="preserve">
+    <value>_outerFlowLayoutPanel</value>
+  </data>
+  <data name="&gt;&gt;_diagnosticService.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="_procedureType.LabelText" xml:space="preserve">
+    <value>Procedure Type</value>
+  </data>
+  <data name="_procedureType.Location" type="System.Drawing.Point, System.Drawing">
+    <value>212, 140</value>
+  </data>
+  <data name="_procedureType.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_procedureType.Size" type="System.Drawing.Size, System.Drawing">
+    <value>206, 42</value>
+  </data>
+  <data name="_procedureType.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;_procedureType.Name" xml:space="preserve">
+    <value>_procedureType</value>
+  </data>
+  <data name="&gt;&gt;_procedureType.Type" xml:space="preserve">
+    <value>ClearCanvas.Ris.Client.View.WinForms.LookupField, ClearCanvas.Ris.Client.View.WinForms, Version=1.0.5246.18702, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_procedureType.Parent" xml:space="preserve">
+    <value>_outerFlowLayoutPanel</value>
+  </data>
+  <data name="&gt;&gt;_procedureType.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="_showDeactivatedChoices.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_showDeactivatedChoices.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 1</value>
+  </data>
+  <data name="_showDeactivatedChoices.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 6, 0, 0</value>
+  </data>
+  <data name="_showDeactivatedChoices.Size" type="System.Drawing.Size, System.Drawing">
+    <value>201, 23</value>
+  </data>
+  <data name="_showDeactivatedChoices.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="_showDeactivatedChoices.Text" xml:space="preserve">
+    <value>Include inactive items in filter choices</value>
+  </data>
+  <data name="_showDeactivatedChoices.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="&gt;&gt;_showDeactivatedChoices.Name" xml:space="preserve">
+    <value>_showDeactivatedChoices</value>
+  </data>
+  <data name="&gt;&gt;_showDeactivatedChoices.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_showDeactivatedChoices.Parent" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="&gt;&gt;_showDeactivatedChoices.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="panel1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>2, 232</value>
+  </data>
+  <data name="panel1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>206, 49</value>
+  </data>
+  <data name="panel1.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="&gt;&gt;panel1.Name" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="&gt;&gt;panel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;panel1.Parent" xml:space="preserve">
+    <value>_outerFlowLayoutPanel</value>
+  </data>
+  <data name="&gt;&gt;panel1.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="panel2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>212, 232</value>
+  </data>
+  <data name="panel2.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="panel2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>206, 49</value>
+  </data>
+  <data name="panel2.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="&gt;&gt;panel2.Name" xml:space="preserve">
+    <value>panel2</value>
+  </data>
+  <data name="&gt;&gt;panel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;panel2.Parent" xml:space="preserve">
+    <value>_outerFlowLayoutPanel</value>
+  </data>
+  <data name="&gt;&gt;panel2.ZOrder" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="_outerFlowLayoutPanel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_outerFlowLayoutPanel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="_outerFlowLayoutPanel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>455, 300</value>
+  </data>
+  <data name="_outerFlowLayoutPanel.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;_outerFlowLayoutPanel.Name" xml:space="preserve">
+    <value>_outerFlowLayoutPanel</value>
+  </data>
+  <data name="&gt;&gt;_outerFlowLayoutPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.FlowLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_outerFlowLayoutPanel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_outerFlowLayoutPanel.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
+    <value>455, 300</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>SearchComponentControl</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.ApplicationComponentUserControl, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
 </root>

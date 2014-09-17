@@ -319,7 +319,7 @@ namespace ClearCanvas.Ris.Application.Services.Admin.StaffAdmin
 				var existing = staffBroker.FindOne(where);
 				if (existing != null)
 					throw new RequestValidationException(
-						string.Format("Staff cannot be associated with user {0} because this user is already associated to staff {1}",
+						string.Format(SR.InvalidRequest_UserAlreadyAssociatedWithStaff,
 							userName, existing.Name));
 			}
 			catch (EntityNotFoundException)

@@ -5,20 +5,11 @@
     <Setting Name="BaseUri" Type="System.String" Scope="Application">
       <Value Profile="(Default)">http://localhost:9998</Value>
     </Setting>
-    <Setting Name="SecurityMode" Type="System.ServiceModel.SecurityMode" Scope="Application">
-      <Value Profile="(Default)">None</Value>
-    </Setting>
     <Setting Name="RestBaseUri" Type="System.String" Scope="Application">
       <Value Profile="(Default)">http://localhost/ImageServer</Value>
     </Setting>
     <Setting Name="RestBaseSecureUri" Type="System.String" Scope="Application">
       <Value Profile="(Default)">https://localhost/ImageServer</Value>
-    </Setting>
-    <Setting Name="MaxReceivedMessageSize" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">2000000</Value>
-    </Setting>
-    <Setting Name="SendTimeoutSeconds" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">-1</Value>
     </Setting>
   </Settings>
 </SettingsFile>

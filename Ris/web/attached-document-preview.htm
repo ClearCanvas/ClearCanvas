@@ -7,6 +7,7 @@
 		<script type="text/javascript" src="./js/jsml.js"></script>
 		<script type="text/javascript" src="./js/ui.js"></script>
 		<script type="text/javascript" src="./js/ris.js"></script>
+		<script type="text/javascript" src="./js/SR.js"></script>
 		<script type="text/javascript" src="./js/layout.js"></script>
 		<script type="text/javascript" src="./js/pdfSupport.js"></script>
 		<script type="text/javascript" >
@@ -14,30 +15,29 @@
 		
 		function onBodyLoad()
 		{
-				try
-				{
-					if(!Ris)
-						return;
+			if(!Ris)
+				return;
+				
+			Label.setValues({
+				pdfPluginError: SR.AttachedDocumentPreview.PluginError,
+				labelSender: SR.AttachedDocumentPreview.Sender,
+				labelSenderNumber: SR.AttachedDocumentPreview.SenderNumber,
+				labelReceivedAt: SR.AttachedDocumentPreview.ReceivedAt,
+				labelReceivedAtNumber: SR.AttachedDocumentPreview.ReceivedAtNumber,
+			});
 
-					var document = Ris.getHealthcareContext();
-					if(!document) {
-						window.location = "about:blank";
-						return;
-					}
-					
-					var url = Ris.getAttachedDocumentUrl(document);
-					if (document.FileExtension === "pdf") {
-						viewPdf(url);
-					} else {
-						window.location = url;
-					}
-					
-				}
-				catch(e)
-				{
-					var message = "Failed to load details page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
-					Field.setValue($("errorMsg"), message);
-				}
+			var document = Ris.getHealthcareContext();
+			if(!document) {
+				window.location = "about:blank";
+				return;
+			}
+			
+			var url = Ris.getAttachedDocumentUrl(document);
+			if (document.FileExtension === "pdf") {
+				viewPdf(url);
+			} else {
+				window.location = url;
+			}
 		}
 		
 		function viewPdf(url) {
@@ -92,12 +92,12 @@
 		<div id="faxPreviewInfo">
 			<table border="0" cellspacing="0" cellpadding="0" class="PatientDemographicsTable">
 				<tr>
-					<td valign="top" class="DemographicsLabel" nowrap="nowrap">Sender: </td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="senderName"/></td>
-					<td valign="top" class="DemographicsLabel" nowrap="nowrap">Sender Number: </td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="senderNumber"/></td>
+					<td valign="top" class="DemographicsLabel" nowrap="nowrap" id="labelSender">Sender: </td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="senderName"/></td>
+					<td valign="top" class="DemographicsLabel" nowrap="nowrap" id="labelSenderNumber">Sender Number: </td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="senderNumber"/></td>
 				</tr>
 				<tr>
-					<td valign="top" class="DemographicsLabel" nowrap="nowrap">Received At: </td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="receivedAt"/></td>
-					<td valign="top" class="DemographicsLabel" nowrap="nowrap">Received At Number: </td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="receivedAtNumber"/></td>
+					<td valign="top" class="DemographicsLabel" nowrap="nowrap" id="labelReceivedAt">Received At: </td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="receivedAt"/></td>
+					<td valign="top" class="DemographicsLabel" nowrap="nowrap" id="labelReceivedAtNumber">Received At Number: </td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="receivedAtNumber"/></td>
 				</tr>
 			</table>
 		</div>

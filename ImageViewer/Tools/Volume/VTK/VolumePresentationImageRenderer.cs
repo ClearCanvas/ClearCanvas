@@ -31,12 +31,12 @@ using vtk;
 using ClearCanvas.ImageViewer.Imaging;
 using ClearCanvas.ImageViewer.Graphics;
 using System.Drawing;
-
+/*
 namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 {
 	public class VolumePresentationImageRenderer : IRenderer
 	{
-		private VtkRenderingSurface _surface;
+        private VtkPresentationImageRenderer _surface;
 		private vtkRenderer _vtkRenderer;
 
 		public VolumePresentationImageRenderer()
@@ -141,3 +141,4 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 		}
 	}
 }
+*/

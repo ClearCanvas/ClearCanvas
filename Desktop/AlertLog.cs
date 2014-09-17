@@ -24,8 +24,9 @@
 
 using System;
 using System.Collections.Generic;
-using ClearCanvas.Common.Utilities;
+using System.ComponentModel;
 using ClearCanvas.Common;
+using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Desktop
 {
@@ -34,7 +35,7 @@ namespace ClearCanvas.Desktop
 	/// </summary>
 	internal class Alert
 	{
-		public Alert(AlertLevel level, DateTime time, string message)
+		public Alert(AlertLevel level, DateTime time, [param : Localizable(true)] string message)
 		{
 			Level = level;
 			Time = time;
@@ -52,7 +53,6 @@ namespace ClearCanvas.Desktop
 	/// </summary>
 	internal class AlertLog
 	{
-
 		private static readonly AlertLog _instance = new AlertLog();
 
 		/// <summary>
@@ -66,14 +66,12 @@ namespace ClearCanvas.Desktop
 		private const int MaxLogSize = 500;
 		private readonly Queue<Alert> _alerts = new Queue<Alert>();
 
-		private AlertLog()
-		{
-		}
+		private AlertLog() {}
 
 		/// <summary>
 		/// Occurs when a new alert is logged.
 		/// </summary>
-		public event EventHandler<ItemEventArgs<Alert>>  AlertLogged;
+		public event EventHandler<ItemEventArgs<Alert>> AlertLogged;
 
 		/// <summary>
 		/// Logs a new alert.
@@ -83,7 +81,7 @@ namespace ClearCanvas.Desktop
 		{
 			var alert = new Alert(args.Level, Platform.Time, args.Message)
 			            	{
-			            		Acknowledged = args.Level == AlertLevel.Info	// info alerts are "pre-acknowledged" (do not require acknowledgement)
+			            		Acknowledged = args.Level == AlertLevel.Info // info alerts are "pre-acknowledged" (do not require acknowledgement)
 			            	};
 
 			_alerts.Enqueue(alert);
@@ -111,6 +109,5 @@ namespace ClearCanvas.Desktop
 		{
 			get { return _alerts; }
 		}
-
 	}
 }
