@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserSessionsManagmentControl));
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -44,143 +45,83 @@
 			// 
 			// flowLayoutPanel1
 			// 
-			this.flowLayoutPanel1.AutoSize = true;
-			this.flowLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-			this.flowLayoutPanel1.Location = new System.Drawing.Point(8, 5);
+			resources.ApplyResources(this.flowLayoutPanel1, "flowLayoutPanel1");
 			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-			this.flowLayoutPanel1.Size = new System.Drawing.Size(0, 0);
-			this.flowLayoutPanel1.TabIndex = 2;
 			// 
 			// panel1
 			// 
-			this.panel1.AutoSize = true;
-			this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.panel1.Location = new System.Drawing.Point(5, 284);
+			resources.ApplyResources(this.panel1, "panel1");
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(707, 0);
-			this.panel1.TabIndex = 3;
 			// 
 			// tableLayoutPanel1
 			// 
-			this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.tableLayoutPanel1.ColumnCount = 1;
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			resources.ApplyResources(this.tableLayoutPanel1, "tableLayoutPanel1");
 			this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel3, 0, 0);
 			this.tableLayoutPanel1.Controls.Add(this._sessionsTable, 0, 2);
 			this.tableLayoutPanel1.Controls.Add(this.label1, 0, 1);
-			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-			this.tableLayoutPanel1.RowCount = 3;
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(712, 253);
-			this.tableLayoutPanel1.TabIndex = 5;
 			// 
 			// flowLayoutPanel3
 			// 
-			this.flowLayoutPanel3.AutoSize = true;
-			this.flowLayoutPanel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			resources.ApplyResources(this.flowLayoutPanel3, "flowLayoutPanel3");
 			this.flowLayoutPanel3.Controls.Add(this._userName);
 			this.flowLayoutPanel3.Controls.Add(this._displayName);
 			this.flowLayoutPanel3.Controls.Add(this._lastLogin);
-			this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 3);
 			this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-			this.flowLayoutPanel3.Padding = new System.Windows.Forms.Padding(0, 10, 10, 0);
-			this.flowLayoutPanel3.Size = new System.Drawing.Size(626, 55);
-			this.flowLayoutPanel3.TabIndex = 2;
 			// 
 			// _userName
 			// 
-			this._userName.LabelText = "User ID";
-			this._userName.Location = new System.Drawing.Point(2, 12);
-			this._userName.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._userName, "_userName");
 			this._userName.Mask = "";
 			this._userName.Name = "_userName";
-			this._userName.PasswordChar = '\0';
 			this._userName.ReadOnly = true;
-			this._userName.Size = new System.Drawing.Size(150, 41);
-			this._userName.TabIndex = 0;
 			this._userName.TabStop = false;
-			this._userName.ToolTip = null;
 			this._userName.Value = null;
 			// 
 			// _displayName
 			// 
-			this._displayName.LabelText = "Display Name";
-			this._displayName.Location = new System.Drawing.Point(156, 12);
-			this._displayName.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._displayName, "_displayName");
 			this._displayName.Mask = "";
 			this._displayName.Name = "_displayName";
-			this._displayName.PasswordChar = '\0';
 			this._displayName.ReadOnly = true;
-			this._displayName.Size = new System.Drawing.Size(304, 41);
-			this._displayName.TabIndex = 1;
 			this._displayName.TabStop = false;
-			this._displayName.ToolTip = null;
 			this._displayName.Value = null;
 			// 
 			// _lastLogin
 			// 
-			this._lastLogin.LabelText = "Last Login Time";
-			this._lastLogin.Location = new System.Drawing.Point(464, 12);
-			this._lastLogin.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._lastLogin, "_lastLogin");
 			this._lastLogin.Mask = "";
 			this._lastLogin.Name = "_lastLogin";
-			this._lastLogin.PasswordChar = '\0';
 			this._lastLogin.ReadOnly = true;
-			this._lastLogin.Size = new System.Drawing.Size(150, 41);
-			this._lastLogin.TabIndex = 2;
 			this._lastLogin.TabStop = false;
-			this._lastLogin.ToolTip = null;
 			this._lastLogin.Value = null;
 			// 
 			// _sessionsTable
 			// 
-			this._sessionsTable.ColumnHeaderTooltip = null;
-			this._sessionsTable.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._sessionsTable.Location = new System.Drawing.Point(3, 84);
-			this._sessionsTable.MinimumSize = new System.Drawing.Size(700, 150);
+			resources.ApplyResources(this._sessionsTable, "_sessionsTable");
 			this._sessionsTable.Name = "_sessionsTable";
 			this._sessionsTable.ReadOnly = false;
-			this._sessionsTable.Size = new System.Drawing.Size(706, 166);
-			this._sessionsTable.SortButtonTooltip = null;
-			this._sessionsTable.TabIndex = 1;
 			// 
 			// label1
 			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(3, 61);
+			resources.ApplyResources(this.label1, "label1");
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(82, 13);
-			this.label1.TabIndex = 3;
-			this.label1.Text = "Active Sessions";
 			// 
 			// _closeButton
 			// 
-			this._closeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this._closeButton.Location = new System.Drawing.Point(637, 259);
+			resources.ApplyResources(this._closeButton, "_closeButton");
 			this._closeButton.Name = "_closeButton";
-			this._closeButton.Size = new System.Drawing.Size(75, 25);
-			this._closeButton.TabIndex = 3;
-			this._closeButton.Text = "Close";
 			this._closeButton.Click += new System.EventHandler(this._closeButton_Click);
 			// 
 			// UserSessionsManagmentControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this.tableLayoutPanel1);
 			this.Controls.Add(this.panel1);
 			this.Controls.Add(this._closeButton);
 			this.Controls.Add(this.flowLayoutPanel1);
 			this.Name = "UserSessionsManagmentControl";
-			this.Padding = new System.Windows.Forms.Padding(5);
-			this.Size = new System.Drawing.Size(717, 289);
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
 			this.flowLayoutPanel3.ResumeLayout(false);

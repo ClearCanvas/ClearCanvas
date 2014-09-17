@@ -51,7 +51,7 @@ namespace ClearCanvas.Ris.Client
 			{
 				var warn = CollectionUtils.FirstElement(response.Warnings);
 				var action = desktopWindow.ShowMessageBox(
-					warn + "\n\nAre you sure you want to cancel this order?",
+					warn + "\n\n" + SR.MessageConfirmCancelOrder,
 					MessageBoxActions.YesNo);
 				if (action == DialogBoxAction.No)
 					return false;

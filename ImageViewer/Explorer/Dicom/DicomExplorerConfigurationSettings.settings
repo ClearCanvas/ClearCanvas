@@ -11,5 +11,8 @@
     <Setting Name="ResultColumns" Description="Configures the columns displayed in the study browser results table" Type="ClearCanvas.ImageViewer.Explorer.Dicom.SearchResultColumnOptionCollection" Scope="User">
       <Value Profile="(Default)">SearchResultColumnOptionDefault.xml</Value>
     </Setting>
+    <Setting Name="AutoLeadingWildcard" Description="Configures whether or not to automatically insert leading wildcards on certain person name searches" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

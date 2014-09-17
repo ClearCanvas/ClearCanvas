@@ -112,9 +112,285 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="_slidingScale.LabelText" xml:space="preserve">
+    <value>Scale</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="_slidingScale.Location" type="System.Drawing.Point, System.Drawing">
+    <value>105, 68</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="_slidingScale.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_slidingScale.Size" type="System.Drawing.Size, System.Drawing">
+    <value>91, 45</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="_slidingScale.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;_slidingScale.Name" xml:space="preserve">
+    <value>_slidingScale</value>
+  </data>
+  <data name="&gt;&gt;_slidingScale.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.ComboBoxField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_slidingScale.Parent" xml:space="preserve">
+    <value>_groupBox</value>
+  </data>
+  <data name="&gt;&gt;_slidingScale.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="_fromCheckBox.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_fromCheckBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>108, 32</value>
+  </data>
+  <data name="_fromCheckBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>49, 17</value>
+  </data>
+  <data name="_fromCheckBox.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="_fromCheckBox.Text" xml:space="preserve">
+    <value>From</value>
+  </data>
+  <data name="&gt;&gt;_fromCheckBox.Name" xml:space="preserve">
+    <value>_fromCheckBox</value>
+  </data>
+  <data name="&gt;&gt;_fromCheckBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_fromCheckBox.Parent" xml:space="preserve">
+    <value>_groupBox</value>
+  </data>
+  <data name="&gt;&gt;_fromCheckBox.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="_toCheckBox.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_toCheckBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>288, 32</value>
+  </data>
+  <data name="_toCheckBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>39, 17</value>
+  </data>
+  <data name="_toCheckBox.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="_toCheckBox.Text" xml:space="preserve">
+    <value>To</value>
+  </data>
+  <data name="&gt;&gt;_toCheckBox.Name" xml:space="preserve">
+    <value>_toCheckBox</value>
+  </data>
+  <data name="&gt;&gt;_toCheckBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_toCheckBox.Parent" xml:space="preserve">
+    <value>_groupBox</value>
+  </data>
+  <data name="&gt;&gt;_toCheckBox.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="_toFixed.LabelText" xml:space="preserve">
+    <value>To</value>
+  </data>
+  <data name="_toFixed.Location" type="System.Drawing.Point, System.Drawing">
+    <value>285, 175</value>
+  </data>
+  <data name="_toFixed.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_toFixed.Size" type="System.Drawing.Size, System.Drawing">
+    <value>150, 41</value>
+  </data>
+  <data name="_toFixed.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="&gt;&gt;_toFixed.Name" xml:space="preserve">
+    <value>_toFixed</value>
+  </data>
+  <data name="&gt;&gt;_toFixed.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.DateTimeField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_toFixed.Parent" xml:space="preserve">
+    <value>_groupBox</value>
+  </data>
+  <data name="&gt;&gt;_toFixed.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="_fromFixed.LabelText" xml:space="preserve">
+    <value>From</value>
+  </data>
+  <data name="_fromFixed.Location" type="System.Drawing.Point, System.Drawing">
+    <value>105, 175</value>
+  </data>
+  <data name="_fromFixed.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_fromFixed.Size" type="System.Drawing.Size, System.Drawing">
+    <value>150, 41</value>
+  </data>
+  <data name="_fromFixed.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;_fromFixed.Name" xml:space="preserve">
+    <value>_fromFixed</value>
+  </data>
+  <data name="&gt;&gt;_fromFixed.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.DateTimeField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_fromFixed.Parent" xml:space="preserve">
+    <value>_groupBox</value>
+  </data>
+  <data name="&gt;&gt;_fromFixed.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="_fixedWindowRadioButton.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_fixedWindowRadioButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>23, 175</value>
+  </data>
+  <data name="_fixedWindowRadioButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>50, 17</value>
+  </data>
+  <data name="_fixedWindowRadioButton.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="_fixedWindowRadioButton.Text" xml:space="preserve">
+    <value>Fixed</value>
+  </data>
+  <data name="&gt;&gt;_fixedWindowRadioButton.Name" xml:space="preserve">
+    <value>_fixedWindowRadioButton</value>
+  </data>
+  <data name="&gt;&gt;_fixedWindowRadioButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_fixedWindowRadioButton.Parent" xml:space="preserve">
+    <value>_groupBox</value>
+  </data>
+  <data name="&gt;&gt;_fixedWindowRadioButton.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="_slidingWindowRadioButton.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_slidingWindowRadioButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>23, 75</value>
+  </data>
+  <data name="_slidingWindowRadioButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>56, 17</value>
+  </data>
+  <data name="_slidingWindowRadioButton.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="_slidingWindowRadioButton.Text" xml:space="preserve">
+    <value>Sliding</value>
+  </data>
+  <data name="&gt;&gt;_slidingWindowRadioButton.Name" xml:space="preserve">
+    <value>_slidingWindowRadioButton</value>
+  </data>
+  <data name="&gt;&gt;_slidingWindowRadioButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_slidingWindowRadioButton.Parent" xml:space="preserve">
+    <value>_groupBox</value>
+  </data>
+  <data name="&gt;&gt;_slidingWindowRadioButton.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="_toSliding.Location" type="System.Drawing.Point, System.Drawing">
+    <value>288, 118</value>
+  </data>
+  <data name="_toSliding.Size" type="System.Drawing.Size, System.Drawing">
+    <value>120, 20</value>
+  </data>
+  <data name="_toSliding.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;_toSliding.Name" xml:space="preserve">
+    <value>_toSliding</value>
+  </data>
+  <data name="&gt;&gt;_toSliding.Type" xml:space="preserve">
+    <value>ClearCanvas.Ris.Client.View.WinForms.DescriptiveSpinControl, ClearCanvas.Ris.Client.View.WinForms, Version=1.0.5246.18702, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_toSliding.Parent" xml:space="preserve">
+    <value>_groupBox</value>
+  </data>
+  <data name="&gt;&gt;_toSliding.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_fromSliding.Location" type="System.Drawing.Point, System.Drawing">
+    <value>108, 118</value>
+  </data>
+  <data name="_fromSliding.Size" type="System.Drawing.Size, System.Drawing">
+    <value>120, 20</value>
+  </data>
+  <data name="_fromSliding.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;_fromSliding.Name" xml:space="preserve">
+    <value>_fromSliding</value>
+  </data>
+  <data name="&gt;&gt;_fromSliding.Type" xml:space="preserve">
+    <value>ClearCanvas.Ris.Client.View.WinForms.DescriptiveSpinControl, ClearCanvas.Ris.Client.View.WinForms, Version=1.0.5246.18702, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_fromSliding.Parent" xml:space="preserve">
+    <value>_groupBox</value>
+  </data>
+  <data name="&gt;&gt;_fromSliding.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_groupBox.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="_groupBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="_groupBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>455, 246</value>
+  </data>
+  <data name="_groupBox.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="_groupBox.Text" xml:space="preserve">
+    <value>Time Window</value>
+  </data>
+  <data name="&gt;&gt;_groupBox.Name" xml:space="preserve">
+    <value>_groupBox</value>
+  </data>
+  <data name="&gt;&gt;_groupBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_groupBox.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_groupBox.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
+    <value>455, 246</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>WorklistTimeWindowEditorComponentControl</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.ApplicationComponentUserControl, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
 </root>

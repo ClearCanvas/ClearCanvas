@@ -37,8 +37,89 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 	/// A 2D Renderer that uses GDI+.
 	/// </summary>
 	public class GdiRenderer : RendererBase
-	{
-		/// <summary>
+    {
+        #region GdiObjectFactory Decorators
+
+        //For unifying old and new API for DrawAnnotationBox, mostly, but others as well.
+	    private class LegacyGdiObjectFactory : IGdiObjectFactory
+	    {
+            private readonly IFontFactory _fontFactory;
+	        private readonly SolidBrush _brush;
+
+            public LegacyGdiObjectFactory(IFontFactory fontFactory, SolidBrush brush)
+	        {
+	            _fontFactory = fontFactory;
+	            _brush = brush;
+	        }
+
+	        public Font CreateFont(CreateFontArgs args)
+	        {
+	            return _fontFactory.CreateFont(args);
+	        }
+
+	        public StringFormat CreateStringFormat(CreateStringFormatArgs args)
+	        {
+	            return new StringFormat
+	            {
+	                Trimming = args.Trimming,
+	                Alignment = args.Alignment,
+	                LineAlignment = args.LineAlignment,
+	                FormatFlags = args.Flags
+	            };
+	        }
+
+	        public Brush CreateBrush(CreateBrushArgs args)
+	        {
+	            _brush.Color = args.GetColor();
+	            return _brush;
+	        }
+
+	        public void Dispose()
+	        {
+	        }
+	    }
+
+	    private class UnifiedFactory : IGdiObjectFactory, IFontFactory
+	    {
+	        private GdiObjectFactory _gdiObjectFactory;
+
+	        public UnifiedFactory(GdiObjectFactory gdiObjectFactory)
+	        {
+	            _gdiObjectFactory = gdiObjectFactory;
+	        }
+
+	        public Font GetFont(string fontName, float fontSize, FontStyle fontStyle = FontStyle.Regular, GraphicsUnit graphicsUnit = GraphicsUnit.Point, string defaultFontName = null)
+	        {
+	            var args = new CreateFontArgs(fontName, fontSize, fontStyle, graphicsUnit){DefaultFontName = defaultFontName};
+	            return _gdiObjectFactory.CreateFont(args);
+	        }
+
+            public Font CreateFont(CreateFontArgs args)
+            {
+                return _gdiObjectFactory.CreateFont(args);
+            }
+
+	        public StringFormat CreateStringFormat(CreateStringFormatArgs args)
+	        {
+	            return _gdiObjectFactory.CreateStringFormat(args);
+	        }
+
+	        public Brush CreateBrush(CreateBrushArgs args)
+	        {
+                return _gdiObjectFactory.CreateBrush(args);
+	        }
+
+	        public void Dispose()
+	        {
+	            if (_gdiObjectFactory == null) return;
+	            _gdiObjectFactory.Dispose();
+	            _gdiObjectFactory = null;
+	        }
+	    }
+
+        #endregion
+
+        /// <summary>
 		/// The minimum font size for rendered text. If the specified font size is less than this value, the text will not be rendered at all.
 		/// </summary>
 		protected static readonly ushort MinimumFontSizeInPixels = 4;
@@ -46,9 +127,8 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 		private const float _nominalScreenDpi = 96;
 
 		private Pen _pen;
-		private SolidBrush _brush;
-
-		private FontFactory _fontFactory;
+        private SolidBrush _brush;
+        private UnifiedFactory _gdiObjectFactory;
 
 		/// <summary>
 		/// Default constructor.
@@ -56,8 +136,9 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 		public GdiRenderer()
 		{
 			_pen = new Pen(Color.White);
-			_brush = new SolidBrush(Color.Black);
-			_fontFactory = new FontFactory();
+            _brush = new SolidBrush(Color.Black);
+
+		    _gdiObjectFactory = new UnifiedFactory(new GdiObjectFactory());
 		}
 
 		private new GdiRenderingSurface Surface
@@ -82,16 +163,16 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 					_pen = null;
 				}
 
-				if (_brush != null)
-				{
-					_brush.Dispose();
-					_brush = null;
-				}
+                if (_brush != null)
+                {
+                    _brush.Dispose();
+                    _brush = null;
+                }
 
-				if (_fontFactory != null)
+				if (_gdiObjectFactory != null)
 				{
-					_fontFactory.Dispose();
-					_fontFactory = null;
+                    _gdiObjectFactory.Dispose();
+                    _gdiObjectFactory = null;
 				}
 			}
 		}
@@ -103,14 +184,16 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 		/// </summary>
 		protected override void Render()
 		{
-			CodeClock clock = new CodeClock();
+#if DEBUG
+            var clock = new CodeClock();
 			clock.Start();
-
+#endif
 			Surface.FinalBuffer.Graphics.Clear(Color.Black);
 			base.Render();
-
+#if DEBUG
 			clock.Stop();
 			PerformanceReportBroker.PublishReport("GDIRenderer", "Render", clock.Seconds);
+#endif
 		}
 
 		/// <summary>
@@ -118,15 +201,17 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 		/// </summary>
 		protected override void Refresh()
 		{
-			CodeClock clock = new CodeClock();
-			clock.Start();
-
+#if DEBUG
+            var clock = new CodeClock();
+            clock.Start();
+#endif
 			if (Surface.FinalBuffer != null)
 				Surface.FinalBuffer.RenderToScreen();
-
+#if DEBUG
 			clock.Stop();
 			PerformanceReportBroker.PublishReport("GDIRenderer", "Refresh", clock.Seconds);
-		}
+#endif
+        }
 
 		/// <summary>
 		/// Factory method for an <see cref="IRenderingSurface"/>.
@@ -141,17 +226,19 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 		/// </summary>
 		protected override void DrawImageGraphic(ImageGraphic imageGraphic)
 		{
-			CodeClock clock = new CodeClock();
+#if DEBUG
+            var clock = new CodeClock();
 			clock.Start();
-
+#endif
 			Surface.ImageBuffer.Graphics.Clear(Color.FromArgb(0x0, 0xFF, 0xFF, 0xFF));
 
 			DrawImageGraphic(Surface.ImageBuffer, imageGraphic);
 
 			Surface.FinalBuffer.RenderImage(Surface.ImageBuffer);
-
+#if DEBUG
 			clock.Stop();
 			PerformanceReportBroker.PublishReport("GDIRenderer", "DrawImageGraphic", clock.Seconds);
+#endif
 		}
 
 		/// <summary>
@@ -231,7 +318,7 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 		/// </summary>
 		protected override void DrawTextPrimitive(InvariantTextPrimitive textPrimitive)
 		{
-			DrawTextPrimitive(Surface.FinalBuffer, _brush, _fontFactory, textPrimitive, Dpi);
+			DrawTextPrimitive(Surface.FinalBuffer, _brush, _gdiObjectFactory, textPrimitive, Dpi);
 		}
 
 		/// <summary>
@@ -239,26 +326,7 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 		/// </summary>
 		protected override void DrawAnnotationBox(string annotationText, AnnotationBox annotationBox)
 		{
-			DrawAnnotationBox(Surface.FinalBuffer, _brush, _fontFactory, annotationText, annotationBox, Dpi);
-		}
-
-		/// <summary>
-		/// Draws an error message in the Scene Graph's client area of the screen.
-		/// </summary>
-		[Obsolete("Renderer implementations are no longer responsible for handling render pipeline errors.")]
-		protected override void ShowErrorMessage(string message)
-		{
-			using (var format = new StringFormat())
-			{
-				format.Trimming = StringTrimming.EllipsisCharacter;
-				format.Alignment = StringAlignment.Center;
-				format.LineAlignment = StringAlignment.Center;
-				format.FormatFlags = StringFormatFlags.NoClip;
-
-				var font = _fontFactory.GetFont(FontFactory.GenericSansSerif, 12, FontStyle.Regular, GraphicsUnit.Point, FontFactory.GenericSansSerif);
-				_brush.Color = Color.WhiteSmoke;
-				Surface.FinalBuffer.Graphics.DrawString(message, font, _brush, Surface.ClipRectangle, format);
-			}
+			DrawAnnotationBox(Surface.FinalBuffer, _gdiObjectFactory, annotationText, annotationBox, Dpi);
 		}
 
 		#region Static Draw Helpers
@@ -272,7 +340,7 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 		{
 			const int bytesPerPixel = 4;
 
-			var bounds = ((IGdiBuffer) buffer).Bounds;
+			var bounds = buffer.Bounds;
 			var bitmapData = buffer.Bitmap.LockBits(bounds, ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
 			try
 			{
@@ -284,119 +352,122 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 			}
 		}
 
-		/// <summary>
-		/// Draws an annotation box to the specified destination buffer.
-		/// </summary>
-		/// <param name="buffer">The destination buffer.</param>
-		/// <param name="brush">A GDI brush to use for drawing.</param>
-		/// <param name="fontFactory">A GDI font factory to use for drawing.</param>
-		/// <param name="annotationText">The annotation text to be drawn.</param>
-		/// <param name="annotationBox">The annotation box to be drawn.</param>
-		/// <param name="dpi">The intended output DPI.</param>
-		public static void DrawAnnotationBox(IGdiBuffer buffer, SolidBrush brush, FontFactory fontFactory, string annotationText, AnnotationBox annotationBox, float dpi = _nominalScreenDpi)
-		{
-			// if there's nothing to draw, there's nothing to do. go figure.
-			if (string.IsNullOrEmpty(annotationText))
-				return;
+        /// <summary>
+        /// Draws an annotation box to the specified destination buffer.
+        /// </summary>
+        /// <param name="buffer">The destination buffer.</param>
+        /// <param name="brush">A GDI brush to use for drawing.</param>
+        /// <param name="fontFactory">A GDI font factory to use for drawing.</param>
+        /// <param name="annotationText">The annotation text to be drawn.</param>
+        /// <param name="annotationBox">The annotation box to be drawn.</param>
+        /// <param name="dpi">The intended output DPI.</param>
+        [Obsolete("Use the overload that takes an IGdiObjectFactory instead.")]
+        public static void DrawAnnotationBox(IGdiBuffer buffer, SolidBrush brush, IFontFactory fontFactory,
+	        string annotationText, AnnotationBox annotationBox, float dpi = _nominalScreenDpi)
+        {
+            var fakeFactory = new LegacyGdiObjectFactory(fontFactory, brush);
+            DrawAnnotationBox(buffer, fakeFactory, annotationText, annotationBox, dpi);
+	    }
 
-			var clientRectangle = RectangleUtilities.CalculateSubRectangle(buffer.Bounds, annotationBox.NormalizedRectangle);
+	    /// <summary>
+	    /// Draws an annotation box to the specified destination buffer.
+	    /// </summary>
+	    /// <param name="buffer">The destination buffer.</param>
+        /// <param name="gdiObjectFactory">A factory for GDI objects.</param>
+        /// <param name="annotationText">The annotation text to be drawn.</param>
+	    /// <param name="annotationBox">The annotation box to be drawn.</param>
+	    /// <param name="dpi">The intended output DPI.</param>
+	    public static void DrawAnnotationBox(IGdiBuffer buffer, IGdiObjectFactory gdiObjectFactory, 
+            string annotationText, AnnotationBox annotationBox, float dpi = _nominalScreenDpi)
+	    {
+	        // if there's nothing to draw, there's nothing to do. go figure.
+	        if (string.IsNullOrWhiteSpace(annotationText))
+	            return;
 
-			//Deflate the client rectangle by 4 pixels to allow some space 
-			//between neighbouring rectangles whose borders coincide.
-			Rectangle.Inflate(clientRectangle, -4, -4);
+	        var clientRectangle = RectangleUtilities.CalculateSubRectangle(buffer.Bounds, annotationBox.NormalizedRectangle);
 
-			var fontSize = (clientRectangle.Height/annotationBox.NumberOfLines) - 1;
+	        //Deflate the client rectangle by 4 pixels to allow some space 
+	        //between neighbouring rectangles whose borders coincide.
+	        Rectangle.Inflate(clientRectangle, -4, -4);
 
-			//don't draw it if it's too small to read, anyway.
-			if (fontSize < MinimumFontSizeInPixels)
-				return;
+	        var fontSize = (clientRectangle.Height/annotationBox.NumberOfLines) - 1;
 
-			using (var format = new StringFormat())
-			{
-				if (annotationBox.Truncation == AnnotationBox.TruncationBehaviour.Truncate)
-					format.Trimming = StringTrimming.Character;
-				else
-					format.Trimming = StringTrimming.EllipsisCharacter;
+	        //don't draw it if it's too small to read, anyway.
+	        if (fontSize < MinimumFontSizeInPixels)
+	            return;
 
-				if (annotationBox.FitWidth)
-					format.Trimming = StringTrimming.None;
+	        var style = FontStyle.Regular;
+	        if (annotationBox.Bold)
+	            style |= FontStyle.Bold;
+	        if (annotationBox.Italics)
+	            style |= FontStyle.Italic;
 
-				if (annotationBox.Justification == AnnotationBox.JustificationBehaviour.Right)
-					format.Alignment = StringAlignment.Far;
-				else if (annotationBox.Justification == AnnotationBox.JustificationBehaviour.Center)
-					format.Alignment = StringAlignment.Center;
-				else
-					format.Alignment = StringAlignment.Near;
+	        //don't draw it if it's too small to read, anyway.
+	        if (fontSize < MinimumFontSizeInPixels)
+	            return;
 
-				if (annotationBox.VerticalAlignment == AnnotationBox.VerticalAlignmentBehaviour.Top)
-					format.LineAlignment = StringAlignment.Near;
-				else if (annotationBox.VerticalAlignment == AnnotationBox.VerticalAlignmentBehaviour.Center)
-					format.LineAlignment = StringAlignment.Center;
-				else
-					format.LineAlignment = StringAlignment.Far;
+	        var fontArgs = new CreateFontArgs(annotationBox.Font, fontSize, style, GraphicsUnit.Pixel) { DefaultFontName = AnnotationBox.DefaultFont };
+            var font = gdiObjectFactory.CreateFont(fontArgs);
+            var format = gdiObjectFactory.CreateStringFormat(new CreateStringFormatArgs(annotationBox));
 
-				//allow p's and q's, etc to extend slightly beyond the bounding rectangle.  Only completely visible lines are shown.
-				format.FormatFlags = StringFormatFlags.NoClip;
+	        var layoutArea = new SizeF(clientRectangle.Width, clientRectangle.Height);
+	        var size = buffer.Graphics.MeasureString(annotationText, font, layoutArea, format);
+	        if (annotationBox.FitWidth && size.Width > clientRectangle.Width)
+	        {
+	            fontSize = (int) (Math.Round(fontSize*clientRectangle.Width/(double) size.Width - 0.5));
+	            //don't draw it if it's too small to read, anyway.
+	            if (fontSize < MinimumFontSizeInPixels)
+	                return;
 
-				if (annotationBox.NumberOfLines == 1)
-					format.FormatFlags |= StringFormatFlags.NoWrap;
+                font = gdiObjectFactory.CreateFont(fontArgs);
+	        }
 
-				var style = FontStyle.Regular;
-				if (annotationBox.Bold)
-					style |= FontStyle.Bold;
-				if (annotationBox.Italics)
-					style |= FontStyle.Italic;
+	        // Draw drop shadow
+			var brush = gdiObjectFactory.CreateBrush(new CreateBrushArgs(Color.Black));
+	        clientRectangle.Offset(1, 1);
 
-				//don't draw it if it's too small to read, anyway.
-				if (fontSize < MinimumFontSizeInPixels)
-					return;
+	        buffer.Graphics.DrawString(
+	            annotationText,
+	            font,
+	            brush,
+	            clientRectangle,
+	            format);
 
-				var font = fontFactory.GetFont(annotationBox.Font, fontSize, style, GraphicsUnit.Pixel, AnnotationBox.DefaultFont);
-				var layoutArea = new SizeF(clientRectangle.Width, clientRectangle.Height);
-				var size = buffer.Graphics.MeasureString(annotationText, font, layoutArea, format);
-				if (annotationBox.FitWidth && size.Width > clientRectangle.Width)
-				{
-					fontSize = (int) (Math.Round(fontSize*clientRectangle.Width/(double) size.Width - 0.5));
+	        brush = gdiObjectFactory.CreateBrush(new CreateBrushArgs(annotationBox.Color));
 
-					//don't draw it if it's too small to read, anyway.
-					if (fontSize < MinimumFontSizeInPixels)
-						return;
+	        clientRectangle.Offset(-1, -1);
 
-					font = fontFactory.GetFont(annotationBox.Font, fontSize, style, GraphicsUnit.Pixel, AnnotationBox.DefaultFont);
-				}
+	        buffer.Graphics.DrawString(
+	            annotationText,
+	            font,
+	            brush,
+	            clientRectangle,
+	            format);
+	    }
 
-				// Draw drop shadow
-				brush.Color = Color.Black;
-				clientRectangle.Offset(1, 1);
+        /// <summary>
+        /// Draws a text primitive to the specified destination buffer.
+        /// </summary>
+        /// <param name="buffer">The destination buffer.</param>
+        /// <param name="brush">A GDI brush to use for drawing.</param>
+        /// <param name="fontFactory">A GDI font factory to use for drawing.</param>
+        /// <param name="text">The text primitive to be drawn.</param>
+        /// <param name="dpi">The intended output DPI.</param>
+        [Obsolete("Use the overload that takes an IGdiObjectFactory instead.")]
+        public static void DrawTextPrimitive(IGdiBuffer buffer, SolidBrush brush, IFontFactory fontFactory, InvariantTextPrimitive text, float dpi = _nominalScreenDpi)
+	    {
+            var fakeFactory = new LegacyGdiObjectFactory(fontFactory, brush);
+            DrawTextPrimitive(buffer, fakeFactory, text, dpi);
+	    }
 
-				buffer.Graphics.DrawString(
-					annotationText,
-					font,
-					brush,
-					clientRectangle,
-					format);
-
-				brush.Color = Color.FromName(annotationBox.Color);
-				clientRectangle.Offset(-1, -1);
-
-				buffer.Graphics.DrawString(
-					annotationText,
-					font,
-					brush,
-					clientRectangle,
-					format);
-			}
-		}
-
-		/// <summary>
+	    /// <summary>
 		/// Draws a text primitive to the specified destination buffer.
 		/// </summary>
 		/// <param name="buffer">The destination buffer.</param>
-		/// <param name="brush">A GDI brush to use for drawing.</param>
-		/// <param name="fontFactory">A GDI font factory to use for drawing.</param>
+		/// <param name="gdiObjectFactory">A factory for GDI+ objects.</param>
 		/// <param name="text">The text primitive to be drawn.</param>
 		/// <param name="dpi">The intended output DPI.</param>
-		public static void DrawTextPrimitive(IGdiBuffer buffer, SolidBrush brush, FontFactory fontFactory, InvariantTextPrimitive text, float dpi = _nominalScreenDpi)
+		public static void DrawTextPrimitive(IGdiBuffer buffer, IGdiObjectFactory gdiObjectFactory, InvariantTextPrimitive text, float dpi = _nominalScreenDpi)
 		{
 			text.CoordinateSystem = CoordinateSystem.Destination;
 			try
@@ -404,13 +475,14 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 				// We adjust the font size depending on the scale so that it's the same size
 				// irrespective of the zoom
 				var fontSize = CalculateScaledFontPoints(text.SizeInPoints, dpi);
-				var font = fontFactory.GetFont(text.Font, fontSize, FontStyle.Regular, GraphicsUnit.Point, FontFactory.GenericSansSerif);
+                var createFontArgs = new CreateFontArgs(text.Font, fontSize, FontStyle.Regular, GraphicsUnit.Point) { DefaultFontName = FontFactory.GenericSansSerif };
+                var font = gdiObjectFactory.CreateFont(createFontArgs);
 
 				// Calculate how big the text will be so we can set the bounding box
 				text.Dimensions = buffer.Graphics.MeasureString(text.Text, font);
 
 				// Draw drop shadow
-				brush.Color = Color.Black;
+			    var brush = gdiObjectFactory.CreateBrush(new CreateBrushArgs(Color.Black));
 
 				var dropShadowOffset = new SizeF(1, 1);
 				var boundingBoxTopLeft = new PointF(text.BoundingBox.Left, text.BoundingBox.Top);
@@ -422,9 +494,9 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 					boundingBoxTopLeft + dropShadowOffset);
 
 				// Draw text
-				brush.Color = text.Color;
+                brush = gdiObjectFactory.CreateBrush(new CreateBrushArgs(text.Color));
 
-				buffer.Graphics.DrawString(
+                buffer.Graphics.DrawString(
 					text.Text,
 					font,
 					brush,
@@ -436,15 +508,22 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 			}
 		}
 
-		/// <summary>
-		/// Draws a point primitive to the specified destination buffer.
-		/// </summary>
-		/// <param name="buffer">The destination buffer.</param>
-		/// <param name="brush">A GDI brush to use for drawing.</param>
-		/// <param name="point">The point primitive to be drawn.</param>
-		/// <param name="dpi">The intended output DPI.</param>
-		public static void DrawPointPrimitive(IGdiBuffer buffer, SolidBrush brush, PointPrimitive point, float dpi = _nominalScreenDpi)
-		{
+	    /// <summary>
+	    /// Draws a point primitive to the specified destination buffer.
+	    /// </summary>
+	    /// <param name="buffer">The destination buffer.</param>
+	    /// <param name="brush">A GDI brush to use for drawing.</param>
+	    /// <param name="point">The point primitive to be drawn.</param>
+	    /// <param name="dpi">The intended output DPI.</param>
+	    [Obsolete("Use the overload that takes an IGdiObjectFactory instead.")]
+	    public static void DrawPointPrimitive(IGdiBuffer buffer, SolidBrush brush, PointPrimitive point, float dpi = _nominalScreenDpi)
+	    {
+            var fakeFactory = new LegacyGdiObjectFactory(null, brush);
+            DrawPointPrimitive(buffer, fakeFactory, point, dpi);
+	    }
+        
+        public static void DrawPointPrimitive(IGdiBuffer buffer, IGdiObjectFactory gdiObjectFactory, PointPrimitive point, float dpi = _nominalScreenDpi)
+        {
 			buffer.Graphics.Transform = point.SpatialTransform.CumulativeTransform;
 			point.CoordinateSystem = CoordinateSystem.Source;
 			try
@@ -453,7 +532,7 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 				var width = CalculateScaledPenWidth(point, 1, dpi);
 
 				// Draw drop shadow
-				brush.Color = Color.Black;
+                var brush = gdiObjectFactory.CreateBrush(new CreateBrushArgs(Color.Black));
 
 				buffer.Graphics.FillRectangle(
 					brush,
@@ -463,7 +542,7 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 					width);
 
 				// Draw point
-				brush.Color = point.Color;
+                brush = gdiObjectFactory.CreateBrush(new CreateBrushArgs(point.Color));
 
 				buffer.Graphics.FillRectangle(
 					brush,

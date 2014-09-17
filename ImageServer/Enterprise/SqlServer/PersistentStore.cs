@@ -39,6 +39,10 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
     [ExtensionOf(typeof(PersistentStoreExtensionPoint))]
     public class PersistentStore : IPersistentStore
     {
+	    /// <summary>
+	    /// Reset event to signal when stopping the service thread.
+	    /// </summary>
+		private CancellationTokenSource _cancelToken;
 	    private static volatile bool _shutdownRequested;
         private static readonly object SyncRoot = new object();
         private static int _connectionCounter;
@@ -51,7 +55,12 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
 		/// <summary>
 		/// Boolean that can be set on the persistent store to signal that the process is shutting down.
 		/// </summary>
-		public bool ShutdownRequested { get { return _shutdownRequested; } set { _shutdownRequested = value; } }
+		public bool ShutdownRequested { get { return _shutdownRequested; } set
+		{
+			_shutdownRequested = value;
+			if (_shutdownRequested)
+				_cancelToken.Cancel();
+		} }
 
         public Version Version
         {
@@ -59,8 +68,8 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
             {
                 using (IReadContext read = PersistentStoreRegistry.GetDefaultStore().OpenReadContext())
                 {
-                    IPersistentStoreVersionEntityBroker broker = read.GetBroker<IPersistentStoreVersionEntityBroker>();
-                    PersistentStoreVersionSelectCriteria criteria = new PersistentStoreVersionSelectCriteria();
+                    var broker = read.GetBroker<IPersistentStoreVersionEntityBroker>();
+                    var criteria = new PersistentStoreVersionSelectCriteria();
                     criteria.Major.SortDesc(0);
                     criteria.Minor.SortDesc(1);
                     criteria.Build.SortDesc(2);
@@ -83,23 +92,25 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
 
         public void Initialize()
         {
+	        _cancelToken = new CancellationTokenSource();
+
             // Retrieve the partial connection string named databaseConnection
             // from the application's app.config or web.config file.
             ConnectionStringSettings settings =
                 ConfigurationManager.ConnectionStrings["ImageServerConnectString"];
-
+			
             if (null != settings)
             {
                 // Retrieve the partial connection string.
                 _connectionString = settings.ConnectionString;
-                SqlConnectionStringBuilder sb = new SqlConnectionStringBuilder(_connectionString);
+                var sb = new SqlConnectionStringBuilder(_connectionString);
                 _maxPoolSize = sb.MaxPoolSize;
             }
 #if UNIT_TESTS
             else 
             {
                 _connectionString = "Data Source=127.0.0.1;Integrated Security=True;Persist Security Info=True;Initial Catalog=ImageServer";
-                SqlConnectionStringBuilder sb = new SqlConnectionStringBuilder(_connectionString);
+                var sb = new SqlConnectionStringBuilder(_connectionString);
                 _maxPoolSize = sb.MaxPoolSize;
             }
 #endif
@@ -119,40 +130,70 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
             {
                 try
                 {
-                    SqlConnection connection = new SqlConnection(_connectionString);
-                    connection.Open();
-                    connection.Disposed += Connection_Disposed;
-					
-                    lock(SyncRoot)
-                    {
-                        _connectionCounter++;
-                        if (SqlServerSettings.Default.ConnectionPoolUsageWarningLevel<=0)
-                        {
-                            Platform.Log(LogLevel.Warn, "# Max SqlConnection Pool Size={0}, current Db Connections={1}", _maxPoolSize, _connectionCounter);
-                        }
-                        else if (_connectionCounter > _maxPoolSize / SqlServerSettings.Default.ConnectionPoolUsageWarningLevel)
-                        {
-                            if (_connectionCounter%3==0)
-                            {
-                                Platform.Log(LogLevel.Warn, "# Max SqlConnection Pool Size={0}, current Db Connections={1}", _maxPoolSize, _connectionCounter);
-                            }
-                        }
-                    }
-                    return connection;
+	                var connection = new SqlConnection(_connectionString);
+	                var task = connection.OpenAsync();
+	                task.Wait(_cancelToken.Token);
+
+	                connection.Disposed += Connection_Disposed;
+
+	                lock (SyncRoot)
+	                {
+		                _connectionCounter++;
+		                if (SqlServerSettings.Default.ConnectionPoolUsageWarningLevel <= 0)
+		                {
+			                Platform.Log(LogLevel.Warn, "# Max SqlConnection Pool Size={0}, current Db Connections={1}",
+			                             _maxPoolSize, _connectionCounter);
+		                }
+		                else if (_connectionCounter > _maxPoolSize/SqlServerSettings.Default.ConnectionPoolUsageWarningLevel)
+		                {
+			                if (_connectionCounter%3 == 0)
+			                {
+				                Platform.Log(LogLevel.Warn, "# Max SqlConnection Pool Size={0}, current Db Connections={1}",
+				                             _maxPoolSize, _connectionCounter);
+			                }
+		                }
+	                }
+	                return connection;
                 }
                 catch (SqlException e)
                 {
-                    // The connection failed.  Check the Sql error class 0x14 is for connection failure, let the 
-                    // other error types through.
-                    if ((i >= 10) || e.Class != 0x14 || _shutdownRequested)
-                        throw;
+	                // The connection failed.  Check the Sql error class 0x14 is for connection failure, let the 
+	                // other error types through.
+	                if ((i >= 10) || e.Class != 0x14 || _cancelToken.IsCancellationRequested)
+		                throw;
 
-                    if (rand == null) rand = new Random();
+	                if (rand == null) rand = new Random();
 
-                    // Sleep a random amount between 5 and 10 seconds
-                    int sleepTime = rand.Next(5 * 1000, 10 * 1000);
-                    Platform.Log(LogLevel.Warn,"Failure connecting to the database, sleeping {0} milliseconds and retrying", sleepTime);
-                    Thread.Sleep(sleepTime);
+	                // Sleep a random amount between 5 and 10 seconds
+	                int sleepTime = rand.Next(5*1000, 10*1000);
+	                Platform.Log(LogLevel.Warn,
+	                             "Failure connecting to the database, sleeping {0} milliseconds and retrying", sleepTime);
+
+	                if (_cancelToken.IsCancellationRequested)
+		                throw;
+                }
+                catch (AggregateException e)
+                {
+	                var x = e.InnerException as SqlException;
+					if (x != null)
+					{
+						// The connection failed.  Check the Sql error class 0x14 is for connection failure, let the 
+						// other error types through.
+						if ((i >= 10) || x.Class != 0x14 || _cancelToken.IsCancellationRequested)
+							throw;
+
+						if (rand == null) rand = new Random();
+
+						// Sleep a random amount between 5 and 10 seconds
+						int sleepTime = rand.Next(5 * 1000, 10 * 1000);
+						Platform.Log(LogLevel.Warn,
+									 "Failure connecting to the database, sleeping {0} milliseconds and retrying", sleepTime);
+
+						if (_cancelToken.IsCancellationRequested)
+							throw;
+					}
+					else
+						throw;
                 }
             }
         }
@@ -175,7 +216,7 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
             }
             catch (Exception e)
             {
-                Platform.Log(LogLevel.Fatal, e, "Exception when opening database connection for reading");
+                Platform.Log(LogLevel.Error, e, "Exception when opening database connection for reading");
 
                 throw new PersistenceException("Unexpected exception opening database connection for reading", e);
             }
@@ -191,7 +232,7 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
             }
             catch (Exception e)
             {
-                Platform.Log(LogLevel.Fatal, e, "Exception when opening database connection for update");
+                Platform.Log(LogLevel.Error, e, "Exception when opening database connection for update");
 
                 throw new PersistenceException("Unexpected exception opening database connection for update", e);
             }

@@ -44,23 +44,23 @@ namespace ClearCanvas.Ris.Client.Workflow
     {
         public DicomSeriesTable()
         {
-			this.Columns.Add(new TableColumn<DicomSeriesDetail, string>("Series Number",
+			this.Columns.Add(new TableColumn<DicomSeriesDetail, string>(SR.ColumnSeriesNumber,
                 delegate(DicomSeriesDetail detail) { return detail.SeriesNumber; }, 
                 0.5f));
 
-            this.Columns.Add(new TableColumn<DicomSeriesDetail, string>("Description",
+            this.Columns.Add(new TableColumn<DicomSeriesDetail, string>(SR.ColumnDescription,
                 delegate(DicomSeriesDetail detail) { return detail.SeriesDescription; }, 
                 1.0f));
 
-            this.Columns.Add(new TableColumn<DicomSeriesDetail, int>("Number of Images",
+            this.Columns.Add(new TableColumn<DicomSeriesDetail, int>(SR.ColumnNumberOfImages,
                 delegate(DicomSeriesDetail detail) { return detail.NumberOfSeriesRelatedInstances; }, 
                 0.5f));
 
-			this.Columns.Add(new TableColumn<DicomSeriesDetail, string>("Study Instance UID",
+			this.Columns.Add(new TableColumn<DicomSeriesDetail, string>(SR.ColumnStudyInstanceUid,
 				delegate(DicomSeriesDetail detail) { return detail.StudyInstanceUID; },
 				1.0f));
 
-			this.Columns.Add(new TableColumn<DicomSeriesDetail, string>("Series Instance UID",
+			this.Columns.Add(new TableColumn<DicomSeriesDetail, string>(SR.ColumnSeriesInstanceUid,
 				delegate(DicomSeriesDetail detail) { return detail.SeriesInstanceUID; },
 				1.0f));
 		}
@@ -220,7 +220,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 
 		public Path Path
 		{
-			get { return new Path("DICOM Series", new ResourceResolver(this.GetType().Assembly)); }
+			get { return new Path("TitleDicomSeries", new ResourceResolver(this.GetType().Assembly)); }
 		}
 
 		public IApplicationComponent GetComponent()

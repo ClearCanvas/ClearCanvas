@@ -131,28 +131,41 @@ namespace ClearCanvas.Dicom.IO
 		{
 			get
 			{
-				if (_ms == null)
-				{
-					if (_highCapacityMode)
-					{
-						_ms = new LargeMemoryStream(_data);
-					}
-					else
-					{
-						_ms = new MemoryStream(); // do not use overload with byte[] because that will make the stream non-expandable
-						if (_data != null)
-						{
-							_ms.Write(_data, 0, _data.Length);
-							_ms.Position = 0;
-						}
-					}
-					_data = null;
-				}
-				return _ms;
+			    if (_ms != null)
+			        return _ms;
+			    AllocateStream();
+			    return _ms;
 			}
 		}
 
-		public BinaryReader Reader
+	    private void AllocateStream(int lengthHint = 0)
+	    {
+	        if (_ms != null) return;
+
+	        if (_highCapacityMode)
+	        {
+	            _ms = new LargeMemoryStream(_data);
+	        }
+	        else
+	        {
+	            if (_data != null)
+	            {
+	                _ms = new MemoryStream(_data.Length);// do not use overload with byte[] because that will make the stream non-expandable
+	                _ms.Write(_data, 0, _data.Length);
+	                _ms.Position = 0;
+	            }
+	            else
+	            {
+	                if (lengthHint <= 0)
+	                    _ms = new MemoryStream();
+	                else
+	                    _ms = new MemoryStream(lengthHint);
+	            }
+	        }
+	        _data = null;
+	    }
+
+	    public BinaryReader Reader
 		{
 			get { return _br ?? (_br = EndianBinaryReader.Create(Stream, Endian)); }
 		}
@@ -266,6 +279,7 @@ namespace ClearCanvas.Dicom.IO
 		{
 			// clear previous data so that next call to Stream property will create new stream instance
 			Clear();
+            AllocateStream(count);
 
 			// execute copy
 			var copied = CopyBytes(s, Stream, count);

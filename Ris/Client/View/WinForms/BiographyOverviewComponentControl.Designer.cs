@@ -60,67 +60,51 @@ namespace ClearCanvas.Ris.Client.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BiographyOverviewComponentControl));
-            this._alertIcons = new System.Windows.Forms.ImageList(this.components);
-            this._overviewLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            this._bannerPanel = new System.Windows.Forms.Panel();
-            this._contentPanel = new System.Windows.Forms.Panel();
-            this._overviewLayoutPanel.SuspendLayout();
-            this.SuspendLayout();
-            // 
-            // _alertIcons
-            // 
-            this._alertIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("_alertIcons.ImageStream")));
-            this._alertIcons.TransparentColor = System.Drawing.Color.Transparent;
-            this._alertIcons.Images.SetKeyName(0, "");
-            this._alertIcons.Images.SetKeyName(1, "");
-            this._alertIcons.Images.SetKeyName(2, "");
-            this._alertIcons.Images.SetKeyName(3, "");
-            this._alertIcons.Images.SetKeyName(4, "");
-            this._alertIcons.Images.SetKeyName(5, "");
-            // 
-            // _overviewLayoutPanel
-            // 
-            this._overviewLayoutPanel.ColumnCount = 1;
-            this._overviewLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this._overviewLayoutPanel.Controls.Add(this._bannerPanel, 0, 0);
-            this._overviewLayoutPanel.Controls.Add(this._contentPanel, 0, 1);
-            this._overviewLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._overviewLayoutPanel.Location = new System.Drawing.Point(0, 0);
-            this._overviewLayoutPanel.Name = "_overviewLayoutPanel";
-            this._overviewLayoutPanel.RowCount = 2;
-            this._overviewLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 95F));
-            this._overviewLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this._overviewLayoutPanel.Size = new System.Drawing.Size(720, 467);
-            this._overviewLayoutPanel.TabIndex = 0;
-            // 
-            // _bannerPanel
-            // 
-            this._bannerPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._bannerPanel.Location = new System.Drawing.Point(3, 3);
-            this._bannerPanel.Name = "_bannerPanel";
-            this._bannerPanel.Size = new System.Drawing.Size(714, 89);
-            this._bannerPanel.TabIndex = 0;
-            // 
-            // _contentPanel
-            // 
-            this._contentPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._contentPanel.Location = new System.Drawing.Point(3, 98);
-            this._contentPanel.Name = "_contentPanel";
-            this._contentPanel.Size = new System.Drawing.Size(714, 366);
-            this._contentPanel.TabIndex = 1;
-            // 
-            // BiographyOverviewComponentControl
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this._overviewLayoutPanel);
-            this.Margin = new System.Windows.Forms.Padding(0);
-            this.Name = "BiographyOverviewComponentControl";
-            this.Size = new System.Drawing.Size(720, 467);
-            this._overviewLayoutPanel.ResumeLayout(false);
-            this.ResumeLayout(false);
+			this.components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BiographyOverviewComponentControl));
+			this._alertIcons = new System.Windows.Forms.ImageList(this.components);
+			this._overviewLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
+			this._bannerPanel = new System.Windows.Forms.Panel();
+			this._contentPanel = new System.Windows.Forms.Panel();
+			this._overviewLayoutPanel.SuspendLayout();
+			this.SuspendLayout();
+			// 
+			// _alertIcons
+			// 
+			this._alertIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("_alertIcons.ImageStream")));
+			this._alertIcons.TransparentColor = System.Drawing.Color.Transparent;
+			this._alertIcons.Images.SetKeyName(0, "");
+			this._alertIcons.Images.SetKeyName(1, "");
+			this._alertIcons.Images.SetKeyName(2, "");
+			this._alertIcons.Images.SetKeyName(3, "");
+			this._alertIcons.Images.SetKeyName(4, "");
+			this._alertIcons.Images.SetKeyName(5, "");
+			// 
+			// _overviewLayoutPanel
+			// 
+			resources.ApplyResources(this._overviewLayoutPanel, "_overviewLayoutPanel");
+			this._overviewLayoutPanel.Controls.Add(this._bannerPanel, 0, 0);
+			this._overviewLayoutPanel.Controls.Add(this._contentPanel, 0, 1);
+			this._overviewLayoutPanel.Name = "_overviewLayoutPanel";
+			// 
+			// _bannerPanel
+			// 
+			resources.ApplyResources(this._bannerPanel, "_bannerPanel");
+			this._bannerPanel.Name = "_bannerPanel";
+			// 
+			// _contentPanel
+			// 
+			resources.ApplyResources(this._contentPanel, "_contentPanel");
+			this._contentPanel.Name = "_contentPanel";
+			// 
+			// BiographyOverviewComponentControl
+			// 
+			resources.ApplyResources(this, "$this");
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.Controls.Add(this._overviewLayoutPanel);
+			this.Name = "BiographyOverviewComponentControl";
+			this._overviewLayoutPanel.ResumeLayout(false);
+			this.ResumeLayout(false);
 
         }
 

@@ -7,23 +7,19 @@
 	    <script type="text/javascript" src="../js/jsml.js"></script>
 	    <script type="text/javascript" src="../js/ui.js"></script>
 	    <script type="text/javascript" src="../js/ris.js"></script>
+		<script type="text/javascript" src="../js/SR.js"></script>
 	    <script type="text/javascript" >
 		    function onBodyLoad()
 		    {		        
 		        if(!Ris)
 		            return;
-
-	            try
-	            {
-                    var content = Ris.getTag("ReportContent");
-                    Field.setValue($("addendum"), content);
-	            }
-	            catch(e)
-	            {
-	                var message = "Failed to load editor page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
-		            Field.setValue($("myForm"), message);
-	            }
 				
+				Label.setValues({
+					labelAddendum: SR.ReportEditor.Addendum
+				});
+				
+				var content = Ris.getTag("ReportContent");
+				Field.setValue($("addendum"), content);
 		    }
 			
             // this no-arg method must be implemented for the component to save report
@@ -35,7 +31,7 @@
 	</head>
 	<body onload="javascript: onBodyLoad()" style="padding-top:0">
 		<form id="myForm" style="padding-top:0">
-		    <p class="sectionheading">Addendum</p>
+		    <p class="sectionheading" id="labelAddendum">Addendum</p>
 			<textarea style="width:99%" rows="5" border="0" id="addendum"></textarea>
 		</form>
 	</body>

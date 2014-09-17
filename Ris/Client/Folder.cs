@@ -125,9 +125,8 @@ namespace ClearCanvas.Ris.Client
 		/// </summary>
 		protected Folder()
 		{
-			// establish default resource resolver on this assembly (not the assembly of the derived class)
-			_resourceResolver = new ResourceResolver(typeof(Folder).Assembly);
-
+			_resourceResolver = new ResourceResolver(this.GetType(), true);
+			
 			// Initialize folder Path
 			var pathAttrib = AttributeUtils.GetAttribute<FolderPathAttribute>(this.GetType());
 			if (pathAttrib != null)
@@ -140,8 +139,7 @@ namespace ClearCanvas.Ris.Client
 			var attrib = AttributeUtils.GetAttribute<FolderDescriptionAttribute>(this.GetType());
 			if (attrib != null)
 			{
-				var resolver = new ResourceResolver(this.GetType(), true);
-				this.Tooltip = resolver.LocalizeString(attrib.Description);
+				this.Tooltip = _resourceResolver.LocalizeString(attrib.Description);
 			}
 		}
 
@@ -152,8 +150,7 @@ namespace ClearCanvas.Ris.Client
 		/// <param name="startExpanded"></param>
 		protected Folder(Path path, bool startExpanded)
 		{
-			// establish default resource resolver on this assembly (not the assembly of the derived class)
-			_resourceResolver = new ResourceResolver(typeof(Folder).Assembly);
+			_resourceResolver = new ResourceResolver(this.GetType(), true);
 			_folderPath = path;
 			_startExpanded = startExpanded;
 		}

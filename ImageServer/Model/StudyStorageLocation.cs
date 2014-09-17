@@ -83,8 +83,7 @@ namespace ClearCanvas.ImageServer.Model
         #endregion
 
         #region Private Members
-        static private readonly IPersistentStore _store = PersistentStoreRegistry.GetDefaultStore();
-    	private IList<StudyIntegrityQueue> _integrityQueueItems;
+	    private IList<StudyIntegrityQueue> _integrityQueueItems;
 
         private ServerPartition _partition;
         private volatile Study _study;
@@ -362,8 +361,8 @@ namespace ClearCanvas.ImageServer.Model
                 PersistentStoreRegistry.GetDefaultStore().OpenUpdateContext(UpdateContextSyncMode.Flush);
             using (context)
             {
-                ILockStudy lockStudyBroker = context.GetBroker<ILockStudy>();
-                LockStudyParameters parms = new LockStudyParameters {StudyStorageKey = GetKey(), WriteLock = true};
+                var lockStudyBroker = context.GetBroker<ILockStudy>();
+                var parms = new LockStudyParameters {StudyStorageKey = GetKey(), WriteLock = true};
             	if (!lockStudyBroker.Execute(parms))
                     return false;
 
@@ -388,8 +387,8 @@ namespace ClearCanvas.ImageServer.Model
                 PersistentStoreRegistry.GetDefaultStore().OpenUpdateContext(UpdateContextSyncMode.Flush);
             using (context)
             {
-                ILockStudy lockStudyBroker = context.GetBroker<ILockStudy>();
-                LockStudyParameters parms = new LockStudyParameters {StudyStorageKey = GetKey(), WriteLock = false};
+                var lockStudyBroker = context.GetBroker<ILockStudy>();
+                var parms = new LockStudyParameters {StudyStorageKey = GetKey(), WriteLock = false};
             	if (!lockStudyBroker.Execute(parms))
                     return false;
 
@@ -590,15 +589,15 @@ namespace ClearCanvas.ImageServer.Model
 						Stream xmlStream = Open(GetStudyXmlPath());
 						if (xmlStream != null)
 						{
-							XmlDocument xml = new XmlDocument();
+							var theMemento = new StudyXmlMemento();
 							using (xmlStream)
 							{
-								StudyXmlIo.Read(xml, xmlStream);
+								StudyXmlIo.Read(theMemento, xmlStream);
 								xmlStream.Close();
 							}
 
 							_studyXml = new StudyXml();
-							_studyXml.SetMemento(xml);
+							_studyXml.SetMemento(theMemento);
 
 						}
 					}
@@ -619,15 +618,15 @@ namespace ClearCanvas.ImageServer.Model
 				Stream xmlStream = Open(GetStudyXmlPath());
 				if (xmlStream != null)
 				{
-					XmlDocument xml = new XmlDocument();
+					var theMemento = new StudyXmlMemento();
 					using (xmlStream)
 					{
-						StudyXmlIo.Read(xml, xmlStream);
+						StudyXmlIo.Read(theMemento, xmlStream);
 						xmlStream.Close();
 					}
 
 					_studyXml = new StudyXml();
-					_studyXml.SetMemento(xml);
+					_studyXml.SetMemento(theMemento);
 
 				}
 

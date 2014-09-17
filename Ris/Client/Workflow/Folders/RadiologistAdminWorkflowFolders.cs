@@ -33,7 +33,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Folders
 	{
 		[ExtensionOf(typeof(RadiologistAdminWorkflowFolderExtensionPoint))]
 		[FolderForWorklistClass(WorklistClassNames.ReportingAdminUnreportedWorklist)]
-		[FolderPath("Unreported Items", true)]
+		[FolderPath("FolderUnreportedItems", true)]
 		[FolderDescription("ReportingAdminUnreportedFolderDescription")]
 		public class ReportingAdminUnreportedFolder : ReportingWorkflowFolder
 		{
@@ -41,7 +41,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Folders
 
 		[ExtensionOf(typeof(RadiologistAdminWorkflowFolderExtensionPoint))]
 		[FolderForWorklistClass(WorklistClassNames.ReportingAdminAssignedWorklist)]
-		[FolderPath("Active Reporting Items", true)]
+		[FolderPath("FolderActiveReportingItems", true)]
 		[FolderDescription("ReportingAdminAssignedFolderDescription")]
 		public class ReportingAdminAssignedFolder : ReportingWorkflowFolder
 		{
@@ -49,13 +49,13 @@ namespace ClearCanvas.Ris.Client.Workflow.Folders
 
 		[ExtensionOf(typeof(RadiologistAdminWorkflowFolderExtensionPoint))]
 		[FolderForWorklistClass(WorklistClassNames.ReportingAdminToBeTranscribedWorklist)]
-		[FolderPath("To Be Transcribed Items", true)]
+		[FolderPath("FolderToBeTranscribedItems", true)]
 		[FolderDescription("ReportingAdminToBeTranscribedWorklistDescription")]
 		public class ReportingAdminToBeTranscribedWorklist : ReportingWorkflowFolder
 		{
 		}
 
-		[FolderPath("Search Results")]
+		[FolderPath("FolderSearchResults")]
 		public class RadiologistAdminSearchFolder : WorklistSearchResultsFolder<ReportingWorklistItemSummary, IReportingWorkflowService>
 		{
 			public RadiologistAdminSearchFolder()

@@ -36,11 +36,11 @@ namespace ClearCanvas.Ris.Client
 
 		public ProcedureTypeSummaryTable()
 		{
-			this.Columns.Add(new TableColumn<ProcedureTypeSummary, string>("ID",
+			this.Columns.Add(new TableColumn<ProcedureTypeSummary, string>(SR.ColumnID,
 				delegate(ProcedureTypeSummary rpt) { return rpt.Id; },
 				0.5f));
 
-			this.Columns.Add(new TableColumn<ProcedureTypeSummary, string>("Name",
+			this.Columns.Add(new TableColumn<ProcedureTypeSummary, string>(SR.ColumnProcedureName,
 				delegate(ProcedureTypeSummary rpt) { return rpt.Name; },
 				0.5f));
 

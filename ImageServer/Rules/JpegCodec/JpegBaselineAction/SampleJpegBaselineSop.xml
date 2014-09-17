@@ -14,6 +14,8 @@ JPEG Baseline, JPEG Extended, and Jpeg 2000 Lossy.
 	  <not-equal test="$TransferSyntaxUid" refValue="1.2.840.10008.1.2.4.91" />
 	  <equal test="$BitsAllocated" refValue="8" />
 	  <not-equal test="$PhotometricInterpretation" refValue="PALETTE COLOR" />
+		<!-- MR Spectroscopy SOP Class has no pixel data -->
+		<not-equal test="$SopClassUid" refValue="1.2.840.10008.5.1.4.1.1.4.2"/>
 	  <or>
 		<equal test="$Modality" refValue="US" />
 		<equal test="$Modality" refValue="RF" />

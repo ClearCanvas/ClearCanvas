@@ -38,7 +38,7 @@ namespace ClearCanvas.ImageViewer.TestTools
 	[ButtonAction("show", "global-toolbars/ToolbarUtilities/Memory Analysis", "Show")]
 	[IconSet("show", "Icons.MemoryAnalysisToolSmall.png", "Icons.MemoryAnalysisToolMedium.png", "")]
 
-	[ExtensionOf(typeof(ClearCanvas.Desktop.DesktopToolExtensionPoint))]
+	[ExtensionOf(typeof(ClearCanvas.Desktop.DesktopToolExtensionPoint), Enabled = false)]
 	public class MemoryAnalysisTool : Tool<ClearCanvas.Desktop.IDesktopToolContext>
 	{
 		private static IShelf _shelf;

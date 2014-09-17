@@ -110,13 +110,8 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.StudyIntegrityQue
                                                                        FromDateCalendarExtender.ClientID);
             ClearToDateButton.OnClientClick = ScriptHelper.ClearDate(ToDate.ClientID,
                                                                      ToDateCalendarExtender.ClientID);
-            ToDate.Attributes["OnChange"] = ScriptHelper.CheckDateRange(FromDate.ClientID, ToDate.ClientID,
-                                                                        ToDate.ClientID, ToDateCalendarExtender.ClientID,
-                                                                        "To Date must be greater than From Date");
-            FromDate.Attributes["OnChange"] = ScriptHelper.CheckDateRange(FromDate.ClientID, ToDate.ClientID,
-                                                                          FromDate.ClientID,
-                                                                          FromDateCalendarExtender.ClientID,
-                                                                          "From Date must be less than To Date");
+            SearchButton.Attributes["onclick"] = ScriptHelper.CheckDateRange(FromDate.ClientID, ToDate.ClientID,
+																		SR.ToFromDateValidationError);
 
             GridPagerTop.InitializeGridPager(Labels.GridPagerQueueSingleItem,
                                              Labels.GridPagerQueueMultipleItems,

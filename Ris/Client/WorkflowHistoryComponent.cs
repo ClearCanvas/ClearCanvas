@@ -96,7 +96,7 @@ namespace ClearCanvas.Ris.Client
 		public override void Start()
 		{
 			_procedureTable = new Table<ProcedureDetail>();
-			_procedureTable.Columns.Add(new TableColumn<ProcedureDetail, string>("Procedure",
+			_procedureTable.Columns.Add(new TableColumn<ProcedureDetail, string>(SR.ColumnProcedure,
 				delegate(ProcedureDetail item) { return Formatting.ProcedureFormat.Format(item); }));
 
 			_procedureViewComponentHost = new ChildComponentHost(this.Host, new ProcedureViewComponent(this));

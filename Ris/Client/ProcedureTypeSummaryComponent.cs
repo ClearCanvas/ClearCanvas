@@ -35,7 +35,7 @@ using ClearCanvas.Ris.Application.Common.Admin.ProcedureTypeAdmin;
 
 namespace ClearCanvas.Ris.Client
 {
-	[MenuAction("launch", "global-menus/Admin/Procedure Types", "Launch")]
+	[MenuAction("launch", "global-menus/MenuAdmin/MenuProcedureTypes", "Launch")]
 	[ActionPermission("launch", ClearCanvas.Ris.Application.Common.AuthorityTokens.Admin.Data.ProcedureType)]
 	[ExtensionOf(typeof(DesktopToolExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]
 	public class ProcedureTypeAdminTool : Tool<IDesktopToolContext>
@@ -53,7 +53,7 @@ namespace ClearCanvas.Ris.Client
                     _workspace = ApplicationComponent.LaunchAsWorkspace(
                         this.Context.DesktopWindow,
                         component,
-                        "Procedure Types");
+                        SR.TitleProcedureTypes);
                     _workspace.Closed += delegate { _workspace = null; };
 
                 }
@@ -185,7 +185,7 @@ namespace ClearCanvas.Ris.Client
 
 			ProcedureTypeEditorComponent editor = new ProcedureTypeEditorComponent(item.ProcedureTypeRef);
 			ApplicationComponentExitCode exitCode = ApplicationComponent.LaunchAsDialog(
-				this.Host.DesktopWindow, editor, SR.TitleUpdateProcedureType + " - " + "("+item.Id+") " +item.Name);
+				this.Host.DesktopWindow, editor, string.Format("{0} - ({1}) {2}", SR.TitleUpdateProcedureType, item.Id, item.Name));
 			if (exitCode == ApplicationComponentExitCode.Accepted)
 			{
 				editedItems.Add(editor.ProcedureTypeSummary);

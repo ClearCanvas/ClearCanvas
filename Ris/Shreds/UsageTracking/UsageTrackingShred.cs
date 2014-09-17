@@ -34,7 +34,8 @@ using ClearCanvas.Common.Shreds;
 namespace ClearCanvas.Ris.Shreds.UsageTracking
 {
     [ExtensionOf(typeof(ShredExtensionPoint))]
-    class UsageTrackingShred: Shred
+	[ShredIsolation(Level = ShredIsolationLevel.None)]
+	class UsageTrackingShred : Shred
     {
         private readonly string _className;
         private UsageTrackingService _service;

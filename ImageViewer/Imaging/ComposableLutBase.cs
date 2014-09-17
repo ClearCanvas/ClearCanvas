@@ -43,9 +43,10 @@ namespace ClearCanvas.ImageViewer.Imaging
 	[Cloneable(true)]
 	public abstract class ComposableLutBase : IComposableLut
 	{
-		#region Private Fields
+	    #region Private Fields
 
-		private event EventHandler _lutChanged;
+        private string _key;
+        private event EventHandler _lutChanged;
 
 		#endregion
 
@@ -68,6 +69,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 		/// </remarks>
 		protected virtual void OnLutChanged()
 		{
+		    _key = null;
 			EventsHelper.Fire(_lutChanged, this, EventArgs.Empty);
 		}
 
@@ -126,11 +128,24 @@ namespace ClearCanvas.ImageViewer.Imaging
 		/// <summary>
 		/// Gets the output value of the lookup table for a given input value.
 		/// </summary>
-		internal abstract double Lookup(double input);
+		internal abstract double LookupCore(double input);
+
+		/// <summary>
+		/// Performs bulk lookup for a set of input values.
+		/// </summary>
+		/// <param name="input">Source array of input values to be transformed.</param>
+		/// <param name="output">Destination array where transformed output values will be written (may be same array as <paramref name="input"/>).</param>
+		/// <param name="count">Number of values in the arrays to transform (contiguous entries from start of array).</param>
+		internal abstract void LookupCore(double[] input, double[] output, int count);
 
 		double IComposableLut.this[double input]
 		{
-			get { return Lookup(input); }
+			get { return LookupCore(input); }
+		}
+
+		void IComposableLut.LookupValues(double[] input, double[] output, int count)
+		{
+			LookupCore(input, output, count);
 		}
 
 		/// <summary>
@@ -150,6 +165,14 @@ namespace ClearCanvas.ImageViewer.Imaging
 		/// dependent upon the actual image to which it belongs.
 		/// </remarks>
 		public abstract string GetKey();
+
+	    string IComposableLut.GetKey()
+	    {
+            if (String.IsNullOrWhiteSpace(_key))
+	            _key = GetKey();
+	        
+            return _key;
+	    }
 
 		/// <summary>
 		/// Gets an abbreviated description of the lookup table.

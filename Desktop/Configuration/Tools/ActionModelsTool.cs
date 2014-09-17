@@ -23,6 +23,7 @@
 #endregion
 
 #if DEBUG
+// ReSharper disable LocalizableElement
 
 using System;
 using System.Collections.Generic;
@@ -269,4 +270,5 @@ namespace ClearCanvas.Desktop.Configuration.Tools
 	}
 }
 
+// ReSharper restore LocalizableElement
 #endif

@@ -208,16 +208,8 @@ namespace ClearCanvas.ImageViewer.Layout.Basic
 
         private void OnDisplaySetChanged(object sender, DisplaySetChangedEventArgs e)
         {
-            if (e.NewDisplaySet == null)
-                return;
-
-            var clock = new CodeClock();
-            clock.Start();
-
-            UpdateVisibility(e.NewDisplaySet, SelectedOverlaysVisible ? ShowHideOption.ShowSelected : ShowHideOption.HideUnimportant);
-
-            clock.Stop();
-            Trace.WriteLine(String.Format("{0} - UpdateVisibility took {1}", GetType().FullName, clock.Seconds));
+            if (e.NewDisplaySet != null)
+                UpdateVisibility(e.NewDisplaySet, SelectedOverlaysVisible ? ShowHideOption.ShowSelected : ShowHideOption.HideUnimportant);
         }
 
         private static void UpdateVisibility(IDisplaySet displaySet, ShowHideOption option)

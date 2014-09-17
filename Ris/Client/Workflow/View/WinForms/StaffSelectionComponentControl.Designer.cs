@@ -59,6 +59,7 @@ namespace ClearCanvas.Ris.Client.Workflow.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(StaffSelectionComponentControl));
 			this._staff = new ClearCanvas.Ris.Client.View.WinForms.LookupField();
 			this._cancelButton = new System.Windows.Forms.Button();
 			this._acceptButton = new System.Windows.Forms.Button();
@@ -66,47 +67,32 @@ namespace ClearCanvas.Ris.Client.Workflow.View.WinForms
 			// 
 			// _staff
 			// 
-			this._staff.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this._staff.LabelText = "label";
-			this._staff.Location = new System.Drawing.Point(3, 3);
-			this._staff.Margin = new System.Windows.Forms.Padding(0);
+			resources.ApplyResources(this._staff, "_staff");
 			this._staff.Name = "_staff";
-			this._staff.Size = new System.Drawing.Size(291, 41);
-			this._staff.TabIndex = 0;
 			this._staff.Value = null;
 			// 
 			// _cancelButton
 			// 
-			this._cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this._cancelButton.Location = new System.Drawing.Point(219, 46);
+			resources.ApplyResources(this._cancelButton, "_cancelButton");
 			this._cancelButton.Name = "_cancelButton";
-			this._cancelButton.Size = new System.Drawing.Size(75, 23);
-			this._cancelButton.TabIndex = 1;
-			this._cancelButton.Text = "Cancel";
 			this._cancelButton.UseVisualStyleBackColor = true;
 			this._cancelButton.Click += new System.EventHandler(this._cancelButton_Click);
 			// 
 			// _acceptButton
 			// 
-			this._acceptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this._acceptButton.Location = new System.Drawing.Point(138, 46);
+			resources.ApplyResources(this._acceptButton, "_acceptButton");
 			this._acceptButton.Name = "_acceptButton";
-			this._acceptButton.Size = new System.Drawing.Size(75, 23);
-			this._acceptButton.TabIndex = 2;
-			this._acceptButton.Text = "OK";
 			this._acceptButton.UseVisualStyleBackColor = true;
 			this._acceptButton.Click += new System.EventHandler(this._acceptButton_Click);
 			// 
 			// StaffSelectionComponentControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this._acceptButton);
 			this.Controls.Add(this._cancelButton);
 			this.Controls.Add(this._staff);
 			this.Name = "StaffSelectionComponentControl";
-			this.Size = new System.Drawing.Size(297, 72);
 			this.ResumeLayout(false);
 
         }

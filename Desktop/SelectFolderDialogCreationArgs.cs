@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.ComponentModel;
 
 namespace ClearCanvas.Desktop
 {
@@ -66,6 +67,7 @@ namespace ClearCanvas.Desktop
 		/// <summary>
 		/// Gets or sets the prompt to the user shown on the dialog.
 		/// </summary>
+		[Localizable(true)]
 		public string Prompt
 		{
 			get { return _prompt; }

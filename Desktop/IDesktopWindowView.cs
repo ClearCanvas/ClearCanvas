@@ -22,40 +22,41 @@
 
 #endregion
 
+using System.ComponentModel;
 using ClearCanvas.Common;
 using ClearCanvas.Desktop.Actions;
 
 namespace ClearCanvas.Desktop
 {
-    /// <summary>
-    /// Defines the interface to a view for a <see cref="DesktopWindow"/> object.
-    /// </summary>
-    public interface IDesktopWindowView : IDesktopObjectView
-    {
-        /// <summary>
-        /// Creates a view for the specified workspace.
-        /// </summary>
-        IWorkspaceView CreateWorkspaceView(Workspace workspace);
+	/// <summary>
+	/// Defines the interface to a view for a <see cref="DesktopWindow"/> object.
+	/// </summary>
+	public interface IDesktopWindowView : IDesktopObjectView
+	{
+		/// <summary>
+		/// Creates a view for the specified workspace.
+		/// </summary>
+		IWorkspaceView CreateWorkspaceView(Workspace workspace);
 
-        /// <summary>
-        /// Creates a view for the specified shelf.
-        /// </summary>
-        IShelfView CreateShelfView(Shelf shelf);
+		/// <summary>
+		/// Creates a view for the specified shelf.
+		/// </summary>
+		IShelfView CreateShelfView(Shelf shelf);
 
-        /// <summary>
-        /// Creates a view for the specified dialog box.
-        /// </summary>
-        IDialogBoxView CreateDialogBoxView(DialogBox dialog);
+		/// <summary>
+		/// Creates a view for the specified dialog box.
+		/// </summary>
+		IDialogBoxView CreateDialogBoxView(DialogBox dialog);
 
-        /// <summary>
-        /// Sets the current menu model.
-        /// </summary>
-        void SetMenuModel(ActionModelNode model);
+		/// <summary>
+		/// Sets the current menu model.
+		/// </summary>
+		void SetMenuModel(ActionModelNode model);
 
-        /// <summary>
-        /// Sets the current toolbar model.
-        /// </summary>
-        void SetToolbarModel(ActionModelNode model);
+		/// <summary>
+		/// Sets the current toolbar model.
+		/// </summary>
+		void SetToolbarModel(ActionModelNode model);
 
 		/// <summary>
 		/// Shows a message box in front of this window.
@@ -64,14 +65,14 @@ namespace ClearCanvas.Desktop
 		/// <param name="title">The title of the message box.</param>
 		/// <param name="buttons">The buttons to display on the message box.</param>
 		/// <returns>The result of the user dismissing the message box.</returns>
-		DialogBoxAction ShowMessageBox(string message, string title, MessageBoxActions buttons);
+		DialogBoxAction ShowMessageBox([param : Localizable(true)] string message, [param : Localizable(true)] string title, MessageBoxActions buttons);
 
 		/// <summary>
 		/// Sets the alert context.
 		/// </summary>
 		/// <param name="alertContext"></param>
-    	void SetAlertContext(IDesktopAlertContext alertContext);
-	
+		void SetAlertContext(IDesktopAlertContext alertContext);
+
 		/// <summary>
 		/// Shows an alert notification in front of this window.
 		/// </summary>
@@ -96,6 +97,6 @@ namespace ClearCanvas.Desktop
 		/// </summary>
 		/// <param name="args"></param>
 		/// <returns></returns>
-    	FileDialogResult ShowSelectFolderDialogBox(SelectFolderDialogCreationArgs args);
-    }
+		FileDialogResult ShowSelectFolderDialogBox(SelectFolderDialogCreationArgs args);
+	}
 }

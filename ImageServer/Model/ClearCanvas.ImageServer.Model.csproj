@@ -74,6 +74,7 @@
     <Compile Include="ArchiveTypeEnum.gen.cs" />
     <Compile Include="Brokers\IPostponeWorkQueue.cs" />
     <Compile Include="Brokers\IQueryCurrentStudyMove.cs" />
+    <Compile Include="Brokers\IQueryQCStatistics.cs" />
     <Compile Include="Brokers\IWebResetWorkQueue.cs" />
     <Compile Include="Brokers\IWorkQueueProcessorIDs.cs" />
     <Compile Include="Brokers\ICreatePatientForStudy.cs" />
@@ -183,11 +184,15 @@
     <Compile Include="EntityBrokers\IFilesystemQueueTypeEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\IFilesystemTierEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\INotificationQueueEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IOrderEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IOrderStatusEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\IPartitionArchiveEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\IPartitionSopClassEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\IPartitionTransferSyntaxEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\IPatientEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IProcedureCodeEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\IProcessDuplicateSopWorkQueueEntryBroker.cs" />
+    <Compile Include="EntityBrokers\IQCStatusEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\IQueueStudyStateEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\IRequestAttributesEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\IRestoreQueueEntityBroker.gen.cs" />
@@ -205,6 +210,7 @@
     <Compile Include="EntityBrokers\IServiceLockEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\IServiceLockTypeEnumBroker.gen.cs" />
     <Compile Include="EntityBrokers\IFilesystemStudyStorageEntityBroker.gen.cs" />
+    <Compile Include="EntityBrokers\IStaffEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\IStudyDataAccessEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\IStudyDeleteRecordEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\IStudyEntityBroker.gen.cs" />
@@ -223,6 +229,9 @@
     <Compile Include="EntityBrokers\IWorkQueueUidEntityBroker.gen.cs" />
     <Compile Include="EntityBrokers\NotificationQueueSelectCriteria.gen.cs" />
     <Compile Include="EntityBrokers\NotificationQueueUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\OrderSelectCriteria.cs" />
+    <Compile Include="EntityBrokers\OrderSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\OrderUpdateColumns.gen.cs" />
     <Compile Include="EntityBrokers\PartitionArchiveSelectCriteria.gen.cs" />
     <Compile Include="EntityBrokers\PartitionArchiveUpdateColumns.gen.cs" />
     <Compile Include="EntityBrokers\PartitionSopClassSelectCriteria.gen.cs" />
@@ -232,6 +241,8 @@
     <Compile Include="EntityBrokers\PatientSelectCriteria.cs" />
     <Compile Include="EntityBrokers\PatientSelectCriteria.gen.cs" />
     <Compile Include="EntityBrokers\PatientUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\ProcedureCodeSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\ProcedureCodeUpdateColumns.gen.cs" />
     <Compile Include="EntityBrokers\RequestAttributesSelectCriteria.gen.cs" />
     <Compile Include="EntityBrokers\RequestAttributesUpdateColumns.gen.cs" />
     <Compile Include="EntityBrokers\RestoreQueueSelectCriteria.cs" />
@@ -255,6 +266,8 @@
     <Compile Include="EntityBrokers\ServiceLockUpdateColumns.gen.cs" />
     <Compile Include="EntityBrokers\FilesystemStudyStorageSelectCriteria.gen.cs" />
     <Compile Include="EntityBrokers\FilesystemStudyStorageUpdateColumns.gen.cs" />
+    <Compile Include="EntityBrokers\StaffSelectCriteria.gen.cs" />
+    <Compile Include="EntityBrokers\StaffUpdateColumns.gen.cs" />
     <Compile Include="EntityBrokers\StudyDataAccessSelectCriteria.gen.cs" />
     <Compile Include="EntityBrokers\StudyDataAccessUpdateColumns.gen.cs" />
     <Compile Include="EntityBrokers\StudyDeleteRecordSelectCriteria.gen.cs" />
@@ -291,8 +304,11 @@
     <Compile Include="InconsistentDataSIQEntry.cs" />
     <Compile Include="InstanceKeys.cs" />
     <Compile Include="NotificationQueue.gen.cs" />
+    <Compile Include="Order.gen.cs" />
+    <Compile Include="OrderStatusEnum.gen.cs" />
     <Compile Include="Parameters\PostponeWorkQueueParameters.cs" />
     <Compile Include="Parameters\QueryCurrentStudyMoveParameters.cs" />
+    <Compile Include="Parameters\QueryQCStatisticsParameters.cs" />
     <Compile Include="Parameters\WebResetWorkQueueParameters.cs" />
     <Compile Include="Parameters\WorkQueueProcessordIDsParameters.cs" />
     <Compile Include="Parameters\CreatePatientForStudyParameters.cs" />
@@ -328,8 +344,11 @@
     <Compile Include="PartitionTransferSyntax.gen.cs" />
     <Compile Include="Patient.cs" />
     <Compile Include="Patient.gen.cs" />
+    <Compile Include="ProcedureCode.gen.cs" />
     <Compile Include="ProcessDuplicateAction.cs" />
     <Compile Include="ProcessDuplicateQueueEntryQueueData.cs" />
+    <Compile Include="QCStatusEnum.gen.cs" />
+    <Compile Include="QueryQCStatisticsResult.cs" />
     <Compile Include="QueueStudyStateEnum.gen.cs" />
     <Compile Include="ReconcileStudyQueueDescription.cs" />
     <Compile Include="ReconcileStudyWorkQueue.cs" />
@@ -352,6 +371,7 @@
     <Compile Include="ServiceLock.gen.cs" />
     <Compile Include="ServiceLockTypeEnum.gen.cs" />
     <Compile Include="FilesystemStudyStorage.gen.cs" />
+    <Compile Include="Staff.gen.cs" />
     <Compile Include="Study.cs" />
     <Compile Include="Study.gen.cs" />
     <Compile Include="Brokers\IInsertInstance.cs" />

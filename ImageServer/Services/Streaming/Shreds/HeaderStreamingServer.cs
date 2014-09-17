@@ -36,6 +36,7 @@ namespace ClearCanvas.ImageServer.Services.Streaming.Shreds
 	/// Plugin to handle streaming request for the ImageServer.
 	/// </summary>
 	[ExtensionOf(typeof(ShredExtensionPoint))]
+	[ShredIsolationAttribute(Level = ShredIsolationLevel.None)]
 	public class HeaderStreamingServer : WcfShred
 	{
 

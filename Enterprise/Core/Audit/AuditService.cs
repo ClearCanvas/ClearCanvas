@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ServiceModel;
 using System.Text;
 using ClearCanvas.Common;
 using ClearCanvas.Enterprise.Common.Audit;
@@ -39,8 +40,10 @@ namespace ClearCanvas.Enterprise.Core.Audit
 		[UpdateOperation(ChangeSetAuditable = false)]
 		public WriteEntryResponse WriteEntry(WriteEntryRequest request)
 		{
-			Platform.CheckForNullReference(request, "request");
-			Platform.CheckMemberIsSet(request.LogEntry, "LogEntry");
+		    if (request == null)
+                throw new FaultException(SR.ErrorNullAuditRequest);
+		    if (request.LogEntry == null)
+                throw new FaultException(SR.ErrorEmptyAuditRequest);
 
 			AuditLogEntryAssembler assembler = new AuditLogEntryAssembler();
 			AuditLogEntry logEntry = assembler.CreateAuditLogEntry(request.LogEntry);

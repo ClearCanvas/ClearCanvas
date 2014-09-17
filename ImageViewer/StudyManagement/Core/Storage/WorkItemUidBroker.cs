@@ -22,80 +22,86 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
+using System.Data.Linq;
 using System.Linq;
 
 namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 {
+	public class WorkItemUidBroker : Broker
+	{
+		internal WorkItemUidBroker(DicomStoreDataContext context)
+			: base(context) {}
 
-    public class WorkItemUidBroker : Broker
-    {
-        internal WorkItemUidBroker(DicomStoreDataContext context)
-            : base(context)
-        {
-        }
+		/// <summary>
+		/// Gets the specified number of pending work items.
+		/// </summary>
+		/// <param name="workItemOid"></param>
+		/// <returns></returns>
+		public IList<WorkItemUid> GetWorkItemUidsForWorkItem(long workItemOid)
+		{
+			return (from w in Context.WorkItemUids
+			        where w.WorkItemOid == workItemOid
+			        select w).ToList();
+		}
 
-        /// <summary>
-        /// Gets the specified number of pending work items.
-        /// </summary>
-        /// <param name="workItemOid"></param>
-        /// <returns></returns>
-        public IList<WorkItemUid> GetWorkItemUidsForWorkItem(long workItemOid)
-        {
-            return (from w in Context.WorkItemUids
-                    where w.WorkItemOid == workItemOid
-                    select w).ToList();
-        }
+		/// <summary>
+		/// Gets the specified number of pending work items.
+		/// </summary>
+		/// <param name="workItemOid"></param>
+		/// <param name="seriesInstanceUid"></param>
+		/// <param name="sopInstanceUid"> </param>
+		/// <returns></returns>
+		public bool HasWorkItemUidForSop(long workItemOid, string seriesInstanceUid, string sopInstanceUid)
+		{
+			return (from w in Context.WorkItemUids
+			        where w.WorkItemOid == workItemOid
+			              && w.SeriesInstanceUid == seriesInstanceUid
+			              && w.SopInstanceUid == sopInstanceUid
+			        select w).Count() > 1;
+		}
 
-        /// <summary>
-        /// Gets the specified number of pending work items.
-        /// </summary>
-        /// <param name="workItemOid"></param>
-        /// <param name="seriesInstanceUid"></param>
-        /// <param name="sopInstanceUid"> </param>
-        /// <returns></returns>
-        public bool HasWorkItemUidForSop(long workItemOid, string seriesInstanceUid, string sopInstanceUid)
-        {
-            return (from w in Context.WorkItemUids
-                    where w.WorkItemOid == workItemOid
-                          && w.SeriesInstanceUid == seriesInstanceUid
-                          && w.SopInstanceUid == sopInstanceUid
-                    select w).Count() > 1;
-        }
+		/// <summary>
+		/// Get a specific WorkItemUid
+		/// </summary>
+		/// <param name="oid"></param>
+		/// <returns></returns>
+		public WorkItemUid GetWorkItemUid(long oid)
+		{
+			return _getWorkItemUidByOid(Context, oid).FirstOrDefault();
+		}
 
+		/// <summary>
+		/// Insert a WorkItemUid
+		/// </summary>
+		/// <param name="entity"></param>
+		public void AddWorkItemUid(WorkItemUid entity)
+		{
+			Context.WorkItemUids.InsertOnSubmit(entity);
+		}
 
-        /// <summary>
-        /// Get a specific WorkItemUid
-        /// </summary>
-        /// <param name="oid"></param>
-        /// <returns></returns>
-        public WorkItemUid GetWorkItemUid(long oid)
-        {
-            var list = (from w in this.Context.WorkItemUids
-                        where w.Oid == oid
-                        select w).ToList();
+		/// <summary>
+		/// Delete WorkItemUid entity.
+		/// </summary>
+		/// <param name="entity"></param>
+		public void Delete(WorkItemUid entity)
+		{
+			Context.WorkItemUids.DeleteOnSubmit(entity);
+		}
 
-            if (!list.Any()) return null;
+		internal void DeleteAll()
+		{
+			Context.WorkItemUids.DeleteAllOnSubmit(Context.WorkItemUids);
+		}
 
-            return list.First();
-        }
+		#region Compiled Queries
 
-        /// <summary>
-        /// Insert a WorkItemUid
-        /// </summary>
-        /// <param name="entity"></param>
-        public void AddWorkItemUid(WorkItemUid entity)
-        {
-            Context.WorkItemUids.InsertOnSubmit(entity);
-        }
+		private static readonly Func<DicomStoreDataContext, long, IQueryable<WorkItemUid>> _getWorkItemUidByOid =
+			CompiledQuery.Compile<DicomStoreDataContext, long, IQueryable<WorkItemUid>>((context, oid) => (from w in context.WorkItemUids
+			                                                                                               where w.Oid == oid
+			                                                                                               select w).Take(1));
 
-        /// <summary>
-        /// Delete WorkItemUid entity.
-        /// </summary>
-        /// <param name="entity"></param>
-        public void Delete(WorkItemUid entity)
-        {
-            this.Context.WorkItemUids.DeleteOnSubmit(entity);
-        }
-    }
+		#endregion
+	}
 }

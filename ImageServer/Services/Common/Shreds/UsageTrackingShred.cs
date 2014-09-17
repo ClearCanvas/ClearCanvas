@@ -26,6 +26,7 @@ using System;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Shreds;
 using ClearCanvas.Enterprise.Core;
+using ClearCanvas.ImageServer.Core.Helpers;
 using ClearCanvas.ImageServer.Services.Common.Misc;
 
 namespace ClearCanvas.ImageServer.Services.Common.Shreds
@@ -34,12 +35,14 @@ namespace ClearCanvas.ImageServer.Services.Common.Shreds
     /// Plugin to host Usage Tracking service.
     /// </summary>
     [ExtensionOf(typeof(ShredExtensionPoint))]
-    public class UsageTrackingShred : Shred
+	[ShredIsolation(Level = ShredIsolationLevel.None)]
+	public class UsageTrackingShred : Shred
     {
         #region Private Members
 
         private readonly string _className;
         private UsageTrackingService _service;
+		private ShredStartupHelper _shredStartupHelper;
 
         #endregion
 
@@ -57,6 +60,12 @@ namespace ClearCanvas.ImageServer.Services.Common.Shreds
         public override void Start()
         {
             Platform.Log(LogLevel.Debug, "{0}[{1}]: Start invoked", _className, AppDomain.CurrentDomain.FriendlyName);
+			
+			_shredStartupHelper = new ShredStartupHelper(GetDisplayName());
+			_shredStartupHelper.Initialize();
+			if (_shredStartupHelper.StopFlag)
+				return;
+			_shredStartupHelper = null;
 
             try
             {
@@ -71,6 +80,9 @@ namespace ClearCanvas.ImageServer.Services.Common.Shreds
 
         public override void Stop()
         {
+			if (_shredStartupHelper != null)
+				_shredStartupHelper.StopService();
+
 			PersistentStoreRegistry.GetDefaultStore().ShutdownRequested = true;
             Platform.Log(LogLevel.Info, "{0}[{1}]: Stop invoked", _className, AppDomain.CurrentDomain.FriendlyName);
             if (_service != null)

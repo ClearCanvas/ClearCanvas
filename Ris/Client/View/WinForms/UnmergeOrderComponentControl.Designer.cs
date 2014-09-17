@@ -59,6 +59,7 @@ namespace ClearCanvas.Ris.Client.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UnmergeOrderComponentControl));
 			this._cancelButton = new System.Windows.Forms.Button();
 			this._okButton = new System.Windows.Forms.Button();
 			this._cancelReason = new ClearCanvas.Desktop.View.WinForms.ComboBoxField();
@@ -66,23 +67,15 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			// 
 			// _cancelButton
 			// 
-			this._cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this._cancelButton.Location = new System.Drawing.Point(319, 70);
+			resources.ApplyResources(this._cancelButton, "_cancelButton");
 			this._cancelButton.Name = "_cancelButton";
-			this._cancelButton.Size = new System.Drawing.Size(75, 23);
-			this._cancelButton.TabIndex = 5;
-			this._cancelButton.Text = "Cancel";
 			this._cancelButton.UseVisualStyleBackColor = true;
 			this._cancelButton.Click += new System.EventHandler(this._cancelButton_Click);
 			// 
 			// _okButton
 			// 
-			this._okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this._okButton.Location = new System.Drawing.Point(238, 70);
+			resources.ApplyResources(this._okButton, "_okButton");
 			this._okButton.Name = "_okButton";
-			this._okButton.Size = new System.Drawing.Size(75, 23);
-			this._okButton.TabIndex = 4;
-			this._okButton.Text = "Confirm";
 			this._okButton.UseVisualStyleBackColor = true;
 			this._okButton.Click += new System.EventHandler(this._okButton_Click);
 			// 
@@ -91,25 +84,20 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			this._cancelReason.DataSource = null;
 			this._cancelReason.DisplayMember = "";
 			this._cancelReason.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this._cancelReason.LabelText = "Reason";
-			this._cancelReason.Location = new System.Drawing.Point(8, 15);
-			this._cancelReason.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._cancelReason, "_cancelReason");
 			this._cancelReason.Name = "_cancelReason";
-			this._cancelReason.Size = new System.Drawing.Size(386, 41);
-			this._cancelReason.TabIndex = 3;
 			this._cancelReason.Value = null;
 			// 
 			// UnmergeOrderComponentControl
 			// 
 			this.AcceptButton = this._okButton;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this._cancelButton;
 			this.Controls.Add(this._cancelButton);
 			this.Controls.Add(this._cancelReason);
 			this.Controls.Add(this._okButton);
 			this.Name = "UnmergeOrderComponentControl";
-			this.Size = new System.Drawing.Size(401, 104);
 			this.ResumeLayout(false);
 
         }

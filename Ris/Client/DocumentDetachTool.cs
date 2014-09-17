@@ -31,8 +31,8 @@ using ClearCanvas.Desktop.Tools;
 
 namespace ClearCanvas.Ris.Client
 {
-	[MenuAction("apply", "attached-document-items/Remove", "Apply")]
-	[ButtonAction("apply", "attached-document-items/Remove", "Apply")]
+	[MenuAction("apply", "attached-document-items/MenuRemove", "Apply")]
+	[ButtonAction("apply", "attached-document-items/MenuRemove", "Apply")]
 	[IconSet("apply", "Icons.DeleteToolSmall.png", "Icons.DeleteToolSmall.png", "Icons.DeleteToolSmall.png")]
 	[EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
 	[VisibleStateObserver("apply", "Visible")]

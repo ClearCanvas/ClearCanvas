@@ -14,9 +14,9 @@
     <File name="ClearCanvas.Ris.Server.Executable.exe" checksum="true" />
     <File name="ClearCanvas.Ris.Server.Executable.exe.config" config="true" />
     <!--<File name="ClearCanvas.Ris.Server.Executable.exe.critical.config" checksum="true" config="true" />-->
-    <File name="ClearCanvas.Server.ShredHostService.exe" checksum="true" />
-    <File name="ClearCanvas.Server.ShredHostService.exe.config" config="true" />
-    <!--<File name="ClearCanvas.Server.ShredHostService.exe.critical.config" checksum="true" config="true" />-->
+    <File name="ClearCanvas.Ris.Server.ShredHostService.exe" checksum="true" />
+    <File name="ClearCanvas.Ris.Server.ShredHostService.exe.config" config="true" />
+    <!--<File name="ClearCanvas.Ris.Server.ShredHostService.exe.critical.config" checksum="true" config="true" />-->
     <File name="common\log4net.dll" checksum="true" />
     <File name="common\ClearCanvas.Common.dll" checksum="true" />
     <File name="common\ClearCanvas.Server.ShredHost.dll" checksum="true" />

@@ -32,15 +32,13 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
 
 	internal class ImageServerWadoLoader : IDicomFileLoader
 	{
-		private readonly string _hostName;
-		private readonly string _aeTitle;
-		private readonly int _wadoServicePort;
+	    private readonly string _aeTitle;
+        private readonly Uri _wadoUri;
 
 		public ImageServerWadoLoader(string hostName, string aeTitle, int wadoServicePort)
 		{
-			_hostName = hostName;
-			_aeTitle = aeTitle;
-			_wadoServicePort = wadoServicePort;
+		    _aeTitle = aeTitle;
+            _wadoUri = new Uri(string.Format(StreamingSettings.Default.FormatWadoUriPrefix, hostName, wadoServicePort));
 		}
 
 		#region Implementation of IDicomFileLoader
@@ -64,8 +62,7 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
 		{
 			try
 			{
-				Uri uri = new Uri(string.Format(StreamingSettings.Default.FormatWadoUriPrefix, _hostName, _wadoServicePort));
-				var client = new StreamingClient(uri);
+				var client = new StreamingClient(_wadoUri);
 				var file = new DicomFile();
 				using (var stream = client.RetrieveImageHeader(_aeTitle, args.StudyInstanceUid, args.SeriesInstanceUid, args.SopInstanceUid))
 				{
@@ -84,8 +81,7 @@ namespace ClearCanvas.ImageViewer.StudyLoaders.Streaming
 		{
 			try
 			{
-				var uri = new Uri(string.Format(StreamingSettings.Default.FormatWadoUriPrefix, _hostName, _wadoServicePort));
-				var client = new StreamingClient(uri);
+				var client = new StreamingClient(_wadoUri);
 				var result = client.RetrievePixelData(_aeTitle, args.StudyInstanceUid, args.SeriesInstanceUid, args.SopInstanceUid, args.FrameNumber - 1);
 				return new ImageServerFramePixelData(result);
 			}

@@ -26,7 +26,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
-using System.Xml;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
@@ -98,8 +97,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom
         public DicomPresContextResult VerifyAssociation(AssociationParameters association, byte pcid)
         {
             bool isNew;
-
-            Device = DeviceManager.LookupDevice(Partition, association, out isNew);
+			Device = Context.Device ?? DeviceManager.LookupDevice(Partition, association, out isNew);
 
             // Let the subclass perform the verification
             DicomPresContextResult result = OnVerifyAssociation(association, pcid);
@@ -136,11 +134,11 @@ namespace ClearCanvas.ImageServer.Services.Dicom
                     {
                         using (Stream fileStream = FileStreamOpener.OpenForRead(streamFile, FileMode.Open))
                         {
-                            var theDoc = new XmlDocument();
+                            var theMemento = new StudyXmlMemento();
 
-                            StudyXmlIo.Read(theDoc, fileStream);
+                            StudyXmlIo.Read(theMemento, fileStream);
 
-                            theXml.SetMemento(theDoc);
+                            theXml.SetMemento(theMemento);
 
                             fileStream.Close();
 

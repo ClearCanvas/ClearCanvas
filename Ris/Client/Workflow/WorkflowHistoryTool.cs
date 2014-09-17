@@ -37,13 +37,13 @@ namespace ClearCanvas.Ris.Client.Workflow
 {
 	//NOTE: DEBUG'd out because there is no requirement for this feature, however it is a useful debugging tool (JR)
 #if DEBUG
-	[ButtonAction("view", "folderexplorer-items-toolbar/Workflow History", "View")]
-	[MenuAction("view", "folderexplorer-items-contextmenu/Workflow History", "View")]
-	[ButtonAction("view", "patientsearch-items-toolbar/Workflow History", "View")]
-	[MenuAction("view", "patientsearch-items-contextmenu/Workflow History", "View")]
+	[ButtonAction("view", "folderexplorer-items-toolbar/MenuWorkflowHistory", "View")]
+	[MenuAction("view", "folderexplorer-items-contextmenu/MenuWorkflowHistory", "View")]
+	[ButtonAction("view", "patientsearch-items-toolbar/MenuWorkflowHistory", "View")]
+	[MenuAction("view", "patientsearch-items-contextmenu/MenuWorkflowHistory", "View")]
 #endif
 	[EnabledStateObserver("view", "Enabled", "EnabledChanged")]
-	[Tooltip("view", "View workflow history")]
+	[Tooltip("view", "TooltipWorkflowHistory")]
 	[ExtensionOf(typeof(RegistrationWorkflowItemToolExtensionPoint))]
 	[ExtensionOf(typeof(PerformingWorkflowItemToolExtensionPoint))]
 	[ExtensionOf(typeof(ReportingWorkflowItemToolExtensionPoint))]
@@ -102,7 +102,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 			ApplicationComponent.LaunchAsDialog(
 				window,
 				new WorkflowHistoryComponent(orderRef),
-				"Workflow History");
+				SR.TitleWorkflowHistory);
 		}
 	}
 }

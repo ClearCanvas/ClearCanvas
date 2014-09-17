@@ -34,10 +34,10 @@ using ClearCanvas.Ris.Client.Formatting;
 
 namespace ClearCanvas.Ris.Client.Workflow
 {
-	[MenuAction("neworder", "folderexplorer-items-contextmenu/New Order", "NewOrder")]
-	[ButtonAction("neworder", "folderexplorer-items-toolbar/New Order", "NewOrder")]
-	[ButtonAction("neworder", "patientsearch-items-toolbar/New Order", "NewOrder")]
-	[MenuAction("neworder", "patientsearch-items-contextmenu/New Order", "NewOrder")]
+	[MenuAction("neworder", "folderexplorer-items-contextmenu/MenuNewOrder", "NewOrder")]
+	[ButtonAction("neworder", "folderexplorer-items-toolbar/MenuNewOrder", "NewOrder")]
+	[ButtonAction("neworder", "patientsearch-items-toolbar/MenuNewOrder", "NewOrder")]
+	[MenuAction("neworder", "patientsearch-items-contextmenu/MenuNewOrder", "NewOrder")]
 	[IconSet("neworder", "NewOrderSmall.png", "NewOrderMedium.png", "NewOrderLarge.png")]
 	[ActionPermission("neworder", Application.Common.AuthorityTokens.Workflow.Order.Create)]
 

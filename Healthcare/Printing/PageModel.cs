@@ -89,6 +89,35 @@ namespace ClearCanvas.Healthcare.Printing
 		}
 
 		/// <summary>
+		/// Healthcard facade.
+		/// </summary>
+		public class HealthcardFacade
+		{
+			private readonly HealthcardNumber _healthcard;
+
+			public HealthcardFacade(HealthcardNumber healthcard)
+			{
+				_healthcard = healthcard;
+			}
+
+			public string Id
+			{
+				get { return _healthcard.Id; }
+			}
+
+			public string AssigningAuthority
+			{
+
+				get { return _healthcard.AssigningAuthority.Code; }
+			}
+
+			public override string ToString()
+			{
+				return string.IsNullOrEmpty(_healthcard.Id) ? string.Empty : _healthcard.ToString();
+			}
+		}
+
+		/// <summary>
 		/// Address facade.
 		/// </summary>
 		public class AddressFacade
@@ -151,37 +180,28 @@ namespace ClearCanvas.Healthcare.Printing
 		/// </summary>
 		public class LetterheadFacade
 		{
-			private readonly LetterheadSettings _settings;
+			private readonly Letterhead _letterhead;
 			private readonly AddressFacade _address;
 
-			internal LetterheadFacade()
+			internal LetterheadFacade(string facilityCode)
 			{
-				_settings = new LetterheadSettings();
-				var address = new Address(
-					_settings.LetterheadAddressStreet,
-					_settings.LetterheadAddressUnit,
-					_settings.LetterheadAddressCity,
-					_settings.LetterheadAddressProvince,
-					_settings.LetterheadAddressPostalCode,
-					"",
-					AddressType.B,
-					null);
-				_address = new AddressFacade(address);
+				_letterhead = LetterheadHelper.GetLetterheads(facilityCode);
+				_address = new AddressFacade(_letterhead.Address);
 			}
 
 			public string FacilityTitle
 			{
-				get { return _settings.LetterheadFacilityTitle; }
+				get { return _letterhead.FacilityTitle; }
 			}
 
 			public string FacilitySubtitle
 			{
-				get { return _settings.LetterheadFacilitySubtitle; }
+				get { return _letterhead.FacilitySubtitle; }
 			}
 
 			public string LogoFile
 			{
-				get { return _settings.LetterheadLogoFile; }
+				get { return _letterhead.LogoFile; }
 			}
 
 			public AddressFacade Address
@@ -191,17 +211,17 @@ namespace ClearCanvas.Healthcare.Printing
 
 			public string Phone
 			{
-				get { return _settings.LetterheadPhone; }
+				get { return _letterhead.Phone; }
 			}
 
 			public string Fax
 			{
-				get { return _settings.LetterheadFax; }
+				get { return _letterhead.Fax; }
 			}
 
 			public string Email
 			{
-				get { return _settings.LetterheadEmail; }
+				get { return _letterhead.Email; }
 			}
 		}
 
@@ -225,6 +245,16 @@ namespace ClearCanvas.Healthcare.Printing
 			public IdentifierFacade Mrn
 			{
 				get { return new IdentifierFacade(_patientProfile.Mrn); }
+			}
+
+			public HealthcardFacade Healthcard
+			{
+				get { return new HealthcardFacade(_patientProfile.Healthcard); }
+			}
+
+			public string BillingInformation
+			{
+				get { return _patientProfile.BillingInformation; }
 			}
 
 			public string DateOfBirth

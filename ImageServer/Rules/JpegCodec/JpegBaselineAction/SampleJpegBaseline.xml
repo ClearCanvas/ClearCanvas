@@ -6,7 +6,9 @@ on 8-bit US and RF studies.
 	<condition expressionLanguage="dicom">
 		<and>
 			<equal test="$BitsAllocated" refValue="8" />
-		    <not-equal test="$PhotometricInterpretation" refValue="PALETTE COLOR" />
+      <not-equal test="$PhotometricInterpretation" refValue="PALETTE COLOR" />
+			<!-- MR Spectroscopy SOP Class has no pixel data -->
+			<not-equal test="$SopClassUid" refValue="1.2.840.10008.5.1.4.1.1.4.2"/>
 			<or>
 				<equal test="$Modality" refValue="US" />
 				<equal test="$Modality" refValue="RF" />

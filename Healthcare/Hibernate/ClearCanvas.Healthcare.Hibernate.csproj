@@ -125,6 +125,7 @@
     <Compile Include="UpgradeScripts\UpgradeFrom_9_0_9561_11723.cs" />
     <Compile Include="UpgradeScripts\UpgradeFrom_10_0_11128_314.cs" />
     <Compile Include="UpgradeScripts\UpgradeFrom_10_1_13120_656.cs" />
+    <Compile Include="UpgradeScripts\UpgradeFrom_11_0_14821_1095.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />

@@ -1,0 +1,14 @@
+﻿<!-- 
+This rule instructs the server to auto-route MR and CT studies to CLEARCANVAS after a 10 minute delay
+-->
+<rule>
+	<condition expressionLanguage="dicom">
+		<or>
+			<equal test="$Modality" refValue="MR" />
+			<equal test="$Modality" refValue="CT" />
+		</or>
+	</condition>
+	<action>
+		<study-auto-route device="CLEARCANVAS" delayInMinutes="10"/>
+	</action>
+</rule>

@@ -59,6 +59,7 @@ namespace ClearCanvas.Ris.Client.Workflow.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DicomSeriesEditorComponentControl));
 			this._seriesNumber = new ClearCanvas.Desktop.View.WinForms.TextField();
 			this._seriesDescription = new ClearCanvas.Desktop.View.WinForms.TextField();
 			this._acceptButton = new System.Windows.Forms.Button();
@@ -72,103 +73,67 @@ namespace ClearCanvas.Ris.Client.Workflow.View.WinForms
 			// 
 			// _seriesNumber
 			// 
-			this._seriesNumber.LabelText = "Series Number";
-			this._seriesNumber.Location = new System.Drawing.Point(3, 2);
-			this._seriesNumber.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._seriesNumber, "_seriesNumber");
 			this._seriesNumber.Mask = "";
 			this._seriesNumber.Name = "_seriesNumber";
-			this._seriesNumber.PasswordChar = '\0';
-			this._seriesNumber.Size = new System.Drawing.Size(107, 41);
-			this._seriesNumber.TabIndex = 0;
-			this._seriesNumber.ToolTip = null;
 			this._seriesNumber.Value = null;
 			// 
 			// _seriesDescription
 			// 
-			this._seriesDescription.LabelText = "Series Description";
-			this._seriesDescription.Location = new System.Drawing.Point(3, 47);
-			this._seriesDescription.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._seriesDescription, "_seriesDescription");
 			this._seriesDescription.Mask = "";
 			this._seriesDescription.Name = "_seriesDescription";
-			this._seriesDescription.PasswordChar = '\0';
-			this._seriesDescription.Size = new System.Drawing.Size(268, 41);
-			this._seriesDescription.TabIndex = 2;
-			this._seriesDescription.ToolTip = null;
 			this._seriesDescription.Value = null;
 			// 
 			// _acceptButton
 			// 
-			this._acceptButton.Location = new System.Drawing.Point(120, 192);
+			resources.ApplyResources(this._acceptButton, "_acceptButton");
 			this._acceptButton.Name = "_acceptButton";
-			this._acceptButton.Size = new System.Drawing.Size(75, 23);
-			this._acceptButton.TabIndex = 5;
-			this._acceptButton.Text = "OK";
 			this._acceptButton.UseVisualStyleBackColor = true;
 			this._acceptButton.Click += new System.EventHandler(this._acceptButton_Click);
 			// 
 			// _cancelButton
 			// 
-			this._cancelButton.Location = new System.Drawing.Point(196, 192);
+			resources.ApplyResources(this._cancelButton, "_cancelButton");
 			this._cancelButton.Name = "_cancelButton";
-			this._cancelButton.Size = new System.Drawing.Size(75, 23);
-			this._cancelButton.TabIndex = 6;
-			this._cancelButton.Text = "Cancel";
 			this._cancelButton.UseVisualStyleBackColor = true;
 			this._cancelButton.Click += new System.EventHandler(this._cancelButton_Click);
 			// 
 			// _seriesInstanceUID
 			// 
-			this._seriesInstanceUID.LabelText = "Series Instance UID";
-			this._seriesInstanceUID.Location = new System.Drawing.Point(3, 92);
-			this._seriesInstanceUID.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._seriesInstanceUID, "_seriesInstanceUID");
 			this._seriesInstanceUID.Mask = "";
 			this._seriesInstanceUID.Name = "_seriesInstanceUID";
-			this._seriesInstanceUID.PasswordChar = '\0';
 			this._seriesInstanceUID.ReadOnly = true;
-			this._seriesInstanceUID.Size = new System.Drawing.Size(268, 41);
-			this._seriesInstanceUID.TabIndex = 3;
-			this._seriesInstanceUID.ToolTip = null;
 			this._seriesInstanceUID.Value = null;
 			// 
 			// _studyInstanceUID
 			// 
-			this._studyInstanceUID.LabelText = "Study Instance UID";
-			this._studyInstanceUID.Location = new System.Drawing.Point(3, 137);
-			this._studyInstanceUID.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._studyInstanceUID, "_studyInstanceUID");
 			this._studyInstanceUID.Mask = "";
 			this._studyInstanceUID.Name = "_studyInstanceUID";
-			this._studyInstanceUID.PasswordChar = '\0';
 			this._studyInstanceUID.ReadOnly = true;
-			this._studyInstanceUID.Size = new System.Drawing.Size(268, 41);
-			this._studyInstanceUID.TabIndex = 4;
-			this._studyInstanceUID.ToolTip = null;
 			this._studyInstanceUID.Value = null;
 			// 
 			// _numberOfImages
 			// 
-			this._numberOfImages.Location = new System.Drawing.Point(149, 20);
+			resources.ApplyResources(this._numberOfImages, "_numberOfImages");
 			this._numberOfImages.Maximum = new decimal(new int[] {
             100000000,
             0,
             0,
             0});
 			this._numberOfImages.Name = "_numberOfImages";
-			this._numberOfImages.Size = new System.Drawing.Size(120, 20);
-			this._numberOfImages.TabIndex = 1;
 			// 
 			// label1
 			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(146, 2);
+			resources.ApplyResources(this.label1, "label1");
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(93, 13);
-			this.label1.TabIndex = 8;
-			this.label1.Text = "Number of Images";
 			// 
 			// DicomSeriesEditorComponentControl
 			// 
 			this.AcceptButton = this._acceptButton;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this._cancelButton;
 			this.Controls.Add(this.label1);
@@ -180,7 +145,6 @@ namespace ClearCanvas.Ris.Client.Workflow.View.WinForms
 			this.Controls.Add(this._seriesDescription);
 			this.Controls.Add(this._seriesNumber);
 			this.Name = "DicomSeriesEditorComponentControl";
-			this.Size = new System.Drawing.Size(297, 221);
 			((System.ComponentModel.ISupportInitialize)(this._numberOfImages)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();

@@ -101,6 +101,13 @@ INSERT INTO [ImageServer].[dbo].[WorkQueueTypeEnum]
            (newid(),116,'ExternalEdit','External Edit','Edit request trigger by an external application.')
 GO
 
+INSERT INTO [ImageServer].[dbo].[WorkQueueTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),117,'StudyAutoRoute','Study Auto Route','DICOM Auto-route request of a Study.')
+GO
+
+
 --  WorkQueuePriorityEnum inserts
 INSERT INTO [ImageServer].[dbo].WorkQueuePriorityEnum
            ([GUID],[Enum],[Lookup],[Description],[LongDescription])
@@ -131,7 +138,7 @@ INSERT INTO [ImageServer].[dbo].[WorkQueueTypeProperties]
            [PostponeDelaySeconds],[ExpireDelaySeconds],[MaxBatchSize], [QueueStudyStateEnum], [QueueStudyStateOrder],
            [ReadLock],[WriteLock])
      VALUES
-           (100,300,1,1,3,10,180,60,120,120,3000,105,5,0,1)
+           (100,300,1,1,3,5,60,60,120,30,3000,105,5,0,1)
 GO
   -- AutoRoute
 INSERT INTO [ImageServer].[dbo].[WorkQueueTypeProperties]
@@ -281,7 +288,15 @@ INSERT INTO [ImageServer].[dbo].[WorkQueueTypeProperties]
      VALUES
            (116,300,0,1,1,30,180,60,120,240,-1,101,3,0,1)
 GO
-
+  -- StudyAutoRoute
+INSERT INTO [ImageServer].[dbo].[WorkQueueTypeProperties]
+           ([WorkQueueTypeEnum],[WorkQueuePriorityEnum],[MemoryLimited],[AlertFailedWorkQueue],
+           [MaxFailureCount],[ProcessDelaySeconds],[FailureDelaySeconds],[DeleteDelaySeconds],
+           [PostponeDelaySeconds],[ExpireDelaySeconds],[MaxBatchSize], [QueueStudyStateEnum], [QueueStudyStateOrder],
+           [ReadLock],[WriteLock])
+     VALUES
+           (117,300,1,1,3,10,180,60,120,15,-1,101,0,1,0)
+GO
 
 -- WorkQueueStatusEnum inserts
 INSERT INTO [ImageServer].[dbo].[WorkQueueStatusEnum]
@@ -382,6 +397,12 @@ INSERT INTO [ImageServer].[dbo].[ServerRuleTypeEnum]
            ([GUID],[Enum],[Lookup],[Description],[LongDescription])
      VALUES
            (newid(),107,'StudyQualityControl','Study Quality Control','A rule for quality control purposes when studies are received')
+GO
+
+INSERT INTO [ImageServer].[dbo].[ServerRuleTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),108,'StudyAutoRoute','Study Auto Routing','A DICOM auto-routing rule for studies')
 GO
 
 
@@ -531,6 +552,12 @@ INSERT INTO [ImageServer].[dbo].[ServiceLockTypeEnum]
            ([GUID],[Enum],[Lookup],[Description],[LongDescription])
      VALUES
            (newid(),302,'ExternalNotificationProcess','Process External Notifications','This service processes notifications to send to external applications.')
+GO
+
+INSERT INTO [ImageServer].[dbo].[ServiceLockTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),303,'PartitionOrderPurge','Partition Order Purge','This service purges orders not linked to studies on a partition.')
 GO
 
 INSERT INTO [ImageServer].[dbo].[ServiceLockTypeEnum]
@@ -747,7 +774,7 @@ VALUES (newid(), '1.2.840.10008.5.1.4.1.1.481.6', 'RT Brachy Treatment Record St
 GO
 
 INSERT INTO [ImageServer].[dbo].[ServerSopClass] ([GUID],[SopClassUid],[Description],[NonImage])
-VALUES (newid(), '1.2.840.10008.5.1.4.1.1.481.2', 'RT Dose Storage', 1)
+VALUES (newid(), '1.2.840.10008.5.1.4.1.1.481.2', 'RT Dose Storage', 0)
 GO
 
 INSERT INTO [ImageServer].[dbo].[ServerSopClass] ([GUID],[SopClassUid],[Description],[NonImage])
@@ -1146,6 +1173,16 @@ INSERT INTO [ImageServer].[dbo].[StudyHistoryTypeEnum]
      VALUES
            (newid(),204,'ExternalEdit','External Edit','Study was edited via an external request.')
 GO
+INSERT INTO [ImageServer].[dbo].[StudyHistoryTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),205,'StudyCompress','Study Compress','Study was compressed.')
+GO
+INSERT INTO [ImageServer].[dbo].[StudyHistoryTypeEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),206,'SopCompress','SOP Compress','Study was compressed by a SOP Compress rule.')
+GO
 
 -- Canned Text
 INSERT INTO [ImageServer].[dbo].[CannedText]([GUID],[Label],[Category],[Text])
@@ -1251,4 +1288,59 @@ INSERT INTO [ImageServer].[dbo].[ExternalRequestQueueStatusEnum]
            ([GUID],[Enum],[Lookup],[Description],[LongDescription])
      VALUES
            (newid(),203,'Failed','Failed','The Queue entry has failed.')
+GO
+
+
+-- OrderStatusEnum inserts
+INSERT INTO [ImageServer].[dbo].[OrderStatusEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),101,'New','New','New Order')
+GO
+
+INSERT INTO [ImageServer].[dbo].[OrderStatusEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),102,'Canceled','Canceled','Order Cancelled')
+GO
+
+INSERT INTO [ImageServer].[dbo].[OrderStatusEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),103,'Complete','Complete','Order Completed')
+GO
+
+INSERT INTO [ImageServer].[dbo].[OrderStatusEnum]
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+     VALUES
+           (newid(),104,'InProcess','In Process','Order In Process')
+GO
+
+
+
+
+--  QCStatusEnum inserts
+INSERT INTO [ImageServer].[dbo].QCStatusEnum
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+VALUES     (newid(),100,'Processing','Processing','Processing')
+GO
+
+INSERT INTO [ImageServer].[dbo].QCStatusEnum
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+VALUES     (newid(),200,'NA','N/A','Not Applicable')
+GO
+
+INSERT INTO [ImageServer].[dbo].QCStatusEnum
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+VALUES     (newid(),300,'Passed','Passed','Passed')
+GO
+
+INSERT INTO [ImageServer].[dbo].QCStatusEnum
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+VALUES     (newid(),400,'Failed','Failed','Failed')
+GO
+
+INSERT INTO [ImageServer].[dbo].QCStatusEnum
+           ([GUID],[Enum],[Lookup],[Description],[LongDescription])
+VALUES     (newid(),500,'Incomplete','Incomplete','Incomplete (Missing required scans)')
 GO

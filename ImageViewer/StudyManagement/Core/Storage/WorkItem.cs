@@ -22,39 +22,40 @@
 
 #endregion
 
+using System.Data.Linq;
 using ClearCanvas.ImageViewer.Common.WorkItem;
 
 namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 {
-	partial class WorkItem
+	partial class WorkItem : ILinq2SqlEntity
 	{
-        public override string ToString()
-        {
-            return string.Format("{0}\nType:{1}\nPriority: {2}\nScheduled: {3}\nProcess:{4}", Oid, Type, Priority, ScheduledTime, ProcessTime);
-        }
-		
-        public WorkItemRequest Request
+		public override string ToString()
 		{
-			get
-			{
-				return Serializer.DeserializeWorkItemRequest(this.SerializedRequest);
-			}
-			set
-			{
-				this.SerializedRequest = Serializer.SerializeWorkItemRequest(value);
-			}
+			return string.Format("{0}\nType:{1}\nPriority: {2}\nScheduled: {3}\nProcess:{4}", Oid, Type, Priority, ScheduledTime, ProcessTime);
+		}
+
+		public WorkItemRequest Request
+		{
+			get { return Serializer.DeserializeWorkItemRequest(SerializedRequest); }
+			set { SerializedRequest = Serializer.SerializeWorkItemRequest(value); }
 		}
 
 		public WorkItemProgress Progress
 		{
-			get
-			{
-				return Serializer.DeserializeWorkItemProgress(this.SerializedProgress);
-			}
-			set
-			{
-                this.SerializedProgress = Serializer.SerializeWorkItemProgress(value);
-			}
+			get { return Serializer.DeserializeWorkItemProgress(SerializedProgress); }
+			set { SerializedProgress = Serializer.SerializeWorkItemProgress(value); }
+		}
+
+		long ILinq2SqlEntity.RowId
+		{
+			get { return Oid; }
+			set { Oid = value; }
+		}
+
+		Binary ILinq2SqlEntity.RowVersion
+		{
+			get { return Version; }
+			set { Version = value; }
 		}
 	}
 }

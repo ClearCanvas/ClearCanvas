@@ -59,6 +59,7 @@ namespace ClearCanvas.Ris.Client.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExternalPractitionerContactPointSummaryComponentControl));
 			this._contactPointTableView = new ClearCanvas.Desktop.View.WinForms.TableView();
 			this._okButton = new System.Windows.Forms.Button();
 			this._cancelButton = new System.Windows.Forms.Button();
@@ -66,49 +67,33 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			// 
 			// _contactPointTableView
 			// 
-			this._contactPointTableView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this._contactPointTableView.ColumnHeaderTooltip = null;
-			this._contactPointTableView.Location = new System.Drawing.Point(0, 0);
-			this._contactPointTableView.Margin = new System.Windows.Forms.Padding(4);
+			resources.ApplyResources(this._contactPointTableView, "_contactPointTableView");
 			this._contactPointTableView.Name = "_contactPointTableView";
 			this._contactPointTableView.ReadOnly = false;
-			this._contactPointTableView.Size = new System.Drawing.Size(377, 315);
-			this._contactPointTableView.SortButtonTooltip = null;
-			this._contactPointTableView.TabIndex = 0;
 			this._contactPointTableView.ItemDoubleClicked += new System.EventHandler(this._contactPointTableView_ItemDoubleClicked);
 			// 
 			// _okButton
 			// 
-			this._okButton.Location = new System.Drawing.Point(236, 322);
+			resources.ApplyResources(this._okButton, "_okButton");
 			this._okButton.Name = "_okButton";
-			this._okButton.Size = new System.Drawing.Size(75, 23);
-			this._okButton.TabIndex = 1;
-			this._okButton.Text = "OK";
 			this._okButton.UseVisualStyleBackColor = true;
 			this._okButton.Click += new System.EventHandler(this._okButton_Click);
 			// 
 			// _cancelButton
 			// 
-			this._cancelButton.Location = new System.Drawing.Point(317, 322);
+			resources.ApplyResources(this._cancelButton, "_cancelButton");
 			this._cancelButton.Name = "_cancelButton";
-			this._cancelButton.Size = new System.Drawing.Size(75, 23);
-			this._cancelButton.TabIndex = 2;
-			this._cancelButton.Text = "Cancel";
 			this._cancelButton.UseVisualStyleBackColor = true;
 			this._cancelButton.Click += new System.EventHandler(this._cancelButton_Click);
 			// 
 			// ExternalPractitionerContactPointSummaryComponentControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this._cancelButton);
 			this.Controls.Add(this._okButton);
 			this.Controls.Add(this._contactPointTableView);
 			this.Name = "ExternalPractitionerContactPointSummaryComponentControl";
-			this.Padding = new System.Windows.Forms.Padding(0, 0, 15, 0);
-			this.Size = new System.Drawing.Size(396, 348);
 			this.ResumeLayout(false);
 
         }

@@ -40,25 +40,25 @@ namespace ClearCanvas.Healthcare {
         /// <summary>
         /// Any, or unknown
         /// </summary>
-        [EnumValue("Any", Description = "Any, or unknown")]
+        [EnumValue("Any")]
         ANY,
 
         /// <summary>
         /// Mail
         /// </summary>
-        [EnumValue("Mail", Description = "Mail")]
+        [EnumValue("Mail")]
         MAIL,
 
         /// <summary>
         /// Fax
         /// </summary>
-        [EnumValue("Fax", Description = "Fax")]
+        [EnumValue("Fax")]
         FAX,
 
         /// <summary>
         /// Email
         /// </summary>
-        [EnumValue("Email", Description = "Email")]
+        [EnumValue("Email")]
         EMAIL
 	}
 }

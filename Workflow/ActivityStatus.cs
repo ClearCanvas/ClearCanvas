@@ -41,7 +41,7 @@ namespace ClearCanvas.Workflow
         /// <summary>
         /// In Progress
         /// </summary>
-        [EnumValue("In Progress")]
+        [EnumValue("InProgress")]
         IP = 1,
 
         /// <summary>

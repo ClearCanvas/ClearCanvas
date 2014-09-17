@@ -140,15 +140,15 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
             } 
         }
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="LastUpdatedTime")]
-        public ISearchCondition<DateTime> LastUpdatedTime
+        public ISearchCondition<DateTime?> LastUpdatedTime
         {
             get
             {
               if (!SubCriteria.ContainsKey("LastUpdatedTime"))
               {
-                 SubCriteria["LastUpdatedTime"] = new SearchCondition<DateTime>("LastUpdatedTime");
+                 SubCriteria["LastUpdatedTime"] = new SearchCondition<DateTime?>("LastUpdatedTime");
               }
-              return (ISearchCondition<DateTime>)SubCriteria["LastUpdatedTime"];
+              return (ISearchCondition<DateTime?>)SubCriteria["LastUpdatedTime"];
             } 
         }
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="FailureDescription")]
@@ -212,15 +212,15 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
             } 
         }
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="ExpirationTime")]
-        public ISearchCondition<DateTime> ExpirationTime
+        public ISearchCondition<DateTime?> ExpirationTime
         {
             get
             {
               if (!SubCriteria.ContainsKey("ExpirationTime"))
               {
-                 SubCriteria["ExpirationTime"] = new SearchCondition<DateTime>("ExpirationTime");
+                 SubCriteria["ExpirationTime"] = new SearchCondition<DateTime?>("ExpirationTime");
               }
-              return (ISearchCondition<DateTime>)SubCriteria["ExpirationTime"];
+              return (ISearchCondition<DateTime?>)SubCriteria["ExpirationTime"];
             } 
         }
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="DeviceGUID")]

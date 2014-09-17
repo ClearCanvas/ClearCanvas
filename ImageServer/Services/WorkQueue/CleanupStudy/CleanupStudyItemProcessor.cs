@@ -61,7 +61,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.CleanupStudy
 			if (!LoadWritableStorageLocation(item))
 			{
 				Platform.Log(LogLevel.Warn, "Unable to find readable location when processing CleanupStudy WorkQueue item, rescheduling");
-                PostponeItem(item.ScheduledTime.AddMinutes(2), item.ExpirationTime.AddMinutes(2), "Unable to find readable location.");
+                PostponeItem(item.ScheduledTime.AddMinutes(2), item.ExpirationTime.GetValueOrDefault(Platform.Time).AddMinutes(2), "Unable to find readable location.");
 
 				return;
 			}

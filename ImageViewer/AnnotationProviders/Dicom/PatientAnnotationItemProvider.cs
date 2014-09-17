@@ -23,12 +23,14 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Iod;
 using ClearCanvas.ImageViewer.Annotations;
 using ClearCanvas.ImageViewer.Annotations.Dicom;
 using ClearCanvas.ImageViewer.StudyManagement;
+using ClearCanvas.Dicom.Utilities;
 
 namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 {
@@ -73,6 +75,36 @@ namespace ClearCanvas.ImageViewer.AnnotationProviders.Dicom
 						"Dicom.Patient.PatientId",
 						resolver,
 						delegate(Frame frame) { return frame.ParentImageSop.PatientId; },
+						DicomDataFormatHelper.RawStringFormat
+					)
+				);
+
+			_annotationItems.Add
+				(
+					new DicomAnnotationItem<string>
+					(
+						"Dicom.Patient.OtherPatientIds",
+						resolver,
+						delegate(Frame frame)
+							{
+								var patientIds = new List<string>();
+								DicomAttribute attribute;
+								if (frame.ParentImageSop.TryGetAttribute(DicomTags.OtherPatientIds, out attribute))
+									patientIds.AddRange(DicomStringHelper.GetStringArray(attribute));
+
+								if (frame.ParentImageSop.TryGetAttribute(DicomTags.OtherPatientIdsSequence, out attribute) && !attribute.IsEmpty && !attribute.IsNull)
+								{
+									var sqAttr = (DicomAttributeSQ)attribute;
+									for (var i = 0; i < sqAttr.Count; i++)
+									{
+										var attr = sqAttr[i][DicomTags.PatientId];
+										if (attr != null && !string.IsNullOrEmpty(attr))
+											patientIds.Add(attr);
+									}
+								}
+
+								return DicomStringHelper.GetDicomStringArray(patientIds.Distinct());
+							},
 						DicomDataFormatHelper.RawStringFormat
 					)
 				);

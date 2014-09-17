@@ -7,6 +7,7 @@
 		<script type="text/javascript" src="js/jsml.js"></script>
 		<script type="text/javascript" src="js/ui.js"></script>
 		<script type="text/javascript" src="js/ris.js"></script>
+		<script type="text/javascript" src="js/SR.js"></script>
 		<script type="text/javascript" src="js/preview.js"></script>
 		<script type="text/javascript" src="js/layout.js"></script>
 		<script type="text/javascript" >
@@ -16,23 +17,26 @@
 			{
 				if(!Ris)
 					return;
+					
+				Label.setValues({
+					labelHealthcard: SR.PatientBanner.Healthcard,
+					labelDateOfBirth: SR.PatientBanner.DateOfBirth,
+					labelAgeSex: SR.PatientBanner.AgeSex,
+					labelAccession: SR.PatientBanner.Accession,
+					labelImagingService: SR.PatientBanner.ImagingService,
+					labelOrderingPhysician: SR.PatientBanner.OrderingPhysician,
+					labelProcedures: SR.PatientBanner.Procedures,
+					labelPriority: SR.PatientBanner.Priority
+				});
 
-				try
+				var worklistItem = Ris.getHealthcareContext();
+				if (worklistItem == null)
 				{
-					var worklistItem = Ris.getHealthcareContext();
-					if (worklistItem == null)
-					{
-						Field.setValue($("myForm"), "");
-						return;
-					}
+					Field.setValue($("myForm"), "");
+					return;
+				}
 
-					Ris.getPatientDataService().getDataAsync(CreateRequest(worklistItem), OnPatientDataLoaded);
-				}
-				catch(e)
-				{
-					var message = "Failed to load editor page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
-					Field.setValue($("myForm"), message);
-				}
+				Ris.getPatientDataService().getDataAsync(CreateRequest(worklistItem), OnPatientDataLoaded);
 			}
 
 			function CreateRequest(worklistItem)
@@ -175,15 +179,15 @@
 								<td>
 									<table border="0" id="profileTable">
 										<tr>
-											<td class="propertyname" nowrap>Healthcard #</td>
+											<td class="propertyname" nowrap id="labelHealthcard">Healthcard #</td>
 											<td class="propertyvalue" nowrap><div id="healthcard"/></td>
 										</tr>
 										<tr>
-											<td class="propertyname" nowrap>Date of Birth</td>
+											<td class="propertyname" nowrap id="labelDateOfBirth">Date of Birth</td>
 											<td class="propertyvalue" nowrap><div id="dateOfBirth"/></td>
 										</tr>
 										<tr>
-											<td class="propertyname" nowrap>Age / Sex</td>
+											<td class="propertyname" nowrap  id="labelAgeSex">Age / Sex</td>
 											<td class="propertyvalue" nowrap><div id="agesex"/></td>
 										</tr>
 									</table>
@@ -192,19 +196,19 @@
 								<td align="left">
 									<table border="0" id="orderTable">
 										<tr>
-											<td class="propertyname" nowrap>Accession #</td>
+											<td class="propertyname" nowrap id="labelAccession">Accession #</td>
 											<td class="propertyvalue" nowrap><div id="AccessionNumber"/></td>
-											<td class="propertyname" nowrap>Imaging Service</td>
+											<td class="propertyname" nowrap id="labelImagingService">Imaging Service</td>
 											<td class="propertyvalue"><div id="DiagnosticService" class="singleLineNoWrap" style="width:250px"/></td>
 										</tr>
 										<tr>
-											<td class="propertyname" nowrap>Ordering Physician</td>
+											<td class="propertyname" nowrap id="labelOrderingPhysician">Ordering Physician</td>
 											<td class="propertyvalue"><div id="OrderingPhysician" class="singleLineNoWrap" style="width:120px"/></td>
-											<td class="propertyname" rowspan="2">Procedures</td>
+											<td class="propertyname" rowspan="2" id="labelProcedures">Procedures</td>
 											<td class="propertyvalue" rowspan="2"><div id="Procedures"/></td>
 										</tr>
 										<tr>
-											<td class="propertyname">Priority</td>
+											<td class="propertyname" id="labelPriority">Priority</td>
 											<td class="propertyvalue"><div id="OrderPriority"/></td>
 										</tr>
 									</table>

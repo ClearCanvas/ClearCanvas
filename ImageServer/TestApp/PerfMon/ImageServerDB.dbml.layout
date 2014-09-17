@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="ImageServerDB">
+  <DataContextMoniker Name="/ImageServerDBDataContext" />
+  <nestedChildShapes>
+    <classShape Id="bc868b06-5c83-4d05-8651-fc0a1cd30dd4" absoluteBounds="2.375, 1.25, 3.125, 4.0785139973958326">
+      <DataClassMoniker Name="/ImageServerDBDataContext/WorkQueue" />
+      <nestedChildShapes>
+        <elementListCompartment Id="801992d3-491f-4f29-82f2-7d6e97684bec" absoluteBounds="2.39, 1.71, 3.0949999999999998, 3.518513997395833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="9bc1f4b6-daca-4648-810d-61358e19e4a1" absoluteBounds="5.625, 1.875, 2, 2.5401025390624996">
+      <DataClassMoniker Name="/ImageServerDBDataContext/WorkQueueUid" />
+      <nestedChildShapes>
+        <elementListCompartment Id="ed56040f-ff26-45ee-b417-882360cbfe99" absoluteBounds="5.64, 2.335, 1.9700000000000002, 1.9801025390625" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(5.5 : 3.14505126953125); (5.625 : 3.14505126953125)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/ImageServerDBDataContext/WorkQueue/WorkQueue_WorkQueueUid" />
+      <nodes>
+        <classShapeMoniker Id="bc868b06-5c83-4d05-8651-fc0a1cd30dd4" />
+        <classShapeMoniker Id="9bc1f4b6-daca-4648-810d-61358e19e4a1" />
+      </nodes>
+    </associationConnector>
+    <classShape Id="4eaf705d-cbc3-4f24-b7a7-3f33beb780a0" absoluteBounds="0.625, 2.875, 2, 2.1554996744791666">
+      <DataClassMoniker Name="/ImageServerDBDataContext/Study" />
+      <nestedChildShapes>
+        <elementListCompartment Id="968ec6d7-14f8-43f1-b4c1-09c270ce77d3" absoluteBounds="0.64000000000000012, 3.335, 1.9700000000000002, 1.5954996744791665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="1356d239-ce42-4f84-9183-651cb6047cb5" absoluteBounds="6.75, 4.875, 2, 2.5401025390625">
+      <DataClassMoniker Name="/ImageServerDBDataContext/StudyStorage" />
+      <nestedChildShapes>
+        <elementListCompartment Id="b4d3d78a-396d-4dd5-8357-808028f04652" absoluteBounds="6.7650000000000006, 5.335, 1.9700000000000002, 1.9801025390625" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(6.75 : 5.88260949088542); (3.9375 : 5.88260949088542); (3.9375 : 5.32851399739583)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/ImageServerDBDataContext/StudyStorage/StudyStorage_WorkQueue" />
+      <nodes>
+        <classShapeMoniker Id="1356d239-ce42-4f84-9183-651cb6047cb5" />
+        <classShapeMoniker Id="bc868b06-5c83-4d05-8651-fc0a1cd30dd4" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(6.75 : 6.499208984375); (1.46875 : 6.499208984375); (1.46875 : 5.03049967447917)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/ImageServerDBDataContext/StudyStorage/StudyStorage_Study" />
+      <nodes>
+        <classShapeMoniker Id="1356d239-ce42-4f84-9183-651cb6047cb5" />
+        <classShapeMoniker Id="4eaf705d-cbc3-4f24-b7a7-3f33beb780a0" />
+      </nodes>
+    </associationConnector>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

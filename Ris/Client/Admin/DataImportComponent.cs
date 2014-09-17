@@ -40,7 +40,7 @@ using ClearCanvas.Desktop.Validation;
 
 namespace ClearCanvas.Ris.Client.Admin
 {
-    [MenuAction("launch", "global-menus/Admin/Import Data", "Launch")]
+	[MenuAction("launch", "global-menus/MenuAdmin/MenuImportData", "Launch")]
 
 	// JR (may 2008): this tool is not terribly useful or usable - arguably all importing should be done via command line on server
     //[ExtensionOf(typeof(DesktopToolExtensionPoint))]
@@ -167,7 +167,7 @@ namespace ClearCanvas.Ris.Client.Admin
                 delegate(IBackgroundTaskContext context)
                 {
                     DoImport(context);
-                }, true);
+				}, true) { ThreadUICulture = Desktop.Application.CurrentUICulture };
 
             try
             {
@@ -177,7 +177,7 @@ namespace ClearCanvas.Ris.Client.Admin
             catch (Exception e)
             {
                 // we know that the background task has wrapped up an inner exception, so extract it
-                ExceptionHandler.Report(e, "Import failed", this.Host.DesktopWindow);
+                ExceptionHandler.Report(e, SR.MessageImportFailed, this.Host.DesktopWindow);
             }
         }
 

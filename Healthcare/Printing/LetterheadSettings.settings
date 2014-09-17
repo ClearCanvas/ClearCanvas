@@ -35,5 +35,19 @@
     <Setting Name="LetterheadAddressPostalCode" Description="Postal code of the Imaging Facility." Type="System.String" Scope="Application">
       <Value Profile="(Default)">A1B 2C3</Value>
     </Setting>
+    <Setting Name="MultiFacilityLetterheadsXml" Description="XML document specifying letterheads for multiple facilities." Type="System.Xml.XmlDocument" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;letterheads&gt;
+  &lt;!-- The facility code in each letterhead definition should be unique.--&gt;
+  &lt;!-- If a facility is not defined or if a node/attribute is not defined, the default value will be used --&gt;
+  &lt;letterhead&gt;
+    &lt;facility code="E" logo="logo.jpg" title="Totally Rad" subtitle="Medical Imaging Centre" /&gt;
+    &lt;phone&gt;Phone: (555) 555-5555&lt;/phone&gt;
+    &lt;fax&gt;Fax: (555) 555-5555&lt;/fax&gt;
+    &lt;email&gt;Email: info@totallyrad.ca&lt;/email&gt;
+    &lt;address unit="100" street="123 Any St." city="Anywhere" province="ON" postalCode="A1B 2C3" /&gt;
+  &lt;/letterhead&gt;
+&lt;/letterheads&gt;</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

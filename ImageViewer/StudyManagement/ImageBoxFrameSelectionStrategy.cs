@@ -117,9 +117,6 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 					else
 						offsetFromCurrent = -offsetFromCurrent + 1;
 				}
-
-				string message = String.Format("Current: {0}, Window: {1}, Queue: {2}", _currentIndex, selectionWindow, _frames.Count);
-				Trace.WriteLine(message);
 			}
 
 			//trigger another round of retrievals.

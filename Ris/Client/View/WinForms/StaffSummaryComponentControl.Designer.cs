@@ -60,6 +60,7 @@ namespace ClearCanvas.Ris.Client.View.WinForms
         private void InitializeComponent()
         {
 			this.components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(StaffSummaryComponentControl));
 			this._okButton = new System.Windows.Forms.Button();
 			this._firstName = new ClearCanvas.Desktop.View.WinForms.TextField();
 			this._buttonsPanel = new System.Windows.Forms.FlowLayoutPanel();
@@ -78,97 +79,57 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			// 
 			// _okButton
 			// 
-			this._okButton.Location = new System.Drawing.Point(410, 2);
-			this._okButton.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._okButton, "_okButton");
 			this._okButton.Name = "_okButton";
-			this._okButton.Size = new System.Drawing.Size(75, 23);
-			this._okButton.TabIndex = 0;
-			this._okButton.Text = "OK";
 			this._okButton.UseVisualStyleBackColor = true;
 			this._okButton.Click += new System.EventHandler(this._okButton_Click);
 			// 
 			// _firstName
 			// 
-			this._firstName.LabelText = "First Name";
-			this._firstName.Location = new System.Drawing.Point(149, 5);
-			this._firstName.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._firstName, "_firstName");
 			this._firstName.Mask = "";
 			this._firstName.Name = "_firstName";
-			this._firstName.PasswordChar = '\0';
-			this._firstName.Size = new System.Drawing.Size(150, 41);
-			this._firstName.TabIndex = 1;
-			this._firstName.ToolTip = null;
 			this._firstName.Value = null;
-			this._firstName.Leave += new System.EventHandler(this._field_Leave);
 			this._firstName.Enter += new System.EventHandler(this._field_Enter);
+			this._firstName.Leave += new System.EventHandler(this._field_Leave);
 			// 
 			// _buttonsPanel
 			// 
-			this._buttonsPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+			resources.ApplyResources(this._buttonsPanel, "_buttonsPanel");
 			this._buttonsPanel.Controls.Add(this._cancelButton);
 			this._buttonsPanel.Controls.Add(this._okButton);
-			this._buttonsPanel.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-			this._buttonsPanel.Location = new System.Drawing.Point(2, 379);
-			this._buttonsPanel.Margin = new System.Windows.Forms.Padding(2);
 			this._buttonsPanel.Name = "_buttonsPanel";
-			this._buttonsPanel.Size = new System.Drawing.Size(566, 30);
-			this._buttonsPanel.TabIndex = 2;
 			// 
 			// _cancelButton
 			// 
-			this._cancelButton.Location = new System.Drawing.Point(489, 2);
-			this._cancelButton.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._cancelButton, "_cancelButton");
 			this._cancelButton.Name = "_cancelButton";
-			this._cancelButton.Size = new System.Drawing.Size(75, 23);
-			this._cancelButton.TabIndex = 1;
-			this._cancelButton.Text = "Cancel";
 			this._cancelButton.UseVisualStyleBackColor = true;
 			this._cancelButton.Click += new System.EventHandler(this._cancelButton_Click);
 			// 
 			// _lastName
 			// 
-			this._lastName.LabelText = "Last Name";
-			this._lastName.Location = new System.Drawing.Point(0, 5);
-			this._lastName.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._lastName, "_lastName");
 			this._lastName.Mask = "";
 			this._lastName.Name = "_lastName";
-			this._lastName.PasswordChar = '\0';
-			this._lastName.Size = new System.Drawing.Size(152, 41);
-			this._lastName.TabIndex = 0;
-			this._lastName.ToolTip = null;
 			this._lastName.Value = null;
-			this._lastName.Leave += new System.EventHandler(this._field_Leave);
 			this._lastName.Enter += new System.EventHandler(this._field_Enter);
+			this._lastName.Leave += new System.EventHandler(this._field_Leave);
 			// 
 			// _staffTableView
 			// 
-			this._staffTableView.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._staffTableView.Location = new System.Drawing.Point(4, 64);
-			this._staffTableView.Margin = new System.Windows.Forms.Padding(4);
+			resources.ApplyResources(this._staffTableView, "_staffTableView");
 			this._staffTableView.Name = "_staffTableView";
 			this._staffTableView.ReadOnly = false;
-			this._staffTableView.Size = new System.Drawing.Size(562, 309);
-			this._staffTableView.TabIndex = 1;
 			this._staffTableView.ItemDoubleClicked += new System.EventHandler(this._staffTableView_ItemDoubleClicked);
 			// 
 			// tableLayoutPanel1
 			// 
-			this.tableLayoutPanel1.ColumnCount = 1;
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			resources.ApplyResources(this.tableLayoutPanel1, "tableLayoutPanel1");
 			this.tableLayoutPanel1.Controls.Add(this._staffTableView, 0, 1);
 			this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 0);
 			this.tableLayoutPanel1.Controls.Add(this._buttonsPanel, 0, 2);
-			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-			this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-			this.tableLayoutPanel1.RowCount = 3;
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(570, 411);
-			this.tableLayoutPanel1.TabIndex = 0;
 			// 
 			// panel1
 			// 
@@ -176,52 +137,37 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			this.panel1.Controls.Add(this._searchButton);
 			this.panel1.Controls.Add(this._lastName);
 			this.panel1.Controls.Add(this._firstName);
-			this.panel1.Location = new System.Drawing.Point(3, 3);
+			resources.ApplyResources(this.panel1, "panel1");
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(563, 54);
-			this.panel1.TabIndex = 0;
 			// 
 			// _clearButton
 			// 
-			this._clearButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			resources.ApplyResources(this._clearButton, "_clearButton");
 			this._clearButton.BackColor = System.Drawing.Color.Transparent;
-			this._clearButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
 			this._clearButton.FlatAppearance.BorderSize = 0;
 			this._clearButton.Image = global::ClearCanvas.Ris.Client.View.WinForms.SR.ClearFilterSmall;
-			this._clearButton.Location = new System.Drawing.Point(332, 18);
-			this._clearButton.Margin = new System.Windows.Forms.Padding(0);
 			this._clearButton.Name = "_clearButton";
-			this._clearButton.RightToLeft = System.Windows.Forms.RightToLeft.No;
-			this._clearButton.Size = new System.Drawing.Size(30, 30);
-			this._clearButton.TabIndex = 5;
-			this._clearButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-			this.toolTip1.SetToolTip(this._clearButton, "Clear search query");
+			this.toolTip1.SetToolTip(this._clearButton, resources.GetString("_clearButton.ToolTip"));
 			this._clearButton.UseVisualStyleBackColor = false;
 			this._clearButton.Click += new System.EventHandler(this._clearButton_Click);
 			// 
 			// _searchButton
 			// 
-			this._searchButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			resources.ApplyResources(this._searchButton, "_searchButton");
 			this._searchButton.BackColor = System.Drawing.Color.Transparent;
-			this._searchButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
 			this._searchButton.FlatAppearance.BorderSize = 0;
 			this._searchButton.Image = global::ClearCanvas.Ris.Client.View.WinForms.SR.SearchToolSmall;
-			this._searchButton.Location = new System.Drawing.Point(301, 18);
-			this._searchButton.Margin = new System.Windows.Forms.Padding(0);
 			this._searchButton.Name = "_searchButton";
-			this._searchButton.Size = new System.Drawing.Size(30, 30);
-			this._searchButton.TabIndex = 4;
-			this.toolTip1.SetToolTip(this._searchButton, "Search");
+			this.toolTip1.SetToolTip(this._searchButton, resources.GetString("_searchButton.ToolTip"));
 			this._searchButton.UseVisualStyleBackColor = false;
 			this._searchButton.Click += new System.EventHandler(this._searchButton_Click);
 			// 
 			// StaffSummaryComponentControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this.tableLayoutPanel1);
 			this.Name = "StaffSummaryComponentControl";
-			this.Size = new System.Drawing.Size(570, 411);
 			this._buttonsPanel.ResumeLayout(false);
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.panel1.ResumeLayout(false);

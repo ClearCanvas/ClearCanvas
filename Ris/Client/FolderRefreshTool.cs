@@ -30,9 +30,9 @@ using System;
 
 namespace ClearCanvas.Ris.Client
 {
-	[ButtonAction("apply", "folderexplorer-folders-toolbar/Refresh All", "Refresh")]
-	[MenuAction("apply", "folderexplorer-folders-contextmenu/Refresh All", "Refresh")]
-	[Tooltip("apply", "Refresh Folders")]
+	[ButtonAction("apply", "folderexplorer-folders-toolbar/MenuRefreshAll", "Refresh")]
+	[MenuAction("apply", "folderexplorer-folders-contextmenu/MenuRefreshAll", "Refresh")]
+	[Tooltip("apply", "TooltipRefreshFolders")]
 	[IconSet("apply", "Icons.RefreshSmall.png", "Icons.RefreshMedium.png", "Icons.RefreshLarge.png")]
 	[ExtensionOf(typeof(FolderExplorerGroupToolExtensionPoint))]
 	public class FolderRefreshTool : Tool<IFolderExplorerGroupToolContext>

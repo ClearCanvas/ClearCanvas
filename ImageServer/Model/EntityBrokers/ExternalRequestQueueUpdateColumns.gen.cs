@@ -55,10 +55,15 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
         {
             set { SubParameters["Revision"] = new EntityUpdateColumn<Int32>("Revision", value); }
         }
-        [EntityFieldDatabaseMappingAttribute(TableName="ExternalRequestQueue", ColumnName="DeletionTime")]
-        public DateTime DeletionTime
+        [EntityFieldDatabaseMappingAttribute(TableName="ExternalRequestQueue", ColumnName="ScheduledTime")]
+        public DateTime ScheduledTime
         {
-            set { SubParameters["DeletionTime"] = new EntityUpdateColumn<DateTime>("DeletionTime", value); }
+            set { SubParameters["ScheduledTime"] = new EntityUpdateColumn<DateTime>("ScheduledTime", value); }
+        }
+        [EntityFieldDatabaseMappingAttribute(TableName="ExternalRequestQueue", ColumnName="DeletionTime")]
+        public DateTime? DeletionTime
+        {
+            set { SubParameters["DeletionTime"] = new EntityUpdateColumn<DateTime?>("DeletionTime", value); }
         }
         [EntityFieldDatabaseMappingAttribute(TableName="ExternalRequestQueue", ColumnName="StateXml")]
         public XmlDocument StateXml

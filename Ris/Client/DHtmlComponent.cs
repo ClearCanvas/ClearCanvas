@@ -66,6 +66,17 @@ namespace ClearCanvas.Ris.Client
 			}
 
 			/// <summary>
+			/// Handle uncaught script errors from the browser.
+			/// </summary>
+			/// <param name="message"></param>
+			/// <param name="url"></param>
+			/// <param name="lineNumber"></param>
+			public void OnScriptError(string message, string url, int lineNumber)
+			{
+				Platform.Log(LogLevel.Error, "WebBrowser JScript Error: {0} ({1} line {2})", message, url, lineNumber);
+			}
+
+			/// <summary>
 			/// Surrogate for the browser's window.alert method.
 			/// </summary>
 			/// <param name="message"></param>
@@ -509,7 +520,9 @@ namespace ClearCanvas.Ris.Client
 		/// <param name="url"></param>
 		public void SetUrl(string url)
 		{
-			this.HtmlPageUrl = string.IsNullOrEmpty(url) ? null : new Uri(url);
+			this.HtmlPageUrl = string.IsNullOrEmpty(url)
+				? null
+				: new Uri(string.Format("{0}?{1}", url, UrlQueryString.Build(new {lang = InstalledLocales.Instance.Selected.Culture})));
 		}
 
 		/// <summary>
@@ -560,7 +573,7 @@ namespace ClearCanvas.Ris.Client
 		public Uri HtmlPageUrl
 		{
 			get { return _htmlPageUrl; }
-			protected set
+			private set
 			{
 				// Do not assume same url implies page should not be reloaded
 				_htmlPageUrl = value;

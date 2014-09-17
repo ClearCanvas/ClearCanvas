@@ -56,7 +56,7 @@ namespace ClearCanvas.Desktop.Configuration
 						strategy.ProgressChanged += (sender, e) => context.ReportProgress(new BackgroundTaskProgress(strategy.CurrentStep - 1, strategy.TotalSteps, String.Empty));
 						strategy.Run();
 						context.Complete();
-					}, false, strategy);
+					}, false, strategy) { ThreadUICulture = Desktop.Application.CurrentUICulture };
 
 			task.ProgressUpdated += (sender, e) => _dialogView.SetProgressPercent(e.Progress.Percent);
 			task.Terminated += (sender, e) => _dialogView.Close(strategy.FailedCount > 0 ? SR.MessageUserUpgradeFailures : null);

@@ -226,5 +226,17 @@ namespace ClearCanvas.ImageServer.Common.Authentication
 			[AuthorityToken(Description = "Allow viewing of VFS partitions.")]
 			public const string ViewPartitions = "PACS/VFS/View Partitions";
 		}
+
+        /// <summary>
+        /// Tokens that allow access to study functionalities.
+        /// </summary>
+        public static class Order
+        {
+            [AuthorityToken(Description = "Allow searching for orders.")] 
+            public const string Search = "PACS/Order/Search";
+
+            [AuthorityToken(Description = "Allow deleting orders.")]
+            public const string Delete = "PACS/Order/Delete";
+        }
     }
 }

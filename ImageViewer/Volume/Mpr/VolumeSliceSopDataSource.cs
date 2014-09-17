@@ -41,7 +41,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr
 		public VolumeSliceSopDataSource(VolumeSlice slice)
 		{
 			Slice = slice;
-			DataSet = new DicomAttributeCollection();
+		    DataSet = new DicomAttributeCollection() {ValidateVrLengths = false, ValidateVrValues = false};
 			FillDataSet(DataSet, slice);
 		}
 

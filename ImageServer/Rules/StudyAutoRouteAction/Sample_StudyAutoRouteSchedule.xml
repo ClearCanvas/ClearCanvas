@@ -1,0 +1,12 @@
+﻿<!-- 
+This rule instructs the server to auto-route Chest studies to CLEARCANVAS
+between 18:00:00 and 06:00:00
+-->
+<rule>
+	<condition expressionLanguage="dicom">
+		<regex test="$StudyDescription" pattern="chest" />
+	</condition>
+	<action>
+		<study-auto-route device="CLEARCANVAS" startTime="18:00:00" endTime="06:00:00" />
+	</action>
+</rule>

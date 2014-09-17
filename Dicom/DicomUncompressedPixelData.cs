@@ -803,6 +803,86 @@ namespace ClearCanvas.Dicom
 
 		#endregion
 
+		#region Normalize Pixel Data (Grayscale)
+
+		public static unsafe void NormalizePixelData(byte[] pixelData, int bitsAllocated, int bitsStored, int highBit, bool isSigned)
+		{
+			var unusedLowBits = GetLowBit(bitsStored, highBit);
+			var highestBit = bitsAllocated - 1;
+			var unusedHighBits = highestBit - highBit;
+
+			var leftShift = unusedHighBits;
+			var rightShift = unusedHighBits + unusedLowBits;
+
+			if (bitsAllocated == 16)
+			{
+				var length = pixelData.Length/2;
+				fixed (byte* p = pixelData)
+				{
+					if (isSigned)
+					{
+						var pPixelData = (short*) p;
+						for (int i = 0; i < length; ++i)
+						{
+							// sign-fill the unused bits by shifting it left, then shifting it back
+							var value = *pPixelData;
+							value <<= leftShift;
+							value >>= rightShift;
+							*pPixelData++ = value;
+						}
+					}
+					else
+					{
+						var pPixelData = (ushort*) p;
+						for (int i = 0; i < length; ++i)
+						{
+							// sign-fill the unused bits by shifting it left, then shifting it back
+							var value = *pPixelData;
+							value <<= leftShift;
+							value >>= rightShift;
+							*pPixelData++ = value;
+						}
+					}
+				}
+			}
+			else
+			{
+				// 8-bit
+				var length = pixelData.Length;
+				fixed (byte* p = pixelData)
+				{
+					if (isSigned)
+					{
+						var pPixelData = (sbyte*) p;
+						for (int i = 0; i < length; ++i)
+						{
+							// sign-fill the unused bits by shifting it left, then shifting it back
+							var value = *pPixelData;
+							value <<= leftShift;
+							value >>= rightShift;
+							*pPixelData++ = value;
+						}
+					}
+					else
+					{
+						var pPixelData = p;
+						for (int i = 0; i < length; ++i)
+						{
+							// sign-fill the unused bits by shifting it left, then shifting it back
+							var value = *pPixelData;
+							value <<= leftShift;
+							value >>= rightShift;
+							*pPixelData++ = value;
+						}
+					}
+				}
+			}
+		}
+
+		#endregion
+
+		#region Palette Color to RGB Conversion
+
 		/// <summary>
 		/// Convert Palette Color pixel data to RGB.
 		/// </summary>
@@ -900,6 +980,8 @@ namespace ClearCanvas.Dicom
 				}
 			}
 		}
+
+		#endregion
 
 		#region Color Space Conversion
 

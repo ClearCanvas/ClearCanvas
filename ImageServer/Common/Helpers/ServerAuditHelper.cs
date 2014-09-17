@@ -24,8 +24,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Security.Principal;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Audit;
 using ClearCanvas.Common.Utilities;
@@ -49,11 +51,7 @@ namespace ClearCanvas.ImageServer.Common.Helpers
             {
                 lock (_syncLock)
                 {
-                    if (_auditSource == null)
-                    {
-                        _auditSource = new DicomAuditSource("ImageServer");
-                    }
-                    return _auditSource;
+	                return _auditSource ?? (_auditSource = new DicomAuditSource("ImageServer"));
                 }
             }
         }
@@ -120,34 +118,70 @@ namespace ClearCanvas.ImageServer.Common.Helpers
             LogAuditMessage(helper);
         }
 
+		/// <summary>
+		/// Gets the session token ID of the current thread or null if not established.
+		/// </summary>
+		/// <returns></returns>
+		private static string GetUserSessionId()
+		{
+			var p = Thread.CurrentPrincipal as IUserCredentialsProvider;
+			return (p != null) ? p.SessionTokenId : null;
+		}
+
+		/// <summary>
+		/// Gets the identity of the current thread or null if not established.
+		/// </summary>
+		/// <returns></returns>
+		private static string GetUserName()
+		{
+			var p = Thread.CurrentPrincipal;
+
+			if (p == null || p.Identity == null)
+				return null;
+
+			//TODO (CR September 2011) - this is not a robust solution.
+			// Check if it's being called in a service.
+			if (p.Identity is WindowsIdentity)
+				return null;
+
+			return p.Identity.Name;
+		}
+
+
         /// <summary>
         /// Log an Audit message.
         /// </summary>
         /// <param name="helper"></param>
         public static void LogAuditMessage(DicomAuditHelper helper)
         {
-            lock (_syncLock)
-            {
-                if (_log == null)
-                    _log = new AuditLog(ProductInformation.Component, "DICOM");
+			// Found doing this on the local thread had a performance impact with some DICOM operations,
+			// make run as a task in the background to make it work faster.
+	        
+	        Task.Factory.StartNew(delegate
+		        {
+			        lock (_syncLock)
+			        {
+				        if (_log == null)
+					        _log = new AuditLog(ProductInformation.Component, "DICOM");
 
-                string serializeText = null;
-                try
-                {
-                    serializeText = helper.Serialize(false);
-                    _log.WriteEntry(helper.Operation, serializeText);
-                }
-                catch (Exception ex)
-                {
-                    Platform.Log(LogLevel.Error, ex, "Error occurred when writing audit log");
+				        string serializeText = null;
+				        try
+				        {
+					        serializeText = helper.Serialize(false);
+							_log.WriteEntry(helper.Operation, serializeText, GetUserName(), GetUserSessionId());
+				        }
+				        catch (Exception ex)
+				        {
+					        Platform.Log(LogLevel.Error, ex, "Error occurred when writing audit log");
 
-                    StringBuilder sb = new StringBuilder();
-                    sb.AppendLine("Audit Log failed to save:");
-                    sb.AppendLine(String.Format("Operation: {0}", helper.Operation));
-                    sb.AppendLine(String.Format("Details: {0}", serializeText));
-                    Platform.Log(LogLevel.Info, sb.ToString());
-                }
-            }
+					        var sb = new StringBuilder();
+					        sb.AppendLine("Audit Log failed to save:");
+					        sb.AppendLine(String.Format("Operation: {0}", helper.Operation));
+					        sb.AppendLine(String.Format("Details: {0}", serializeText));
+					        Platform.Log(LogLevel.Info, sb.ToString());
+				        }
+			        }
+		        });
         }
     }
 }

@@ -23,7 +23,7 @@
 #endregion
 
 using System;
-
+using System.ComponentModel;
 
 namespace ClearCanvas.Desktop
 {
@@ -33,14 +33,27 @@ namespace ClearCanvas.Desktop
 	public class AlertNotificationArgs
 	{
 		/// <summary>
-		/// Constructor
+		/// Initializes a new instance of <see cref="AlertNotificationArgs"/>.
 		/// </summary>
-		/// <param name="level"></param>
-		/// <param name="message"></param>
-		public AlertNotificationArgs(AlertLevel level, string message)
+		public AlertNotificationArgs()
+			: this(string.Empty) {}
+
+		/// <summary>
+		/// Initializes a new instance of <see cref="AlertNotificationArgs"/>.
+		/// </summary>
+		/// <param name="message">The alert message.</param>
+		public AlertNotificationArgs([param : Localizable(true)] string message)
+			: this(AlertLevel.Info, message) {}
+
+		/// <summary>
+		/// Initializes a new instance of <see cref="AlertNotificationArgs"/>.
+		/// </summary>
+		/// <param name="level">The alert level.</param>
+		/// <param name="message">The alert message.</param>
+		public AlertNotificationArgs(AlertLevel level, [param : Localizable(true)] string message)
 		{
-			this.Level = level;
-			this.Message = message;
+			Level = level;
+			Message = message;
 		}
 
 		/// <summary>
@@ -51,11 +64,13 @@ namespace ClearCanvas.Desktop
 		/// <summary>
 		/// Gets or sets the message.
 		/// </summary>
+		[Localizable(true)]
 		public string Message { get; set; }
 
 		/// <summary>
 		/// Gets or sets the link text, if the alert has a contextual link.
 		/// </summary>
+		[Localizable(true)]
 		public string LinkText { get; set; }
 
 		/// <summary>

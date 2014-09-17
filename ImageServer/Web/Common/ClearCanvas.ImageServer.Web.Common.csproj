@@ -79,8 +79,11 @@
     <Compile Include="Data\DataAccessGroupInfo.cs" />
     <Compile Include="Data\DataSource\ExternalRequestQueueDataSource.cs" />
     <Compile Include="Data\DataSource\IStudySummaryAssembler.cs" />
+    <Compile Include="Data\DataSource\OrderDataSource.cs" />
     <Compile Include="Data\ExternalRequestQueueAdaptor.cs" />
     <Compile Include="Data\ExternalRequestQueueController.cs" />
+    <Compile Include="Data\OrderAdaptor.cs" />
+    <Compile Include="Data\OrderController.cs" />
     <Compile Include="Data\StudyDataAccessAdaptor.cs" />
     <Compile Include="Data\StudyDataAccessController.cs" />
     <Compile Include="Data\StudyEditReasonAdaptor.cs" />
@@ -167,6 +170,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>AboutPage.settings</DependentUpon>
     </Compile>
+    <Compile Include="PatientSummaryPanelExtensionPoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\WebAppUserCredentialProvider.cs" />
     <Compile Include="Security\XmlMembershipProvider.cs" />

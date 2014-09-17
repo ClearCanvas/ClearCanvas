@@ -25,7 +25,6 @@
 using System;
 using System.IO;
 using System.Threading;
-using System.Xml;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom.ServiceModel.Query;
 using ClearCanvas.Dicom.Utilities.Xml;
@@ -106,11 +105,11 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
             {
                 using (Stream fileStream = FileStreamOpener.OpenForRead(streamFile, FileMode.Open))
                 {
-                    var theDoc = new XmlDocument();
+                    var memento = new StudyXmlMemento();
 
-                    StudyXmlIo.Read(theDoc, fileStream);
+                    StudyXmlIo.Read(memento, fileStream);
 
-                    theXml.SetMemento(theDoc);
+                    theXml.SetMemento(memento);
 
                     fileStream.Close();
                 }

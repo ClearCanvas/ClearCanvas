@@ -14,6 +14,7 @@
     <File name="manifest\" ignore="true" />
     <File name="dicom_interim\" ignore="true" />
     <File name="badfiles\" ignore="true" />
+    <File name="scripts\" ignore="true" />
     <File name="ClearCanvas.Desktop.Executable.exe" checksum="true" />
     <File name="ClearCanvas.Desktop.Executable.exe.config" config="true" />
     <File name="ClearCanvas.Desktop.Executable.exe.critical.config" checksum="true" config="true" />

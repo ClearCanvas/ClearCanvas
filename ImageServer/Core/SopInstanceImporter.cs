@@ -404,7 +404,7 @@ namespace ClearCanvas.ImageServer.Core
 						return result;
 					}
 					
-					File.Delete(sourceFilename);
+					FileUtils.Delete(sourceFilename);
 
 					Platform.Log(LogLevel.Info, "Unable to save temporary file to incoming folder, file already exists there: {0}, rejecting SOP as processing failure",
 							 path);

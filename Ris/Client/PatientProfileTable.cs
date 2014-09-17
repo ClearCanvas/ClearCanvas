@@ -37,7 +37,7 @@ namespace ClearCanvas.Ris.Client
                new TableColumn<PatientProfileSummary, string>(SR.ColumnMRN,
                    delegate(PatientProfileSummary profile) { return MrnFormat.Format(profile.Mrn); }, 1.0f));
             this.Columns.Add(
-              new TableColumn<PatientProfileSummary, string>(SR.ColumnName,
+              new TableColumn<PatientProfileSummary, string>(SR.ColumnPatientName,
                   delegate(PatientProfileSummary profile) { return PersonNameFormat.Format(profile.Name); }, 2.0f));
             this.Columns.Add(
               new TableColumn<PatientProfileSummary, string>(SR.ColumnHealthcardNumber,

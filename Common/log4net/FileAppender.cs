@@ -132,7 +132,8 @@ namespace ClearCanvas.Common.log4net
             {
                 if (locking == null)
                 {
-                    throw new ArgumentException("Locking model may not be null", "locking");
+                    const string message = "Locking model may not be null";
+                    throw new ArgumentException(message, "locking");
                 }
                 m_lockingModel = locking;
 

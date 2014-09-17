@@ -24,7 +24,6 @@
 
 using System.Collections.Generic;
 using System.IO;
-using System.Xml;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
@@ -55,12 +54,12 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.PartitionReapplyRules
 			}
 
 			FileStream stream = FileStreamOpener.OpenForRead(studyXml, FileMode.Open);
-			var theDoc = new XmlDocument();
-			StudyXmlIo.Read(theDoc, stream);
+			var theMemento = new StudyXmlMemento();
+			StudyXmlIo.Read(theMemento, stream);
 			stream.Close();
 			stream.Dispose();
 			var xml = new StudyXml();
-			xml.SetMemento(theDoc);
+			xml.SetMemento(theMemento);
             
 			IEnumerator<SeriesXml> seriesEnumerator = xml.GetEnumerator();
 			if (seriesEnumerator.MoveNext())
@@ -128,7 +127,11 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.PartitionReapplyRules
 						filesystemDeleteExists = filesystemQueueBroker.Count(filesystemQueueCriteria) > 0;
 					}
 
-					using (var commandProcessor = new ServerCommandProcessor("Study Rule Processor"))
+					using (var commandProcessor = new ServerCommandProcessor("Study Rule Processor")
+					{
+						PrimaryServerPartitionKey = partition.GetKey(),
+						PrimaryStudyKey = location.Study.GetKey()
+					})
 					{
 						var context = new ServerActionContext(msg, location.FilesystemKey, partition, location.Key, commandProcessor);
 					

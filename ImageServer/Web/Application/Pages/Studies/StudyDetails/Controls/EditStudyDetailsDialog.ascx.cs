@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Web.UI.WebControls;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
@@ -112,7 +113,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Con
                 return String.IsNullOrEmpty(v2) == false;
 
             //v1 is not null
-            return !v1.Equals(v2);
+            return !v1.Equals(v2, StringComparison.InvariantCulture);
         }
 
         private List<UpdateItem> GetChanges()
@@ -121,15 +122,16 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Con
             var oldPatientName = new PersonName(Study.PatientsName);
             var newPatientName = PatientNamePanel.PersonName;
 
-            if (!oldPatientName.AreSame(newPatientName, PersonNameComparisonOptions.CaseInsensitive))
+            if (!oldPatientName.AreSame(newPatientName, PersonNameComparisonOptions.CaseSensitive))
             {
                 var item = new UpdateItem(DicomTags.PatientsName, Study.PatientsName, PatientNamePanel.PersonName);
                 changes.Add(item);
             }
 
-            String dicomBirthDate = !(string.IsNullOrEmpty(PatientBirthDate.Text))
-                                        ? DateTime.ParseExact(PatientBirthDate.Text, InputDateParser.DateFormat, null).ToString(DicomConstants.DicomDate)
-                                        : "";
+	        String dicomBirthDate = string.IsNullOrEmpty(PatientBirthDate.Text)
+		        ? ""
+		        : DateTime.Parse(PatientBirthDate.Text).ToString(DicomConstants.DicomDate, CultureInfo.InvariantCulture);
+
             if (AreDifferent(Study.PatientsBirthDate, dicomBirthDate))
             {
                 var item = new UpdateItem(DicomTags.PatientsBirthDate, Study.PatientsBirthDate, dicomBirthDate);
@@ -179,7 +181,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Con
             var oldPhysicianName = new PersonName(Study.ReferringPhysiciansName);
             var newPhysicianName = ReferringPhysicianNamePanel.PersonName;
 
-            if (!newPhysicianName.AreSame(oldPhysicianName, PersonNameComparisonOptions.CaseInsensitive))
+            if (!newPhysicianName.AreSame(oldPhysicianName, PersonNameComparisonOptions.CaseSensitive))
             {
                 var item = new UpdateItem(DicomTags.ReferringPhysiciansName, Study.ReferringPhysiciansName, ReferringPhysicianNamePanel.PersonName.ToString());
                 changes.Add(item);
@@ -190,7 +192,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Con
             {
                 DateTime newStudyDate;
                 newDicomStudyDate = InputDateParser.TryParse(StudyDate.Text, out newStudyDate)
-                                        ? newStudyDate.ToString(DicomConstants.DicomDate)
+                                        ? newStudyDate.ToString(DicomConstants.DicomDate, CultureInfo.InvariantCulture) /* to ISO yyyyMMdd */
                                         : string.Empty;
             }
 
@@ -254,8 +256,8 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Con
             }
 
             PatientID.Text = Study.PatientId;
-            DateTime? birthDate = String.IsNullOrEmpty(Study.PatientsBirthDate)? null:DateParser.Parse(Study.PatientsBirthDate);
-            PatientBirthDate.Text = birthDate == null ? String.Empty : this.Study.PatientsBirthDate;
+            DateTime? originalBirthDate = String.IsNullOrEmpty(Study.PatientsBirthDate)? (DateTime?) null:DateParser.Parse(Study.PatientsBirthDate);
+	        PatientBirthDateCalendarExtender.SelectedDate = originalBirthDate;
 
             if (!String.IsNullOrEmpty(Study.PatientsAge))
             {
@@ -431,6 +433,8 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Con
             EditStudyDetailsValidationSummary.HeaderText = ErrorMessages.EditStudyValidationError;
             EnsurePredefinedReasonsLoaded();
 
+			PatientBirthDate.Attributes.Add("readonly", "readonly");
+
             //Set up the control to handle custom reasons if the user has the authority.
             if (!SessionManager.Current.User.IsInRole(AuthorityTokens.Study.SaveReason))
             {
@@ -452,7 +456,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Con
             StudyDateCalendarExtender.Format = pattern;
 
             var d = new DateTime(2008, 05, 27);
-            DateExampleLabel.Text = string.Format("({0})", string.Format(SR.Example, d.ToString(pattern)));
+            DateExampleLabel.Text = string.Format("({0})", string.Format(SR.Example, d.ToString(pattern, CultureInfo.InstalledUICulture)));
         }
 
         protected override void OnLoad(EventArgs e)

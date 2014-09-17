@@ -304,4 +304,22 @@
   <data name="ServicePartition" xml:space="preserve">
     <value>Partition</value>
   </data>
+  <data name="OrderStatus" xml:space="preserve">
+    <value>Order Status</value>
+  </data>
+  <data name="QCStatus" xml:space="preserve">
+    <value>QC Status</value>
+  </data>
+  <data name="QCReportMode" xml:space="preserve">
+    <value>Report Type</value>
+  </data>
+  <data name="ScheduledFrom" xml:space="preserve">
+    <value>Scheduled From</value>
+  </data>
+  <data name="ScheduledTo" xml:space="preserve">
+    <value>Scheduled To</value>
+  </data>
+  <data name="QCExpected" xml:space="preserve">
+    <value>QC</value>
+  </data>
 </root>

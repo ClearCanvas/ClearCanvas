@@ -28,27 +28,24 @@ namespace ClearCanvas.Ris.Client.Admin.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ValidationManagementComponentControl));
 			this._appComponentTableView = new ClearCanvas.Desktop.View.WinForms.TableView();
 			this.SuspendLayout();
 			// 
 			// _appComponentTableView
 			// 
-			this._appComponentTableView.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._appComponentTableView.Location = new System.Drawing.Point(0, 0);
+			resources.ApplyResources(this._appComponentTableView, "_appComponentTableView");
 			this._appComponentTableView.MultiSelect = false;
 			this._appComponentTableView.Name = "_appComponentTableView";
 			this._appComponentTableView.ReadOnly = false;
-			this._appComponentTableView.Size = new System.Drawing.Size(831, 512);
-			this._appComponentTableView.TabIndex = 0;
 			this._appComponentTableView.ItemDoubleClicked += new System.EventHandler(this._appComponentTableView_ItemDoubleClicked);
 			// 
 			// ValidationManagementComponentControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this._appComponentTableView);
 			this.Name = "ValidationManagementComponentControl";
-			this.Size = new System.Drawing.Size(831, 512);
 			this.ResumeLayout(false);
 
         }

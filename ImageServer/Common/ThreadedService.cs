@@ -34,29 +34,23 @@ namespace ClearCanvas.ImageServer.Common
 	public abstract class ThreadedService
 	{
 		#region Private Members
-		private ManualResetEvent _threadStop;
-		private Thread _theThread = null;
-		private bool _stopFlag = false;
+
+		private Thread _theThread;
 		private readonly string _name;
-		private int _threadRetryDelay = 60000;
+
 		#endregion
 
 		#region Public Properties
+
 		/// <summary>
 		/// Flag set to true if stop has been requested.
 		/// </summary>
-		public bool StopFlag
-		{
-			get { return _stopFlag; }
-		}
+		public bool StopFlag { get; private set; }
 
 		/// <summary>
 		/// Reset event to signal when stopping the service thread.
 		/// </summary>
-		public ManualResetEvent ThreadStop
-		{
-			get { return _threadStop; }
-		}
+		public ManualResetEvent ThreadStop { get; private set; }
 
 		/// <summary>
 		/// The name of the thread.
@@ -69,11 +63,8 @@ namespace ClearCanvas.ImageServer.Common
 		/// <summary>
 		/// Retry delay (in ms) before retrying after a failure
 		/// </summary>
-		public int ThreadRetryDelay
-		{
-			get { return _threadRetryDelay; }
-			set { _threadRetryDelay = value; }
-		}
+		public int ThreadRetryDelay { get; set; }
+
 		#endregion
 
 		#region Protected Abstract Methods
@@ -87,9 +78,11 @@ namespace ClearCanvas.ImageServer.Common
 		/// Constructor.
 		/// </summary>
 		/// <param name="name">The name of the service.</param>
-		public ThreadedService(string name)
+		protected ThreadedService(string name)
 		{
 			_name = name;
+			StopFlag = false;
+			ThreadRetryDelay = 60000;
 		}
 		#endregion
 
@@ -116,44 +109,40 @@ namespace ClearCanvas.ImageServer.Common
 		{
 			if (_theThread == null)
 			{
-				_threadStop = new ManualResetEvent(false);
+				ThreadStop = new ManualResetEvent(false);
 				_theThread = new Thread(delegate()
-											{
-												bool bInit = false;
-												while (!bInit)
-												{
-													try
-													{
-														bInit = Initialize();
-													}
-													catch (Exception e)
-													{
-														Platform.Log(LogLevel.Warn, e, "Unexpected exception intializing {0} service", Name);
-													}
-													if (!bInit)
-													{
-														// Wait before retrying init
-														ThreadStop.WaitOne(ThreadRetryDelay, false);
-														ThreadStop.Reset();
+					{
+						bool bInit = false;
+						while (!bInit)
+						{
+							try
+							{
+								bInit = Initialize();
+							}
+							catch (Exception e)
+							{
+								Platform.Log(LogLevel.Warn, "Unexpected exception intializing {0} service: {1}", Name, e.Message);
+							}
+							if (!bInit)
+							{
+								if (CheckStop(ThreadRetryDelay))
+									return;
+							}
+						}
 
-														if (_stopFlag)
-															return;
-													}
-												}
+						if (StopFlag)
+							return;
 
-												if (_stopFlag)
-													return;
+						try
+						{
+							Run();
+						}
+						catch (Exception e)
+						{
+							Platform.Log(LogLevel.Error, e, "Unexpected exception running service {0}", Name);
+						}
 
-												try
-												{
-													Run();
-												}
-												catch (Exception e)
-												{
-													Platform.Log(LogLevel.Error, e, "Unexpected exception running service {0}", Name);
-												}
-
-											});
+					});
 				_theThread.Name = String.Format("{0}:{1}", Name, _theThread.ManagedThreadId);
 				_theThread.Start();
 			}
@@ -170,10 +159,10 @@ namespace ClearCanvas.ImageServer.Common
 		/// </summary>
 		public void StopService()
 		{
-			_stopFlag = true;
+			StopFlag = true;
 			Stop();
 
-			if (_theThread.IsAlive)
+			if (_theThread != null && _theThread.IsAlive)
 			{
 				ThreadStop.Set();
 				_theThread.Join();

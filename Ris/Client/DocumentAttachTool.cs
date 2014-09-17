@@ -31,8 +31,8 @@ using ClearCanvas.Desktop.Tools;
 
 namespace ClearCanvas.Ris.Client
 {
-	[MenuAction("apply", "attached-document-items/Add", "Apply")]
-	[ButtonAction("apply", "attached-document-items/Add", "Apply")]
+	[MenuAction("apply", "attached-document-items/MenuAdd", "Apply")]
+	[ButtonAction("apply", "attached-document-items/MenuAdd", "Apply")]
 	[IconSet("apply", "Icons.AddToolSmall.png", "Icons.AddToolSmall.png", "Icons.AddToolSmall.png")]
 	[VisibleStateObserver("apply", "Visible")]
 	[ExtensionOf(typeof(AttachedDocumentToolExtensionPoint))]
@@ -47,7 +47,7 @@ namespace ClearCanvas.Ris.Client
 		public void Apply()
 		{
 			var component = new AttachDocumentComponent(this.Context.Site);
-			var exitCode = ApplicationComponent.LaunchAsDialog(this.Context.DesktopWindow, component, "Attach File");
+			var exitCode = ApplicationComponent.LaunchAsDialog(this.Context.DesktopWindow, component, SR.TitleAttachFile);
 			if(exitCode == ApplicationComponentExitCode.Accepted)
 			{
 				this.Context.AddAttachment(component.Document, component.Category);

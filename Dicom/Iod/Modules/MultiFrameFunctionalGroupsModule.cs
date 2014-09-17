@@ -85,8 +85,7 @@ namespace ClearCanvas.Dicom.Iod.Modules
 		public bool HasValues()
 		{
 			return !(IsNullOrEmpty(SharedFunctionalGroupsSequence)
-			         && IsNullOrEmpty(PerFrameFunctionalGroupsSequence)
-			        );
+			         && IsNullOrEmpty(PerFrameFunctionalGroupsSequence));
 		}
 
 		/// <summary>
@@ -96,12 +95,11 @@ namespace ClearCanvas.Dicom.Iod.Modules
 		{
 			get
 			{
-				var dicomAttribute = DicomAttributeProvider[DicomTags.SharedFunctionalGroupsSequence];
-				if (dicomAttribute.IsNull || dicomAttribute.IsEmpty)
-				{
-					return null;
-				}
-				return new FunctionalGroupsSequenceItem(((DicomSequenceItem[]) dicomAttribute.Values)[0]);
+                DicomAttribute dicomAttribute;
+                if (!DicomAttributeProvider.TryGetAttribute(DicomTags.SharedFunctionalGroupsSequence, out dicomAttribute) || dicomAttribute.IsNull)
+                    return null;
+                
+                return new FunctionalGroupsSequenceItem(((DicomSequenceItem[])dicomAttribute.Values)[0]);
 			}
 			set
 			{
@@ -138,8 +136,8 @@ namespace ClearCanvas.Dicom.Iod.Modules
 		{
 			get
 			{
-				var dicomAttribute = DicomAttributeProvider[DicomTags.PerFrameFunctionalGroupsSequence];
-				if (dicomAttribute.IsNull || dicomAttribute.IsEmpty)
+			    DicomAttribute dicomAttribute;
+                if (!DicomAttributeProvider.TryGetAttribute(DicomTags.PerFrameFunctionalGroupsSequence, out dicomAttribute) || dicomAttribute.IsNull)
 					return null;
 
 				var result = new FunctionalGroupsSequenceItem[dicomAttribute.Count];

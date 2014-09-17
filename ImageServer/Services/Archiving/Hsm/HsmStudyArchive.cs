@@ -23,9 +23,9 @@
 #endregion
 
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.Text;
-using System.Xml;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
@@ -34,7 +34,10 @@ using ClearCanvas.Dicom.Utilities.Xml;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
 using ClearCanvas.ImageServer.Core;
+using ClearCanvas.ImageServer.Core.Command;
+using ClearCanvas.ImageServer.Core.Command.Archiving;
 using ClearCanvas.ImageServer.Core.Validation;
+using ClearCanvas.ImageServer.Enterprise;
 using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.Brokers;
@@ -59,8 +62,7 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Hsm
 		private StudyXml _studyXml;
 		private StudyStorageLocation _storageLocation;
 		private readonly HsmArchive _hsmArchive;
-		private XmlDocument _archiveXml;
-
+		
 		/// <summary>
 		/// Retrieves the storage location fromthe database for the specified study.
 		/// </summary>
@@ -79,12 +81,12 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Hsm
 		{
 			using (Stream fileStream = FileStreamOpener.OpenForRead(studyXmlFile, FileMode.Open))
 			{
-				XmlDocument theDoc = new XmlDocument();
+				var theMemento = new StudyXmlMemento();
 
-				StudyXmlIo.Read(theDoc, fileStream);
+				StudyXmlIo.Read(theMemento, fileStream);
 
 				_studyXml = new StudyXml(_storageLocation.StudyInstanceUid);
-				_studyXml.SetMemento(theDoc);
+				_studyXml.SetMemento(theMemento);
 
 				fileStream.Close();
 			}
@@ -141,9 +143,7 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Hsm
                         }
                         update.Commit();
                     }
-
-                    string studyFolder = _storageLocation.GetStudyPath();
-
+					
                     string studyXmlFile = _storageLocation.GetStudyXmlPath(); 
                     
                     // Load the study Xml file, this is used to generate the list of dicom files to archive.
@@ -164,46 +164,14 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Hsm
                     // Use the command processor to do the archival.
                     using (ServerCommandProcessor commandProcessor = new ServerCommandProcessor("Archive"))
                     {
-                        _archiveXml = new XmlDocument();
 
-                        // Create the study date folder
-                        string zipFilename = Path.Combine(_hsmArchive.HsmPath, _storageLocation.StudyFolder);
-                        commandProcessor.AddCommand(new CreateDirectoryCommand(zipFilename));
+						var archiveStudyCmd = new ArchiveStudyCommand(_storageLocation, _hsmArchive.HsmPath, executionContext.TempDirectory, _hsmArchive.PartitionArchive) 
+								{ ForceCompress = HsmSettings.Default.CompressZipFiles };
 
-                        // Create a folder for the study
-                        zipFilename = Path.Combine(zipFilename, _storageLocation.StudyInstanceUid);
-                        commandProcessor.AddCommand(new CreateDirectoryCommand(zipFilename));
-
-                        // Save the archive data in the study folder, based on a filename with a date / time stamp
-                        string filename = String.Format("{0}.zip", Platform.Time.ToString("yyyy-MM-dd-HHmm"));
-                        zipFilename = Path.Combine(zipFilename, filename);
-
-
-                        // Create the Xml data to store in the ArchiveStudyStorage table telling
-                        // where the archived study is located.
-                        XmlElement hsmArchiveElement = _archiveXml.CreateElement("HsmArchive");
-                        _archiveXml.AppendChild(hsmArchiveElement);
-                        XmlElement studyFolderElement = _archiveXml.CreateElement("StudyFolder");
-                        hsmArchiveElement.AppendChild(studyFolderElement);
-                        studyFolderElement.InnerText = _storageLocation.StudyFolder;
-                        XmlElement filenameElement = _archiveXml.CreateElement("Filename");
-                        hsmArchiveElement.AppendChild(filenameElement);
-                        filenameElement.InnerText = filename;
-                        XmlElement studyInstanceUidElement = _archiveXml.CreateElement("Uid");
-                        hsmArchiveElement.AppendChild(studyInstanceUidElement);
-                        studyInstanceUidElement.InnerText = _storageLocation.StudyInstanceUid;
-
-
-                        // Create the Zip file
-                    	commandProcessor.AddCommand(
-                    		new CreateStudyZipCommand(zipFilename, _studyXml, studyFolder, executionContext.TempDirectory));
-
-                        // Update the database.
-                        commandProcessor.AddCommand(new InsertArchiveStudyStorageCommand(queueItem.StudyStorageKey, queueItem.PartitionArchiveKey, queueItem.GetKey(), _storageLocation.ServerTransferSyntaxKey, _archiveXml));
-
-
-                    	StudyRulesEngine studyEngine =
-                    		new StudyRulesEngine(_storageLocation, _hsmArchive.ServerPartition, _studyXml);
+						commandProcessor.AddCommand(archiveStudyCmd);
+	                    commandProcessor.AddCommand(new UpdateArchiveQueueItemCommand(queueItem.GetKey(),_storageLocation.GetKey(), ArchiveQueueStatusEnum.Completed));
+                        
+                    	StudyRulesEngine studyEngine = new StudyRulesEngine(_storageLocation, _hsmArchive.ServerPartition, _studyXml);
                     	studyEngine.Apply(ServerRuleApplyTimeEnum.StudyArchived, commandProcessor);
 						
 
@@ -212,7 +180,7 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Hsm
                             Platform.Log(LogLevel.Error,
                                          "Unexpected failure archiving study ({0}) to archive {1}: {2}, zip filename: {3}",
                                          _storageLocation.StudyInstanceUid, _hsmArchive.PartitionArchive.Description,
-                                         commandProcessor.FailureReason, zipFilename);
+										 commandProcessor.FailureReason, archiveStudyCmd.OutputZipFilePath);
 
                             queueItem.FailureDescription = commandProcessor.FailureReason;
                             _hsmArchive.UpdateArchiveQueue(queueItem, ArchiveQueueStatusEnum.Failed, Platform.Time);
@@ -220,7 +188,7 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Hsm
                         else
                             Platform.Log(LogLevel.Info, "Successfully archived study {0} on {1} to zip {2}",
                                          _storageLocation.StudyInstanceUid,
-                                         _hsmArchive.PartitionArchive.Description, zipFilename);
+										 _hsmArchive.PartitionArchive.Description, archiveStudyCmd.OutputZipFilePath);
 
 						// Log the current FilesystemQueue settings
 						_storageLocation.LogFilesystemQueue();
@@ -307,6 +275,41 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Hsm
 				}
 
 			return defaultFile;
+		}
+	}
+
+	/// <summary>
+	/// Command to update the status of an <see cref="ArchiveQueue"/> record
+	/// </summary>
+	class UpdateArchiveQueueItemCommand : ServerDatabaseCommand
+	{
+		private readonly ServerEntityKey _archiveQueueKey;
+		private readonly ServerEntityKey _studyStorageKey;
+		private readonly ArchiveQueueStatusEnum _status;
+
+		public UpdateArchiveQueueItemCommand(ServerEntityKey archiveQueueKey, ServerEntityKey studyStorageKey, ArchiveQueueStatusEnum status)
+			: base("Update Archive Queue Item")
+		{
+			_archiveQueueKey = archiveQueueKey;
+			_studyStorageKey = studyStorageKey;
+			_status = status;
+		}
+
+		protected override void OnExecute(CommandProcessor theProcessor, IUpdateContext updateContext)
+		{
+			var parms = new UpdateArchiveQueueParameters
+			{
+				ArchiveQueueKey = _archiveQueueKey,
+				ArchiveQueueStatusEnum = _status,
+				ScheduledTime = Platform.Time,
+				StudyStorageKey = _studyStorageKey
+			};
+
+
+			var broker = updateContext.GetBroker<IUpdateArchiveQueue>();
+
+			if (!broker.Execute(parms))
+				throw new ApplicationException("UpdateArchiveQueueItemCommand failed");
 		}
 	}
 }

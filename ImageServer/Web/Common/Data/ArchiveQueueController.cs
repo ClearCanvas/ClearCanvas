@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Web;
 using ClearCanvas.Common;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Model;
@@ -49,9 +50,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
 			{
 				IList<ArchiveQueue> list;
 
-				IPersistentStore _store = PersistentStoreRegistry.GetDefaultStore();
-
-                IWebQueryArchiveQueue broker = HttpContextData.Current.ReadContext.GetBroker<IWebQueryArchiveQueue>();
+				IWebQueryArchiveQueue broker = HttpContext.Current.GetSharedPersistentContext().GetBroker<IWebQueryArchiveQueue>();
 				list = broker.Find(parameters);
 
 				return list;

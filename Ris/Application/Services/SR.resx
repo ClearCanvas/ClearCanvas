@@ -235,4 +235,46 @@ Please use the "Merge Contact Points" tool to merge the contact point(s) with an
   <data name="MessageMultipleInformationAuthoritiesNotSupported" xml:space="preserve">
     <value>The system is not configured to support multiple information authorities.  All facilities must be assigned to the same information authority.</value>
   </data>
+  <data name="InvalidRequest_InvalidEnumerationName" xml:space="preserve">
+    <value>Invalid enumeration name.</value>
+  </data>
+  <data name="InvalidRequest_EnumerationValueCannotInsertAfterSelf" xml:space="preserve">
+    <value>Value cannot be inserted after itself.</value>
+  </data>
+  <data name="InvalidRequest_UserAlreadyAssociatedWithStaff" xml:space="preserve">
+    <value>Staff cannot be associated with user {0} because this user is already associated to staff {1}</value>
+  </data>
+  <data name="InvalidRequest_ReportCannotBeSubmittedForProcedure" xml:space="preserve">
+    <value>Report cannot be submitted for this procedure.  It may have been submitted previously.</value>
+  </data>
+  <data name="CancelOrderWarning_OrderAlreadyTerminated" xml:space="preserve">
+    <value>This order cannot be cancelled because it has already been completed or otherwise terminated.</value>
+  </data>
+  <data name="CancelOrderWarning_OrderPerformedMayHaveInProgressReports" xml:space="preserve">
+    <value>This order has been performed and may have reports in progress.</value>
+  </data>
+  <data name="InvalidRequest_OrderInStatusCannotBeReplaced" xml:space="preserve">
+    <value>Orders with a status of '{0}' cannot be replaced.</value>
+  </data>
+  <data name="InvalidRequest_DowntimeOrdersCannotBeReplaced" xml:space="preserve">
+    <value>Downtime orders cannot be replaced.  You must cancel the order and create a new one.</value>
+  </data>
+  <data name="InvalidRequest_CannotEnterOrderWithoutVisits" xml:space="preserve">
+    <value>The order cannot be entered because the patient does not have any visits at {0}.</value>
+  </data>
+  <data name="InvalidRequest_InvalidDowntimeAccessionNumber" xml:space="preserve">
+    <value>Invalid downtime accession number.</value>
+  </data>
+  <data name="InvalidRequest_CannotModifyProcedureType" xml:space="preserve">
+    <value>Order modification must not modify the type of a requested procedure.</value>
+  </data>
+  <data name="InvalidRequest_VisitRequired" xml:space="preserve">
+    <value>A visit is required.</value>
+  </data>
+  <data name="InvalidRequest_NoOrdersToUnmerge" xml:space="preserve">
+    <value>This order does not have any orders to un-merge.</value>
+  </data>
+  <data name="InvalidRequest_SupervisorIsRequired" xml:space="preserve">
+    <value>A supervisor is required.</value>
+  </data>
 </root>

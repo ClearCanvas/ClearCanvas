@@ -277,7 +277,10 @@ namespace ClearCanvas.Enterprise.Core.ServiceModel
 			// add exception promotion advice at the beginning of the interception chain (outside of the service transaction)
 			interceptors.Add(new ExceptionPromotionAdvice());
 
-			// additional interceptors are added outside of all others
+			// use client culture
+			interceptors.Add(new CultureServerSideAdvice());
+
+			// additional interceptors
 			foreach (var interceptor in AdditionalServiceInterceptorProvider.GetInterceptors(ServiceInterceptSite.Server))
 			{
 				interceptors.Add(interceptor);

@@ -29,6 +29,11 @@
 
 if(window.external)
 {
+	// re-direct script errors through the host app
+	window.onerror = function(message, url, lineNumber) {
+		window.external.OnScriptError(message, url, lineNumber);
+	};
+
 	var Ris = {
 		_asyncStarted: false,
 		_asyncCount: 0,

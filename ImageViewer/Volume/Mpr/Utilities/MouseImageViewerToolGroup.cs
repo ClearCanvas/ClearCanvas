@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
@@ -31,7 +32,7 @@ using ClearCanvas.Desktop.Actions;
 using ClearCanvas.Desktop.Tools;
 using ClearCanvas.ImageViewer.BaseTools;
 using ClearCanvas.ImageViewer.InputManagement;
-using Action=ClearCanvas.Desktop.Actions.Action;
+using Action = ClearCanvas.Desktop.Actions.Action;
 
 namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 {
@@ -93,7 +94,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 			this.MouseWheelShortcut = new MouseWheelShortcut();
 		}
 
-		public event  EventHandler SelectedToolChanged
+		public event EventHandler SelectedToolChanged
 		{
 			add { _selectedToolChanged += value; }
 			remove { _selectedToolChanged -= value; }
@@ -146,7 +147,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 			foreach (IAction action in actions)
 			{
 				if (action is Action && action.IconSet is MouseButtonIconSet)
-					((Action)action).IconSet = new MouseButtonIconSet(action.IconSet, mouseButton);
+					((Action) action).IconSet = new MouseButtonIconSet(action.IconSet, mouseButton);
 			}
 		}
 
@@ -369,6 +370,15 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 			{
 				get { return _viewer.DesktopWindow; }
 			}
+
+			/// <summary>
+			/// Not supported.
+			/// </summary>
+			public event CancelEventHandler ViewerClosing
+			{
+				add { }
+				remove { }
+			}
 		}
 
 		#endregion
@@ -436,7 +446,7 @@ namespace ClearCanvas.ImageViewer.Volume.Mpr.Utilities
 				private readonly string _actionID;
 				private readonly object _actionTarget;
 				private readonly ResourceResolver _resolver;
-				private Desktop.Actions.Action _action;
+				private Action _action;
 
 				public CustomActionBuildingContext(string actionID, object actionTarget)
 				{

@@ -74,7 +74,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="PostBuild_dist.proj" />
+    <None Include="PostBuild_dist.proj">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -108,6 +110,6 @@
     </CreateProperty>
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>$(MSBuildBinPath)\Msbuild $(ProjectDir)\PostBuild_dist.proj /p:SolutionDir=$(SolutionDir);SolutionName=$(SolutionName);TargetPlatform=$(TargetPlatform);EditionName=$(EditionName);Configuration=$(ConfigurationName);ProjectName=$(ProjectName);ProjectDir=$(ProjectDir);OutDir=$(OutDir);StrongNameKeyFile=$(AssemblyOriginatorKeyFile);DistributionDir=$(DistributionDir);Options=$(Options);ReleaseType=$(ReleaseType)</PostBuildEvent>
+    <PostBuildEvent>"$(MSBuildBinPath)\Msbuild" $(ProjectDir)\PostBuild_dist.proj /p:SolutionDir=$(SolutionDir);SolutionName=$(SolutionName);TargetPlatform=$(TargetPlatform);EditionName=$(EditionName);Configuration=$(ConfigurationName);ProjectName=$(ProjectName);ProjectDir=$(ProjectDir);OutDir=$(OutDir);StrongNameKeyFile=$(AssemblyOriginatorKeyFile);DistributionDir=$(DistributionDir);Options=$(Options);ReleaseType=$(ReleaseType)</PostBuildEvent>
   </PropertyGroup>
 </Project>

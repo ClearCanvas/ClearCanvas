@@ -160,6 +160,8 @@
     <Compile Include="Configuration\IApplicationConfigurationReadService.cs" />
     <Compile Include="Configuration\ImportSettingsGroupRequest.cs" />
     <Compile Include="Configuration\ImportSettingsGroupResponse.cs" />
+    <Compile Include="CultureAdviceBase.cs" />
+    <Compile Include="CultureClientSideAdvice.cs" />
     <Compile Include="IResponseDataCachingStrategy.cs" />
     <Compile Include="Configuration\ListConfigurationDocumentsRequest.cs" />
     <Compile Include="Configuration\ListConfigurationDocumentsResponse.cs" />
@@ -172,6 +174,9 @@
     <Compile Include="IChannelProvider.cs" />
     <Compile Include="IOfflineCache.cs" />
     <Compile Include="ListRequestBase.cs" />
+    <Compile Include="Mail\IMailQueueService.cs" />
+    <Compile Include="Mail\OutgoingMailClassification.cs" />
+    <Compile Include="Mail\OutgoingMailMessage.cs" />
     <Compile Include="Manifest\IManifestService.cs" />
     <Compile Include="Manifest\ServerManifestVerification.cs" />
     <Compile Include="NullOfflineCache.cs" />
@@ -212,9 +217,15 @@
     <Compile Include="ServiceConfiguration\Client\NamedPipeConfiguration.cs" />
     <Compile Include="ServiceConfiguration\Server\CertificateSearchDirective.cs" />
     <Compile Include="ServiceConfiguration\Server\NamedPipeConfiguration.cs" />
+    <Compile Include="Setup\GetSettingApplication.cs" />
+    <Compile Include="Setup\GetSettingCommandLine.cs" />
+    <Compile Include="Setup\SettingDefinition.cs" />
+    <Compile Include="Setup\SetUserApplication.cs" />
+    <Compile Include="Setup\SetUserCommandLine.cs" />
     <Compile Include="Setup\SetSettingApplication.cs" />
     <Compile Include="Setup\SetSettingCommandLine.cs" />
     <Compile Include="ServiceTransferModeAttribute.cs" />
+    <Compile Include="Setup\UserDefinition.cs" />
     <Compile Include="SystemAccounts\ISystemAccountLocalRegistry.cs" />
     <Compile Include="SystemAccounts\LocalRegistryManager.cs" />
     <Compile Include="SystemAccounts\SystemAccountCommandLine.cs" />
@@ -225,6 +236,7 @@
     <Compile Include="StaticChannelProvider.cs" />
     <Compile Include="Tests\AopInterceptorChainTests.cs" />
     <Compile Include="Tests\EntityRefJsmlSerializerHookTests.cs" />
+    <Compile Include="Mail\Tests\OutgoingMailMessageTests.cs" />
     <Compile Include="Tests\ResponseCachingAdviceBaseTests.cs" />
     <Compile Include="UserAccessDeniedException.cs" />
     <Compile Include="InvalidUserSessionException.cs" />

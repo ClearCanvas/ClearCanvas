@@ -189,7 +189,7 @@ namespace ClearCanvas.Ris.Client
 							taskContext.Error(e);
 						}
 					},
-					false);
+					false) { ThreadUICulture = Desktop.Application.CurrentUICulture };
 
 				_queryItemsTask.Terminated += OnQueryItemsCompleted;
 				_queryItemsTask.Run();

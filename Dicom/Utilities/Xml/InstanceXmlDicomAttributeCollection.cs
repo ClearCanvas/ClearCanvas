@@ -24,7 +24,7 @@
 
 using System;
 using System.Collections.Generic;
-using ClearCanvas.Common.Utilities;
+using System.Linq;
 
 namespace ClearCanvas.Dicom.Utilities.Xml
 {
@@ -46,12 +46,12 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 	internal class ExcludedTagsHelper : IEquatable<ExcludedTagsHelper>
 	{
 		private readonly IInstanceXmlDicomAttributeCollection _parent;
-		private readonly SortedList<DicomTag, DicomTag> _excludedTags;
+		private readonly SortedList<uint, DicomTag> _excludedTags;
 
 		public ExcludedTagsHelper(IInstanceXmlDicomAttributeCollection parent)
 		{
 			_parent = parent;
-			_excludedTags = new SortedList<DicomTag, DicomTag>();
+            _excludedTags = new SortedList<uint, DicomTag>();
 		}
 
 		public IList<DicomTag> ExcludedTags
@@ -59,48 +59,53 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 			get
 			{
 				Cleanup();
-				return _excludedTags.Keys;
+				return _excludedTags.Values;
 			}
 		}
 
 		internal void Cleanup()
 		{
-			List<DicomTag> tagsToRemove = new List<DicomTag>();
-			foreach (DicomTag tag in _excludedTags.Keys)
+		    if (_excludedTags.Count == 0)
+		        return;
+
+            //Set the capacity right away so adding is faster.
+			var tagsToRemove = new List<uint>(_excludedTags.Count);
+			foreach (var tag in _excludedTags.Keys)
 			{
 				DicomAttribute attribute;
-				if (_parent.TryGetAttribute(tag, out attribute) && !attribute.IsEmpty)
+				if (_parent.TryGetAttribute(tag, out attribute))
 					tagsToRemove.Add(tag);
 			}
 
-			foreach (DicomTag tag in tagsToRemove)
-				Remove(tag);
+			foreach (var tag in tagsToRemove)
+                _excludedTags.Remove(tag);
 		}
 
 		public void Remove(DicomTag tag)
 		{
-			DicomTag existingTag;
-			if (_excludedTags.TryGetValue(tag, out existingTag))
-				_excludedTags.Remove(existingTag);
+			_excludedTags.Remove(tag.TagValue);
 		}
 
 		public void Add(DicomTag tag)
 		{
-			DicomTag existingTag;
-			if (!_excludedTags.TryGetValue(tag, out existingTag))
-				_excludedTags.Add(tag, tag);
+			_excludedTags[tag.TagValue] = tag;
 		}
 
-		public void Add(IEnumerable<DicomTag> tagList)
+		public void Add(IEnumerable<DicomTag> tags)
 		{
-			foreach (DicomTag tag in tagList)
+			foreach (DicomTag tag in tags)
 				Add(tag);
 		}
 
 		public bool IsTagExcluded(uint tag)
 		{
-			return CollectionUtils.Contains(ExcludedTags,
-			                                dicomTag => dicomTag.TagValue == tag);
+		    if (_excludedTags.Count == 0)
+		        return false;
+
+		    if (_excludedTags.Count == 1)
+		        return ExcludedTags[0].TagValue == tag;
+
+			return ExcludedTags.Any(dicomTag => dicomTag.TagValue == tag);
 		}
 
 		public bool HasExcludedTags(bool recursive)
@@ -108,29 +113,18 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 			if (ExcludedTags.Count > 0)
 				return true;
 
-			if (recursive)
-			{
-				foreach (DicomAttribute attribute in _parent)
-				{
-					if (attribute.Tag.VR == DicomVr.SQvr)
-					{
-						DicomSequenceItem[] items = attribute.Values as DicomSequenceItem[];
-						if (items != null)
-						{
-							foreach (DicomSequenceItem item in items)
-							{
-								if (item is InstanceXmlDicomSequenceItem)
-								{
-									if (((InstanceXmlDicomSequenceItem) item).HasExcludedTags(true))
-										return true;
-								}
-							}
-						}
-					}
-				}
-			}
+		    if (!recursive) return false;
 
-			return false;
+		    foreach (DicomAttribute attribute in _parent)
+		    {
+		        if (attribute.Tag.VR != DicomVr.SQvr) continue;
+
+		        var items = attribute.Values as DicomSequenceItem[];
+		        if (items != null && items.OfType<InstanceXmlDicomSequenceItem>().Any(item => item.HasExcludedTags(true)))
+		            return true;
+		    }
+
+		    return false;
 		}
 
 		#region IEquatable<ExcludedTagsHelper> Members
@@ -143,13 +137,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 			if (other.ExcludedTags.Count != ExcludedTags.Count)
 				return false;
 
-			foreach (DicomTag tag in ExcludedTags)
-			{
-				if (!other.ExcludedTags.Contains(tag))
-					return false;
-			}
-
-			return true;
+		    return ExcludedTags.All(tag => other.ExcludedTags.Contains(tag));
 		}
 
 		#endregion
@@ -161,7 +149,8 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 
 		public override bool Equals(object obj)
 		{
-			return obj is ExcludedTagsHelper && Equals((ExcludedTagsHelper) obj);
+		    var other = obj as ExcludedTagsHelper;
+		    return other != null && Equals(other);
 		}
 	}
 

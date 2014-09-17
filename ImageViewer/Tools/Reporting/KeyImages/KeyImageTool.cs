@@ -29,7 +29,6 @@ using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
 using ClearCanvas.ImageViewer.BaseTools;
-using ClearCanvas.ImageViewer.Common.WorkItem;
 using ClearCanvas.ImageViewer.InteractiveGraphics;
 
 namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
@@ -56,7 +55,6 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		private bool _showEnabled;
 		private bool _firstKeyImageCreation = true;
 		private event EventHandler _showEnabledChanged;
-		private IWorkItemActivityMonitor _workItemActivityMonitor;
 
 		#endregion
 
@@ -91,13 +89,8 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 			base.Initialize();
 			KeyImageClipboard.OnViewerOpened(Context.Viewer);
 
+            //Enablement conditions don't change.
 			UpdateEnabled();
-
-			if (WorkItemActivityMonitor.IsSupported)
-			{
-				_workItemActivityMonitor = WorkItemActivityMonitor.Create();
-				_workItemActivityMonitor.IsConnectedChanged += OnIsConnectedChanged;
-			}
 
 			if (!KeyImageClipboardComponent.HasViewPlugin)
 			{
@@ -108,13 +101,6 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 		protected override void Dispose(bool disposing)
 		{
-			if (_workItemActivityMonitor != null)
-			{
-				_workItemActivityMonitor.IsConnectedChanged -= OnIsConnectedChanged;
-				_workItemActivityMonitor.Dispose();
-				_workItemActivityMonitor = null;
-			}
-
 			if (Context != null)
 			{
 				KeyImageClipboard.OnViewerClosed(Context.Viewer);
@@ -127,21 +113,6 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 		{
 			Enabled = PermissionsHelper.IsInRole(AuthorityTokens.Study.KeyImages);
 			ShowEnabled = KeyImageClipboardComponent.HasViewPlugin && Enabled;
-		}
-
-		private void OnIsConnectedChanged(object sender, EventArgs eventArgs)
-		{
-			UpdateEnabled();
-		}
-
-		protected override void OnPresentationImageSelected(object sender, PresentationImageSelectedEventArgs e)
-		{
-			UpdateEnabled();
-		}
-
-		protected override void OnTileSelected(object sender, TileSelectedEventArgs e)
-		{
-			UpdateEnabled();
 		}
 
 		#endregion

@@ -59,9 +59,11 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BiographyVisitHistoryComponentControl));
 			this._visitList = new ClearCanvas.Desktop.View.WinForms.TableView();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this._detailPanel = new System.Windows.Forms.Panel();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
@@ -69,59 +71,45 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			// 
 			// _visitList
 			// 
-			this._visitList.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._visitList.Location = new System.Drawing.Point(0, 0);
+			resources.ApplyResources(this._visitList, "_visitList");
 			this._visitList.MultiSelect = false;
 			this._visitList.Name = "_visitList";
 			this._visitList.ReadOnly = false;
 			this._visitList.ShowToolbar = false;
-			this._visitList.Size = new System.Drawing.Size(461, 577);
-			this._visitList.TabIndex = 0;
 			// 
 			// splitContainer1
 			// 
-			this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+			resources.ApplyResources(this.splitContainer1, "splitContainer1");
 			this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-			this.splitContainer1.Location = new System.Drawing.Point(4, 2);
 			this.splitContainer1.Name = "splitContainer1";
 			// 
 			// splitContainer1.Panel1
 			// 
 			this.splitContainer1.Panel1.Controls.Add(this._visitList);
-			this.splitContainer1.Panel1.Padding = new System.Windows.Forms.Padding(0, 0, 4, 0);
+			resources.ApplyResources(this.splitContainer1.Panel1, "splitContainer1.Panel1");
 			// 
 			// splitContainer1.Panel2
 			// 
-			this.splitContainer1.Panel2.AutoScroll = true;
+			resources.ApplyResources(this.splitContainer1.Panel2, "splitContainer1.Panel2");
 			this.splitContainer1.Panel2.Controls.Add(this._detailPanel);
-			this.splitContainer1.Panel2.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
-			this.splitContainer1.Size = new System.Drawing.Size(976, 577);
-			this.splitContainer1.SplitterDistance = 465;
-			this.splitContainer1.TabIndex = 1;
 			// 
 			// _detailPanel
 			// 
 			this._detailPanel.BackColor = System.Drawing.SystemColors.ControlDark;
-			this._detailPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			resources.ApplyResources(this._detailPanel, "_detailPanel");
 			this._detailPanel.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-			this._detailPanel.Location = new System.Drawing.Point(3, 0);
-			this._detailPanel.Margin = new System.Windows.Forms.Padding(5, 3, 3, 3);
 			this._detailPanel.Name = "_detailPanel";
-			this._detailPanel.Padding = new System.Windows.Forms.Padding(1);
-			this._detailPanel.Size = new System.Drawing.Size(504, 577);
-			this._detailPanel.TabIndex = 0;
 			// 
 			// BiographyVisitHistoryComponentControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.Control;
 			this.Controls.Add(this.splitContainer1);
 			this.Name = "BiographyVisitHistoryComponentControl";
-			this.Padding = new System.Windows.Forms.Padding(4, 2, 2, 7);
-			this.Size = new System.Drawing.Size(982, 586);
 			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 			this.splitContainer1.ResumeLayout(false);
 			this.ResumeLayout(false);
 

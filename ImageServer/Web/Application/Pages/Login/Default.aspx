@@ -83,11 +83,11 @@
 				<table>
             <tr>
             <td align="right"><asp:Label ID="Label2" runat="server" Text="<%$Resources: Labels,UserID %>"></asp:Label></td>
-            <td align="right"><asp:TextBox runat="server" ID="UserName" CssClass="LoginTextInput"></asp:TextBox></td>
+            <td align="right"><asp:TextBox runat="server" ID="UserName" CssClass="LoginTextInput"  AutoCompleteType="Disabled"></asp:TextBox></td>
             </tr>
             <tr>
             <td align="right"><asp:Label ID="Label3" runat="server" Text="<%$Resources: Labels,Password %>"></asp:Label></td>
-            <td align="right"><asp:TextBox runat="server" ID="Password" TextMode="Password" CssClass="LoginTextInput"></asp:TextBox></td>
+            <td align="right"><asp:TextBox runat="server" ID="Password" TextMode="Password" CssClass="LoginTextInput"  AutoCompleteType="Disabled"></asp:TextBox></td>
             </tr> 
             <tr>
                 <td colspan="2" align="right"><asp:Button runat="server" ID="LoginButton" OnClick="LoginClicked"  Text="<%$Resources: Labels,ButtonLogin %>" CssClass="LoginButton"/></td>

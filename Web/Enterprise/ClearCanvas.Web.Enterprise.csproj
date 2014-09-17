@@ -80,6 +80,10 @@
       <Project>{F6EAD428-E6CF-4DF6-B2F3-D33D532C5343}</Project>
       <Name>ClearCanvas.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Dicom\ClearCanvas.Dicom.csproj">
+      <Project>{AD9ECE2B-8268-4115-8DC8-860FBD011FFF}</Project>
+      <Name>ClearCanvas.Dicom</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Enterprise\Common\ClearCanvas.Enterprise.Common.csproj">
       <Project>{B5EBFFD7-6641-4932-91C9-4C4322B41868}</Project>
       <Name>ClearCanvas.Enterprise.Common</Name>

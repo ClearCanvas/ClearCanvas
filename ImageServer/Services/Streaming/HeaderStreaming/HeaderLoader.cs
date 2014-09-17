@@ -44,6 +44,9 @@ namespace ClearCanvas.ImageServer.Services.Streaming.HeaderStreaming
         private readonly string _studyInstanceUid;
         private StudyStorageLocation _studyLocation;
     	private string _faultDescription;
+        
+        private static bool _enableCache = ImageStreamingServerSettings.Default.EnableCache;
+        private static TimeSpan _cacheRetentionTime = ImageStreamingServerSettings.Default.CacheRetentionWindow;
 
         #region Constructor
 
@@ -57,8 +60,8 @@ namespace ClearCanvas.ImageServer.Services.Streaming.HeaderStreaming
             ServerPartition partition = ServerPartitionMonitor.Instance.GetPartition(_partitionAE);
 
             StudyStorageLoader storageLoader = new StudyStorageLoader(sessionId);
-            storageLoader.CacheEnabled = ImageStreamingServerSettings.Default.EnableCache;
-            storageLoader.CacheRetentionTime = ImageStreamingServerSettings.Default.CacheRetentionWindow;
+            storageLoader.CacheEnabled = _enableCache;
+            storageLoader.CacheRetentionTime = _cacheRetentionTime;
             StudyLocation = storageLoader.Find(_studyInstanceUid, partition);
 
             if (StudyLocation != null && StudyLocation.QueueStudyStateEnum != QueueStudyStateEnum.Idle)

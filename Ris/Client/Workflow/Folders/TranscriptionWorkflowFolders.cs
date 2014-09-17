@@ -33,41 +33,41 @@ namespace ClearCanvas.Ris.Client.Workflow.Folders
 	{
 		[ExtensionOf(typeof(TranscriptionWorkflowFolderExtensionPoint))]
 		[FolderForWorklistClass(WorklistClassNames.TranscriptionToBeTranscribedWorklist)]
-		[FolderPath("To Be Transcribed", true)]
+		[FolderPath("FolderToBeTranscribed", true)]
 		[FolderDescription("TranscriptionToBeTranscribedFolderDescription")]
 		public class ToBeTranscribedFolder : TranscriptionWorkflowFolder
 		{
 		}
 
 		[FolderForWorklistClass(WorklistClassNames.TranscriptionDraftWorklist)]
-		[FolderPath("My Items/Draft")]
+		[FolderPath("FolderMyItems/FolderDraft")]
 		[FolderDescription("TranscriptionDraftFolderDescription")]
 		public class DraftFolder : TranscriptionWorkflowFolder
 		{
 		}
 
 		[FolderForWorklistClass(WorklistClassNames.TranscriptionToBeReviewedWorklist)]
-		[FolderPath("My Items/To Be Reviewed")]
+		[FolderPath("FolderMyItems/FolderToBeReviewed")]
 		[FolderDescription("TranscriptionToBeReviewedFolderDescription")]
 		public class ToBeReviewedFolder : TranscriptionWorkflowFolder
 		{
 		}
 
 		[FolderForWorklistClass(WorklistClassNames.TranscriptionAwaitingReviewWorklist)]
-		[FolderPath("My Items/Awaiting Review")]
+		[FolderPath("FolderMyItems/FolderAwaitingReview")]
 		[FolderDescription("TranscriptionAwaitingReviewFolderDescription")]
 		public class AwaitingReviewFolder : TranscriptionWorkflowFolder
 		{
 		}
 
 		[FolderForWorklistClass(WorklistClassNames.TranscriptionCompletedWorklist)]
-		[FolderPath("My Items/Completed")]
+		[FolderPath("FolderMyItems/FolderCompleted")]
 		[FolderDescription("TranscriptionCompletedFolderDescription")]
 		public class CompletedFolder : TranscriptionWorkflowFolder
 		{
 		}
 
-		[FolderPath("Search Results")]
+		[FolderPath("FolderSearchResults")]
 		public class TranscriptionSearchFolder : WorklistSearchResultsFolder<ReportingWorklistItemSummary, ITranscriptionWorkflowService>
 		{
 			public TranscriptionSearchFolder()

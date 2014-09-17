@@ -90,14 +90,17 @@ namespace ClearCanvas.Ris.Client
         public override string ToString()
         {
             if (this.Value == 0)
-                return "Today";
+                return SR.RelativeTimeInDays_Today;
             if (this.Value == 1)
-                return "Tomorrow";
+                return SR.RelativeTimeInDays_Tomorrow;
             if (this.Value == -1)
-                return "Yesterday";
+                return SR.RelativeTimeInDays_Yesterday;
 
-            return string.Format("{0} days {1}", Math.Abs(this.Value), this.Value > 0 ? "from now" : "ago");
-        }
+			if (this.Value > 0)
+				return string.Format(SR.RelativeTimeInDays_DaysFromNow, Math.Abs(this.Value));
+			else
+				return string.Format(SR.RelativeTimeInDays_DaysAgo, Math.Abs(this.Value));
+		}
     }
 
     public class RelativeTimeInHours : RelativeTime
@@ -110,11 +113,16 @@ namespace ClearCanvas.Ris.Client
         public override string ToString()
         {
             if (this.Value == 0)
-                return "Now";
+                return SR.RelativeTimeInHours_Now;
+			if (this.Value == 1)
+				return SR.RelativeTimeInHours_OneHourFromNow;
+			if (this.Value == -1)
+				return SR.RelativeTimeInHours_OneHourAgo;
 
-			var absoluteValue = Math.Abs(this.Value);
-			var formatting = absoluteValue == 1 ? "{0} hour {1}" : "{0} hours {1}";
-			return string.Format(formatting, absoluteValue, this.Value > 0 ? "from now" : "ago");
+			if (this.Value > 0)
+				return string.Format(SR.RelativeTimeInHours_HoursFromNow, Math.Abs(this.Value));
+			else
+				return string.Format(SR.RelativeTimeInHours_HoursAgo, Math.Abs(this.Value));
         }
     }
 }

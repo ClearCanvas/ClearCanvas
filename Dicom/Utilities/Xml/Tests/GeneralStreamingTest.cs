@@ -48,7 +48,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Tests
 			StudyXmlOutputSettings settings = new StudyXmlOutputSettings();
 			settings.IncludeSourceFileName = false;
 
-			XmlDocument doc = theStream.GetMemento(settings);
+			var doc = theStream.GetMemento(settings);
 
 			if (File.Exists(streamFile))
 				File.Delete(streamFile);
@@ -74,11 +74,11 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Tests
 			{
 				using (Stream fileStream = new FileStream(location, FileMode.Open))
 				{
-					XmlDocument theDoc = new XmlDocument();
+					var theMemento = new StudyXmlMemento();
 
-					StudyXmlIo.Read(theDoc, fileStream);
+					StudyXmlIo.Read(theMemento, fileStream);
 
-					theXml.SetMemento(theDoc);
+					theXml.SetMemento(theMemento);
 
 					fileStream.Close();
 				}

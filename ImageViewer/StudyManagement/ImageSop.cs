@@ -47,8 +47,19 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 	/// </remarks>
 	public partial class ImageSop : Sop
 	{
-		private readonly object _syncLock = new object();
+	    private class CachedValues
+	    {
+	        public string AnatomicalOrientationType;
+            public string PresentationIntentType;
+            public int? NumberOfFrames;
+	    }
+
+	    private bool? _isMultiframe;
+
+	    private readonly object _syncLock = new object();
 		private volatile FrameCollection _frames;
+
+	    private CachedValues _cache = new CachedValues();
 
 		/// <summary>
 		/// Constructs a new instance of <see cref="ImageSop"/> from a local file.
@@ -111,7 +122,15 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public virtual string AnatomicalOrientationType
 		{
-			get { return this[DicomTags.AnatomicalOrientationType].ToString(); }
+		    get
+		    {
+		        var value = _cache.AnatomicalOrientationType;
+		        if (value != null) return value;
+		        
+                DicomAttribute attribute;
+		        _cache.AnatomicalOrientationType = value = TryGetAttribute(DicomTags.AnatomicalOrientationType, out attribute) ? attribute.ToString() : String.Empty;
+		        return value;
+		    }
 		}
 
 		#endregion
@@ -123,344 +142,15 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </summary>
 		public virtual string PresentationIntentType
 		{
-			get { return this[DicomTags.PresentationIntentType].ToString(); }
-		}
-
-		#endregion
-
-		#region General Image Module
-
-		/// <summary>
-		/// Gets the patient orientation.
-		/// </summary>
-		/// <remarks>
-		/// A <see cref="Dicom.Iod.PatientOrientation"/> is returned even when no data is available; 
-		/// the <see cref="Dicom.Iod.PatientOrientation.IsEmpty"/> property will be true.
-		/// </remarks>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual PatientOrientation PatientOrientation
-		{
-			get { return Frames[1].PatientOrientation; }
-		}
-
-		/// <summary>
-		/// Gets the image type.  The entire Image Type value should be returned as a Dicom string array.
-		/// </summary>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual string ImageType
-		{
-			get { return Frames[1].ImageType; }
-		}
-
-		/// <summary>
-		/// Gets the acquisition number.
-		/// </summary>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual int AcquisitionNumber
-		{
-			get { return Frames[1].AcquisitionNumber; }
-		}
-
-		/// <summary>
-		/// Gets the acquisiton date.
-		/// </summary>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual string AcquisitionDate
-		{
-			get { return Frames[1].AcquisitionDate; }
-		}
-
-		/// <summary>
-		/// Gets the acquisition time.
-		/// </summary>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual string AcquisitionTime
-		{
-			get { return Frames[1].AcquisitionTime; }
-		}
-
-		/// <summary>
-		/// Gets the acquisition date/time.
-		/// </summary>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual string AcquisitionDateTime
-		{
-			get { return Frames[1].AcquisitionDateTime; }
-		}
-
-		/// <summary>
-		/// Gets the number of images in the acquisition.
-		/// </summary>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual int ImagesInAcquisition
-		{
-			get { return Frames[1].ImagesInAcquisition; }
-		}
-
-		/// <summary>
-		/// Gets the image comments.
-		/// </summary>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual string ImageComments
-		{
-			get { return Frames[1].ImageComments; }
-		}
-
-		/// <summary>
-		/// Gets the lossy image compression.
-		/// </summary>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual string LossyImageCompression
-		{
-			get { return Frames[1].LossyImageCompression; }
-		}
-
-		/// <summary>
-		/// Gets the lossy image compression ratio.
-		/// </summary>
-		/// <remarks>
-		/// Will return as many parsable values as possible up to the first non-parsable value.  For example, if there are 3 values, but the last one is poorly encoded, 2 values will be returned.
-		/// </remarks>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual double[] LossyImageCompressionRatio
-		{
-			get { return Frames[1].LossyImageCompressionRatio; }
-		}
-
-		#endregion
-
-		#region Image Plane Module
-
-		/// <summary>
-		/// Gets the pixel spacing.
-		/// </summary>
-		/// <remarks>
-		/// It is generally recommended that clients use <see cref="NormalizedPixelSpacing"/> when
-		/// in calculations that require the pixel spacing.
-		/// </remarks>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual PixelSpacing PixelSpacing
-		{
-			get { return Frames[1].PixelSpacing; }
-		}
-
-		/// <summary>
-		/// Gets the image orientation patient.
-		/// </summary>
-		/// <remarks>
-		/// Returns an <see cref="Dicom.Iod.ImageOrientationPatient"/> object with zero for all its values
-		/// when no data is available or the existing data is bad/incorrect;  <see cref="Dicom.Iod.ImageOrientationPatient.IsNull"/>
-		/// will be true.
-		/// </remarks>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual ImageOrientationPatient ImageOrientationPatient
-		{
-			get { return Frames[1].ImageOrientationPatient; }
-		}
-
-		/// <summary>
-		/// Gets the image position patient.
-		/// </summary>
-		/// <remarks>
-		/// Returns an <see cref="Dicom.Iod.ImagePositionPatient"/> object with zero for all its values when no data is
-		/// available or the existing data is bad/incorrect; <see cref="Dicom.Iod.ImagePositionPatient.IsNull"/> will be true.
-		/// </remarks>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual ImagePositionPatient ImagePositionPatient
-		{
-			get { return Frames[1].ImagePositionPatient; }
-		}
-
-		/// <summary>
-		/// Gets the slice thickness.
-		/// </summary>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual double SliceThickness
-		{
-			get { return Frames[1].SliceThickness; }
-		}
-
-		/// <summary>
-		/// Gets the slice location.
-		/// </summary>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual double SliceLocation
-		{
-			get { return Frames[1].SliceLocation; }
-		}
-
-		#endregion
-
-		#region Image Pixel Module
-
-		#region Type 1
-
-		/// <summary>
-		/// Gets the samples per pixel.
-		/// </summary>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual int SamplesPerPixel
-		{
-			get { return Frames[1].SamplesPerPixel; }
-		}
-
-		/// <summary>
-		/// Gets the photometric interpretation.
-		/// </summary>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual PhotometricInterpretation PhotometricInterpretation
-		{
-			get { return Frames[1].PhotometricInterpretation; }
-		}
-
-		/// <summary>
-		/// Gets the number of rows.
-		/// </summary>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual int Rows
-		{
-			get { return Frames[1].Rows; }
-		}
-
-		/// <summary>
-		/// Gets the number of columns.
-		/// </summary>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual int Columns
-		{
-			get { return Frames[1].Columns; }
-		}
-
-		/// <summary>
-		/// Gets the number of bits allocated.
-		/// </summary>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual int BitsAllocated
-		{
-			get { return Frames[1].BitsAllocated; }
-		}
-
-		/// <summary>
-		/// Gets the number of bits stored.
-		/// </summary>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual int BitsStored
-		{
-			get { return Frames[1].BitsStored; }
-		}
-
-		/// <summary>
-		/// Gets the high bit.
-		/// </summary>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual int HighBit
-		{
-			get { return Frames[1].HighBit; }
-		}
-
-		/// <summary>
-		/// Gets the pixel representation.
-		/// </summary>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual int PixelRepresentation
-		{
-			get { return Frames[1].PixelRepresentation; }
-		}
-
-		#endregion
-
-		#region Type 1C
-
-		/// <summary>
-		/// Gets the planar configuration.
-		/// </summary>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual int PlanarConfiguration
-		{
-			get { return Frames[1].PlanarConfiguration; }
-		}
-
-		/// <summary>
-		/// Gets the pixel aspect ratio.
-		/// </summary>
-		/// <remarks>
-		/// If no value exists in the image header, or the value is invalid, a <see cref="ClearCanvas.Dicom.Iod.PixelAspectRatio"/>
-		/// is returned whose <see cref="ClearCanvas.Dicom.Iod.PixelAspectRatio.IsNull"/> property evaluates to true.
-		/// </remarks>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual PixelAspectRatio PixelAspectRatio
-		{
-			get { return Frames[1].PixelAspectRatio; }
-		}
-
-		#endregion
-
-		#endregion
-
-		#region Modality LUT Module
-
-		/// <summary>
-		/// Gets the rescale intercept.
-		/// </summary>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual double RescaleIntercept
-		{
-			get { return Frames[1].RescaleIntercept; }
-		}
-
-		/// <summary>
-		/// Gets the rescale slope.
-		/// </summary>
-		/// <remarks>
-		/// 1.0 is returned if no data is available.
-		/// </remarks>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual double RescaleSlope
-		{
-			get { return Frames[1].RescaleSlope; }
-		}
-
-		/// <summary>
-		/// Gets the rescale type.
-		/// </summary>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual string RescaleType
-		{
-			get { return Frames[1].RescaleType; }
-		}
-
-		#endregion
-
-		#region VOI LUT Module
-
-		/// <summary>
-		/// Gets the <see cref="VoiDataLut"/>s from the image header.
-		/// </summary>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual IList<VoiDataLut> VoiDataLuts
-		{
-			get { return Frames[1].VoiDataLuts; }
-		}
-
-		/// <summary>
-		/// Gets the window width and center.
-		/// </summary>
-		/// <remarks>
-		/// Will return as many parsable values as possible up to the first non-parsable value.  For example, if there are 3 values, but the last one is poorly encoded, 2 values will be returned.
-		/// </remarks>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual Window[] WindowCenterAndWidth
-		{
-			get { return Frames[1].WindowCenterAndWidth; }
-		}
-
-		/// <summary>
-		/// Gets the window width and center explanation.
-		/// </summary>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual string[] WindowCenterAndWidthExplanation
-		{
-			get { return Frames[1].WindowCenterAndWidthExplanation; }
+		    get
+		    {
+                var value = _cache.PresentationIntentType;
+		        if (value != null) return value;
+		        
+                DicomAttribute attribute;
+		        _cache.PresentationIntentType = value = TryGetAttribute(DicomTags.PresentationIntentType, out attribute) ? attribute.ToString() : String.Empty;
+		        return value;
+		    }
 		}
 
 		#endregion
@@ -477,48 +167,33 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		/// </remarks>
 		public virtual int NumberOfFrames
 		{
-			get { return Math.Max(this[DicomTags.NumberOfFrames].GetInt32(0, 1), 1); }
+		    get
+		    {
+		        var value = _cache.NumberOfFrames;
+		        if (value.HasValue) return value.Value;
+		        
+                DicomAttribute attribute;
+		        _cache.NumberOfFrames = value = Math.Max(TryGetAttribute(DicomTags.NumberOfFrames, out attribute) ? attribute.GetInt32(0, 1) : 1, 1);
+		        return value.Value;
+		    }
 		}
 
 		#endregion
 
-		#region Mammography Image Module / DX Anatomy Imaged Module / Intra-Oral Image Module / Ocular Region Imaged Module
-
-		/// <summary>
-		/// Gets the Image Laterality.
-		/// </summary>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual string ImageLaterality
-		{
-			get { return this[DicomTags.ImageLaterality].GetString(0, null) ?? string.Empty; }
-		}
-
-		#endregion
-
-		#region CR Series Module / DX Positioning Module
-
-		/// <summary>
-		/// Gets the View Position.
-		/// </summary>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual string ViewPosition
-		{
-			get { return this[DicomTags.ViewPosition].GetString(0, null) ?? string.Empty; }
-		}
-
-		#endregion
-
-		/// <summary>
-		/// Gets pixel data in normalized form.
-		/// </summary>
-		/// <remarks>
-		/// See the comments for <see cref="Frame"/> for an explanation of 'normalized' pixel data.
-		/// </remarks>
-		[Obsolete("This method has been deprecated and will be removed in the future. Use equivalent property on Frame class instead.")]
-		public virtual byte[] GetNormalizedPixelData()
-		{
-			return Frames[1].GetNormalizedPixelData();
-		}
+        /// <summary>
+        /// Resets any values that were cached after reading from <see cref="Sop.DataSource"/>.
+        /// </summary>
+        /// <remarks>
+        /// Many of the property values are cached for performance reasons, as they generally never change, 
+        /// and parsing values from the image header can be expensive, especially when done repeatedly.
+        /// </remarks>
+        public override void ResetCache()
+        {
+            base.ResetCache();
+            _cache = new CachedValues();
+            foreach (var frame in Frames)
+                frame.ResetCache();
+        }
 
 		protected override IEnumerable<TransferSyntax> GetAllowableTransferSyntaxes()
 		{
@@ -583,7 +258,12 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 		public bool IsMultiframe
 		{
 			// we include a check for the functional groups since an "enhanced" image could have only one frame, but have important data encoded in functional groups anyway
-			get { return NumberOfFrames > 1 || new MultiFrameFunctionalGroupsModuleIod(DataSource).HasValues(); }
+			get
+			{
+			    if (!_isMultiframe.HasValue)
+                    _isMultiframe =  NumberOfFrames > 1 || new MultiFrameFunctionalGroupsModuleIod(DataSource).HasValues();
+			    return _isMultiframe.Value;
+			}
 		}
 
 		/// <summary>

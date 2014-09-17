@@ -57,7 +57,7 @@ namespace ClearCanvas.Ris.Client
 				summaryComponent.Name = query;
 			}
 
-			var exitCode = ApplicationComponent.LaunchAsDialog(_desktopWindow, summaryComponent, "Procedure Types");
+			var exitCode = ApplicationComponent.LaunchAsDialog(_desktopWindow, summaryComponent, SR.TitleProcedureTypes);
 			if (exitCode == ApplicationComponentExitCode.Accepted)
 			{
 				result = (ProcedureTypeSummary)summaryComponent.SummarySelection.Item;

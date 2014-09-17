@@ -16,6 +16,7 @@ contact ClearCanvas, Inc. at info@clearcanvas.ca
 		<script type="text/javascript" src="../js/jsml.js"></script>
 		<script type="text/javascript" src="../js/ui.js"></script>
 		<script type="text/javascript" src="../js/ris.js"></script>
+		<script type="text/javascript" src="../js/SR.js"></script>
 		<script type="text/javascript" src="../js/preview.js"></script>
 		<script type="text/javascript" >
 			var imagePath = "../images";
@@ -24,93 +25,99 @@ contact ClearCanvas, Inc. at info@clearcanvas.ca
 			{
 				if(!Ris)
 					return;
-
-				try
-				{
-					var queueItem = Ris.getHealthcareContext();
-					if (queueItem == null)
-					{
-						Field.setValue($("myForm"), "");
-						return;
-					}
-
-					Field.setValue($("peer"), queueItem.Peer);
-					Field.setValue($("direction"), queueItem.Direction.Value);
-					Field.setValue($("type"), queueItem.MessageType);
-					Field.setValue($("version"), queueItem.MessageVersion.Value);
-					Field.setValue($("status"), queueItem.StatusCode.Value);
-					Field.setValue($("created"), Ris.formatDateTime(queueItem.CreationTime));
-					Field.setValue($("processed"), Ris.formatDateTime(queueItem.UpdateTime));
-				
-					Field.show($("error"), queueItem.StatusCode.Value === "Error");
-					Field.setValue($("errorMessage"), queueItem.StatusDescription);
 					
-					Field.setPreFormattedValue($("messagePlain"), queueItem.MessageText);
+				Label.setValues({
+					labelMessageDetails: SR.HL7Queue.MessageDetails,
+					labelPeer: SR.HL7Queue.Peer,
+					labelDirection: SR.HL7Queue.Direction,
+					labelType: SR.HL7Queue.Type,
+					labelVersion: SR.HL7Queue.Version,
+					labelStatus: SR.HL7Queue.Status,
+					labelCreated: SR.HL7Queue.Created,
+					labelProcessed: SR.HL7Queue.Processed,
+					labelErrorDetails: SR.HL7Queue.ErrorDetails,
+					labelMessageText: SR.HL7Queue.MessageText,
+					labelShowHideClipboardVersion: SR.HL7Queue.ShowHideClipboardVersion				
+				});
 
-					if(queueItem.MessageFormat.Code === "Er7")
+				var queueItem = Ris.getHealthcareContext();
+				if (queueItem == null)
+				{
+					Field.setValue($("myForm"), "");
+					return;
+				}
+
+				Field.setValue($("peer"), queueItem.Peer);
+				Field.setValue($("direction"), queueItem.Direction.Value);
+				Field.setValue($("type"), queueItem.MessageType);
+				Field.setValue($("version"), queueItem.MessageVersion.Value);
+				Field.setValue($("status"), queueItem.StatusCode.Value);
+				Field.setValue($("created"), Ris.formatDateTime(queueItem.CreationTime));
+				Field.setValue($("processed"), Ris.formatDateTime(queueItem.UpdateTime));
+			
+				Field.show($("error"), queueItem.StatusCode.Value === "Error");
+				Field.setValue($("errorMessage"), queueItem.StatusDescription);
+				
+				Field.setPreFormattedValue($("messagePlain"), queueItem.MessageText);
+
+				if(queueItem.MessageFormat.Code === "Er7")
+				{
+					Field.show($("messagePlain"), false);
+					 
+					var text = String.replaceLineBreak(queueItem.MessageText);
+					var segments = text.split("<br>");
+					
+					var segmentList = document.createElement("ul");
+					segmentList.className = "hl7Message";
+					$("messageTreeContainer").appendChild(segmentList);
+
+					for(var i = 0; i < segments.length; i++)
 					{
-						Field.show($("messagePlain"), false);
-						 
-						var text = String.replaceLineBreak(queueItem.MessageText);
-						var segments = text.split("<br>");
+						var segmentItem = document.createElement("li");
+						segmentItem.className = "collapsedSegmentItem";
+						segmentList.appendChild(segmentItem);
+
+						var segmentName = document.createElement("div");
+						segmentName.className = "segmentName";
+						segmentItem.appendChild(segmentName);
+
+						var allComponents = document.createElement("div");
+						allComponents.className = "allComponents";
+						segmentItem.appendChild(allComponents);
+
+						var componentList = document.createElement("ol");
+						componentList.className = "componentList";
+						segmentItem.appendChild(componentList);
 						
-						var segmentList = document.createElement("ul");
-						segmentList.className = "hl7Message";
-						$("messageTreeContainer").appendChild(segmentList);
-
-						for(var i = 0; i < segments.length; i++)
+						var othis = segmentItem;
+						segmentItem.onclick = function()
 						{
-							var segmentItem = document.createElement("li");
-							segmentItem.className = "collapsedSegmentItem";
-							segmentList.appendChild(segmentItem);
-
-							var segmentName = document.createElement("div");
-							segmentName.className = "segmentName";
-							segmentItem.appendChild(segmentName);
-
-							var allComponents = document.createElement("div");
-							allComponents.className = "allComponents";
-							segmentItem.appendChild(allComponents);
-
-							var componentList = document.createElement("ol");
-							componentList.className = "componentList";
-							segmentItem.appendChild(componentList);
-							
-							var othis = segmentItem;
-							segmentItem.onclick = function()
-							{
-								this.className = this.className === "collapsedSegmentItem" ? "expandedSegmentItem" : "collapsedSegmentItem";
-							}
-							
-							var components = segments[i].split("|");
-							segmentName.innerText = components[0];
-							var segmentText = "";
-							if(components[0] === "MSH")
-							{
-								components.splice(1,0,"|");
-							}
-							for(var j = 1; j < components.length; j++)
-							{
-								var componentItem = document.createElement("li");
-								componentList.appendChild(componentItem);
-								componentItem.innerHTML = components[j] || "<span class='emptycomponent'>-</span>";
-								if(components[j] !== "|")
-								{
-									segmentText = segmentText + "<div class='separator'>|</div>" + components[j];
-								}
-							}
-							allComponents.innerHTML = segmentText;
+							this.className = this.className === "collapsedSegmentItem" ? "expandedSegmentItem" : "collapsedSegmentItem";
 						}
-					}
-					else
-					{
-						Field.show($("messageTree"), false);
+						
+						var components = segments[i].split("|");
+						segmentName.innerText = components[0];
+						var segmentText = "";
+						if(components[0] === "MSH")
+						{
+							components.splice(1,0,"|");
+						}
+						for(var j = 1; j < components.length; j++)
+						{
+							var componentItem = document.createElement("li");
+							componentList.appendChild(componentItem);
+							componentItem.innerHTML = components[j] || "<span class='emptycomponent'>-</span>";
+							if(components[j] !== "|")
+							{
+								segmentText = segmentText + "<div class='separator'>|</div>" + components[j];
+							}
+						}
+						allComponents.innerHTML = segmentText;
 					}
 				}
-				catch(e)
+				else
 				{
-					var message = "Failed to load editor page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
-					Field.setValue($("myForm"), message);
+					Field.show($("messageTree"), false);
 				}
 			}
 			
@@ -176,40 +183,40 @@ contact ClearCanvas, Inc. at info@clearcanvas.ca
 	</head>
 	<body onload="javascript: onBodyLoad()">
 		<form id="myForm">
-			<p class="sectionheading">Message Details</p>
+			<p class="sectionheading" id="labelMessageDetails">Message Details</p>
 			<table border="0" class="fixedTableLayout" width="660px" id="orderTable">
 				<tr>
-					<td class="propertyname" width="80x">Peer</td>
+					<td class="propertyname" width="80x" id="labelMessageDetails">Peer</td>
 					<td class="propertyvalue" width="200px"><div id="peer"/></td>
-					<td class="propertyname" width="80px">Direction</td>
+					<td class="propertyname" width="80px" id="labelMessageDetails">Direction</td>
 					<td class="propertyvalue"><div id="direction" /></td>
 				</tr>
 				<tr>
-					<td class="propertyname">Type</td>
+					<td class="propertyname" id="labelType">Type</td>
 					<td class="propertyvalue"><div id="type" /></td>
-					<td class="propertyname">Version</td>
+					<td class="propertyname" id="labelVersion">Version</td>
 					<td class="propertyvalue"><div id="version"/></td>
 				</tr>
 				<tr>
-					<td class="propertyname">Status</td>
+					<td class="propertyname" id="labelStatus">Status</td>
 					<td class="propertyvalue"><div id="status"/></td>
 				</tr>
 				<tr>
-					<td class="propertyname">Created</td>
+					<td class="propertyname" id="labelCreated">Created</td>
 					<td class="propertyvalue"><div id="created"/></td>
-					<td class="propertyname">Processed</td>
+					<td class="propertyname" id="labelProcessed">Processed</td>
 					<td class="propertyvalue"><div id="processed"/></td>
 				</tr>
 			</table>
 
 			<div id="error">
-				<p class="sectionheading">Error Detail</p>
+				<p class="sectionheading" id="labelErrorDetails">Error Details</p>
 				<div id="errorMessage"></div>
 			</div>
-			<p class="sectionheading">Message Text</p>
+			<p class="sectionheading" id="labelMessageText">Message Text</p>
 			<div id="messageTree" class="message">
 				<div id="messageTreeContainer"></div>
-				<div id="copyToClipboard" onclick="javascript: showClipboard()">Show/hide clipboard-friendly version.</div>
+				<div id="copyToClipboard" onclick="javascript: showClipboard()" id="labelShowHideClipboardVersion">Show/hide clipboard-friendly version.</div>
 			</div>
 			<div id="messagePlain" class="message"></div>
 		</form>
