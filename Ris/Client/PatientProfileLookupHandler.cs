@@ -62,7 +62,7 @@ namespace ClearCanvas.Ris.Client
 				summaryComponent.SearchString = query;
 			}
 
-			var exitCode = ApplicationComponent.LaunchAsDialog(_desktopWindow, summaryComponent, "Patients");
+			var exitCode = ApplicationComponent.LaunchAsDialog(_desktopWindow, summaryComponent, SR.TitlePatients);
 			if (exitCode == ApplicationComponentExitCode.Accepted)
 			{
 				result = (PatientProfileSummary)summaryComponent.SummarySelection.Item;

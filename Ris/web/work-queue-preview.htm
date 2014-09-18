@@ -7,6 +7,7 @@
 		<script type="text/javascript" src="js/jsml.js"></script>
 		<script type="text/javascript" src="js/ui.js"></script>
 		<script type="text/javascript" src="js/ris.js"></script>
+		<script type="text/javascript" src="js/SR.js"></script>
 		<script type="text/javascript" src="js/preview.js"></script>
 		<script type="text/javascript" src="js/layout.js"></script>
 		<script type="text/javascript" >
@@ -17,34 +18,40 @@
 
 				if(!Ris)
 					return;
+					
+				Label.setValues({
+					labelOverview: SR.WorkQueue.Overview,
+					labelCreationTime: SR.WorkQueue.CreationTime,
+					labelExpirationTime: SR.WorkQueue.ExpirationTime,
+					labelScheduledTime: SR.WorkQueue.ScheduledTime,
+					labelProcessedTime: SR.WorkQueue.ProcessedTime,
+					labelFailureCount: SR.WorkQueue.FailureCount,
+					labelUser: SR.WorkQueue.User,
+					labelFailureDescription: SR.WorkQueue.FailureDescription,
+					labelProperties: SR.WorkQueue.Properties,
+					labelName: SR.WorkQueue.Name,
+					labelValue: SR.WorkQueue.Value
+				});
 
-				try
+
+				var context = Ris.getHealthcareContext();
+				if (context == null)
 				{
-					var context = Ris.getHealthcareContext();
-					if (context == null)
-					{
-						Field.setValue($("myForm"), "");
-						return;
-					}
-
-					Field.setValue($("CreationTime"), Ris.formatDateTime(context.CreationTime));
-					Field.setValue($("ScheduledTime"), Ris.formatDateTime(context.ScheduledTime));
-					Field.setValue($("ExpirationTime"), Ris.formatDateTime(context.ExpirationTime));
-					Field.setValue($("ProcessedTime"), Ris.formatDateTime(context.ProcessedTime));
-					Field.setValue($("User"), context.User);
-					Field.setValue($("Type"), context.Type);
-					Field.setValue($("Status"), context.Status.Value);
-					Field.setValue($("FailureCount"), context.FailureCount);
-					Field.setValue($("FailureDescription"), context.FailureDescription);
-
-					createExtendedPropertiesTable($("extendedPropertiesTable"), context.ExtendedProperties);
+					Field.setValue($("myForm"), "");
+					return;
 				}
-				catch(e)
-				{
-					var message = "Failed to load editor page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
-					Field.setValue($("myForm"), message);
-				}
-				
+
+				Field.setValue($("CreationTime"), Ris.formatDateTime(context.CreationTime));
+				Field.setValue($("ScheduledTime"), Ris.formatDateTime(context.ScheduledTime));
+				Field.setValue($("ExpirationTime"), Ris.formatDateTime(context.ExpirationTime));
+				Field.setValue($("ProcessedTime"), Ris.formatDateTime(context.ProcessedTime));
+				Field.setValue($("User"), context.User);
+				Field.setValue($("Type"), context.Type);
+				Field.setValue($("Status"), context.Status.Value);
+				Field.setValue($("FailureCount"), context.FailureCount);
+				Field.setValue($("FailureDescription"), context.FailureDescription);
+
+				createExtendedPropertiesTable($("extendedPropertiesTable"), context.ExtendedProperties);
 			}
 
 			function createExtendedPropertiesTable(htmlTable, extendedProperties)
@@ -92,37 +99,37 @@
 				</tr>
 			</table>
 
-			<p class="sectionheading">Overview</p>
+			<p class="sectionheading" id="labelOverview">Overview</p>
 			<table width="100%" border="0">
 				<tr>
-					<td width="120" class="propertyname">Creation Time</td>
+					<td width="120" class="propertyname" id="labelCreationTime">Creation Time</td>
 					<td width="200"><div id="CreationTime"/></td>
-					<td width="120" class="propertyname">Expiration Time</td>
+					<td width="120" class="propertyname" id="labelExpirationTime">Expiration Time</td>
 					<td width="200"><div id="ExpirationTime"/></td>
 				</tr>
 				<tr>
-					<td width="120" class="propertyname">Scheduled Time</td>
+					<td width="120" class="propertyname" id="labelScheduledTime">Scheduled Time</td>
 					<td width="200"><div id="ScheduledTime"/></td>
-					<td width="120" class="propertyname">Processed Time</td>
+					<td width="120" class="propertyname" id="labelProcessedTime">Processed Time</td>
 					<td width="200"><div id="ProcessedTime"/></td>
 				</tr>
 				<tr>
-					<td width="120" class="propertyname">Failure Count</td>
+					<td width="120" class="propertyname" id="labelFailureCount">Failure Count</td>
 					<td width="200"><div id="FailureCount"/></td>
-					<td width="120" class="propertyname">User</td>
+					<td width="120" class="propertyname" id="labelUser">User</td>
 					<td width="200"><div id="User"/></td>
 				</tr>
 				<tr>
-					<td width="120" class="propertyname">Failure Description</td>
+					<td width="120" class="propertyname" id="labelFailureDescription">Failure Description</td>
 					<td width="200" colspan=3><div id="FailureDescription"/></td>
 				</tr>
 			</table>
 
-			<p class="sectionheading">Properties</p>
+			<p class="sectionheading" id="labelProperties">Properties</p>
 			<table border="0" id="extendedPropertiesTable">
 				<tr class="tableheading">
-					<td>Name</td>
-					<td>Value</td>
+					<td id="labelName">Name</td>
+					<td id="labelValue">Value</td>
 				</tr>
 			</table>
 			

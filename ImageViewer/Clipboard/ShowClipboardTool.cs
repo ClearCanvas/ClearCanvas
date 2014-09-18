@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.ComponentModel;
 using ClearCanvas.Common;
 using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
@@ -63,6 +64,12 @@ namespace ClearCanvas.ImageViewer.Clipboard
 			public IDesktopWindow DesktopWindow
 			{
 				get { return _realContext.DesktopWindow; }
+			}
+
+			public event CancelEventHandler ViewerClosing
+			{
+				add { _realContext.ViewerClosing += value; }
+				remove { _realContext.ViewerClosing -= value; }
 			}
 
 			#endregion

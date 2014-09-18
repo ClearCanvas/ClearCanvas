@@ -32,8 +32,7 @@ namespace ClearCanvas.ImageServer.Services.Streaming.ImageStreaming.Handlers
 {
     class StudyStorageCache
     {
-		private TimeSpan _retentionTime = ImageStreamingServerSettings.Default.CacheRetentionWindow;
-
+		private static TimeSpan _retentionTime = ImageStreamingServerSettings.Default.CacheRetentionWindow;
         private readonly Cache _cache = HttpRuntime.Cache;
 
         public TimeSpan RetentionTime
@@ -44,25 +43,12 @@ namespace ClearCanvas.ImageServer.Services.Streaming.ImageStreaming.Handlers
 
         public void Insert(StudyStorageLocation storageLocation, string studyInstanceUid)
         {
-            lock (_cache)
-            {
-
-                _cache.Add(studyInstanceUid, storageLocation, null, Cache.NoAbsoluteExpiration, _retentionTime, CacheItemPriority.Normal, null);
-            }
+            _cache.Add(studyInstanceUid, storageLocation, null, Cache.NoAbsoluteExpiration, _retentionTime, CacheItemPriority.Normal, null);
         }
 
         public StudyStorageLocation Find(string studyInstanceUId)
         {
-            lock (_cache)
-            {
-                object cached = _cache.Get(studyInstanceUId);
-                if (cached != null)
-                {
-                    return cached as StudyStorageLocation;
-                }
-                else
-                    return null;
-            }
+            return _cache.Get(studyInstanceUId) as StudyStorageLocation;
         }
     }
 }

@@ -30,6 +30,7 @@ using ClearCanvas.Server.ShredHost;
 
 namespace ClearCanvas.ImageViewer.Shreds.DicomServer
 {
+    [ShredIsolation(Level = ShredIsolationLevel.None)]
     [ExtensionOf(typeof(ShredExtensionPoint))]
     public class DicomServerExtension : WcfShred
     {

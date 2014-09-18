@@ -24,15 +24,15 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using ClearCanvas.Common;
 using ClearCanvas.Common.Serialization;
 using ClearCanvas.Common.Utilities;
+using ClearCanvas.Enterprise.Common;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.Enterprise.Core.Modelling;
 using ClearCanvas.Healthcare;
-using ClearCanvas.Enterprise.Common;
 using ClearCanvas.Ris.Application.Common;
-using ClearCanvas.Common;
-using System.Text.RegularExpressions;
 
 namespace ClearCanvas.Ris.Application.Services
 {
@@ -40,10 +40,14 @@ namespace ClearCanvas.Ris.Application.Services
 	{
 		public static PersonName[] ParsePersonNames(string query)
 		{
-			// define a term as anything starting with a letter, and followed by letters, hyphen (-) or apostrophe (')
-			// we allow hyphens for hyphenated surnames (wyatt-jones)
-			// allow apostrophe for names like O'Leary
-			var termDefinition = new Regex(@"\b[A-Za-z][A-Za-z'\-]*\b");
+			// define a person name as anything starting with a letter, and followed by letters or general punctuation
+			// (apostrophe and hyphens in particular, but without prejudice to any other punctuation which may be used in native names of other languages)
+			// examples:
+			// * O'Leary
+			// * Wyatt-Jones
+			// * Pérez
+			const string letter = @"\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Lm}\p{M}";
+			var termDefinition = new Regex(@"\b[" + letter + @"][" + letter + @"\p{P}]*\b");
 			var terms = ParseTerms(query, termDefinition);
 
 			var names = new List<PersonName>();
@@ -94,6 +98,7 @@ namespace ClearCanvas.Ris.Application.Services
 		where TSummary : DataContractBase
 	{
 		public delegate bool TestCriteriaSpecificityDelegate(TSearchCriteria[] where, int threshold);
+
 		public delegate IList<TDomainItem> DoQueryDelegate(TSearchCriteria[] where, SearchResultPage page);
 
 		private readonly Converter<TextQueryRequest, TSearchCriteria[]> _buildCriteriaCallback;
@@ -104,10 +109,7 @@ namespace ClearCanvas.Ris.Application.Services
 		/// <summary>
 		/// Protected constructor for subclasses.
 		/// </summary>
-		protected TextQueryHelper()
-		{
-
-		}
+		protected TextQueryHelper() {}
 
 		/// <summary>
 		/// Public constructor allows direct use of this class without the need to create a subclass.
@@ -139,9 +141,9 @@ namespace ClearCanvas.Ris.Application.Services
 			var where = BuildCriteria(request);
 
 			// augment criteria to exclude de-activated items if specified
-			if (!request.IncludeDeactivated && AttributeUtils.HasAttribute<DeactivationFlagAttribute>(typeof(TDomainItem)))
+			if (!request.IncludeDeactivated && AttributeUtils.HasAttribute<DeactivationFlagAttribute>(typeof (TDomainItem)))
 			{
-				var propertyName = AttributeUtils.GetAttribute<DeactivationFlagAttribute>(typeof(TDomainItem)).PropertyName;
+				var propertyName = AttributeUtils.GetAttribute<DeactivationFlagAttribute>(typeof (TDomainItem)).PropertyName;
 				var c = new SearchCondition<bool>(propertyName);
 				c.EqualTo(false);
 				CollectionUtils.ForEach(where, w => w.SetSubCriteria(c));
@@ -159,7 +161,7 @@ namespace ClearCanvas.Ris.Application.Services
 			var matches = DoQuery(where, request.Page);
 
 			return new TextQueryResponse<TSummary>(false,
-				CollectionUtils.Map(matches, (TDomainItem entity) => AssembleSummary(entity)));
+			                                       CollectionUtils.Map(matches, (TDomainItem entity) => AssembleSummary(entity)));
 		}
 
 		protected virtual bool ValidateRequest(TextQueryRequest request)
@@ -195,7 +197,6 @@ namespace ClearCanvas.Ris.Application.Services
 				throw new NotImplementedException("Method must be overridden or a delegate supplied.");
 			return _summaryAssembler(domainItem);
 		}
-
 
 		/// <summary>
 		/// Applies specified string value to specified condition, if the value is non-empty, using partial matching.

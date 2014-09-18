@@ -24,12 +24,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Xml;
 using System.Xml.Serialization;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Enterprise.Core;
+using ClearCanvas.ImageServer.Common.StudyHistory;
 using ClearCanvas.ImageServer.Common.Utilities;
 using ClearCanvas.ImageServer.Core.Data;
 using ClearCanvas.ImageServer.Model;
@@ -98,42 +97,18 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.WebDeleteStudy.Extensions.L
         #endregion
     }
 
-    public class SeriesDeletionChangeLog
+	[ImageServerStudyHistoryType("DC4991D3-457E-4753-913B-DC90654B07F3")]
+    public class SeriesDeletionChangeLog : ImageServerStudyHistory
     {
-        private DateTime _timeStamp;
-        private string _userId;
-        private string _userName;
-        private string _reason;
-        private List<SeriesInformation> _seriesInfo;
-        
-        public DateTime TimeStamp
-        {
-            get { return _timeStamp; }
-            set { _timeStamp = value; }
-        }
+		public DateTime TimeStamp { get; set; }
 
-        public string UserId
-        {
-            get { return _userId; }
-            set { _userId = value; }
-        }
+		public string UserId { get; set; }
 
-        public string Reason
-        {
-            get { return _reason; }
-            set { _reason = value; }
-        }
-        [XmlArray("DeletedSeries")]
-        public List<SeriesInformation> Series
-        {
-            get { return _seriesInfo; }
-            set { _seriesInfo = value; }
-        }
+		public string Reason { get; set; }
 
-        public string UserName
-        {
-            get { return _userName; }
-            set { _userName = value; }
-        }
+		[XmlArray("DeletedSeries")]
+		public List<SeriesInformation> Series { get; set; }
+
+		public string UserName { get; set; }
     }
 }

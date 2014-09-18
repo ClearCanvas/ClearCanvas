@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ClearCanvas.Desktop.Actions
 {
@@ -47,10 +48,7 @@ namespace ClearCanvas.Desktop.Actions
         /// </summary>
         public ActionSet(IEnumerable<IAction> actions)
         {
-            _actions = new List<IAction>();
-
-            if(actions != null)
-                _actions.AddRange(actions);
+            _actions =  new List<IAction>(actions ?? new IAction[0]);
         }
 
         #region IActionSet members
@@ -60,13 +58,7 @@ namespace ClearCanvas.Desktop.Actions
         /// </summary>
         public IActionSet Select(Predicate<IAction> predicate)
         {
-            List<IAction> subset = new List<IAction>();
-            foreach (IAction action in _actions)
-            {
-                if (predicate(action))
-                    subset.Add(action);
-            }
-            return new ActionSet(subset);
+            return new ActionSet(_actions.Where(a => predicate(a)));
         }
 
         /// <summary>
@@ -82,9 +74,14 @@ namespace ClearCanvas.Desktop.Actions
         /// </summary>
         public IActionSet Union(IActionSet other)
         {
-            List<IAction> union = new List<IAction>();
-            union.AddRange(this);
-            union.AddRange(other);
+            //This is done for reasons of efficiency. Populating an array of know size is way faster
+            //than populating a list that keeps having to adjust its size.
+            var union = new IAction[other.Count + Count];
+            _actions.CopyTo(union);
+            int index = Count;
+            foreach (var action in other)
+                union[index++] = action;
+            
             return new ActionSet(union);
         }
 

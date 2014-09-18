@@ -112,9 +112,222 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="_radioToBeReported.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="_radioToBeReported.Location" type="System.Drawing.Point, System.Drawing">
+    <value>34, 23</value>
+  </data>
+  <data name="_radioToBeReported.Size" type="System.Drawing.Size, System.Drawing">
+    <value>119, 17</value>
+  </data>
+  <data name="_radioToBeReported.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="_radioToBeReported.Text" xml:space="preserve">
+    <value>Send to be reported</value>
+  </data>
+  <data name="&gt;&gt;_radioToBeReported.Name" xml:space="preserve">
+    <value>_radioToBeReported</value>
+  </data>
+  <data name="&gt;&gt;_radioToBeReported.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_radioToBeReported.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_radioToBeReported.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="_radioPasteReport.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_radioPasteReport.Location" type="System.Drawing.Point, System.Drawing">
+    <value>34, 49</value>
+  </data>
+  <data name="_radioPasteReport.Size" type="System.Drawing.Size, System.Drawing">
+    <value>135, 17</value>
+  </data>
+  <data name="_radioPasteReport.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="_radioPasteReport.Text" xml:space="preserve">
+    <value>Enter transcribed report</value>
+  </data>
+  <data name="&gt;&gt;_radioPasteReport.Name" xml:space="preserve">
+    <value>_radioPasteReport</value>
+  </data>
+  <data name="&gt;&gt;_radioPasteReport.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_radioPasteReport.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_radioPasteReport.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="_reportText.LabelText" xml:space="preserve">
+    <value>Report</value>
+  </data>
+  <data name="_reportText.Location" type="System.Drawing.Point, System.Drawing">
+    <value>34, 81</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="_reportText.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_reportText.Size" type="System.Drawing.Size, System.Drawing">
+    <value>442, 235</value>
+  </data>
+  <data name="_reportText.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;_reportText.Name" xml:space="preserve">
+    <value>_reportText</value>
+  </data>
+  <data name="&gt;&gt;_reportText.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.RichTextField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_reportText.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_reportText.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="_okButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>320, 445</value>
+  </data>
+  <data name="_okButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="_okButton.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="_okButton.Text" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="&gt;&gt;_okButton.Name" xml:space="preserve">
+    <value>_okButton</value>
+  </data>
+  <data name="&gt;&gt;_okButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_okButton.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_okButton.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_cancelButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>401, 445</value>
+  </data>
+  <data name="_cancelButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="_cancelButton.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="_cancelButton.Text" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="&gt;&gt;_cancelButton.Name" xml:space="preserve">
+    <value>_cancelButton</value>
+  </data>
+  <data name="&gt;&gt;_cancelButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_cancelButton.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_cancelButton.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_transcriptionistLookup.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_transcriptionistLookup.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="_transcriptionistLookup.LabelText" xml:space="preserve">
+    <value>Transcribed by</value>
+  </data>
+  <data name="_transcriptionistLookup.Location" type="System.Drawing.Point, System.Drawing">
+    <value>34, 387</value>
+  </data>
+  <data name="_transcriptionistLookup.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="_transcriptionistLookup.Size" type="System.Drawing.Size, System.Drawing">
+    <value>442, 43</value>
+  </data>
+  <data name="_transcriptionistLookup.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;_transcriptionistLookup.Name" xml:space="preserve">
+    <value>_transcriptionistLookup</value>
+  </data>
+  <data name="&gt;&gt;_transcriptionistLookup.Type" xml:space="preserve">
+    <value>ClearCanvas.Ris.Client.View.WinForms.LookupField, ClearCanvas.Ris.Client.View.WinForms, Version=1.0.5246.18702, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_transcriptionistLookup.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_transcriptionistLookup.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="_interpreterLookup.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_interpreterLookup.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="_interpreterLookup.LabelText" xml:space="preserve">
+    <value>Interpreted by</value>
+  </data>
+  <data name="_interpreterLookup.Location" type="System.Drawing.Point, System.Drawing">
+    <value>34, 329</value>
+  </data>
+  <data name="_interpreterLookup.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="_interpreterLookup.Size" type="System.Drawing.Size, System.Drawing">
+    <value>442, 43</value>
+  </data>
+  <data name="_interpreterLookup.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;_interpreterLookup.Name" xml:space="preserve">
+    <value>_interpreterLookup</value>
+  </data>
+  <data name="&gt;&gt;_interpreterLookup.Type" xml:space="preserve">
+    <value>ClearCanvas.Ris.Client.View.WinForms.LookupField, ClearCanvas.Ris.Client.View.WinForms, Version=1.0.5246.18702, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_interpreterLookup.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_interpreterLookup.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
+    <value>513, 488</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>DowntimeReportEntryComponentControl</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.ApplicationComponentUserControl, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
 </root>

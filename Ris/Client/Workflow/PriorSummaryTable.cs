@@ -32,14 +32,14 @@ namespace ClearCanvas.Ris.Client.Workflow
     {
         public PriorSummaryTable()
         {
-            this.Columns.Add(new TableColumn<PriorProcedureSummary, string>("Accession Number",
+            this.Columns.Add(new TableColumn<PriorProcedureSummary, string>(SR.ColumnAccessionNumber,
                 delegate(PriorProcedureSummary item) { return AccessionFormat.Format(item.AccessionNumber); }));
-            this.Columns.Add(new TableColumn<PriorProcedureSummary, string>("Procedure",
+            this.Columns.Add(new TableColumn<PriorProcedureSummary, string>(SR.ColumnProcedure,
                 delegate(PriorProcedureSummary item) { return ProcedureFormat.Format(item); }));
 
-            this.Columns.Add(new DateTableColumn<PriorProcedureSummary>("Performed Date",
+            this.Columns.Add(new DateTableColumn<PriorProcedureSummary>(SR.ColumnPerformedDate,
                 delegate(PriorProcedureSummary item) { return item.PerformedDate.Value; }));
-            this.Columns.Add(new TableColumn<PriorProcedureSummary, string>("Report Status",
+            this.Columns.Add(new TableColumn<PriorProcedureSummary, string>(SR.ColumnReportStatus,
                 delegate(PriorProcedureSummary item) { return item.ReportStatus.Value; }));
         }
     }

@@ -184,6 +184,15 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Con
         protected global::ClearCanvas.ImageServer.Web.Common.WebControls.UI.TextBox PatientBirthDate;
         
         /// <summary>
+        /// PatientBirthDateCalendarExtender control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::ClearCanvas.ImageServer.Web.Common.WebControls.UI.CalendarExtender PatientBirthDateCalendarExtender;
+        
+        /// <summary>
         /// PatientBirthDateHelp control.
         /// </summary>
         /// <remarks>

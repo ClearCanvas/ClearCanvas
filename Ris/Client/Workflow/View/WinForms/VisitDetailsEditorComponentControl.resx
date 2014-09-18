@@ -112,9 +112,519 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="_visitNumber.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_visitNumber.LabelText" xml:space="preserve">
+    <value>Visit Number</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="_visitNumber.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 2</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="_visitNumber.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_visitNumber.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
+    <value />
+  </data>
+  <data name="_visitNumber.Size" type="System.Drawing.Size, System.Drawing">
+    <value>140, 40</value>
+  </data>
+  <data name="_visitNumber.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="_visitNumber.ToolTip" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="&gt;&gt;_visitNumber.Name" xml:space="preserve">
+    <value>_visitNumber</value>
+  </data>
+  <data name="&gt;&gt;_visitNumber.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.TextField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_visitNumber.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_visitNumber.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="_visitNumberAssigningAuthority.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_visitNumberAssigningAuthority.LabelText" xml:space="preserve">
+    <value>Information Authority</value>
+  </data>
+  <data name="_visitNumberAssigningAuthority.Location" type="System.Drawing.Point, System.Drawing">
+    <value>159, 2</value>
+  </data>
+  <data name="_visitNumberAssigningAuthority.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_visitNumberAssigningAuthority.Size" type="System.Drawing.Size, System.Drawing">
+    <value>140, 41</value>
+  </data>
+  <data name="_visitNumberAssigningAuthority.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;_visitNumberAssigningAuthority.Name" xml:space="preserve">
+    <value>_visitNumberAssigningAuthority</value>
+  </data>
+  <data name="&gt;&gt;_visitNumberAssigningAuthority.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.ComboBoxField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_visitNumberAssigningAuthority.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_visitNumberAssigningAuthority.ZOrder" xml:space="preserve">
+    <value>12</value>
+  </data>
+  <data name="_admitDateTime.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_admitDateTime.LabelText" xml:space="preserve">
+    <value>Admit Date/Time</value>
+  </data>
+  <data name="_admitDateTime.Location" type="System.Drawing.Point, System.Drawing">
+    <value>159, 91</value>
+  </data>
+  <data name="_admitDateTime.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_admitDateTime.Size" type="System.Drawing.Size, System.Drawing">
+    <value>140, 40</value>
+  </data>
+  <data name="_admitDateTime.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;_admitDateTime.Name" xml:space="preserve">
+    <value>_admitDateTime</value>
+  </data>
+  <data name="&gt;&gt;_admitDateTime.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.DateTimeField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_admitDateTime.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_admitDateTime.ZOrder" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="_dischargeDateTime.LabelText" xml:space="preserve">
+    <value>Discharge Date/Time</value>
+  </data>
+  <data name="_dischargeDateTime.Location" type="System.Drawing.Point, System.Drawing">
+    <value>313, 91</value>
+  </data>
+  <data name="_dischargeDateTime.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_dischargeDateTime.Size" type="System.Drawing.Size, System.Drawing">
+    <value>140, 40</value>
+  </data>
+  <data name="_dischargeDateTime.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="&gt;&gt;_dischargeDateTime.Name" xml:space="preserve">
+    <value>_dischargeDateTime</value>
+  </data>
+  <data name="&gt;&gt;_dischargeDateTime.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.DateTimeField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_dischargeDateTime.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_dischargeDateTime.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="_dischargeDisposition.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_dischargeDisposition.LabelText" xml:space="preserve">
+    <value>Discharge Disposition</value>
+  </data>
+  <data name="_dischargeDisposition.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 221</value>
+  </data>
+  <data name="_dischargeDisposition.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_dischargeDisposition.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
+    <value />
+  </data>
+  <data name="_dischargeDisposition.Size" type="System.Drawing.Size, System.Drawing">
+    <value>448, 40</value>
+  </data>
+  <data name="_dischargeDisposition.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="_dischargeDisposition.ToolTip" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="&gt;&gt;_dischargeDisposition.Name" xml:space="preserve">
+    <value>_dischargeDisposition</value>
+  </data>
+  <data name="&gt;&gt;_dischargeDisposition.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.TextField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_dischargeDisposition.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_dischargeDisposition.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="_preadmitNumber.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_preadmitNumber.LabelText" xml:space="preserve">
+    <value>Pre-Admit Number</value>
+  </data>
+  <data name="_preadmitNumber.Location" type="System.Drawing.Point, System.Drawing">
+    <value>313, 3</value>
+  </data>
+  <data name="_preadmitNumber.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_preadmitNumber.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
+    <value />
+  </data>
+  <data name="_preadmitNumber.Size" type="System.Drawing.Size, System.Drawing">
+    <value>140, 40</value>
+  </data>
+  <data name="_preadmitNumber.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="_preadmitNumber.ToolTip" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="&gt;&gt;_preadmitNumber.Name" xml:space="preserve">
+    <value>_preadmitNumber</value>
+  </data>
+  <data name="&gt;&gt;_preadmitNumber.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.TextField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_preadmitNumber.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_preadmitNumber.ZOrder" xml:space="preserve">
+    <value>13</value>
+  </data>
+  <data name="_vip.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_vip.Location" type="System.Drawing.Point, System.Drawing">
+    <value>328, 268</value>
+  </data>
+  <data name="_vip.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 16, 0, 0</value>
+  </data>
+  <data name="_vip.Size" type="System.Drawing.Size, System.Drawing">
+    <value>49, 33</value>
+  </data>
+  <data name="_vip.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
+  <data name="_vip.Text" xml:space="preserve">
+    <value>VIP?</value>
+  </data>
+  <data name="&gt;&gt;_vip.Name" xml:space="preserve">
+    <value>_vip</value>
+  </data>
+  <data name="&gt;&gt;_vip.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_vip.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_vip.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="_patientClass.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_patientClass.LabelText" xml:space="preserve">
+    <value>Patient Class</value>
+  </data>
+  <data name="_patientClass.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 46</value>
+  </data>
+  <data name="_patientClass.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_patientClass.Size" type="System.Drawing.Size, System.Drawing">
+    <value>140, 41</value>
+  </data>
+  <data name="_patientClass.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;_patientClass.Name" xml:space="preserve">
+    <value>_patientClass</value>
+  </data>
+  <data name="&gt;&gt;_patientClass.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.ComboBoxField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_patientClass.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_patientClass.ZOrder" xml:space="preserve">
+    <value>14</value>
+  </data>
+  <data name="_visitStatus.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_visitStatus.LabelText" xml:space="preserve">
+    <value>Visit Status</value>
+  </data>
+  <data name="_visitStatus.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 91</value>
+  </data>
+  <data name="_visitStatus.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_visitStatus.Size" type="System.Drawing.Size, System.Drawing">
+    <value>140, 41</value>
+  </data>
+  <data name="_visitStatus.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;_visitStatus.Name" xml:space="preserve">
+    <value>_visitStatus</value>
+  </data>
+  <data name="&gt;&gt;_visitStatus.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.ComboBoxField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_visitStatus.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_visitStatus.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="_patientType.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_patientType.LabelText" xml:space="preserve">
+    <value>Patient Type</value>
+  </data>
+  <data name="_patientType.Location" type="System.Drawing.Point, System.Drawing">
+    <value>159, 46</value>
+  </data>
+  <data name="_patientType.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_patientType.Size" type="System.Drawing.Size, System.Drawing">
+    <value>140, 41</value>
+  </data>
+  <data name="_patientType.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;_patientType.Name" xml:space="preserve">
+    <value>_patientType</value>
+  </data>
+  <data name="&gt;&gt;_patientType.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.ComboBoxField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_patientType.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_patientType.ZOrder" xml:space="preserve">
+    <value>15</value>
+  </data>
+  <data name="_ambulatoryStatus.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="_ambulatoryStatus.LabelText" xml:space="preserve">
+    <value>Ambulatory Status</value>
+  </data>
+  <data name="_ambulatoryStatus.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 265</value>
+  </data>
+  <data name="_ambulatoryStatus.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_ambulatoryStatus.Size" type="System.Drawing.Size, System.Drawing">
+    <value>313, 41</value>
+  </data>
+  <data name="_ambulatoryStatus.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="&gt;&gt;_ambulatoryStatus.Name" xml:space="preserve">
+    <value>_ambulatoryStatus</value>
+  </data>
+  <data name="&gt;&gt;_ambulatoryStatus.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.ComboBoxField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_ambulatoryStatus.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_ambulatoryStatus.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="_admissionType.LabelText" xml:space="preserve">
+    <value>Admission Type</value>
+  </data>
+  <data name="_admissionType.Location" type="System.Drawing.Point, System.Drawing">
+    <value>313, 46</value>
+  </data>
+  <data name="_admissionType.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_admissionType.Size" type="System.Drawing.Size, System.Drawing">
+    <value>140, 40</value>
+  </data>
+  <data name="_admissionType.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;_admissionType.Name" xml:space="preserve">
+    <value>_admissionType</value>
+  </data>
+  <data name="&gt;&gt;_admissionType.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.ComboBoxField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_admissionType.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_admissionType.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="_currentLocation.LabelText" xml:space="preserve">
+    <value>Current Location</value>
+  </data>
+  <data name="_currentLocation.Location" type="System.Drawing.Point, System.Drawing">
+    <value>159, 136</value>
+  </data>
+  <data name="_currentLocation.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_currentLocation.Size" type="System.Drawing.Size, System.Drawing">
+    <value>294, 41</value>
+  </data>
+  <data name="_currentLocation.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="&gt;&gt;_currentLocation.Name" xml:space="preserve">
+    <value>_currentLocation</value>
+  </data>
+  <data name="&gt;&gt;_currentLocation.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.ComboBoxField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_currentLocation.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_currentLocation.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="_facility.LabelText" xml:space="preserve">
+    <value>Facility</value>
+  </data>
+  <data name="_facility.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 136</value>
+  </data>
+  <data name="_facility.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_facility.Size" type="System.Drawing.Size, System.Drawing">
+    <value>140, 41</value>
+  </data>
+  <data name="_facility.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="&gt;&gt;_facility.Name" xml:space="preserve">
+    <value>_facility</value>
+  </data>
+  <data name="&gt;&gt;_facility.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.ComboBoxField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_facility.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_facility.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="_currentBed.LabelText" xml:space="preserve">
+    <value>Bed</value>
+  </data>
+  <data name="_currentBed.Location" type="System.Drawing.Point, System.Drawing">
+    <value>313, 181</value>
+  </data>
+  <data name="_currentBed.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_currentBed.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
+    <value />
+  </data>
+  <data name="_currentBed.Size" type="System.Drawing.Size, System.Drawing">
+    <value>140, 41</value>
+  </data>
+  <data name="_currentBed.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
+  <data name="_currentBed.ToolTip" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="&gt;&gt;_currentBed.Name" xml:space="preserve">
+    <value>_currentBed</value>
+  </data>
+  <data name="&gt;&gt;_currentBed.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.TextField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_currentBed.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_currentBed.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="_currentRoom.LabelText" xml:space="preserve">
+    <value>Room</value>
+  </data>
+  <data name="_currentRoom.Location" type="System.Drawing.Point, System.Drawing">
+    <value>159, 181</value>
+  </data>
+  <data name="_currentRoom.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="_currentRoom.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
+    <value />
+  </data>
+  <data name="_currentRoom.Size" type="System.Drawing.Size, System.Drawing">
+    <value>140, 41</value>
+  </data>
+  <data name="_currentRoom.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="_currentRoom.ToolTip" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="&gt;&gt;_currentRoom.Name" xml:space="preserve">
+    <value>_currentRoom</value>
+  </data>
+  <data name="&gt;&gt;_currentRoom.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.TextField, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_currentRoom.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_currentRoom.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
+    <value>476, 313</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>VisitDetailsEditorComponentControl</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.ApplicationComponentUserControl, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
 </root>

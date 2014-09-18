@@ -104,7 +104,7 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 			}
 		}
 
-		Rectangle IGdiBuffer.Bounds
+		public Rectangle Bounds
 		{
 			get { return new Rectangle(new Point(), _size); }
 		}

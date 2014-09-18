@@ -18,7 +18,10 @@ already.
 	  <not-equal test="$TransferSyntaxUid" refValue="1.2.840.10008.1.2.4.90" />
 	  <!-- JPEG 2000 Lossless/Lossy -->
 	  <not-equal test="$TransferSyntaxUid" refValue="1.2.840.10008.1.2.4.91" />
-	  
+
+		<!-- MR Spectroscopy SOP Class has no pixel data -->
+		<not-equal test="$SopClassUid" refValue="1.2.840.10008.5.1.4.1.1.4.2"/>
+
 	  <equal test="$BitsAllocated" refValue="8" />
 	  <not-equal test="$PhotometricInterpretation" refValue="PALETTE COLOR" />
 	  <or>

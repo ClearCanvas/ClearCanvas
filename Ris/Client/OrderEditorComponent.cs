@@ -259,15 +259,15 @@ namespace ClearCanvas.Ris.Client
 
 			// in "modify" mode, the Delete action is actually a Cancel action
 			if (_operatingContext.Mode == Mode.ModifyOrder)
-				_proceduresActionModel.Delete.Label = _proceduresActionModel.Delete.Tooltip = "Cancel";
+				_proceduresActionModel.Delete.Label = _proceduresActionModel.Delete.Tooltip = SR.TooltipCancel;
 
 
 			UpdateProcedureActionModel();
 
 			_recipientsTable = new Table<ResultRecipientDetail>();
-			_recipientsTable.Columns.Add(new TableColumn<ResultRecipientDetail, string>("Practitioner",
+			_recipientsTable.Columns.Add(new TableColumn<ResultRecipientDetail, string>(SR.ColumnPractitioner,
 				item => PersonNameFormat.Format(item.Practitioner.Name)));
-			_recipientsTable.Columns.Add(new TableColumn<ResultRecipientDetail, string>("Contact Point",
+			_recipientsTable.Columns.Add(new TableColumn<ResultRecipientDetail, string>(SR.ColumnContactPoint,
 				item => item.ContactPoint.Name));
 
 			_recipientsActionModel = new CrudActionModel(true, false, true);
@@ -798,7 +798,7 @@ namespace ClearCanvas.Ris.Client
 					_lateralityChoices,
 					_schedulingCodeChoices);
 
-				if (LaunchAsDialog(this.Host.DesktopWindow, procedureEditor, "Add Procedure")
+				if (LaunchAsDialog(this.Host.DesktopWindow, procedureEditor, SR.TitleAddProcedure)
 					== ApplicationComponentExitCode.Accepted)
 				{
 					_proceduresTable.Items.Add(procedureRequisition);
@@ -827,7 +827,7 @@ namespace ClearCanvas.Ris.Client
 
 				if (_selectedProcedures.Count == 1)
 				{
-					title = "Modify Procedure";
+					title = SR.TitleModifyProcedure;
 					editor = new ProcedureEditorComponent(
 						_selectedProcedures[0],
 						ProcedureEditorComponent.Mode.Edit,
@@ -839,7 +839,7 @@ namespace ClearCanvas.Ris.Client
 				}
 				else
 				{
-					title = "Modify Multiple Procedures";
+					title = SR.TitleModifyMultipleProcedures;
 					editor = new MultipleProceduresEditorComponent(
 						_selectedProcedures,
 						_facilityChoices,
@@ -1318,11 +1318,16 @@ namespace ClearCanvas.Ris.Client
 
 		private ProcedureRequisition NewProcedureRequisition(ProcedureTypeDetail procedureType)
 		{
-			var requisition = new ProcedureRequisition(procedureType != null ? procedureType.GetSummary() : null, _orderingFacility);
+			var performingFacility = _orderingFacility;
+
+			var requisition = new ProcedureRequisition(procedureType != null ? procedureType.GetSummary() : null, performingFacility);
 			if (procedureType != null)
 			{
 				requisition.ScheduledDuration = procedureType.DefaultDuration;
-				requisition.Modality = procedureType.DefaultModality;
+				if (procedureType.DefaultModality != null &&
+					procedureType.DefaultModality.Facility != null &&
+					procedureType.DefaultModality.Facility.Code == performingFacility.Code)
+					requisition.Modality = procedureType.DefaultModality;
 			}
 
 			// apply default values

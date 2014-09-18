@@ -32,8 +32,8 @@ using ClearCanvas.Ris.Application.Common.Admin.WorklistAdmin;
 
 namespace ClearCanvas.Ris.Client
 {
-	[MenuAction("launch", "folderexplorer-folders-contextmenu/Properties", "Launch")]
-	[Tooltip("launch", "Folder Properties")]
+	[MenuAction("launch", "folderexplorer-folders-contextmenu/MenuProperties", "Launch")]
+	[Tooltip("launch", "TooltipFolderProperties")]
 	[EnabledStateObserver("launch", "Enabled", "EnabledChanged")]
 	[ExtensionOf(typeof(FolderExplorerGroupToolExtensionPoint))]
 	public class WorklistPropertiesTool : Tool<IFolderExplorerGroupToolContext>
@@ -107,7 +107,7 @@ namespace ClearCanvas.Ris.Client
 					}
 				}
 
-				ApplicationComponent.LaunchAsDialog(this.Context.DesktopWindow, component, "Worklist Properties");
+				ApplicationComponent.LaunchAsDialog(this.Context.DesktopWindow, component, SR.TitleWorklistProperties);
 			}
 			catch (Exception e)
 			{

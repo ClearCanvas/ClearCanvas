@@ -23,6 +23,7 @@
 #endregion
 
 using System.Drawing;
+using System.Linq;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
 using ClearCanvas.ImageViewer.Graphics;
@@ -45,19 +46,18 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
 
 		public override void SetOverlayVisible(IPresentationImage image, bool visible)
 		{
-			ColorBarCompositeGraphic graphic = GetCompositeScaleGraphic(image, visible);
+            var graphic = GetCompositeColorBarGraphic(image, visible);
 			if (graphic != null)
 				graphic.Visible = visible;
 		}
 
-		//TODO (CR Sept 2010): GetCompositeColorBarGraphic?
-		private static ColorBarCompositeGraphic GetCompositeScaleGraphic(IPresentationImage image, bool createIfNull)
-		{
-			if (image is IColorMapProvider && image is IApplicationGraphicsProvider)
+        private static ColorBarCompositeGraphic GetCompositeColorBarGraphic(IPresentationImage image, bool createIfNull)
+        {
+            var applicationGraphicsProvider = image as IApplicationGraphicsProvider;
+            if (image is IColorMapProvider && applicationGraphicsProvider != null)
 			{
-				GraphicCollection applicationGraphics = ((IApplicationGraphicsProvider) image).ApplicationGraphics;
-				ColorBarCompositeGraphic graphic = (ColorBarCompositeGraphic) CollectionUtils.SelectFirst(applicationGraphics, g => g is ColorBarCompositeGraphic);
-
+                var applicationGraphics = applicationGraphicsProvider.ApplicationGraphics;
+			    var graphic = applicationGraphics.OfType<ColorBarCompositeGraphic>().FirstOrDefault();
 				if (graphic == null && createIfNull)
 					applicationGraphics.Add(graphic = new ColorBarCompositeGraphic());
 

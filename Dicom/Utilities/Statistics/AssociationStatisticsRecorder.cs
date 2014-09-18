@@ -22,6 +22,7 @@
 
 #endregion
 
+using System.Threading.Tasks;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Statistics;
 using ClearCanvas.Dicom.Network;
@@ -127,8 +128,8 @@ namespace ClearCanvas.Dicom.Utilities.Statistics
             // it needs at this point based on what we have set
             _assocStats.End();
 
-			if (_logInformation)
-				StatisticsLogger.Log(LogLevel.Info, _assocStats);
+	        if (_logInformation)
+		        Task.Factory.StartNew(() => StatisticsLogger.Log(LogLevel.Info, _assocStats));
         }
 
         /// <summary>

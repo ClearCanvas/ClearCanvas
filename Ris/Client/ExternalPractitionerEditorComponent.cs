@@ -165,8 +165,8 @@ namespace ClearCanvas.Ris.Client
 			_contactPointSummaryComponent.SetModifiedOnListChange = true;
 
 			var rootPath = SR.TitleExternalPractitioner;
-			this.Pages.Add(new NavigatorPage(rootPath, _detailsEditor = new ExternalPractitionerDetailsEditorComponent(_isNew)));
-			this.Pages.Add(new NavigatorPage(rootPath + "/" + SR.TitleContactPoints, _contactPointSummaryComponent));
+			this.Pages.Add(new NavigatorPage("NodeExternalPractitioner", _detailsEditor = new ExternalPractitionerDetailsEditorComponent(_isNew)));
+			this.Pages.Add(new NavigatorPage("NodeExternalPractitioner/NodeContactPoints", _contactPointSummaryComponent));
 
 			this.ValidationStrategy = new AllComponentsValidationStrategy();
 

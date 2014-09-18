@@ -37,7 +37,7 @@ using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Ris.Client
 {
-    [MenuAction("launch", "global-menus/Admin/Staff Groups", "Launch")]
+	[MenuAction("launch", "global-menus/MenuAdmin/MenuStaffGroups", "Launch")]
 	[ActionPermission("launch", Application.Common.AuthorityTokens.Admin.Data.StaffGroup)]
 	[ExtensionOf(typeof(DesktopToolExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]
     public class StaffGroupAdminTool : Tool<IDesktopToolContext>
@@ -55,7 +55,7 @@ namespace ClearCanvas.Ris.Client
                     _workspace = ApplicationComponent.LaunchAsWorkspace(
                         this.Context.DesktopWindow,
                         component,
-                        "Staff Groups");
+                        SR.TitleStaffGroups);
                     _workspace.Closed += delegate { _workspace = null; };
 
                 }
@@ -76,9 +76,9 @@ namespace ClearCanvas.Ris.Client
     {
         public StaffGroupSummaryTable()
         {
-            this.Columns.Add(new TableColumn<StaffGroupSummary, string>("Name", item => item.Name, 0.5f));
-            this.Columns.Add(new TableColumn<StaffGroupSummary, string>("Description", item => item.Description, 1.0f));
-			this.Columns.Add(new TableColumn<StaffGroupSummary, bool>("Elective", item => item.IsElective, 0.2f));
+            this.Columns.Add(new TableColumn<StaffGroupSummary, string>(SR.ColumnStaffGroupName, item => item.Name, 0.5f));
+            this.Columns.Add(new TableColumn<StaffGroupSummary, string>(SR.ColumnDescription, item => item.Description, 1.0f));
+			this.Columns.Add(new TableColumn<StaffGroupSummary, bool>(SR.ColumnElective, item => item.IsElective, 0.2f));
 		}
     }
 
@@ -171,7 +171,7 @@ namespace ClearCanvas.Ris.Client
             var editor = new StaffGroupEditorComponent();
             var exitCode = LaunchAsDialog(
                 this.Host.DesktopWindow,
-				new DialogBoxCreationArgs(editor, "Add Staff Group", null, DialogSizeHint.Large));
+				new DialogBoxCreationArgs(editor, SR.TitleAddStaffGroup, null, DialogSizeHint.Large));
             if (exitCode == ApplicationComponentExitCode.Accepted)
             {
                 addedItems.Add(editor.StaffGroupSummary);
@@ -194,7 +194,7 @@ namespace ClearCanvas.Ris.Client
             var editor = new StaffGroupEditorComponent(item.StaffGroupRef);
             var exitCode = LaunchAsDialog(
                 this.Host.DesktopWindow,
-				new DialogBoxCreationArgs(editor, "Edit Staff Group - " + item.Name, null, DialogSizeHint.Large));
+				new DialogBoxCreationArgs(editor, SR.TitleEditStaffGroup + item.Name, null, DialogSizeHint.Large));
             if (exitCode == ApplicationComponentExitCode.Accepted)
             {
                 editedItems.Add(editor.StaffGroupSummary);

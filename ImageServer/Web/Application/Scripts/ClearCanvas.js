@@ -101,12 +101,12 @@ function fitStringToWidth(str,width,className) {
  *
  */
 
-function CheckDateRange(fromDate, toDate, textBoxId, calendarExtenderId, message) {
+function CheckDateRange(fromDate, toDate, message) {
     if(new Date(fromDate) > new Date(toDate)) {
         alert(message);
-        document.getElementById(textBoxId).value='';
-        $find(calendarExtenderId).set_selectedDate(null);
+        return false;
     }
+	return true;
 }
 
 /*

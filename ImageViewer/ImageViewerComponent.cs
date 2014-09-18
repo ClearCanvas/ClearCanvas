@@ -24,7 +24,10 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
@@ -32,23 +35,19 @@ using ClearCanvas.Desktop.Actions;
 using ClearCanvas.Desktop.Tools;
 using ClearCanvas.Dicom.Iod;
 using ClearCanvas.ImageViewer.Automation;
+using ClearCanvas.ImageViewer.BaseTools;
 using ClearCanvas.ImageViewer.Common;
 using ClearCanvas.ImageViewer.InputManagement;
 using ClearCanvas.ImageViewer.StudyManagement;
-using System.Collections.Generic;
-using System.Threading;
 
 namespace ClearCanvas.ImageViewer
 {
-
 	/// <summary>
 	/// An <see cref="ExtensionPoint"/> for views on to the 
 	/// <see cref="ImageViewerComponent"/>.
 	/// </summary>
 	[ExtensionPoint]
-	public sealed class ImageViewerComponentViewExtensionPoint : ExtensionPoint<IApplicationComponentView>
-	{
-	}
+	public sealed class ImageViewerComponentViewExtensionPoint : ExtensionPoint<IApplicationComponentView> {}
 
 	/// <summary>
 	/// An <see cref="ExtensionPoint"/> for image viewer tools.
@@ -58,59 +57,7 @@ namespace ClearCanvas.ImageViewer
 	/// are added to the <see cref="ImageViewerComponent"/>.
 	/// </remarks>
 	[ExtensionPoint]
-	public sealed class ImageViewerToolExtensionPoint : ExtensionPoint<ITool>
-	{
-	}
-
-	/// <summary>
-	/// Specifies window launch options for the <see cref="ImageViewerComponent"/>.
-	/// </summary>
-	public enum WindowBehaviour
-	{
-		/// <summary>
-		/// Same as <see cref="Single"/> currently.
-		/// </summary>
-		Auto,
-
-		/// <summary>
-		/// Specifies that the <see cref="ImageViewerComponent"/> should be launched
-		/// in a single (e.g. active) desktop window.
-		/// </summary>
-		Single,
-
-		/// <summary>
-		/// Specifies that the <see cref="ImageViewerComponent"/> should be launched
-		/// in a separate desktop window.
-		/// </summary>
-		Separate
-	}
-
-	/// <summary>
-	/// Arguments for launching an <see cref="ImageViewerComponent"/>.
-	/// </summary>
-	public class LaunchImageViewerArgs
-	{
-		/// <summary>
-		/// Mandatory constructor.
-		/// </summary>
-		public LaunchImageViewerArgs(WindowBehaviour windowBehaviour)
-		{
-			this.WindowBehaviour = windowBehaviour;
-		}
-
-		/// <summary>
-		/// Gets the <see cref="WindowBehaviour"/> to be used to launch the <see cref="ImageViewerComponent"/>.
-		/// </summary>
-		public readonly WindowBehaviour WindowBehaviour;
-		
-		/// <summary>
-		/// Gets or sets the title to be used for the <see cref="ImageViewerComponent"/> when launched.
-		/// </summary>
-		/// <remarks>
-		/// Leave this value null if you want the title to be automatically determined.
-		/// </remarks>
-		public string Title;
-	}
+	public sealed class ImageViewerToolExtensionPoint : ExtensionPoint<ITool> {}
 
 	/// <summary>
 	/// An <see cref="ApplicationComponent"/> capable of image display.
@@ -122,7 +69,7 @@ namespace ClearCanvas.ImageViewer
 	/// rendering, etc.  An API and a number of extension points allow plugin developers
 	/// to extend the functionality of the IVC.
 	/// </remarks>
-	[AssociateView(typeof(ImageViewerComponentViewExtensionPoint))]
+	[AssociateView(typeof (ImageViewerComponentViewExtensionPoint))]
 	public partial class ImageViewerComponent : ApplicationComponent, IImageViewer, IContextMenuProvider
 	{
 		public const string ContextMenuSite = "imageviewer-contextmenu";
@@ -134,7 +81,7 @@ namespace ClearCanvas.ImageViewer
 		private ILogicalWorkspace _logicalWorkspace;
 		private IPhysicalWorkspace _physicalWorkspace;
 		private EventBroker _eventBroker;
-		
+
 		private readonly ViewerShortcutManager _shortcutManager;
 
 		private readonly IViewerSetupHelper _setupHelper;
@@ -143,13 +90,14 @@ namespace ClearCanvas.ImageViewer
 		private IViewerActionFilter _toolbarFilter;
 		private ILayoutManager _layoutManager;
 
-        private readonly AsynchronousPriorStudyLoader _priorStudyLoader;
+		private readonly AsynchronousPriorStudyLoader _priorStudyLoader;
 		private SynchronizationContext _uiThreadSynchronizationContext;
 
 		private static readonly StudyFinderMap _studyFinders = new StudyFinderMap();
 		private readonly StudyLoaderMap _studyLoaders = new StudyLoaderMap();
 
 		private event EventHandler _closingEvent;
+		private event CancelEventHandler _closingInternal;
 
 		#endregion
 
@@ -163,9 +111,7 @@ namespace ClearCanvas.ImageViewer
 		/// how images are initially laid out.
 		/// If you do require control over the initial layout, use
 		/// <see cref="ImageViewerComponent(ILayoutManager)"/> instead.
-		public ImageViewerComponent(): this(LayoutManagerCreationParameters.Simple)
-		{
-		}
+		public ImageViewerComponent() : this(LayoutManagerCreationParameters.Simple) {}
 
 		/// <summary>
 		/// Instantiates a new instance of <see cref="ImageViewerComponent"/>
@@ -178,18 +124,14 @@ namespace ClearCanvas.ImageViewer
 		/// no extension exists, a simple layout manager is used.
 		/// </remarks>
 		public ImageViewerComponent(LayoutManagerCreationParameters creationParameters)
-			: this(ImageViewer.LayoutManager.Create(creationParameters))
-		{
-		}
+			: this(ImageViewer.LayoutManager.Create(creationParameters)) {}
 
 		/// <summary>
 		/// Initializes a new instance of <see cref="ImageViewerComponent"/>
 		/// with the specified <see cref="ILayoutManager"/>.
 		/// </summary>
 		public ImageViewerComponent(ILayoutManager layoutManager)
-			: this(layoutManager, PriorStudyFinder.Create())
-		{
-		}
+			: this(layoutManager, PriorStudyFinder.Create()) {}
 
 		/// <summary>
 		/// <see cref="ImageViewerComponent"/>
@@ -208,9 +150,7 @@ namespace ClearCanvas.ImageViewer
 		/// </para>
 		/// </remarks>
 		public ImageViewerComponent(LayoutManagerCreationParameters creationParameters, IPriorStudyFinder priorStudyFinder)
-			: this(ImageViewer.LayoutManager.Create(creationParameters), priorStudyFinder)
-		{
-		}
+			: this(ImageViewer.LayoutManager.Create(creationParameters), priorStudyFinder) {}
 
 		/// <summary>
 		/// Initializes a new instance of <see cref="ImageViewerComponent"/>
@@ -222,9 +162,7 @@ namespace ClearCanvas.ImageViewer
 		/// </para>
 		/// </remarks>
 		public ImageViewerComponent(ILayoutManager layoutManager, IPriorStudyFinder priorStudyFinder)
-			: this(new ViewerSetupHelper(layoutManager, priorStudyFinder))
-		{
-		}
+			: this(new ViewerSetupHelper(layoutManager, priorStudyFinder)) {}
 
 		public ImageViewerComponent(IViewerSetupHelper setupHelper)
 		{
@@ -232,10 +170,10 @@ namespace ClearCanvas.ImageViewer
 			_setupHelper = setupHelper;
 			_setupHelper.SetImageViewer(this);
 
-            _shortcutManager = new ViewerShortcutManager(this);
+			_shortcutManager = new ViewerShortcutManager(this);
 			_priorStudyLoader = new AsynchronousPriorStudyLoader(this, _setupHelper.GetPriorStudyFinder());
-            
-            ExtensionData = new ExtensionData();
+
+			ExtensionData = new ExtensionData();
 		}
 
 		/// <summary>
@@ -278,6 +216,14 @@ namespace ClearCanvas.ImageViewer
 			base.Stop();
 		}
 
+		public override bool PrepareExit()
+		{
+			// allow viewer tools first opportunity to prevent closing the viewer, since most legit reasons to do so involve tools performing some operation on the loaded study.
+			var e = new CancelEventArgs();
+			EventsHelper.Fire(_closingInternal, this, e);
+			return !e.Cancel && base.PrepareExit();
+		}
+
 		#region Public Properties
 
 		/// <summary>
@@ -285,7 +231,7 @@ namespace ClearCanvas.ImageViewer
 		/// </summary>
 		public IDesktopWindow DesktopWindow
 		{
-			get { return this.Host.DesktopWindow; }
+			get { return Host.DesktopWindow; }
 		}
 
 		/// <summary>
@@ -317,7 +263,7 @@ namespace ClearCanvas.ImageViewer
 		/// </remarks>
 		public override string GlobalActionsNamespace
 		{
-			get { return this.ActionsNamespace; }
+			get { return ActionsNamespace; }
 		}
 
 		/// <summary>
@@ -347,7 +293,7 @@ namespace ClearCanvas.ImageViewer
 		/// </remarks>
 		public CommandHistory CommandHistory
 		{
-			get { return this.Host.CommandHistory; }
+			get { return Host.CommandHistory; }
 		}
 
 		/// <summary>
@@ -355,13 +301,7 @@ namespace ClearCanvas.ImageViewer
 		/// </summary>
 		public IPhysicalWorkspace PhysicalWorkspace
 		{
-			get
-			{
-				if (_physicalWorkspace == null)
-					_physicalWorkspace = new PhysicalWorkspace(this);
-
-				return _physicalWorkspace;
-			}
+			get { return _physicalWorkspace ?? (_physicalWorkspace = new PhysicalWorkspace(this)); }
 		}
 
 		/// <summary>
@@ -369,13 +309,7 @@ namespace ClearCanvas.ImageViewer
 		/// </summary>
 		public ILogicalWorkspace LogicalWorkspace
 		{
-			get
-			{
-				if (_logicalWorkspace == null)
-					_logicalWorkspace = new LogicalWorkspace(this);
-
-				return _logicalWorkspace;
-			}
+			get { return _logicalWorkspace ?? (_logicalWorkspace = new LogicalWorkspace(this)); }
 		}
 
 		/// <summary>
@@ -383,13 +317,7 @@ namespace ClearCanvas.ImageViewer
 		/// </summary>
 		public EventBroker EventBroker
 		{
-			get
-			{
-				if (_eventBroker == null)
-					_eventBroker = new EventBroker();
-
-				return _eventBroker;
-			}
+			get { return _eventBroker ?? (_eventBroker = new EventBroker()); }
 		}
 
 		/// <summary>
@@ -399,13 +327,7 @@ namespace ClearCanvas.ImageViewer
 		/// no <see cref="IImageBox"/> is currently selected.</value>
 		public IImageBox SelectedImageBox
 		{
-			get
-			{
-				if (this.PhysicalWorkspace == null)
-					return null;
-				else
-					return this.PhysicalWorkspace.SelectedImageBox;
-			}
+			get { return PhysicalWorkspace == null ? null : PhysicalWorkspace.SelectedImageBox; }
 		}
 
 		/// <summary>
@@ -415,13 +337,7 @@ namespace ClearCanvas.ImageViewer
 		/// no <see cref="ITile"/> is currently selected.</value>
 		public ITile SelectedTile
 		{
-			get
-			{
-				if (this.SelectedImageBox == null)
-					return null;
-				else
-					return this.SelectedImageBox.SelectedTile;
-			}
+			get { return SelectedImageBox == null ? null : SelectedImageBox.SelectedTile; }
 		}
 
 		/// <summary>
@@ -431,13 +347,7 @@ namespace ClearCanvas.ImageViewer
 		/// no <see cref="IPresentationImage"/> is currently selected.</value>
 		public IPresentationImage SelectedPresentationImage
 		{
-			get
-			{
-				if (this.SelectedTile == null)
-					return null;
-				else
-					return this.SelectedTile.PresentationImage;
-			}
+			get { return SelectedTile == null ? null : SelectedTile.PresentationImage; }
 		}
 
 		/// <summary>
@@ -461,13 +371,7 @@ namespace ClearCanvas.ImageViewer
 		/// </remarks>
 		public StudyTree StudyTree
 		{
-			get
-			{
-				if (_studyTree == null)
-					_studyTree = new StudyTree();
-
-				return _studyTree;
-			}
+			get { return _studyTree ?? (_studyTree = new StudyTree()); }
 		}
 
 		/// <summary>
@@ -502,13 +406,10 @@ namespace ClearCanvas.ImageViewer
 		/// </summary>
 		public string PatientsLoadedLabel
 		{
-			get
-			{
-				return CreateTitle(CollectionUtils.Map(this.StudyTree.Patients, (Patient patient) => (IPatientData) patient));
-			}
+			get { return CreateTitle(CollectionUtils.Map(StudyTree.Patients, (Patient patient) => (IPatientData) patient)); }
 		}
 
-        public ExtensionData ExtensionData { get; private set; }
+		public ExtensionData ExtensionData { get; private set; }
 
 		#endregion
 
@@ -523,79 +424,81 @@ namespace ClearCanvas.ImageViewer
 			remove { _closingEvent -= value; }
 		}
 
-        /// <summary>
-        /// Allows a one-time call of one of the viewer's automation services, which is usually
-        /// a <see cref="Tool{TContextInterface}<IImageViewerToolContext>"/>, but can also be
-        /// an extension of <see cref="AutomationExtensionPoint{T}"/>.
-        /// </summary>
-        /// <remarks>
-        /// If the service is itself a tool, it can access the viewer via it's own <see cref="IImageViewerToolContext">tool context</see>.
-        /// Otherwise, this method sets the value of <see cref="AutomationContext.Current"/> for the duration of the call.
-        /// </remarks>
-        /// <typeparam name="TService">The type of automation service to be used; this must be an interface and not a tool class.</typeparam>
-        /// <param name="withService">The delegate this method will call, passing in the service object.</param>
-        public void Automate<TService>(Action<TService> withService) where TService : class
-        {
-            if (!typeof(TService).IsInterface)
-                throw new ArgumentException("Automation Service must be an interface, not a class.");
+		#endregion
 
+		#region Service Automation
 
-            Automation.AutomationContext.Current = new Automation.AutomationContext(this);
-            try
-            {
-                withService(GetAutomationService<TService>());
-            }
-            finally
-            {
-                Automation.AutomationContext.Current = null;
-            }
-        }
+		/// <summary>
+		/// Allows a one-time call of one of the viewer's automation services, which is usually
+		/// an <see cref="ImageViewerTool"/>, but can also be
+		/// an extension of <see cref="AutomationExtensionPoint{T}"/>.
+		/// </summary>
+		/// <remarks>
+		/// If the service is itself a tool, it can access the viewer via it's own <see cref="IImageViewerToolContext">tool context</see>.
+		/// Otherwise, this method sets the value of <see cref="AutomationContext.Current"/> for the duration of the call.
+		/// </remarks>
+		/// <typeparam name="TService">The type of automation service to be used; this must be an interface and not a tool class.</typeparam>
+		/// <param name="withService">The delegate this method will call, passing in the service object.</param>
+		public void Automate<TService>(Action<TService> withService) where TService : class
+		{
+			if (!typeof (TService).IsInterface)
+				throw new ArgumentException("Automation Service must be an interface, not a class.");
 
-        /// <summary>
-        /// Allows a one-time call of one of the viewer's automation services, which is usually
-        /// a <see cref="Tool{TContextInterface}<IImageViewerToolContext>"/>, but can also be
-        /// an extension of <see cref="AutomationExtensionPoint{T}"/>.
-        /// </summary>
-        /// <remarks>
-        /// If the service is itself a tool, it can access the viewer via it's own <see cref="IImageViewerToolContext">tool context</see>.
-        /// Otherwise, this method sets the value of <see cref="AutomationContext.Current"/> for the duration of the call.
-        /// </remarks>
-        /// <typeparam name="TService">The type of automation service to be used; this must be an interface and not a tool class.</typeparam>
-        /// <param name="withService">The delegate this method will call, passing in the service object.</param>
-        public TResult Automate<TService, TResult>(Func<TService, TResult> withService) where TService : class
-        {
-            if (!typeof(TService).IsInterface)
-                throw new ArgumentException("Automation Service must be an interface, not a class.");
+			AutomationContext.Current = new AutomationContext(this);
+			try
+			{
+				withService(GetAutomationService<TService>());
+			}
+			finally
+			{
+				AutomationContext.Current = null;
+			}
+		}
 
-            Automation.AutomationContext.Current = new Automation.AutomationContext(this);
-            try
-            {
-                return withService(GetAutomationService<TService>());
-            }
-            finally
-            {
-                Automation.AutomationContext.Current = null;
-            }
-        }
+		/// <summary>
+		/// Allows a one-time call of one of the viewer's automation services, which is usually
+		/// an <see cref="ImageViewerTool"/>, but can also be
+		/// an extension of <see cref="AutomationExtensionPoint{T}"/>.
+		/// </summary>
+		/// <remarks>
+		/// If the service is itself a tool, it can access the viewer via it's own <see cref="IImageViewerToolContext">tool context</see>.
+		/// Otherwise, this method sets the value of <see cref="AutomationContext.Current"/> for the duration of the call.
+		/// </remarks>
+		/// <typeparam name="TService">The type of automation service to be used; this must be an interface and not a tool class.</typeparam>
+		/// <typeparam name="TResult">The type of result returned from the automation service call.</typeparam>
+		/// <param name="withService">The delegate this method will call, passing in the service object.</param>
+		public TResult Automate<TService, TResult>(Func<TService, TResult> withService) where TService : class
+		{
+			if (!typeof (TService).IsInterface)
+				throw new ArgumentException("Automation Service must be an interface, not a class.");
 
-        internal TService GetAutomationService<TService>() where TService : class 
-        {
-            try
-            {
-                //Try looking for an extension first.
-                return (TService) new AutomationExtensionPoint<TService>().CreateExtension();
-            }
-            catch (NotSupportedException)
-            {
-            }
+			AutomationContext.Current = new AutomationContext(this);
+			try
+			{
+				return withService(GetAutomationService<TService>());
+			}
+			finally
+			{
+				AutomationContext.Current = null;
+			}
+		}
 
-            var tool = _toolSet.Tools.OfType<TService>().FirstOrDefault();
-            if (tool == null)
-                throw new NotSupportedException(String.Format("Component service '{0}' does not exist.", typeof(TService).Name));
-            return tool;
-        }
+		internal TService GetAutomationService<TService>() where TService : class
+		{
+			try
+			{
+				//Try looking for an extension first.
+				return (TService) new AutomationExtensionPoint<TService>().CreateExtension();
+			}
+			catch (NotSupportedException) {}
 
-	    #endregion
+			var tool = _toolSet.Tools.OfType<TService>().FirstOrDefault();
+			if (tool == null)
+				throw new NotSupportedException(String.Format("Component service '{0}' does not exist.", typeof (TService).Name));
+			return tool;
+		}
+
+		#endregion
 
 		#region Protected properties
 
@@ -607,15 +510,15 @@ namespace ClearCanvas.ImageViewer
 			get { return _toolSet; }
 		}
 
-        /// <summary>
-        /// Creates a set of tools for this image viewer to load into its tool set.  Subclasses can override
-        /// this to provide their own tools or cull the set of tools this creates.
-        /// </summary>
-        /// <returns></returns>
-        protected virtual IEnumerable CreateTools()
-        {
+		/// <summary>
+		/// Creates a set of tools for this image viewer to load into its tool set.  Subclasses can override
+		/// this to provide their own tools or cull the set of tools this creates.
+		/// </summary>
+		/// <returns></returns>
+		protected virtual IEnumerable CreateTools()
+		{
 			return _setupHelper.GetTools();
-        }
+		}
 
 		/// <summary>
 		/// Creates an <see cref="IImageViewerToolContext"/> to provide to all the tools owned by this image viewer.
@@ -647,16 +550,13 @@ namespace ClearCanvas.ImageViewer
 			get
 			{
 				IActionSet actions = _toolSet.Actions.Select(_contextMenuFilter.Evaluate);
-                return ActionModelRoot.CreateModel(ActionsNamespace, ContextMenuSite, actions);
+				return ActionModelRoot.CreateModel(ActionsNamespace, ContextMenuSite, actions);
 			}
 		}
 
 		private ActionModelNode KeyboardModel
 		{
-			get
-			{
-                return ActionModelRoot.CreateModel(ActionsNamespace, KeyboardSite, _toolSet.Actions);
-			}
+			get { return ActionModelRoot.CreateModel(ActionsNamespace, KeyboardSite, _toolSet.Actions); }
 		}
 
 		public ActionModelNode ToolbarModel
@@ -683,7 +583,7 @@ namespace ClearCanvas.ImageViewer
 		/// </remarks>
 		public void Layout()
 		{
-			this.LayoutManager.Layout();
+			LayoutManager.Layout();
 			_priorStudyLoader.Start();
 		}
 
@@ -862,12 +762,12 @@ namespace ClearCanvas.ImageViewer
 		public static string CreateTitle(IEnumerable<IPatientData> patientData)
 		{
 			return StringUtilities.Combine(patientData, String.Format(" {0} ", SR.SeparatorPatientsLoaded),
-					delegate(IPatientData data)
-					{
-						PersonName name = new PersonName(data.PatientsName);
-						string formattedName = name.FormattedName;
-						return StringUtilities.Combine<string>(new string[] { formattedName, data.PatientId }, String.Format(" {0} ", SR.SeparatorPatientDescription));
-					});
+			                               delegate(IPatientData data)
+			                               	{
+			                               		PersonName name = new PersonName(data.PatientsName);
+			                               		string formattedName = name.FormattedName;
+			                               		return StringUtilities.Combine(new[] {formattedName, data.PatientId}, String.Format(" {0} ", SR.SeparatorPatientDescription));
+			                               	});
 		}
 
 		/// <summary>
@@ -889,30 +789,30 @@ namespace ClearCanvas.ImageViewer
 		public static void Launch(ImageViewerComponent imageViewer, LaunchImageViewerArgs launchArgs)
 		{
 			IDesktopWindow window = GetLaunchWindow(launchArgs.WindowBehaviour);
-            
+
 			Launch(imageViewer, window, launchArgs.Title);
 		}
 
-        /// <summary>
-        /// Launches the specified <see cref="ImageViewerComponent"/> using the <paramref name="window"/> parameter.
-        /// </summary>
-        public static void Launch(ImageViewerComponent imageViewer, IDesktopWindow window, string title)
-        {
+		/// <summary>
+		/// Launches the specified <see cref="ImageViewerComponent"/> using the <paramref name="window"/> parameter.
+		/// </summary>
+		public static void Launch(ImageViewerComponent imageViewer, IDesktopWindow window, string title)
+		{
 			if (title == null)
 				title = imageViewer.PatientsLoadedLabel;
 
-            IWorkspace workspace = LaunchAsWorkspace(window, imageViewer, title);
-            imageViewer.ParentDesktopObject = workspace;
-            try
-            {
-                imageViewer.Layout();
-            }
-            catch (Exception)
-            {
-                workspace.Close();
-                throw;
-            }
-        }
+			IWorkspace workspace = LaunchAsWorkspace(window, imageViewer, title);
+			imageViewer.ParentDesktopObject = workspace;
+			try
+			{
+				imageViewer.Layout();
+			}
+			catch (Exception)
+			{
+				workspace.Close();
+				throw;
+			}
+		}
 
 		/// <summary>
 		/// Launches an <see cref="ImageViewerComponent"/> in the active desktop window.
@@ -944,6 +844,7 @@ namespace ClearCanvas.ImageViewer
 		}
 
 		#endregion
+
 		#endregion
 
 		private static IDesktopWindow GetLaunchWindow(WindowBehaviour windowBehaviour)
@@ -954,14 +855,14 @@ namespace ClearCanvas.ImageViewer
 				return Application.ActiveDesktopWindow;
 
 			IDesktopWindow window;
-			string imageViewerWindow = "ImageViewer";
+			const string imageViewerWindow = "ImageViewer";
 
 			// If an image viewer desktop window already exists, use it
 			if (Application.DesktopWindows.Contains(imageViewerWindow))
 			{
 				window = Application.DesktopWindows[imageViewerWindow];
 			}
-			// If not, create one
+				// If not, create one
 			else
 			{
 				DesktopWindowCreationArgs args = new DesktopWindowCreationArgs("", imageViewerWindow);
@@ -1106,7 +1007,7 @@ namespace ClearCanvas.ImageViewer
 		/// </remarks>
 		public virtual ActionModelNode GetContextMenuModel(IMouseInformation mouseInformation)
 		{
-			return this.ContextMenuModel;
+			return ContextMenuModel;
 		}
 
 		#endregion

@@ -57,7 +57,7 @@ namespace ClearCanvas.Desktop
         public CloseHelperComponent()
         {
             _workspaces = new Table<Workspace>();
-            _workspaces.Columns.Add(new TableColumn<Workspace, string>("Workspace", delegate(Workspace w) { return w.Title; }));
+            _workspaces.Columns.Add(new TableColumn<Workspace, string>(SR.ColumnWorkspace, delegate(Workspace w) { return w.Title; }));
         }
 
 		/// <summary>

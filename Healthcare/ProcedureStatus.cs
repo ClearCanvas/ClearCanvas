@@ -40,37 +40,37 @@ namespace ClearCanvas.Healthcare {
         /// <summary>
         /// Scheduled
         /// </summary>
-        [EnumValue("Scheduled", Description = "In process, scheduled")]
+        [EnumValue("Scheduled", Description = "ScheduledDescription")]
         SC,
 
         /// <summary>
         /// Canceled
         /// </summary>
-        [EnumValue("Cancelled", Description = "Procedure was cancelled")]
+        [EnumValue("Canceled", Description = "CanceledDescription")]
         CA,
 
         /// <summary>
         /// Completed
         /// </summary>
-        [EnumValue("Completed", Description = "Procedure was completed, including report publishing")]
+        [EnumValue("Completed", Description = "CompletedDescription")]
         CM,
 
         /// <summary>
         /// Discontinued
         /// </summary>
-        [EnumValue("Discontinued", Description = "Procedure was discontinued")]
+        [EnumValue("Discontinued", Description = "DiscontinuedDescription")]
         DC,
 
         /// <summary>
         /// In Progress
         /// </summary>
-        [EnumValue("In Progress", Description = "In process, unspecified")]
+        [EnumValue("InProgress", Description = "InProgressDescription")]
         IP,
 
 		/// <summary>
 		/// Ghost
 		/// </summary>
-		[EnumValue("Ghost", Description = "Ghost of procedure that was moved to another order")]
+		[EnumValue("Ghost", Description = "GhostDescription")]
 		GH,
 	}
 }

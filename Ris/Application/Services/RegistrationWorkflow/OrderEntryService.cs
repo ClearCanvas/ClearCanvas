@@ -339,7 +339,7 @@ namespace ClearCanvas.Ris.Application.Services.RegistrationWorkflow
 					var destinationOrder = this.PersistenceContext.Load<Order>(request.OrderRef);
 					var sourceOrders = destinationOrder.MergeSourceOrders;
 					if (sourceOrders.Count == 0)
-						throw new RequestValidationException("This order does not have any orders to un-merge.");
+						throw new RequestValidationException(SR.InvalidRequest_NoOrdersToUnmerge);
 
 					// load the reason; if reason is null (eg dry run), just get the first available reason
 					var reason = request.UnmergeReason == null ?
@@ -384,7 +384,7 @@ namespace ClearCanvas.Ris.Application.Services.RegistrationWorkflow
 
 			if(order.IsTerminated)
 			{
-				errors.Add("This order cannot be cancelled because it has already been completed or otherwise terminated.");
+				errors.Add(SR.CancelOrderWarning_OrderAlreadyTerminated);
 				return new QueryCancelOrderWarningsResponse(warnings, errors);
 			}
 
@@ -394,7 +394,7 @@ namespace ClearCanvas.Ris.Application.Services.RegistrationWorkflow
 
 			if (hasActiveReportingSteps)
 			{
-				warnings.Add("This order has been performed and may have reports in progress.");
+				warnings.Add(SR.CancelOrderWarning_OrderPerformedMayHaveInProgressReports);
 			}
 
 			return new QueryCancelOrderWarningsResponse(warnings, errors);
@@ -526,11 +526,11 @@ namespace ClearCanvas.Ris.Application.Services.RegistrationWorkflow
 		private void ValidateOrderReplacable(Order order)
 		{
 			if (order.IsTerminated)
-				throw new RequestValidationException(string.Format("Orders with a status of '{0}' cannot be replaced.",
+				throw new RequestValidationException(string.Format(SR.InvalidRequest_OrderInStatusCannotBeReplaced,
 					EnumUtils.GetEnumValueInfo(order.Status, this.PersistenceContext)));
 
 			if (CollectionUtils.Contains(order.Procedures, p => p.DowntimeRecoveryMode))
-				throw new RequestValidationException("Downtime orders cannot be replaced.  You must cancel the order and create a new one.");
+				throw new RequestValidationException(SR.InvalidRequest_DowntimeOrdersCannotBeReplaced);
 		}
 
 		private void ValidateVisitsExist(Order order)
@@ -545,7 +545,7 @@ namespace ClearCanvas.Ris.Application.Services.RegistrationWorkflow
 			catch (EntityNotFoundException)
 			{
 				throw new RequestValidationException(
-					string.Format("The order cannot be entered because the patient does not have any visits at {0}.",
+					string.Format(SR.InvalidRequest_CannotEnterOrderWithoutVisits,
 					order.OrderingFacility.InformationAuthority.Value));
 			}
 		}
@@ -746,7 +746,7 @@ namespace ClearCanvas.Ris.Application.Services.RegistrationWorkflow
 				// validate that the downtime A# is less than then current sequence position
 				var currentMaxAccession = accessionBroker.PeekNext();
 				if (requisition.DowntimeAccessionNumber.CompareTo(currentMaxAccession) > -1)
-					throw new RequestValidationException("Invalid downtime accession number.");
+					throw new RequestValidationException(SR.InvalidRequest_InvalidDowntimeAccessionNumber);
 
 				return requisition.DowntimeAccessionNumber;
 			}
@@ -814,7 +814,7 @@ namespace ClearCanvas.Ris.Application.Services.RegistrationWorkflow
 
 				// validate that the type has not changed
 				if (!procedure.Type.Equals(requestedType))
-					throw new RequestValidationException("Order modification must not modify the type of a requested procedure.");
+					throw new RequestValidationException(SR.InvalidRequest_CannotModifyProcedureType);
 
 				// If the procedure is already terminated, just move on to the next one since procedures cannot be "un-terminated".
 				if (procedure.IsTerminated)
@@ -885,7 +885,7 @@ namespace ClearCanvas.Ris.Application.Services.RegistrationWorkflow
 				return visit;
 			}
 
-			throw new RequestValidationException("A visit is required.");
+			throw new RequestValidationException(SR.InvalidRequest_VisitRequired);
 		}
 	}
 }

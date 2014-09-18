@@ -6,6 +6,8 @@ compression only works with 12 bit images and not with PALETTE COLOR.
 <rule>
   <condition expressionLanguage="dicom">
 	<and>
+		<!-- MR Spectroscopy SOP Class has no pixel data -->
+		<not-equal test="$SopClassUid" refValue="1.2.840.10008.5.1.4.1.1.4.2"/>
 	  <or>
 		<equal test="$BitsStored" refValue="12" />
 		<equal test="$BitsStored" refValue="8"/>

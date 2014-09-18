@@ -36,13 +36,13 @@ namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis
 		private int _min;
 		private int _max;
 
-		private int[] _data;
+        private double[] _data;
 		private int[] _binLabels;
 		private int[] _bins;
 
 		private bool _generate;
 	
-		public Histogram(int min, int max, int numBins, int[] data)
+		public Histogram(int min, int max, int numBins, double[] data)
 		{
 			Platform.CheckPositive(numBins, "numBins");
 			Platform.CheckForNullReference(data, "data");
@@ -82,7 +82,7 @@ namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis
 			}
 		}
 
-		public int[] Data
+        public double[] Data
 		{
 			get { return _data; }
 			set

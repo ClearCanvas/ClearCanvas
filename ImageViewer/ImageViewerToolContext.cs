@@ -22,6 +22,7 @@
 
 #endregion
 
+using System.ComponentModel;
 using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Tools;
 
@@ -30,18 +31,27 @@ namespace ClearCanvas.ImageViewer
 	/// <summary>
 	/// Defines an image viewer tool context.
 	/// </summary>
-    public interface IImageViewerToolContext : IToolContext
-    {
+	public interface IImageViewerToolContext : IToolContext
+	{
 		/// <summary>
 		/// Gets the <see cref="IImageViewer"/>.
 		/// </summary>
-        IImageViewer Viewer { get; }
+		IImageViewer Viewer { get; }
 
 		/// <summary>
 		/// Gets the <see cref="IDesktopWindow"/>.
 		/// </summary>
 		IDesktopWindow DesktopWindow { get; }
-    }
+
+		/// <summary>
+		/// Fired when the image viewer is preparing to close, in order to allow tools an opportunity to abort closing the viewer.
+		/// </summary>
+		/// <remarks>
+		/// This event is separate and distinct from <see cref="IImageViewer.Closing"/> which, despite its name, is fired as the
+		/// image viewer is already in the process of closing.
+		/// </remarks>
+		event CancelEventHandler ViewerClosing;
+	}
 
 	public partial class ImageViewerComponent
 	{
@@ -77,6 +87,19 @@ namespace ClearCanvas.ImageViewer
 			public IDesktopWindow DesktopWindow
 			{
 				get { return _component.Host.DesktopWindow; }
+			}
+
+			/// <summary>
+			/// Fired when the image viewer is preparing to close, in order to allow tools an opportunity to abort closing the viewer.
+			/// </summary>
+			/// <remarks>
+			/// This event is separate and distinct from <see cref="IImageViewer.Closing"/> which, despite the usual semantics associated
+			/// with its name, is fired as the image viewer is already in the process of closing.
+			/// </remarks>
+			public event CancelEventHandler ViewerClosing
+			{
+				add { _component._closingInternal += value; }
+				remove { _component._closingInternal -= value; }
 			}
 
 			#endregion

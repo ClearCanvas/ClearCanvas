@@ -32,7 +32,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Folders
 	{
 		[ExtensionOf(typeof(PerformingWorkflowFolderExtensionPoint))]
 		[FolderForWorklistClass(WorklistClassNames.PerformingScheduledWorklist)]
-		[FolderPath("Scheduled")]
+		[FolderPath("FolderScheduled")]
 		[FolderDescription("PerformingScheduledFolderDescription")]
 		public class ScheduledFolder : PerformingWorkflowFolder
 		{
@@ -40,7 +40,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Folders
 
 		[ExtensionOf(typeof(PerformingWorkflowFolderExtensionPoint))]
 		[FolderForWorklistClass(WorklistClassNames.PerformingCheckedInWorklist)]
-		[FolderPath("Checked In", true)]
+		[FolderPath("FolderCheckedIn", true)]
 		[FolderDescription("PerformingCheckedInFolderDescription")]
 		public class CheckedInFolder : PerformingWorkflowFolder
 		{
@@ -48,7 +48,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Folders
 
 		[ExtensionOf(typeof(PerformingWorkflowFolderExtensionPoint))]
 		[FolderForWorklistClass(WorklistClassNames.PerformingInProgressWorklist)]
-		[FolderPath("In Progress")]
+		[FolderPath("FolderInProgress")]
 		[FolderDescription("PerformingInProgressFolderDescription")]
 		public class InProgressFolder : PerformingWorkflowFolder
 		{
@@ -56,7 +56,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Folders
 
 		[ExtensionOf(typeof(PerformingWorkflowFolderExtensionPoint))]
 		[FolderForWorklistClass(WorklistClassNames.PerformingPerformedWorklist)]
-		[FolderPath("Performed")]
+		[FolderPath("FolderPerformed")]
 		[FolderDescription("PerformingPerformedFolderDescription")]
 		public class PerformedFolder : PerformingWorkflowFolder
 		{
@@ -64,7 +64,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Folders
 
 		[ExtensionOf(typeof(PerformingWorkflowFolderExtensionPoint))]
 		[FolderForWorklistClass(WorklistClassNames.PerformingUndocumentedWorklist)]
-		[FolderPath("Incomplete Documentation")]
+		[FolderPath("FolderIncompleteDocumentation")]
 		[FolderDescription("PerformingUndocumentedFolderDescription")]
 		public class UndocumentedFolder : PerformingWorkflowFolder
 		{
@@ -72,13 +72,13 @@ namespace ClearCanvas.Ris.Client.Workflow.Folders
 
 		[ExtensionOf(typeof(PerformingWorkflowFolderExtensionPoint))]
 		[FolderForWorklistClass(WorklistClassNames.PerformingCancelledWorklist)]
-		[FolderPath("Cancelled")]
+		[FolderPath("FolderCanceled")]
 		[FolderDescription("PerformingCancelledFolderDescription")]
 		public class CancelledFolder : PerformingWorkflowFolder
 		{
 		}
 
-		[FolderPath("Search Results")]
+		[FolderPath("FolderSearchResults")]
 		public class SearchFolder : WorklistSearchResultsFolder<ModalityWorklistItemSummary, IModalityWorkflowService>
 		{
 			public SearchFolder()

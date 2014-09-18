@@ -92,7 +92,11 @@ namespace ClearCanvas.ImageServer.Rules
 		public void Apply(ServerRuleApplyTimeEnum applyTime)
 		{
 
-			using(var theProcessor = new ServerCommandProcessor("Study Rule Processor"))
+			using(var theProcessor = new ServerCommandProcessor("Study Rule Processor")
+			{
+				PrimaryServerPartitionKey = _partition.GetKey(),
+				PrimaryStudyKey = _location.Study.GetKey()
+			})
 			{
                 Apply(applyTime, theProcessor);
 
@@ -183,10 +187,10 @@ namespace ClearCanvas.ImageServer.Rules
 
 				using (FileStream stream = FileStreamOpener.OpenForRead(studyXml, FileMode.Open))
 				{
-					var theDoc = new XmlDocument();
-					StudyXmlIo.Read(theDoc, stream);
+					var theMemento = new StudyXmlMemento();
+					StudyXmlIo.Read(theMemento, stream);
 					stream.Close();
-					_studyXml.SetMemento(theDoc);
+					_studyXml.SetMemento(theMemento);
 				}
 			}
 

@@ -30,10 +30,11 @@ using ClearCanvas.ImageViewer.Imaging;
 using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Tools;
 using ClearCanvas.Desktop.Actions;
+using ClearCanvas.ImageViewer.Vtk.Rendering;
 using vtk;
 using ClearCanvas.ImageViewer.InputManagement;
 using ClearCanvas.ImageViewer.BaseTools;
-
+/*
 namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 {
 	[MouseToolButton(XMouseButtons.Right, false)]
@@ -62,7 +63,7 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 			if (image == null)
 				return null;
 
-			VolumePresentationImageRenderer renderer = image.ImageRenderer as VolumePresentationImageRenderer;
+            VtkPresentationImageRenderer renderer = image.ImageRenderer as VtkPresentationImageRenderer;
 
 			if (renderer == null)
 				return null;
@@ -140,3 +141,4 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 		#endregion
 	}
 }
+*/

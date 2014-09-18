@@ -30,7 +30,10 @@ using System.Reflection;
 using System.ServiceModel;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using ClearCanvas.Common;
+using ClearCanvas.Common.Audit;
+using ClearCanvas.Dicom.Audit;
 using ClearCanvas.Enterprise.Common;
 using ClearCanvas.Enterprise.Common.Authentication;
 
@@ -43,6 +46,7 @@ namespace ClearCanvas.Web.Enterprise.Authentication
 	[Obfuscation(Exclude = true, ApplyToMembers = false)]
 	public sealed class LoginService : IDisposable
 	{
+
 		[Obfuscation(Exclude = true)]
 		public SessionInfo Login(string userName, string password, string appName)
 		{
@@ -86,11 +90,9 @@ namespace ClearCanvas.Web.Enterprise.Authentication
 								session = new SessionInfo(user);
 								session.User.WarningMessages = response.WarningMessages;
 
-								// Note: need to insert into the cache before calling SessionInfo.Validate()
 								SessionCache.Instance.AddSession(response.SessionToken.Id, session);
-								// TODO (CR Nov 2013): Why? The session is new.
-								session.Validate();
-
+								
+								LoginServiceAuditLog.AuditSuccess(userName, response.DisplayName, response.SessionToken.Id);
 								Platform.Log(LogLevel.Info, "{0} has successfully logged in.", userName);
 							}
 						}
@@ -100,6 +102,8 @@ namespace ClearCanvas.Web.Enterprise.Authentication
 						}
 						catch (FaultException<UserAccessDeniedException> ex)
 						{
+							LoginServiceAuditLog.AuditFailure(userName);
+								
 							throw ex.Detail;
 						}
 						catch (FaultException<RequestValidationException> ex)
@@ -130,6 +134,8 @@ namespace ClearCanvas.Web.Enterprise.Authentication
 					{
 						service.TerminateSession(request);
 						SessionCache.Instance.RemoveSession(tokenId);
+						LoginServiceAuditLog.AuditLogout(session.User.UserName, session.User.DisplayName,
+							session.User.Credentials.SessionToken.Id);
 					});
 		}
 
@@ -220,7 +226,7 @@ namespace ClearCanvas.Web.Enterprise.Authentication
 
 		#region Private Methods
 
-
+		
 		private SessionInfo RenewSession(string tokenId, bool bypassCache = false)
 		{
 			try
@@ -323,6 +329,68 @@ namespace ClearCanvas.Web.Enterprise.Authentication
 		}
 
 		#endregion
+
+	}
+
+	static class LoginServiceAuditLog
+	{
+		private static readonly DicomAuditSource _auditSource = new DicomAuditSource(ProductInformation.Component);
+		private static readonly object _syncLock = new object();
+		private static readonly AuditLog _log = new AuditLog(ProductInformation.Component, "DICOM");
+
+		public static void AuditSuccess(string userId, string userName, string sessionId)
+		{
+			var audit = new UserAuthenticationAuditHelper(_auditSource,
+					EventIdentificationContentsEventOutcomeIndicator.Success, UserAuthenticationEventType.Login);
+			audit.AddUserParticipant(new AuditPersonActiveParticipant(userId, null, userName));
+			LogAuditMessage(audit, userId, sessionId);
+		}
+
+		public static void AuditFailure(string userId)
+		{
+			var audit = new UserAuthenticationAuditHelper(_auditSource,
+					EventIdentificationContentsEventOutcomeIndicator.SeriousFailureActionTerminated, UserAuthenticationEventType.Login);
+			audit.AddUserParticipant(new AuditPersonActiveParticipant(userId, null, null));
+			LogAuditMessage(audit, userId);
+		}
+
+
+
+		public static void AuditLogout(string userName, string displayName, string sessionId)
+		{
+			var audit = new UserAuthenticationAuditHelper(_auditSource,
+					EventIdentificationContentsEventOutcomeIndicator.Success, UserAuthenticationEventType.Logout);
+			audit.AddUserParticipant(new AuditPersonActiveParticipant(userName, null, displayName));
+			LogAuditMessage(audit, userName, sessionId);
+		}
+
+		static void LogAuditMessage(DicomAuditHelper helper, string userId, string sessionId = null)
+		{
+			// Found doing this on the local thread had a performance impact with some DICOM operations,
+			// make run as a task in the background to make it work faster.
+			Task.Factory.StartNew(delegate
+			{
+				lock (_syncLock)
+				{
+					string serializeText = null;
+					try
+					{
+						serializeText = helper.Serialize(false);
+						_log.WriteEntry(helper.Operation, serializeText, userId, sessionId);
+					}
+					catch (Exception ex)
+					{
+						Platform.Log(LogLevel.Error, ex, "Error occurred when writing audit log");
+
+						var sb = new StringBuilder();
+						sb.AppendLine("Audit Log failed to save:");
+						sb.AppendLine(String.Format("Operation: {0}", helper.Operation));
+						sb.AppendLine(String.Format("Details: {0}", serializeText));
+						Platform.Log(LogLevel.Info, sb.ToString());
+					}
+				}
+			});
+		}
 
 	}
 

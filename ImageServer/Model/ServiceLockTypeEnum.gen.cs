@@ -48,6 +48,7 @@ public partial class ServiceLockTypeEnum : ServerEnum
       private static readonly ServiceLockTypeEnum _SyncDataAccess = GetEnum("SyncDataAccess");
       private static readonly ServiceLockTypeEnum _ExternalRequestProcess = GetEnum("ExternalRequestProcess");
       private static readonly ServiceLockTypeEnum _ExternalNotificationProcess = GetEnum("ExternalNotificationProcess");
+      private static readonly ServiceLockTypeEnum _PartitionOrderPurge = GetEnum("PartitionOrderPurge");
       private static readonly ServiceLockTypeEnum _PartitionReapplyRules = GetEnum("PartitionReapplyRules");
       #endregion
 
@@ -135,6 +136,13 @@ public partial class ServiceLockTypeEnum : ServerEnum
       public static ServiceLockTypeEnum ExternalNotificationProcess
       {
           get { return _ExternalNotificationProcess; }
+      }
+      /// <summary>
+      /// This service purges orders not linked to studies on a partition.
+      /// </summary>
+      public static ServiceLockTypeEnum PartitionOrderPurge
+      {
+          get { return _PartitionOrderPurge; }
       }
       /// <summary>
       /// This service scans the contents of a partition and reapplies Study Processing rules to all studies on the partition that have not been archived.  Studies that have been archived will have Study Archived and Data Access rules applied.

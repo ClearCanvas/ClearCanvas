@@ -44,7 +44,7 @@ namespace ClearCanvas.ImageServer.Model.SqlServer.CodeGenerator
             private readonly string _variableName;
             private readonly string _databaseColumnName;
             
-            public Column(string name, string type)
+            public Column(string name, string type, bool isNullable=false)
             {
                 _columnName = name.Replace("GUID", "Key");
                 _variableName = String.Format("_{0}{1}", _columnName.Substring(0, 1).ToLower(), _columnName.Substring(1));
@@ -65,7 +65,7 @@ namespace ClearCanvas.ImageServer.Model.SqlServer.CodeGenerator
                 else if (type.Equals("int"))
                     _columnType = typeof(int);
                 else if (type.Equals("datetime"))
-                    _columnType = typeof(DateTime);
+					_columnType = isNullable? typeof(DateTime?):typeof(DateTime);
                 else if (type.Equals("xml"))
                     _columnType = typeof(XmlDocument);
                 else if (type.Equals("decimal"))
@@ -88,6 +88,14 @@ namespace ClearCanvas.ImageServer.Model.SqlServer.CodeGenerator
             {
                 get { return _columnType; }
             }
+
+	        public string DeclaringType
+	        {
+		        get
+		        {
+					return ColumnType.IsGenericType? ColumnType.GetGenericArguments()[0].Name + "?" : ColumnType.Name;
+		        }
+	        }
 
             public string VariableName
             {
@@ -201,11 +209,11 @@ namespace ClearCanvas.ImageServer.Model.SqlServer.CodeGenerator
 
                             DataColumn colColumnName = dt.Columns["COLUMN_NAME"];
                             DataColumn colColumnType = dt.Columns["DATA_TYPE"];
-
+	                        var isNullable = dt.Columns["IS_NULLABLE"];
                             foreach (DataRow row2 in dt.Rows)
                             {
                                 table.Columns.Add(
-                                    new Column(row2[colColumnName].ToString(), row2[colColumnType].ToString()));
+									new Column(row2[colColumnName].ToString(), row2[colColumnType].ToString(), row2[isNullable].ToString().ToUpper()=="YES"));
                             }
 
                             TableList.Add(table);
@@ -511,7 +519,7 @@ namespace ClearCanvas.ImageServer.Model.SqlServer.CodeGenerator
                     if (col.ColumnName.EndsWith("Enum"))
                         writer.WriteLine("            {0}{1} {2}_", comma, col.ColumnName, col.VariableName);
                     else
-                        writer.WriteLine("            {0}{1} {2}_", comma, col.ColumnType.Name, col.VariableName);
+						writer.WriteLine("            {0}{1} {2}_", comma, col.DeclaringType, col.VariableName);
 
                     comma = ',';
                 }
@@ -549,14 +557,14 @@ namespace ClearCanvas.ImageServer.Model.SqlServer.CodeGenerator
                     }
                     else if (col.ColumnType == typeof(XmlDocument))
                     {
-                        writer.WriteLine("        public {0} {1}", col.ColumnType.Name, col.ColumnName);
+						writer.WriteLine("        public {0} {1}", col.DeclaringType, col.ColumnName);
                         writer.WriteLine("        {{ get {{ return _{0}; }} set {{ _{0} = value; }} }}", col.ColumnName);
                         writer.WriteLine("        [NonSerialized]");
                         writer.WriteLine("        private XmlDocument _{0};", col.ColumnName);
                     }
                     else
                     {
-                        writer.WriteLine("        public {0} {1}", col.ColumnType.Name, col.ColumnName);
+						writer.WriteLine("        public {0} {1}", col.DeclaringType, col.ColumnName);
                         writer.WriteLine("        { get; set; }");
                     }
                 }
@@ -640,7 +648,7 @@ namespace ClearCanvas.ImageServer.Model.SqlServer.CodeGenerator
             {
                 if (!col.ColumnName.Equals("Key"))
                 {
-                    string colType = col.ColumnName.EndsWith("Enum") ? col.ColumnName : col.ColumnType.Name;
+					string colType = col.ColumnName.EndsWith("Enum") ? col.ColumnName : col.DeclaringType;
                     string colName = col.DatabaseColumnName;
                     writer.WriteLine("        [EntityFieldDatabaseMappingAttribute(TableName=\"{0}\", ColumnName=\"{1}\")]", table.DatabaseTableName, col.DatabaseColumnName.Replace("Key", "GUID"));
                     writer.WriteLine("        public ISearchCondition<{0}> {1}", colType, col.ColumnName);
@@ -704,7 +712,7 @@ namespace ClearCanvas.ImageServer.Model.SqlServer.CodeGenerator
             {
                 if (!col.ColumnName.Equals("Key"))
                 {
-                    string colType = col.ColumnName.EndsWith("Enum") ? col.ColumnName : col.ColumnType.Name;
+					string colType = col.ColumnName.EndsWith("Enum") ? col.ColumnName : col.DeclaringType;
                     string colName = col.ColumnName;
                     DicomTag tag = DicomTagDictionary.GetDicomTag(col.ColumnName);
                     if (tag != null)

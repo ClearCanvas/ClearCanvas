@@ -26,56 +26,18 @@ using System;
 using System.Net;
 using System.Web;
 using ClearCanvas.Common;
-using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageServer.Common;
 using ClearCanvas.Server.ShredHost;
 
 namespace ClearCanvas.ImageServer.Core
 {
     /// <summary>
-    /// Represents the argument associated with the event fired when a http request is received.
-    /// </summary>
-    public class HttpRequestReceivedEventArg : EventArgs
-    {
-        public HttpRequestReceivedEventArg(HttpListenerContext context)
-        {
-            Context = context;
-        }
-
-        public HttpListenerContext Context { get; set; }
-    }
-
-
-    /// <summary>
     /// Represents a http server that accepts and processes http requests.
     /// </summary>
     public abstract class HttpServer : HttpListenerShred
     {
-
-        #region Public Delegates
-        public delegate void HttpListenerHandlerDelegate(object sender, HttpRequestReceivedEventArg args);
-        #endregion
-
-        #region Private Members
-
         private readonly string _name;
-        private event HttpListenerHandlerDelegate _httpRequestReceived;
-        #endregion
-
-        #region Events
-
-        /// <summary>
-        /// Occurs when a http request is received.
-        /// </summary>
-        public event HttpListenerHandlerDelegate HttpRequestReceived
-        {
-            add { _httpRequestReceived += value; }
-            remove { _httpRequestReceived -= value; }
-        }
         
-        #endregion
-
-        #region Constructors
         /// <summary>
         /// Creates an instance of <see cref="HttpServer"/> on a specified address.
         /// </summary>
@@ -87,42 +49,20 @@ namespace ClearCanvas.ImageServer.Core
         {
             _name = serverName;
         }
-        #endregion
 
         #region Overridden Public Methods
 
         public override void Start()
         {
-            try
-            {
-                StartListening(ListenerCallback);
-            }
-            catch(HttpListenerException e)
-            {
-                // When the port is tied up by another process, the system throws HttpListenerException with error code = 32 
-                // and the message "The process cannot access the file because it is being used by another process". 
-                // For clarity, we make the error message more informative in this case
-                if (e.ErrorCode == WindowsErrorCodes.ERROR_SHARING_VIOLATION)
-                {
-                    string errorMessage = string.Format("Unable to start {0} on port {1}. The port is being used by another process", _name, Port);
-                    Platform.Log(LogLevel.Fatal, errorMessage);
-                    ServerPlatform.Alert(AlertCategory.Application, AlertLevel.Critical, _name, AlertTypeCodes.UnableToStart, null, TimeSpan.Zero, errorMessage);
-                }
-                else
-                {
-                    string errorMessage = string.Format("Unable to start {0}. System Error Code={1}", _name, e.ErrorCode);
-                    Platform.Log(LogLevel.Fatal, e, errorMessage);
-                    ServerPlatform.Alert(AlertCategory.Application, AlertLevel.Critical, _name, AlertTypeCodes.UnableToStart, null, TimeSpan.Zero, errorMessage);
-                }
-            }
-            catch(Exception e)
-            {
-                Platform.Log(LogLevel.Fatal, e, "Unable to start {0}", _name);
-                ServerPlatform.Alert(AlertCategory.Application, AlertLevel.Critical, _name, AlertTypeCodes.UnableToStart,
-                                        null, TimeSpan.Zero, "Unable to start {0}: {1}", _name, e.Message);
-            }
-            
+        	StartListeningAsync(ListenerCallback);
         }
+
+		protected override void OnStartError(string message)
+		{
+			ServerPlatform.Alert(AlertCategory.Application, AlertLevel.Critical, GetDisplayName(), AlertTypeCodes.UnableToStart, null, TimeSpan.Zero, message);
+		}
+
+        protected abstract void HandleRequest(HttpListenerContext context);
 
         #endregion
 
@@ -140,7 +80,7 @@ namespace ClearCanvas.ImageServer.Core
 					Platform.Log(LogLevel.Debug, "{0}", context.Request.Url.AbsoluteUri);
 				}
 
-				EventsHelper.Fire(_httpRequestReceived, this, new HttpRequestReceivedEventArg(context));
+                HandleRequest(context);
             }
             catch (Exception e)
             {

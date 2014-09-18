@@ -263,7 +263,10 @@ namespace ClearCanvas.Dicom.Network.Scu
 			var theFile = new DicomFile();
 			theFile.Load(StreamOpener, null, DicomReadOptions.StorePixelDataReferences | DicomReadOptions.Default);
 
+			// these fields must be loaded for auditing purposes
 			StudyInstanceUid = theFile.DataSet[DicomTags.StudyInstanceUid].GetString(0, string.Empty);
+			SeriesInstanceUid = theFile.DataSet[DicomTags.SeriesInstanceUid].GetString(0, string.Empty);
+			SopInstanceUid = theFile.DataSet[DicomTags.SopInstanceUid].GetString(0, string.Empty);
 			PatientsName = theFile.DataSet[DicomTags.PatientsName].GetString(0, string.Empty);
 			PatientId = theFile.DataSet[DicomTags.PatientId].GetString(0, string.Empty);
 
@@ -281,7 +284,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 
 			var theFile = new DicomFile();
 
-			const uint stopTag = DicomTags.RelatedGeneralSopClassUid;
+			const uint stopTag = DicomTags.StudyId;
 			theFile.Load(StreamOpener, DicomTagDictionary.GetDicomTag(stopTag), DicomReadOptions.Default);
 
 			string sopClassInFile = theFile.DataSet[DicomTags.SopClassUid].ToString();
@@ -300,7 +303,14 @@ namespace ClearCanvas.Dicom.Network.Scu
 				_sopClass = theFile.SopClass;
 
 			_syntax = theFile.TransferSyntax;
-			SopInstanceUid = theFile.MediaStorageSopInstanceUid;
+
+			// these fields must be loaded for auditing purposes, and LoadFile() may not get called
+			StudyInstanceUid = theFile.DataSet[DicomTags.StudyInstanceUid].GetString(0, string.Empty);
+			SeriesInstanceUid = theFile.DataSet[DicomTags.SeriesInstanceUid].GetString(0, string.Empty);
+			SopInstanceUid = theFile.DataSet[DicomTags.SopInstanceUid].GetString(0, string.Empty);
+			PatientsName = theFile.DataSet[DicomTags.PatientsName].GetString(0, string.Empty);
+			PatientId = theFile.DataSet[DicomTags.PatientId].GetString(0, string.Empty);
+
 			MetaInfoFileLength = theFile.MetaInfoFileLength;
 			_infoLoaded = true;
 		}

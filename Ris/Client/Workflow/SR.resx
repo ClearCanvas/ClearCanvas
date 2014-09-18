@@ -797,4 +797,301 @@ Do you want to save it to your Drafts folder and open the transcription for {1}?
   <data name="MessageNoProceduresCanBeCheckedIn" xml:space="preserve">
     <value>All active procedures for this order have already been checked-in.</value>
   </data>
+  <data name="MenuAddAddendum" xml:space="preserve">
+    <value>Add Addendum</value>
+  </data>
+  <data name="MenuCancelOrder" xml:space="preserve">
+    <value>Cancel Order</value>
+  </data>
+  <data name="MenuCheckIn" xml:space="preserve">
+    <value>Check-in</value>
+  </data>
+  <data name="MenuComplete" xml:space="preserve">
+    <value>Complete</value>
+  </data>
+  <data name="MenuDiscardReport" xml:space="preserve">
+    <value>Discard Report</value>
+  </data>
+  <data name="MenuEditPatient" xml:space="preserve">
+    <value>Edit Patient</value>
+  </data>
+  <data name="MenuMergeOrders" xml:space="preserve">
+    <value>Merge Orders</value>
+  </data>
+  <data name="MenuNewPatient" xml:space="preserve">
+    <value>New Patient</value>
+  </data>
+  <data name="MenuPatientBiography" xml:space="preserve">
+    <value>Patient Biography</value>
+  </data>
+  <data name="MenuPatientSearch" xml:space="preserve">
+    <value>Patient Search</value>
+  </data>
+  <data name="MenuRandomOrder" xml:space="preserve">
+    <value>Random Order</value>
+  </data>
+  <data name="MenuSendToTranscription" xml:space="preserve">
+    <value>Send to Transcription</value>
+  </data>
+  <data name="MenuSubmitForReview" xml:space="preserve">
+    <value>Submit for Review</value>
+  </data>
+  <data name="MenuUndoMergeOrders" xml:space="preserve">
+    <value>Undo Merge Orders</value>
+  </data>
+  <data name="MenuViewImages" xml:space="preserve">
+    <value>View Images</value>
+  </data>
+  <data name="MenuWorkflowHistory" xml:space="preserve">
+    <value>Workflow History</value>
+  </data>
+  <data name="TooltipEditPatient" xml:space="preserve">
+    <value>Edit Patient Information</value>
+  </data>
+  <data name="TooltipMergeOrders" xml:space="preserve">
+    <value>Merge Orders</value>
+  </data>
+  <data name="TooltipNewPatient" xml:space="preserve">
+    <value>Create a new patient record</value>
+  </data>
+  <data name="TooltipPatientBiography" xml:space="preserve">
+    <value>Open patient biography</value>
+  </data>
+  <data name="TooltipPatientSearch" xml:space="preserve">
+    <value>Patient Search</value>
+  </data>
+  <data name="TooltipRandomOrder" xml:space="preserve">
+    <value>Random Order</value>
+  </data>
+  <data name="TooltipUndoMergeOrders" xml:space="preserve">
+    <value>Undo Merge Orders</value>
+  </data>
+  <data name="TooltipViewImages" xml:space="preserve">
+    <value>View Images</value>
+  </data>
+  <data name="TooltipWorkflowHistory" xml:space="preserve">
+    <value>View workflow history</value>
+  </data>
+  <data name="TooltipDiscardAddendum" xml:space="preserve">
+    <value>Discard Addendum</value>
+  </data>
+  <data name="TooltipDiscardReport" xml:space="preserve">
+    <value>Discard Report</value>
+  </data>
+  <data name="MenuCancelAndReplaceOrder" xml:space="preserve">
+    <value>Cancel and Replace Order</value>
+  </data>
+  <data name="MenuCompleteDowntimeRecovery" xml:space="preserve">
+    <value>Complete Downtime Recovery...</value>
+  </data>
+  <data name="MenuEditReport" xml:space="preserve">
+    <value>Edit Report</value>
+  </data>
+  <data name="MenuEditReportAndOpenImages" xml:space="preserve">
+    <value>Edit Report and Open Images</value>
+  </data>
+  <data name="MenuModifyOrder" xml:space="preserve">
+    <value>Modify Order</value>
+  </data>
+  <data name="MenuNewOrder" xml:space="preserve">
+    <value>New Order</value>
+  </data>
+  <data name="MenuOpenDocumentation" xml:space="preserve">
+    <value>Open Documentation</value>
+  </data>
+  <data name="MenuOpenReport" xml:space="preserve">
+    <value>Open Report</value>
+  </data>
+  <data name="MenuPrintDowntimeForms" xml:space="preserve">
+    <value>Print Downtime Forms</value>
+  </data>
+  <data name="MenuPrintReport" xml:space="preserve">
+    <value>Print Report</value>
+  </data>
+  <data name="MenuPublish" xml:space="preserve">
+    <value>Publish</value>
+  </data>
+  <data name="MenuReassign" xml:space="preserve">
+    <value>Reassign</value>
+  </data>
+  <data name="MenuReject" xml:space="preserve">
+    <value>Reject</value>
+  </data>
+  <data name="MenuReturnToInterpreter" xml:space="preserve">
+    <value>Return to Interpreter</value>
+  </data>
+  <data name="MenuReviseReport" xml:space="preserve">
+    <value>Revise Report</value>
+  </data>
+  <data name="MenuVerify" xml:space="preserve">
+    <value>Verify</value>
+  </data>
+  <data name="MessageGeneratingPdf" xml:space="preserve">
+    <value>Generating PDF...</value>
+  </data>
+  <data name="TitleMppsDocumentation" xml:space="preserve">
+    <value>MPPS Documentation</value>
+  </data>
+  <data name="FormatPrintReportMessage" xml:space="preserve">
+    <value>Print Report for {0} {1} -  {2}</value>
+    <comment>{0} - MRN, {1} - Patient's Name, {2} - Acc#</comment>
+  </data>
+  <data name="TitleDicomSeries" xml:space="preserve">
+    <value>DICOM Series</value>
+  </data>
+  <data name="TitlePerformingDocumentation" xml:space="preserve">
+    <value>Performing Documentation</value>
+  </data>
+  <data name="TitleWorkflowHistory" xml:space="preserve">
+    <value>Workflow History</value>
+  </data>
+  <data name="MessageNoViewerSupport" xml:space="preserve">
+    <value>No image viewing support.</value>
+  </data>
+  <data name="TitleReason" xml:space="preserve">
+    <value>Reason</value>
+  </data>
+  <data name="FormatMessageConfirmReplaceOrder" xml:space="preserve">
+    <value>{0}
+
+Are you sure you want to cancel and replace this order?</value>
+  </data>
+  <data name="FormatTitleReplaceOrder" xml:space="preserve">
+    <value>Replace Order {0} - {1} {2}</value>
+  </data>
+  <data name="ColumnPerformedDate" xml:space="preserve">
+    <value>Performed Date</value>
+  </data>
+  <data name="ColumnReportStatus" xml:space="preserve">
+    <value>Report Status</value>
+  </data>
+  <data name="MessageConfirmDiscontinueSelectedProcedures" xml:space="preserve">
+    <value>Are you sure you want to discontinue the selected procedure(s)?</value>
+  </data>
+  <data name="TitleCancelTime" xml:space="preserve">
+    <value>Cancel Time</value>
+  </data>
+  <data name="MessageCannotStartDifferentModalityProcedureStepsAtSameTime" xml:space="preserve">
+    <value>Cannot start procedure steps of different modalities at the same time.</value>
+  </data>
+  <data name="TitleStartTime" xml:space="preserve">
+    <value>Start Time</value>
+  </data>
+  <data name="ColumnSeriesInstanceUid" xml:space="preserve">
+    <value>Series Instance UID</value>
+  </data>
+  <data name="ColumnStudyInstanceUid" xml:space="preserve">
+    <value>Study Instance UID</value>
+  </data>
+  <data name="ColumnNumberOfImages" xml:space="preserve">
+    <value>Number of Images</value>
+  </data>
+  <data name="ColumnSeriesNumber" xml:space="preserve">
+    <value>Series Number</value>
+  </data>
+  <data name="TitleCompleteDowntimeRecovery" xml:space="preserve">
+    <value>Complete Downtime Recovery</value>
+  </data>
+  <data name="MessageEnterNumber0OrOver5000" xml:space="preserve">
+    <value>Enter 0 or a number greater than 5000</value>
+  </data>
+  <data name="TitleCompletedTime" xml:space="preserve">
+    <value>Completed Time</value>
+  </data>
+  <data name="TitleDiscontinuedTime" xml:space="preserve">
+    <value>Discontinued Time</value>
+  </data>
+  <data name="FolderActive" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="FolderActiveReportingItems" xml:space="preserve">
+    <value>Active Reporting Items</value>
+  </data>
+  <data name="FolderAwaitingReview" xml:space="preserve">
+    <value>Awaiting Review</value>
+  </data>
+  <data name="FolderCanceled" xml:space="preserve">
+    <value>Canceled</value>
+  </data>
+  <data name="FolderCheckedIn" xml:space="preserve">
+    <value>Checked In</value>
+  </data>
+  <data name="FolderCompleted" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="FolderCorrected" xml:space="preserve">
+    <value>Corrected</value>
+  </data>
+  <data name="FolderDraft" xml:space="preserve">
+    <value>Draft</value>
+  </data>
+  <data name="FolderFinalized" xml:space="preserve">
+    <value>Finalized</value>
+  </data>
+  <data name="FolderIncompleteDocumentation" xml:space="preserve">
+    <value>Incomplete Documentation</value>
+  </data>
+  <data name="FolderInProgress" xml:space="preserve">
+    <value>In Progress</value>
+  </data>
+  <data name="FolderInTranscription" xml:space="preserve">
+    <value>In Transcription</value>
+  </data>
+  <data name="FolderMyItems" xml:space="preserve">
+    <value>My Items</value>
+  </data>
+  <data name="FolderPerformed" xml:space="preserve">
+    <value>Performed</value>
+  </data>
+  <data name="FolderPreliminary" xml:space="preserve">
+    <value>Preliminary</value>
+  </data>
+  <data name="FolderReviewTranscription" xml:space="preserve">
+    <value>Review Transcription</value>
+  </data>
+  <data name="FolderScheduled" xml:space="preserve">
+    <value>Scheduled</value>
+  </data>
+  <data name="FolderSearchResults" xml:space="preserve">
+    <value>Search Results</value>
+  </data>
+  <data name="FolderToBeReported" xml:space="preserve">
+    <value>To be Reported</value>
+  </data>
+  <data name="FolderToBeReviewed" xml:space="preserve">
+    <value>To be Reviewed</value>
+  </data>
+  <data name="FolderToBeTranscribed" xml:space="preserve">
+    <value>To be Transcribed</value>
+  </data>
+  <data name="FolderToBeTranscribedItems" xml:space="preserve">
+    <value>To be Transcribed Items</value>
+  </data>
+  <data name="FolderTracking" xml:space="preserve">
+    <value>Tracking</value>
+  </data>
+  <data name="FolderUnreportedItems" xml:space="preserve">
+    <value>Unreported Items</value>
+  </data>
+  <data name="FolderVerified" xml:space="preserve">
+    <value>Verified</value>
+  </data>
+  <data name="MenuDowntime" xml:space="preserve">
+    <value>Downtime</value>
+  </data>
+  <data name="FormatCommentsFor" xml:space="preserve">
+    <value>Comments for {0}</value>
+  </data>
+  <data name="FormatReportedProcedures" xml:space="preserve">
+    <value>Reported Procedure(s): {0}</value>
+  </data>
+  <data name="MessageMergeOrderConfirmation" xml:space="preserve">
+    <value>Merge order(s) {0} into order {1}?</value>
+  </data>
+  <data name="MessageUndoMergeOrder" xml:space="preserve">
+    <value>Undo merge order {0}</value>
+  </data>
+  <data name="MessageUnmergeOrderConfirmation" xml:space="preserve">
+    <value>Un-merge all orders merged into {0}?</value>
+  </data>
 </root>

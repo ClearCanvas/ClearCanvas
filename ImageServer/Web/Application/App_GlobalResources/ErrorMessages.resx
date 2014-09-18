@@ -205,6 +205,9 @@ If you would like to report the error, please post to one of the forums listed b
   <data name="MultiplePartitionsExistWithAETitle" xml:space="preserve">
     <value>Unexpected Error: Multiple Partitions exist with AE title {0}</value>
   </data>
+  <data name="PageAccessDenied" xml:space="preserve">
+    <value>You are not authorized to view this page</value>
+  </data>
   <data name="PasswordExpired" xml:space="preserve">
     <value>Your password has expired.</value>
   </data>
@@ -220,6 +223,12 @@ If you would like to report the error, please post to one of the forums listed b
   <data name="PasswordsDontMatch" xml:space="preserve">
     <value>Provided passwords don't match. 
 Please retype your passwords and try again.</value>
+  </data>
+  <data name="PotentialDangerousRequest" xml:space="preserve">
+    <value>A potentially dangerous request was detected.</value>
+  </data>
+  <data name="QCReportNotAvailable" xml:space="preserve">
+    <value>Report is not available at this time because of the following error(s):</value>
   </data>
   <data name="SessionTimedout" xml:space="preserve">
     <value>ImageServer session timed out.</value>

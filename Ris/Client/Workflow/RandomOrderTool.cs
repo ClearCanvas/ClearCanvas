@@ -39,9 +39,9 @@ namespace ClearCanvas.Ris.Client.Workflow
 {
 
 
-	[MenuAction("apply", "folderexplorer-items-contextmenu/Random Order", "RandomOrder")]
-	[ButtonAction("apply", "folderexplorer-items-toolbar/Random Order", "RandomOrder")]
-	[Tooltip("apply", "Random Order")]
+	[MenuAction("apply", "folderexplorer-items-contextmenu/MenuRandomOrder", "RandomOrder")]
+	[ButtonAction("apply", "folderexplorer-items-toolbar/MenuRandomOrder", "RandomOrder")]
+	[Tooltip("apply", "TooltipRandomOrder")]
 	[IconSet("apply", "AddToolSmall.png", "AddToolMedium.png", "AddToolLarge.png")]
 	[EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
 	[ActionPermission("apply", Application.Common.AuthorityTokens.Development.CreateTestOrder)]

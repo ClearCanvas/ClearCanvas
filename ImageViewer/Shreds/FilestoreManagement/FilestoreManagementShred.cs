@@ -29,6 +29,7 @@ using ClearCanvas.Common.Shreds;
 
 namespace ClearCanvas.ImageViewer.Shreds.FilestoreManagement
 {
+    [ShredIsolation(Level = ShredIsolationLevel.None)]
 	[ExtensionOf(typeof(ShredExtensionPoint))]
 	public class FilestoreManagementShred : QueueProcessorShred
 	{

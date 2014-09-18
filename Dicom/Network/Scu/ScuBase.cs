@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using ClearCanvas.Common;
+using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom.Iod;
 
 namespace ClearCanvas.Dicom.Network.Scu
@@ -254,6 +255,26 @@ namespace ClearCanvas.Dicom.Network.Scu
 		/// </summary>
 		public event EventHandler<AssociationParameters> AssociationAccepted;
 
+		/// <summary>
+		/// Occurs when the associated has been rejected by the remote AE
+		/// </summary>
+		public event EventHandler<AssociationParameters> AssociationRejected;
+
+		/// <summary>
+		/// Occurs when the associated has been released
+		/// </summary>
+		public event EventHandler<AssociationParameters> AssociationReleased;
+
+		/// <summary>
+		/// Occurs when the associated has been aborted
+		/// </summary>
+		public event EventHandler<AssociationParameters> AssociationAborted;
+
+		/// <summary>
+		/// Occurs when a network error occured
+		/// </summary>
+		public event EventHandler<AssociationParameters> NetworkError;
+
 		#endregion
 
 		#region Public Methods...
@@ -378,7 +399,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 
 		protected void Connect(string clientAETitle, string remoteAE, string remoteHost, int remotePort)
 		{
-			if (LogInformation) Platform.Log(LogLevel.Info, "Preparing to connect to AE {0} on host {1} on port {2} for printer status request.", remoteAE, remoteHost, remotePort);
+			if (LogInformation) Platform.Log(LogLevel.Info, "Preparing to connect to AE {0} on host {1} on port {2}", remoteAE, remoteHost, remotePort);
 			try
 			{
 				ClientAETitle = clientAETitle;
@@ -562,7 +583,15 @@ namespace ClearCanvas.Dicom.Network.Scu
 				String.Format("Association Rejection when {0} connected to remote AE {1}:{2}", association.CallingAE,
 				              association.CalledAE, association.RemoteEndPoint);
 			Platform.Log(LogLevel.Warn, FailureDescription);
-			StopRunningOperation(ScuOperationStatus.AssociationRejected);
+			try
+			{
+				StopRunningOperation(ScuOperationStatus.AssociationRejected);
+			}
+			finally
+			{
+				if (AssociationRejected!=null)
+					EventsHelper.Fire(AssociationRejected, this, association);
+			}
 		}
 
 		/// <summary>
@@ -595,8 +624,17 @@ namespace ClearCanvas.Dicom.Network.Scu
 		public void OnReceiveReleaseResponse(DicomClient client, ClientAssociationParameters association)
 		{
 			if (LogInformation) Platform.Log(LogLevel.Info, "Association released from {0} to {1}", association.CallingAE, association.CalledAE);
-			StopRunningOperation();
+			try
+			{
+				StopRunningOperation();
+			}
+			finally
+			{
+				if (AssociationReleased != null)
+					EventsHelper.Fire(this.AssociationReleased, this, association);
+			}
 		}
+
 
 		/// <summary>
 		/// Called when [receive abort].
@@ -609,7 +647,17 @@ namespace ClearCanvas.Dicom.Network.Scu
 		{
 			FailureDescription = String.Format("Unexpected association abort received from {0} to {1}", association.CallingAE, association.CalledAE);
 			Platform.Log(LogLevel.Warn, FailureDescription);
-			StopRunningOperation(ScuOperationStatus.UnexpectedMessage);
+			try
+			{
+				StopRunningOperation(ScuOperationStatus.UnexpectedMessage);
+			}
+			finally
+			{
+				if (AssociationAborted!=null)
+				{
+					EventsHelper.Fire(AssociationAborted, this, association);
+				}
+			}
 		}
 
 		/// <summary>
@@ -643,7 +691,17 @@ namespace ClearCanvas.Dicom.Network.Scu
 
 			ResultStatus = DicomState.Failure;
 
-			StopRunningOperation(stopStatus);
+			try
+			{
+				StopRunningOperation(stopStatus);
+			}
+			finally
+			{
+				if (NetworkError!=null)
+				{
+					EventsHelper.Fire(NetworkError, this, association);
+				}
+			}
 		}
 
 		/// <summary>
@@ -656,8 +714,8 @@ namespace ClearCanvas.Dicom.Network.Scu
 			Status = ScuOperationStatus.TimeoutExpired;
 			ResultStatus = DicomState.Failure;
 
-			FailureDescription = String.Format("Timeout Expired ({0} seconds) for remote AE {1}, aborting connection", association.ReadTimeout / 1000,
-							  RemoteAE);
+			FailureDescription = String.Format("Timeout Expired ({0} seconds) for remote AE {1}, aborting connection", association.ReadTimeout/1000,
+			                                   RemoteAE);
 			if (LogInformation) Platform.Log(LogLevel.Info, FailureDescription);
 
 			try
@@ -735,6 +793,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 		}
 
 		#endregion
+
 	}
 
 	/// <summary>

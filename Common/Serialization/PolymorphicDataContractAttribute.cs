@@ -50,10 +50,12 @@ namespace ClearCanvas.Common.Serialization
 		{
 			try
 			{
+			    var types = Platform.PluginManager.Plugins.SelectMany(p => p.Assembly.Resolve().GetTypes());
+			    types = types.Concat(typeof (PolymorphicDataContractAttribute).Assembly.GetTypes());
+			    
 				// build the contract maps by finding all types having an attribute
 				// that is a subclass of PolymorphicDataContractAttribute
-				_contractMaps = (from p in Platform.PluginManager.Plugins
-								 from t in p.Assembly.Resolve().GetTypes()
+				_contractMaps = (from t in types
 								 from a in t.GetCustomAttributes(false)
 								 let pa = a as PolymorphicDataContractAttribute
 								 where (pa != null)

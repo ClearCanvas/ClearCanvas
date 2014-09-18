@@ -95,15 +95,13 @@ namespace ClearCanvas.ImageServer.Core.Edit
     }
 
     /// <summary>
-    /// Encapsulate the object stored in the Data column of the "WebDeleteStudy" WorkQueue entry
-    /// used for study level deletion.
+    /// Encapsulate the object stored in the Data column of the "WebMoveStudy" WorkQueue entry
+    /// used for study level move.
     /// </summary>
     [XmlRoot("WebMoveWorkQueueEntry")]
     [WorkQueueDataType("B9B1C2EB-3BFC-43DE-8DA5-0B0018B9C50A")]
     public class WebMoveWorkQueueEntryData : WorkQueueData
     {
-    	public string Reason { get; set; }
-
     	public MoveLevel Level { get; set; }
 
     	public string UserId { get; set; }

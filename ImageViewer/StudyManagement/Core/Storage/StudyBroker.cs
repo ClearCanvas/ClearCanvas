@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data.Linq;
 using System.Linq;
 
 namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
@@ -31,61 +32,42 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 	public class StudyBroker : Broker
 	{
 		internal StudyBroker(DicomStoreDataContext context)
-			: base(context)
-		{
-		}
+			: base(context) {}
 
 		public void AddStudy(Study study)
 		{
-			this.Context.Studies.InsertOnSubmit(study);
+			Context.Studies.InsertOnSubmit(study);
 		}
 
 		public Study GetStudy(long oid)
-		{	
-            var list = (from s in this.Context.Studies
-                        where s.Oid == oid
-                        select s).ToList();
-
-            if (!list.Any()) return null;
-
-            return list.First();
+		{
+			return _getStudyByOid(Context, oid).FirstOrDefault();
 		}
 
 		public Study GetStudy(string studyInstanceUid)
 		{
-            var list = (from s in this.Context.Studies
-                        where s.StudyInstanceUid == studyInstanceUid
-                        select s).ToList();
-
-            if (!list.Any()) return null;
-
-            return list.First();
+			return _getStudyByStudyInstanceUid(Context, studyInstanceUid).FirstOrDefault();
 		}
 
-        public long GetStudyCount()
-        {
-            var count = (from s in Context.Studies
-                        select s).Count();
-            return count;
-        }
+		public long GetStudyCount()
+		{
+			return _getStudyCount(Context);
+		}
 
-        public List<long> GetStudyOids()
-        {
-            return GetSingleColumn<Study, long>(null, s => s.Oid);
-        }
+		public List<long> GetStudyOids()
+		{
+			return _getAllStudyOids(Context).ToList();
+		}
 
-        public List<Study> GetStudies()
-        {
-            return (from s in Context.Studies                    
-                    select s).ToList();
-        }
+		public List<Study> GetStudies()
+		{
+			return _getAllStudies(Context).ToList();
+		}
 
-        public List<Study> GetReindexStudies()
-        {
-            return (from s in Context.Studies
-                    where s.Reindex
-                    select s).ToList();
-        }
+		public List<Study> GetReindexStudies()
+		{
+			return _getReindexStudies(Context).ToList();
+		}
 
 		/// <summary>
 		/// Get studies that are eligible for deletion as of the specified time.
@@ -95,34 +77,66 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage
 		/// <returns></returns>
 		public List<Study> GetStudiesForDeletion(DateTime now, int batchSize)
 		{
-			return (from s in Context.Studies
-					where !s.Deleted && !s.Reindex && s.DeleteTime != null && s.DeleteTime < now
-					orderby s.DeleteTime ascending 
-					select s)
-					.Take(batchSize)
-					.ToList();
-		}		 
+			return _getStudiesForDeletion(Context, now, batchSize).ToList();
+		}
 
-        /// <summary>
-        /// Delete Study entity.
-        /// </summary>
-        /// <param name="entity"></param>
-        public void Delete(Study entity)
-        {
-            this.Context.Studies.DeleteOnSubmit(entity);
-        }
+		/// <summary>
+		/// Delete Study entity.
+		/// </summary>
+		/// <param name="entity"></param>
+		public void Delete(Study entity)
+		{
+			Context.Studies.DeleteOnSubmit(entity);
+		}
 
-        /// <summary>
-        /// Delete Study entity.
-        /// </summary>
-	    public void DeleteStudy(string studyInstanceUid)
-        {
-            this.Context.Studies.DeleteOnSubmit(GetStudy(studyInstanceUid));
-	    }
+		/// <summary>
+		/// Delete Study entity.
+		/// </summary>
+		public void DeleteStudy(string studyInstanceUid)
+		{
+			Context.Studies.DeleteOnSubmit(GetStudy(studyInstanceUid));
+		}
 
-	    internal void DeleteAll()
-	    {
-            Context.Studies.DeleteAllOnSubmit(from s in Context.Studies select s);
-	    }
+		internal void DeleteAll()
+		{
+			Context.Studies.DeleteAllOnSubmit(from s in Context.Studies select s);
+		}
+
+		#region Compiled Queries
+
+		private static readonly Func<DicomStoreDataContext, long, IQueryable<Study>> _getStudyByOid =
+			CompiledQuery.Compile<DicomStoreDataContext, long, IQueryable<Study>>((context, oid) => (from s in context.Studies
+			                                                                                         where s.Oid == oid
+			                                                                                         select s).Take(1));
+
+		private static readonly Func<DicomStoreDataContext, string, IQueryable<Study>> _getStudyByStudyInstanceUid =
+			CompiledQuery.Compile<DicomStoreDataContext, string, IQueryable<Study>>((context, studyInstanceUid) => (from s in context.Studies
+			                                                                                                        where s.StudyInstanceUid == studyInstanceUid
+			                                                                                                        select s).Take(1));
+
+		private static readonly Func<DicomStoreDataContext, int> _getStudyCount =
+			CompiledQuery.Compile<DicomStoreDataContext, int>(context => (from s in context.Studies
+			                                                              select s.Oid).Count());
+
+		private static readonly Func<DicomStoreDataContext, IQueryable<long>> _getAllStudyOids =
+			CompiledQuery.Compile<DicomStoreDataContext, IQueryable<long>>(context => (from s in context.Studies
+			                                                                           select s.Oid));
+
+		private static readonly Func<DicomStoreDataContext, IQueryable<Study>> _getAllStudies =
+			CompiledQuery.Compile<DicomStoreDataContext, IQueryable<Study>>(context => (from s in context.Studies
+			                                                                            select s));
+
+		private static readonly Func<DicomStoreDataContext, IQueryable<Study>> _getReindexStudies =
+			CompiledQuery.Compile<DicomStoreDataContext, IQueryable<Study>>(context => (from s in context.Studies
+			                                                                            where s.Reindex
+			                                                                            select s));
+
+		private static readonly Func<DicomStoreDataContext, DateTime, int, IQueryable<Study>> _getStudiesForDeletion =
+			CompiledQuery.Compile<DicomStoreDataContext, DateTime, int, IQueryable<Study>>((context, now, batchSize) => (from s in context.Studies
+			                                                                                                             where !s.Deleted && !s.Reindex && s.DeleteTime != null && s.DeleteTime < now
+			                                                                                                             orderby s.DeleteTime ascending
+			                                                                                                             select s).Take(batchSize));
+
+		#endregion
 	}
 }

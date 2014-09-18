@@ -35,7 +35,7 @@ using ClearCanvas.Ris.Application.Common;
 
 namespace ClearCanvas.Ris.Client
 {
-    [MenuAction("changePassword", "global-menus/MenuTools/Change Password", "ChangePassword")]
+	[MenuAction("changePassword", "global-menus/MenuTools/MenuUserProfile/MenuChangePassword", "ChangePassword")]
 	[ExtensionOf(typeof(ClearCanvas.Desktop.DesktopToolExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]
     public class SessionManagerTool : Tool<ClearCanvas.Desktop.IDesktopToolContext>
     {
@@ -47,7 +47,7 @@ namespace ClearCanvas.Ris.Client
         {
             if(SessionManager.ChangePassword())
             {
-                this.Context.DesktopWindow.ShowMessageBox("Password changed.", MessageBoxActions.Ok);
+				this.Context.DesktopWindow.ShowMessageBox(SR.MessagePasswordChanged, MessageBoxActions.Ok);
             }
         }
     }

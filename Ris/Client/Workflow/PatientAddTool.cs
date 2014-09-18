@@ -36,11 +36,11 @@ using AuthorityTokens = ClearCanvas.Ris.Application.Common.AuthorityTokens;
 
 namespace ClearCanvas.Ris.Client.Workflow
 {
-	[ButtonAction("apply", "folderexplorer-items-toolbar/New Patient", "Apply")]
-	[MenuAction("apply", "folderexplorer-items-contextmenu/New Patient", "Apply")]
-	[ButtonAction("apply", "patientsearch-items-toolbar/New Patient", "Apply")]
-	[MenuAction("apply", "patientsearch-items-contextmenu/New Patient", "Apply")]
-	[Tooltip("apply", "Create a new patient record")]
+	[ButtonAction("apply", "folderexplorer-items-toolbar/MenuNewPatient", "Apply")]
+	[MenuAction("apply", "folderexplorer-items-contextmenu/MenuNewPatient", "Apply")]
+	[ButtonAction("apply", "patientsearch-items-toolbar/MenuNewPatient", "Apply")]
+	[MenuAction("apply", "patientsearch-items-contextmenu/MenuNewPatient", "Apply")]
+	[Tooltip("apply", "TooltipNewPatient")]
 	[IconSet("apply", "Icons.AddPatientToolSmall.png", "Icons.AddPatientToolMedium.png", "Icons.AddPatientToolLarge.png")]
 	[ActionPermission("apply", ClearCanvas.Ris.Application.Common.AuthorityTokens.Workflow.Patient.Create)]
 

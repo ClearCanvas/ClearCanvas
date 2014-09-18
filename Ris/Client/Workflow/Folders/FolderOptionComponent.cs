@@ -91,7 +91,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Folders
                 }
                 else
                 {
-                    this.Host.DesktopWindow.ShowMessageBox("Enter 0 or a number greater than 5000", MessageBoxActions.Ok);
+                    this.Host.DesktopWindow.ShowMessageBox(SR.MessageEnterNumber0OrOver5000, MessageBoxActions.Ok);
                 }
             }
         }

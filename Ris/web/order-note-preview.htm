@@ -7,6 +7,7 @@
 	<script type="text/javascript" src="./js/jsml.js"></script>
 	<script type="text/javascript" src="./js/ui.js"></script>
 	<script type="text/javascript" src="./js/ris.js"></script>
+	<script type="text/javascript" src="./js/SR.js"></script>
 	<script type="text/javascript" src="./js/preview.js"></script>
 	<script type="text/javascript" src="./JDMI/js/preview.js"></script>
 	<script type="text/javascript" >
@@ -18,45 +19,36 @@
 			if(!Ris)
 				return;
 
-			try
-			{				
-				var context = Ris.getHealthcareContext();
-				if (context == null)
-				{
-					Field.setValue($("myForm"), "");
-					return;
-				}
-				
-				var orderNotes = context.OrderNotes.map(function(n) { return n.NoteDetail; });
-				// initialize an array of boolean check states to false
-				var checkStates = orderNotes.map(function(n) { return false; });
-
-				Field.show($("noConversationSection"), !orderNotes || orderNotes.length == 0);
-								
-				var orderNotesSubsections = 
-					[
-						{category:"PrelimDiagnosis", subsectionHeading:"Preliminary Diagnosis"}
-					];
-
-				var checkBoxesProperties =
-					{
-	 					onItemChecked: function(item, checked) 
-							{
-								var index = orderNotes.indexOf(item);
-								checkStates[index] = checked;
-								Ris.setTag("NotesAcknowledged", JSML.create(checkStates, "checkStates")); 
-							},
-						showItemCheckBox: function(item) { return item.CanAcknowledge; }
-					};
-					
-				Preview.ConversationHistory.create($("conversationHistorySection"), orderNotes, orderNotesSubsections, true, checkBoxesProperties);
-				
-			}
-			catch(e)
+			var context = Ris.getHealthcareContext();
+			if (context == null)
 			{
-				var message = "Failed to load preview page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
-				Field.setValue($("myForm"), message);
+				Field.setValue($("myForm"), "");
+				return;
 			}
+			
+			var orderNotes = context.OrderNotes.map(function(n) { return n.NoteDetail; });
+			// initialize an array of boolean check states to false
+			var checkStates = orderNotes.map(function(n) { return false; });
+
+			Field.show($("noConversationSection"), !orderNotes || orderNotes.length == 0);
+							
+			var orderNotesSubsections = 
+				[
+					{category:"PrelimDiagnosis", subsectionHeading:"Preliminary Diagnosis"}
+				];
+
+			var checkBoxesProperties =
+				{
+					onItemChecked: function(item, checked) 
+						{
+							var index = orderNotes.indexOf(item);
+							checkStates[index] = checked;
+							Ris.setTag("NotesAcknowledged", JSML.create(checkStates, "checkStates")); 
+						},
+					showItemCheckBox: function(item) { return item.CanAcknowledge; }
+				};
+				
+			Preview.ConversationHistory.create($("conversationHistorySection"), orderNotes, orderNotesSubsections, true, checkBoxesProperties);
 		}
 	</script>
 	<style>

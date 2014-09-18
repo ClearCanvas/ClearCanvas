@@ -7,32 +7,25 @@
 	<script type="text/javascript" src="../../js/jsml.js"></script>
 	<script type="text/javascript" src="../../js/ui.js"></script>
 	<script type="text/javascript" src="../../js/ris.js"></script>
+	<script type="text/javascript" src="../../js/SR.js"></script>
 	<script type="text/javascript" >
 		var data = {};
 		var errorProvider = new ErrorProvider();
 
 		function onBodyLoad()
 		{		   
-			try
-			{
-				var startTime;
-				var stopTime;
-				var facility;
-				var modality;
+			var startTime;
+			var stopTime;
+			var facility;
+			var modality;
 
-				if(Ris)
-				{
-					data = JSML.parse(Ris.getTag("Documentation")) || {};
-				}
-
-				data.comments = data.comments || [];
-				initCommentsTable();
-			}
-			catch(e)
+			if(Ris)
 			{
-				var message = "Failed to load details page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
-				Field.setValue($("myForm"), message);
+				data = JSML.parse(Ris.getTag("Documentation")) || {};
 			}
+
+			data.comments = data.comments || [];
+			initCommentsTable();
 		}
 		
 		function initCommentsTable()

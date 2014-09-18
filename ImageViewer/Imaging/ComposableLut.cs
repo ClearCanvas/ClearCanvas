@@ -65,6 +65,17 @@ namespace ClearCanvas.ImageViewer.Imaging
 		/// </summary>
 		public abstract double this[double input] { get; }
 
+		/// <summary>
+		/// Performs bulk lookup for a set of input values.
+		/// </summary>
+		/// <param name="input">Source array of input values to be transformed.</param>
+		/// <param name="output">Destination array where transformed output values will be written (may be same array as <paramref name="input"/>).</param>
+		/// <param name="count">Number of values in the arrays to transform (contiguous entries from start of array).</param>
+		public virtual void LookupValues(double[] input, double[] output, int count)
+		{
+			LutFunctions.LookupLut(input, output, count, this);
+		}
+
 		internal override sealed double MinInputValueCore
 		{
 			get { return MinInputValue; }
@@ -87,9 +98,14 @@ namespace ClearCanvas.ImageViewer.Imaging
 			get { return MaxOutputValue; }
 		}
 
-		internal override sealed double Lookup(double input)
+		internal override sealed double LookupCore(double input)
 		{
 			return this[input];
+		}
+
+		internal override sealed void LookupCore(double[] input, double[] output, int count)
+		{
+			LookupValues(input, output, count);
 		}
 	}
 }

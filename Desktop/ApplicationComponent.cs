@@ -27,8 +27,8 @@ using System.ComponentModel;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop.Actions;
-using ClearCanvas.Desktop.Validation;
 using ClearCanvas.Desktop.Tools;
+using ClearCanvas.Desktop.Validation;
 
 namespace ClearCanvas.Desktop
 {
@@ -36,9 +36,7 @@ namespace ClearCanvas.Desktop
 	/// Defines an extension point for tools that operate on application components.
 	/// </summary>
 	[ExtensionPoint]
-	public class ApplicationComponentMetaToolExtensionPoint : ExtensionPoint<ITool>
-	{
-	}
+	public class ApplicationComponentMetaToolExtensionPoint : ExtensionPoint<ITool> {}
 
 	/// <summary>
 	/// Defines the interface for a tool context for tools that extend <see cref="ApplicationComponentMetaToolExtensionPoint"/>.
@@ -56,7 +54,6 @@ namespace ClearCanvas.Desktop
 		ApplicationComponent Component { get; }
 	}
 
-
 	/// <summary>
 	/// Provides a callback when an application component exits.
 	/// </summary>
@@ -72,7 +69,6 @@ namespace ClearCanvas.Desktop
 	/// </remarks>
 	public abstract class ApplicationComponent : IApplicationComponent, IDataErrorInfo
 	{
-
 		#region LaunchAsWorkspace overloads
 
 		/// <summary>
@@ -92,7 +88,7 @@ namespace ClearCanvas.Desktop
 		public static Workspace LaunchAsWorkspace(
 			IDesktopWindow desktopWindow,
 			IApplicationComponent component,
-			string title,
+			[param : Localizable(true)] string title,
 			ApplicationComponentExitDelegate exitCallback)
 		{
 			var args = new WorkspaceCreationArgs(component, title, null);
@@ -113,7 +109,7 @@ namespace ClearCanvas.Desktop
 		public static Workspace LaunchAsWorkspace(
 			IDesktopWindow desktopWindow,
 			IApplicationComponent component,
-			string title,
+			[param : Localizable(true)] string title,
 			string name,
 			ApplicationComponentExitDelegate exitCallback)
 		{
@@ -140,7 +136,7 @@ namespace ClearCanvas.Desktop
 		public static Workspace LaunchAsWorkspace(
 			IDesktopWindow desktopWindow,
 			IApplicationComponent component,
-			string title,
+			[param : Localizable(true)] string title,
 			string name)
 		{
 			Platform.CheckForNullReference(desktopWindow, "desktopWindow");
@@ -165,7 +161,7 @@ namespace ClearCanvas.Desktop
 		public static Workspace LaunchAsWorkspace(
 			IDesktopWindow desktopWindow,
 			IApplicationComponent component,
-			string title)
+			[param : Localizable(true)] string title)
 		{
 			Platform.CheckForNullReference(desktopWindow, "desktopWindow");
 			Platform.CheckForNullReference(component, "component");
@@ -174,7 +170,6 @@ namespace ClearCanvas.Desktop
 
 			return LaunchAsWorkspace(desktopWindow, args, null);
 		}
-
 
 		/// <summary>
 		/// Executes the specified application component in a new workspace.
@@ -237,7 +232,7 @@ namespace ClearCanvas.Desktop
 		public static Shelf LaunchAsShelf(
 			IDesktopWindow desktopWindow,
 			IApplicationComponent component,
-			string title,
+			[param : Localizable(true)] string title,
 			ShelfDisplayHint displayHint,
 			ApplicationComponentExitDelegate exitCallback)
 		{
@@ -264,7 +259,7 @@ namespace ClearCanvas.Desktop
 		public static Shelf LaunchAsShelf(
 			IDesktopWindow desktopWindow,
 			IApplicationComponent component,
-			string title,
+			[param : Localizable(true)] string title,
 			string name,
 			ShelfDisplayHint displayHint,
 			ApplicationComponentExitDelegate exitCallback)
@@ -292,7 +287,7 @@ namespace ClearCanvas.Desktop
 		public static Shelf LaunchAsShelf(
 			IDesktopWindow desktopWindow,
 			IApplicationComponent component,
-			string title,
+			[param : Localizable(true)] string title,
 			string name,
 			ShelfDisplayHint displayHint)
 		{
@@ -318,7 +313,7 @@ namespace ClearCanvas.Desktop
 		public static Shelf LaunchAsShelf(
 			IDesktopWindow desktopWindow,
 			IApplicationComponent component,
-			string title,
+			[param : Localizable(true)] string title,
 			ShelfDisplayHint displayHint)
 		{
 			var args = new ShelfCreationArgs(component, title, null, displayHint);
@@ -356,10 +351,7 @@ namespace ClearCanvas.Desktop
 			var shelf = desktopWindow.Shelves.AddNew(args);
 			if (exitCallback != null)
 			{
-				shelf.Closed += delegate
-				{
-					exitCallback(args.Component);
-				};
+				shelf.Closed += delegate { exitCallback(args.Component); };
 			}
 			return shelf;
 		}
@@ -383,7 +375,7 @@ namespace ClearCanvas.Desktop
 		public static ApplicationComponentExitCode LaunchAsDialog(
 			IDesktopWindow desktopWindow,
 			IApplicationComponent component,
-			string title)
+			[param : Localizable(true)] string title)
 		{
 			var args = new DialogBoxCreationArgs(component, title, null);
 			return LaunchAsDialog(desktopWindow, args);
@@ -426,7 +418,7 @@ namespace ClearCanvas.Desktop
 		public static WorkspaceDialogBox LaunchAsWorkspaceDialog(
 			IDesktopWindow desktopWindow,
 			IApplicationComponent component,
-			string title)
+			[param : Localizable(true)] string title)
 		{
 			var args = new DialogBoxCreationArgs(component, title, null);
 			return LaunchAsWorkspaceDialog(desktopWindow, args);
@@ -453,10 +445,9 @@ namespace ClearCanvas.Desktop
 
 		#endregion
 
-
 		#region ApplicationComponentMetaToolContext
 
-		class ApplicationComponentMetaToolContext : IApplicationComponentMetaToolContext
+		private class ApplicationComponentMetaToolContext : IApplicationComponentMetaToolContext
 		{
 			private readonly ApplicationComponent _component;
 			private readonly DesktopWindow _window;
@@ -480,7 +471,6 @@ namespace ClearCanvas.Desktop
 
 		#endregion
 
-
 		private IApplicationComponentHost _host;
 		private ApplicationComponentExitCode _exitCode;
 
@@ -500,18 +490,16 @@ namespace ClearCanvas.Desktop
 
 		private ToolSet _toolSet;
 
-
 		/// <summary>
 		/// Default constructor.
 		/// </summary>
 		protected ApplicationComponent()
 		{
-			_exitCode = ApplicationComponentExitCode.None;    // default exit code
+			_exitCode = ApplicationComponentExitCode.None; // default exit code
 
 			// create default validation rule set containing rules for this type
 			_validation = new ValidationRuleSet(ValidationCache.Instance.GetRules(this.GetType()));
 		}
-
 
 		/// <summary>
 		/// Gets or sets the <see cref="ValidationRuleSet"/> that is associated with this component.
@@ -527,10 +515,7 @@ namespace ClearCanvas.Desktop
 		/// </summary>
 		public virtual ActionModelNode MetaContextMenuModel
 		{
-			get
-			{
-				return ActionModelRoot.CreateModel(typeof(ApplicationComponent).FullName, "applicationcomponent-metacontextmenu", _toolSet.Actions);
-			}
+			get { return ActionModelRoot.CreateModel(typeof (ApplicationComponent).FullName, "applicationcomponent-metacontextmenu", _toolSet.Actions); }
 		}
 
 		#region Protected members
@@ -612,33 +597,30 @@ namespace ClearCanvas.Desktop
 		/// </remarks>
 		public virtual IActionSet ExportedActions
 		{
-			get
-			{
-				return new ActionSet();
-			}
+			get { return new ActionSet(); }
 		}
 
-    	/// <summary>
-    	/// Allows the component to specify the namespace that qualifies its global action models. This value should not be null.
-    	/// </summary>
-    	/// <remarks>
-    	/// <para>
-    	/// This value is used by the default implementation of <see cref="IDesktopWindow"/> to qualify the action model
-    	/// to be used for the global toolbar and menu sites.
-    	/// </para>
-    	/// <para>
-    	/// The default implementation returns the default global action model namespace.
-    	/// </para>
-    	/// </remarks>
-    	public virtual string GlobalActionsNamespace
-    	{
-    		get { return typeof (DesktopWindow).FullName; }
-    	}
+		/// <summary>
+		/// Allows the component to specify the namespace that qualifies its global action models. This value should not be null.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This value is used by the default implementation of <see cref="IDesktopWindow"/> to qualify the action model
+		/// to be used for the global toolbar and menu sites.
+		/// </para>
+		/// <para>
+		/// The default implementation returns the default global action model namespace.
+		/// </para>
+		/// </remarks>
+		public virtual string GlobalActionsNamespace
+		{
+			get { return typeof (DesktopWindow).FullName; }
+		}
 
-        /// <summary>
-        /// Called by the host to initialize the application component.
-        /// </summary>
-        ///  <remarks>
+		/// <summary>
+		/// Called by the host to initialize the application component.
+		/// </summary>
+		///  <remarks>
 		/// Override this method to implement custom initialization logic.  Overrides must be sure to call the base implementation.
 		/// </remarks>
 		public virtual void Start()
@@ -647,7 +629,7 @@ namespace ClearCanvas.Desktop
 
 			// create meta-tools
 			_toolSet = new ToolSet(new ApplicationComponentMetaToolExtensionPoint(),
-				new ApplicationComponentMetaToolContext(this, _host.DesktopWindow));
+			                       new ApplicationComponentMetaToolContext(this, _host.DesktopWindow));
 
 			_isStarted = true;
 

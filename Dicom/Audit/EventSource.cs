@@ -33,10 +33,14 @@ namespace ClearCanvas.Dicom.Audit
 	/// </summary>
 	public abstract class EventSource
 	{
-		/// <summary>
-		/// The source of the auditable event is the current end user.
-		/// </summary>
-		public static readonly EventSource CurrentUser = new CurrentUserEventSource();
+	    /// <summary>
+	    /// The source of the auditable event is the current end user.
+	    /// </summary>
+	    /// <returns>Always a new instance representing the user as determined from the calling thread.</returns>
+	    public static EventSource CurrentUser
+	    {
+            get { return new UserEventSource(); }
+	    }
 
 		/// <summary>
 		/// A generic source for when the actual source is unknown.
@@ -111,45 +115,29 @@ namespace ClearCanvas.Dicom.Audit
 			}
 		}
 
-		private class CurrentUserEventSource : EventSource
-		{
-            //TODO CR April 2013: change to ThreadStatic (see defect #11019)
-			private static DicomAuditSource _currentUserAuditSource;
-			private static AuditActiveParticipant _currentUserActiveParticipant;
-
-			protected override DicomAuditSource AsDicomAuditSource()
-			{
-				return _currentUserAuditSource ??
-				       (_currentUserAuditSource =
-				        new DicomAuditSource(GetUserName(), string.Empty, AuditSourceTypeCodeEnum.EndUserInterface));
-			}
-
-			protected override AuditActiveParticipant AsAuditActiveParticipant()
-			{
-				return _currentUserActiveParticipant ??
-				       (_currentUserActiveParticipant =
-				        new AuditPersonActiveParticipant(GetUserName(), string.Empty, GetUserName()));
-			}
-
-			private static string GetUserName()
-			{
-				IPrincipal p = Thread.CurrentPrincipal;
-				if (p == null || p.Identity == null || string.IsNullOrEmpty(p.Identity.Name))
-					return string.Format("{0}@{1}", Environment.UserName, Environment.UserDomainName);
-				return p.Identity.Name;
-			}
-		}
-
 		private class UserEventSource : EventSource
 		{
 			private DicomAuditSource _currentUserAuditSource;
 			private AuditActiveParticipant _currentUserActiveParticipant;
 			private readonly string _username;
 
-			internal UserEventSource(string name)
+		    internal UserEventSource()
+                : this(GetCurrentUserName())
+		    {
+		    }
+
+		    internal UserEventSource(string name)
 			{
 				_username = name;
 			}
+
+            private static string GetCurrentUserName()
+            {
+                IPrincipal p = Thread.CurrentPrincipal;
+                if (p == null || p.Identity == null || string.IsNullOrEmpty(p.Identity.Name))
+                    return string.Format("{0}@{1}", Environment.UserName, Environment.UserDomainName);
+                return p.Identity.Name;
+            }
 
 			protected override DicomAuditSource AsDicomAuditSource()
 			{

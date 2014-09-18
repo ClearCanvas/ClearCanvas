@@ -74,7 +74,7 @@ namespace ClearCanvas.ImageServer.Core.Process
 		    var ep = new ProcessorInsertExtensionPoint();
 		    var extensions = ep.CreateExtensions();
             foreach (IInsertExtension e in extensions)
-                e.InsertExtension(parms, _file);
+                e.InsertExtension(_storageLocation.ServerPartitionKey, parms, _file);
             
 			// Get the Insert Instance broker and do the insert
 			var insert = updateContext.GetBroker<IInsertInstance>();

@@ -23,27 +23,55 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using ClearCanvas.Common;
-using ClearCanvas.ImageViewer.Mathematics;
 
 namespace ClearCanvas.ImageViewer.Rendering.GDI
 {
-	/// <summary>
+    public class CreateFontArgs
+    {
+        public readonly string Name;
+        public readonly float Size;
+        public readonly FontStyle Style;
+        public readonly GraphicsUnit Unit;
+        public string DefaultFontName;
+
+        public CreateFontArgs(string name, float size, FontStyle style, GraphicsUnit unit)
+        {
+            Name = String.IsNullOrWhiteSpace(name) ? FontFactory.GenericSansSerif : name;
+            Size = size;
+            Style = style;
+            Unit = unit;
+        }
+    }
+
+    public interface IFontFactory
+    {
+        Font GetFont(string fontName, float fontSize, FontStyle fontStyle = FontStyle.Regular,
+            GraphicsUnit graphicsUnit = GraphicsUnit.Point, string defaultFontName = null);
+
+        Font CreateFont(CreateFontArgs args);
+    }
+
+    /// <summary>
 	/// Simple flyweight factory for GDI+ <see cref="Font"/>s.
 	/// </summary>
 	public sealed class FontFactory : IDisposable
 	{
 		private class ItemKey
 		{
+            private readonly int _hash;
+		    private readonly int _sizeEquality;
+
 			public ItemKey(string name, float size, FontStyle style, GraphicsUnit unit)
 			{
 				Name = name;
 				//So we don't end up with an insane # of items.
-				Size = (float) Math.Round(size*10)/10;
+			    _sizeEquality = (int)Math.Round(size*10);
+				Size = _sizeEquality/10F;
 				Style = style;
 				Unit = unit;
+			    _hash = ComputeHash();
 			}
 
 			public readonly string Name;
@@ -53,26 +81,32 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 
 			public override int GetHashCode()
 			{
-				var hash = 0x75417862;
-				if (Name != null)
-					hash ^= Name.GetHashCode();
-				hash ^= Size.GetHashCode();
-				hash ^= Style.GetHashCode();
-				hash ^= Unit.GetHashCode();
-				return hash;
+			    return _hash;
 			}
+
+            private int ComputeHash()
+            {
+                var hash = 27;
+                if (Name != null)
+                    hash = hash * 486187739 + Name.GetHashCode();
+                hash = hash * 486187739 + _sizeEquality.GetHashCode();
+                hash = hash * 486187739 + Style.GetHashCode();
+                hash = hash * 486187739 + Unit.GetHashCode();
+                return hash;
+            }
 
 			public override bool Equals(object obj)
 			{
 				var other = (ItemKey) obj;
-				return other.Name == Name
+                //More efficient than constantly using FloatComparer on the size.
+				return other._sizeEquality == _sizeEquality
 				       && other.Style == Style
 				       && other.Unit == Unit
-				       && FloatComparer.AreEqual(other.Size, Size);
+                       && other.Name == Name;
 			}
 		}
 
-		private readonly Dictionary<ItemKey, Font> _fonts = new Dictionary<ItemKey, Font>();
+        private readonly MruFactory<ItemKey, Font> _fonts;
 
 		/// <summary>
 		/// Gets the font name for a generic serif font (e.g. Times New Roman) available on the system.
@@ -89,6 +123,11 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 		/// </summary>
 		public static readonly string GenericMonospace = FontFamily.GenericMonospace.Name;
 
+        public FontFactory(int maxObjects = 20)
+        {
+            _fonts = new MruFactory<ItemKey, Font>(maxObjects, key => new Font(key.Name, key.Size, key.Style, key.Unit));
+        }
+
 		/// <summary>
 		/// Gets a <see cref="Font"/> object for the specified typeface, size, style and unit.
 		/// </summary>
@@ -100,54 +139,41 @@ namespace ClearCanvas.ImageViewer.Rendering.GDI
 		/// <returns></returns>
 		public Font GetFont(string fontName, float fontSize, FontStyle fontStyle = FontStyle.Regular, GraphicsUnit graphicsUnit = GraphicsUnit.Point, string defaultFontName = null)
 		{
-			var key = new ItemKey(fontName, fontSize, fontStyle, graphicsUnit);
-			return GetFont(key, !string.IsNullOrEmpty(defaultFontName) ? defaultFontName : GenericSansSerif);
+		    var args = new CreateFontArgs(fontName, fontSize, fontStyle, graphicsUnit);
+            return CreateFont(args);
 		}
+
+        /// <summary>
+        /// Gets/Creates a <see cref="Font"/> given the specified arguments.
+        /// </summary>
+        public Font CreateFont(CreateFontArgs args)
+        {
+            var key = new ItemKey(args.Name, args.Size, args.Style, args.Unit);
+            var defaultFontName = !string.IsNullOrWhiteSpace(args.DefaultFontName) ? args.DefaultFontName : GenericSansSerif;
+            return GetFont(key, defaultFontName);
+        }
 
 		private Font GetFont(ItemKey key, string defaultFontName)
 		{
-			if (key.Unit == GraphicsUnit.Pixel || key.Unit == GraphicsUnit.Point)
-			{
-				Font font;
-				if (!_fonts.TryGetValue(key, out font))
-					_fonts[key] = font = CreateNewFont(key, defaultFontName);
-
-				return font;
-			}
-
-			return CreateNewFont(key, defaultFontName);
-		}
-
-		private Font CreateNewFont(ItemKey key, string defaultFontName)
-		{
-			CleanupFonts();
-
-			try
-			{
-				return new Font(key.Name, key.Size, key.Style, key.Unit);
-			}
-			catch (Exception ex)
-			{
-				Platform.Log(LogLevel.Error, ex);
-				return new Font(defaultFontName, key.Size, FontStyle.Regular, key.Unit);
-			}
-		}
-
-		private void CleanupFonts(bool force = false)
-		{
-			if (!force && _fonts.Count <= 50)
-				return;
-
-			foreach (var font in _fonts.Values)
-				font.Dispose();
-			_fonts.Clear();
+		    if (key.Unit != GraphicsUnit.Pixel && key.Unit != GraphicsUnit.Point)
+		        throw new NotSupportedException("Only Pixel and Point GraphicsUnits are supported.");
+		    
+            try
+		    {
+		        return _fonts.Create(key);
+		    }
+		    catch (Exception e)
+		    {
+		        Platform.Log(LogLevel.Error, e);
+		        return _fonts.Create(new ItemKey(defaultFontName, key.Size, FontStyle.Regular, key.Unit));
+		    }
 		}
 
 		#region IDisposable Members
 
 		public void Dispose()
 		{
-			CleanupFonts(true);
+			_fonts.Dispose();
 		}
 
 		#endregion

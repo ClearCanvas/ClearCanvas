@@ -35,11 +35,11 @@ using ClearCanvas.Ris.Application.Common;
 namespace ClearCanvas.Ris.Client.Workflow
 {
 	[ActionPermission("apply", ClearCanvas.Ris.Application.Common.AuthorityTokens.Workflow.Images.View)]
-	[MenuAction("apply", "folderexplorer-items-contextmenu/View Images", "Apply")]
-	[ButtonAction("apply", "folderexplorer-items-toolbar/Verify", "Apply")]
-	[ButtonAction("apply", "biography-reports-toolbar/View Images", "Apply")]
+	[MenuAction("apply", "folderexplorer-items-contextmenu/MenuViewImages", "Apply")]
+	[ButtonAction("apply", "folderexplorer-items-toolbar/MenuViewImages", "Apply")]
+	[ButtonAction("apply", "biography-reports-toolbar/MenuViewImages", "Apply")]
 	[IconSet("apply", "Icons.ViewImagesSmall.png", "Icons.ViewImagesMedium.png", "Icons.ViewImagesLarge.png")]
-	[Tooltip("apply", "View Images")]
+	[Tooltip("apply", "TooltipViewImages")]
 	[EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
 	[VisibleStateObserver("apply", "Visible", "VisibleChanged")]
 	[ExtensionOf(typeof(PerformingWorkflowItemToolExtensionPoint))]
@@ -233,7 +233,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 			if (!ViewImagesHelper.IsSupported)
 			{
 				// this should not happen because the tool will be invisible
-				desktopWindow.ShowMessageBox("No image viewing support.", MessageBoxActions.Ok);
+				desktopWindow.ShowMessageBox(SR.MessageNoViewerSupport, MessageBoxActions.Ok);
 				return false;
 			}
 			return true;

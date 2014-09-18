@@ -35,7 +35,7 @@ namespace ClearCanvas.Dicom
 	/// </summary>
 	public abstract class DicomAttributeSingleValueText : DicomAttribute
 	{
-		private String _value = null;
+		private String _value;
 
 		#region Constructors
 
@@ -61,9 +61,9 @@ namespace ClearCanvas.Dicom
 		internal DicomAttributeSingleValueText(DicomAttributeSingleValueText attrib)
 			: base(attrib)
 		{
-			string value = attrib.Values as string;
-			if (value != null)
-				_value = String.Copy(value);
+			var value = attrib.Values as string;
+		    if (value != null)
+		        _value = value;
 		}
 
 		#endregion

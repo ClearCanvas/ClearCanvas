@@ -40,7 +40,7 @@ namespace ClearCanvas.Healthcare {
         /// <summary>
         /// None
         /// </summary>
-        [EnumValue("None", Description = "Not applicable")]
+        [EnumValue("None", Description = "NotApplicable")]
         N,
 
         /// <summary>

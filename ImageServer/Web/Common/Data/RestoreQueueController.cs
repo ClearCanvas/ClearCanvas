@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Web;
 using ClearCanvas.Common;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Model;
@@ -46,7 +47,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
 		{
 			try
 			{
-				IWebQueryRestoreQueue broker = HttpContextData.Current.ReadContext.GetBroker<IWebQueryRestoreQueue>();
+				IWebQueryRestoreQueue broker = HttpContext.Current.GetSharedPersistentContext().GetBroker<IWebQueryRestoreQueue>();
 				IList<RestoreQueue> list = broker.Find(parameters);
 
 				return list;

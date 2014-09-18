@@ -348,7 +348,7 @@ namespace ClearCanvas.Healthcare.Printing
 			var patientProfile = procedure.PatientProfile;
 
 			// letterhead
-			variables["Letterhead"] = new LetterheadFacade();
+			variables["Letterhead"] = new LetterheadFacade(procedure.PerformingFacility.Code);
 
 			// patient
 			variables["Patient"] = new PatientFacade(patientProfile);

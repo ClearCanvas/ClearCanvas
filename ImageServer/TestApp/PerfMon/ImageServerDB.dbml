@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="ImageServer" Class="ImageServerDBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=localhost;Initial Catalog=ImageServer;User ID=isuser" SettingsObjectName="ClearCanvas.ImageServer.TestApp.Properties.Settings" SettingsPropertyName="ImageServerConnectionString2" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.WorkQueue" Member="WorkQueues">
+    <Type Name="WorkQueue">
+      <Column Name="GUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="ServerPartitionGUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="StudyStorageGUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="DeviceGUID" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="StudyHistoryGUID" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="WorkQueueTypeEnum" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
+      <Column Name="WorkQueueStatusEnum" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
+      <Column Name="WorkQueuePriorityEnum" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
+      <Column Name="ProcessorID" Type="System.String" DbType="VarChar(128)" CanBeNull="true" />
+      <Column Name="GroupID" Type="System.String" DbType="VarChar(64)" CanBeNull="true" />
+      <Column Name="ExpirationTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ScheduledTime" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="InsertTime" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="LastUpdatedTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="FailureCount" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="FailureDescription" Type="System.String" DbType="NVarChar(512)" CanBeNull="true" />
+      <Column Name="ExternalRequestQueueGUID" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Association Name="WorkQueue_WorkQueueUid" Member="WorkQueueUids" ThisKey="GUID" OtherKey="WorkQueueGUID" Type="WorkQueueUid" />
+      <Association Name="StudyStorage_WorkQueue" Member="StudyStorage" ThisKey="StudyStorageGUID" OtherKey="GUID" Type="StudyStorage" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.WorkQueueUid" Member="WorkQueueUids">
+    <Type Name="WorkQueueUid">
+      <Column Name="GUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="WorkQueueGUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="SeriesInstanceUid" Type="System.String" DbType="VarChar(64)" CanBeNull="true" />
+      <Column Name="SopInstanceUid" Type="System.String" DbType="VarChar(64)" CanBeNull="true" />
+      <Column Name="Failed" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="Duplicate" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="Extension" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="FailureCount" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
+      <Column Name="GroupID" Type="System.String" DbType="VarChar(64)" CanBeNull="true" />
+      <Association Name="WorkQueue_WorkQueueUid" Member="WorkQueue" ThisKey="WorkQueueGUID" OtherKey="GUID" Type="WorkQueue" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Study" Member="Studies">
+    <Type Name="Study">
+      <Column Name="GUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="ServerPartitionGUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="StudyStorageGUID" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="SpecificCharacterSet" Type="System.String" DbType="VarChar(128)" CanBeNull="true" />
+      <Column Name="StudyInstanceUid" Type="System.String" DbType="VarChar(64) NOT NULL" CanBeNull="false" />
+      <Column Name="NumberOfStudyRelatedSeries" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NumberOfStudyRelatedInstances" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="StudyStorage_Study" Member="StudyStorage" ThisKey="StudyStorageGUID" OtherKey="GUID" Type="StudyStorage" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.StudyStorage" Member="StudyStorages">
+    <Type Name="StudyStorage">
+      <Column Name="GUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="ServerPartitionGUID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="StudyInstanceUid" Type="System.String" DbType="VarChar(64) NOT NULL" CanBeNull="false" />
+      <Column Name="InsertTime" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="LastAccessedTime" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="WriteLock" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="ReadLock" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
+      <Column Name="StudyStatusEnum" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
+      <Column Name="QueueStudyStateEnum" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
+      <Association Name="StudyStorage_WorkQueue" Member="WorkQueues" ThisKey="GUID" OtherKey="StudyStorageGUID" Type="WorkQueue" />
+      <Association Name="StudyStorage_Study" Member="Studies" ThisKey="GUID" OtherKey="StudyStorageGUID" Type="Study" />
+    </Type>
+  </Table>
+</Database>

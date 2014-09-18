@@ -124,25 +124,25 @@ namespace ClearCanvas.ImageServer.TestApp
                 servicecall.End();
 
 
-                TimeSpanStatistics decompression = new TimeSpanStatistics();
+                var decompression = new TimeSpanStatistics();
                 decompression.Start();
                 
                 //GZipStream gzipStream = new GZipStream(stream, CompressionMode.Decompress);
-                XmlDocument doc = new XmlDocument();
-                StudyXmlIo.ReadGzip(doc, stream);
+                var theMemento = new StudyXmlMemento();
+                StudyXmlIo.ReadGzip(theMemento, stream);
                 //doc.Load(gzipStream);
 
                 decompression.End();
                 
 
-                XmlWriterSettings settings = new XmlWriterSettings();
+                var settings = new XmlWriterSettings();
                 //settings.Indent = true;
                 settings.NewLineOnAttributes = false;
                 settings.OmitXmlDeclaration = true;
                 settings.Encoding = Encoding.UTF8;
                 StringWriter sw = new StringWriter();
                 XmlWriter writer = XmlWriter.Create(sw, settings);
-                doc.WriteTo(writer);
+                theMemento.Document.WriteTo(writer);
                 writer.Flush();
                 Log(sw.ToString());
 
@@ -150,7 +150,7 @@ namespace ClearCanvas.ImageServer.TestApp
                 loading.Start();
                 
                 StudyXml xml = new StudyXml();
-                xml.SetMemento(doc);
+                xml.SetMemento(theMemento);
                 loading.End();
 
                 int sopCounter = 0;

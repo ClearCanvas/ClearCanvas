@@ -72,7 +72,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 			get
 			{
 				return _context.SelectedPerformedStep == null ? ""
-				: string.Format("Comments for {0}",
+				: string.Format(SR.FormatCommentsFor,
 					string.Join("/", _context.SelectedPerformedStep.ModalityProcedureSteps.Select(mps => mps.Description).ToArray()));
 			}
 		}
@@ -112,8 +112,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 
 		Path IExtensionPage.Path
 		{
-			//todo: loc
-			get { return new Path("MPPS Documentation", new ResourceResolver(this.GetType().Assembly)); }
+			get { return new Path("TitleMppsDocumentation", new ResourceResolver(this.GetType().Assembly)); }
 		}
 
 		IApplicationComponent IExtensionPage.GetComponent()

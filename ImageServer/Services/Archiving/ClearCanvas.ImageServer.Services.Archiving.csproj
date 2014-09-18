@@ -64,8 +64,6 @@
     <Compile Include="IImageServerArchivePlugin.cs" />
     <Compile Include="ImageServerArchiveBase.cs" />
     <Compile Include="ImageServerArchiveExtensionPoint.cs" />
-    <Compile Include="InsertArchiveStudyStorageCommand.cs" />
-    <Compile Include="InsertFilesystemStudyStorageCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shreds\ArchivingShredExtension.cs" />
     <Compile Include="Shreds\ArchivingShredManager.cs" />

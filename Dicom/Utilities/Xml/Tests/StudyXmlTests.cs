@@ -90,7 +90,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Tests
 			foreach (DicomFile file in images)
 				xml.AddFile(file);
 	
-			XmlDocument doc = xml.GetMemento(new StudyXmlOutputSettings());
+			var doc = xml.GetMemento(new StudyXmlOutputSettings());
 
 			Assert.AreEqual(xml[seriesUid][images[0].DataSet[DicomTags.SopInstanceUid]].SopClass.Uid, SopClass.EnhancedCtImageStorageUid);
 			Assert.AreEqual(xml[seriesUid][images[1].DataSet[DicomTags.SopInstanceUid]].SopClass.Uid, SopClass.EnhancedMrImageStorageUid);
@@ -122,7 +122,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Tests
 			foreach (DicomFile file in images)
 				xml.AddFile(file);
 
-			XmlDocument doc = xml.GetMemento(new StudyXmlOutputSettings());
+			var doc = xml.GetMemento(new StudyXmlOutputSettings());
 
 			Assert.AreEqual(xml[seriesUid][images[0].DataSet[DicomTags.SopInstanceUid]].TransferSyntax, TransferSyntax.Jpeg2000ImageCompression);
 			Assert.AreEqual(xml[seriesUid][images[1].DataSet[DicomTags.SopInstanceUid]].TransferSyntax, TransferSyntax.ExplicitVrLittleEndian);
@@ -151,7 +151,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Tests
 			foreach (DicomFile file in images)
 				xml.AddFile(file);
 
-			XmlDocument doc = xml.GetMemento(new StudyXmlOutputSettings());
+			var doc = xml.GetMemento(new StudyXmlOutputSettings());
 
 			Assert.AreEqual(xml[seriesUid][images[0].DataSet[DicomTags.SopInstanceUid]].TransferSyntax, TransferSyntax.ExplicitVrLittleEndian);
 			Assert.AreEqual(xml[seriesUid][images[1].DataSet[DicomTags.SopInstanceUid]].TransferSyntax, TransferSyntax.ExplicitVrLittleEndian);
@@ -192,7 +192,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Tests
 
 				StudyXmlOutputSettings settings = new StudyXmlOutputSettings();
 				settings.MaxTagLength = 1024;
-				XmlDocument doc = xml.GetMemento(settings);
+				var doc = xml.GetMemento(settings);
 
 				List<InstanceXmlDicomAttributeCollection> dataSets = GetInstanceXmlDataSets(xml);
 				int i = 0;
@@ -226,7 +226,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Tests
 
 				StudyXmlOutputSettings settings = new StudyXmlOutputSettings();
 				settings.MaxTagLength = 1024;
-				XmlDocument doc = xml.GetMemento(settings);
+				var doc = xml.GetMemento(settings);
 
 				List<InstanceXmlDicomAttributeCollection> dataSets = GetInstanceXmlDataSets(xml);
 				ValidateSimpleDataSets(testSet, dataSets, settings);
@@ -282,7 +282,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Tests
 				xml.AddFile(file);
 
 			StudyXmlOutputSettings settings = new StudyXmlOutputSettings();
-			XmlDocument doc = xml.GetMemento(settings);
+			var doc = xml.GetMemento(settings);
 
 			List<InstanceXmlDicomAttributeCollection> dataSets = GetInstanceXmlDataSets(xml);
 			int i = 0;
@@ -313,7 +313,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Tests
 			}
 
 			StudyXmlOutputSettings settings = new StudyXmlOutputSettings();
-			XmlDocument doc = xml.GetMemento(settings);
+			var doc = xml.GetMemento(settings);
 
 			List<InstanceXmlDicomAttributeCollection> dataSets = GetInstanceXmlDataSets(xml);
 			foreach (InstanceXmlDicomAttributeCollection dataSet in dataSets)
@@ -344,7 +344,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Tests
 
 			StudyXmlOutputSettings settings = new StudyXmlOutputSettings();
 			settings.MaxTagLength = 100;
-			XmlDocument doc = xml.GetMemento(settings);
+			var doc = xml.GetMemento(settings);
 
 			//SaveStudyXml(doc, @"C:\stewart\testxml.xml");
 			List<InstanceXmlDicomAttributeCollection> dataSets = GetInstanceXmlDataSets(xml);
@@ -378,7 +378,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Tests
 		{
 			List<DicomFile> images = SetupImages(4);
 
-			XmlDocument doc = null;
+			StudyXmlMemento doc = null;
 			StudyXml xml;
 			int i;
 			for(i = 0; i < images.Count; ++i)
@@ -759,7 +759,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Tests
 			Assert.AreEqual(dataSets1[0][DicomTags.VoiLutSequence], dataSets1[1][DicomTags.VoiLutSequence]);
 
 			newStudyXml.AddFile(images[2]);
-			XmlDocument document = newStudyXml.GetMemento(settings);
+			var document = newStudyXml.GetMemento(settings);
 			//SaveStudyXml(document, @"c:\stewart\studyxml3.xml");
 
 			newStudyXml = new StudyXml();
@@ -796,7 +796,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Tests
 				xml.AddFile(images[0]);
 				xml.AddFile(images[1]);
 
-				XmlDocument doc = xml.GetMemento(settings);
+				var doc = xml.GetMemento(settings);
 
 				settings.MaxTagLength = 1024;
 
@@ -891,7 +891,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Tests
 			foreach (DicomFile image in images)
 				xml.AddFile(image);
 
-			XmlDocument doc = xml.GetMemento(settings);
+			var doc = xml.GetMemento(settings);
 			//SaveStudyXml(doc, @"c:\stewart\LastStudyXml.xml");
 
 			newStudyXml = new StudyXml();

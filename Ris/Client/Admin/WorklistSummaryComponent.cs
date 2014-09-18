@@ -223,7 +223,7 @@ namespace ClearCanvas.Ris.Client.Admin
 			var worklist = CollectionUtils.FirstElement(items);
 			var editor = new WorklistEditorComponent(worklist.WorklistRef, true);
 			var exitCode = LaunchAsDialog(this.Host.DesktopWindow,
-				new DialogBoxCreationArgs(editor, SR.TitleUpdateWorklist + " - " + worklist.DisplayName, null, DialogSizeHint.Large));
+				new DialogBoxCreationArgs(editor, string.Format(SR.FormatTitleSubtitle, SR.TitleUpdateWorklist, worklist.DisplayName), null, DialogSizeHint.Large));
 
 			switch (exitCode)
 			{

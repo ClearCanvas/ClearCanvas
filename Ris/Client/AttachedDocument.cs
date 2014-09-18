@@ -57,10 +57,9 @@ namespace ClearCanvas.Ris.Client
 
 			var fullUrl = new Uri(ftpFileTransfer.BaseUri, documentSummary.ContentUrl);
 			var fileExtension = Path.GetExtension(fullUrl.LocalPath).Trim('.');
-			var localFilePath = TempFileManager.Instance.CreateFile(documentSummary.DocumentRef, fileExtension, 
-				TimeSpan.FromSeconds(AttachedDocumentSettings.Default.DownloadCacheTimeToLive));
-
-			ftpFileTransfer.Download(new FileTransferRequest(fullUrl, localFilePath));
+			var localFilePath = TempFileManager.Instance.CreateFile(documentSummary.DocumentRef, fileExtension,
+			                                                        fn => ftpFileTransfer.Download(new FileTransferRequest(fullUrl, fn)),
+			                                                        TimeSpan.FromSeconds(AttachedDocumentSettings.Default.DownloadCacheTimeToLive));
 
 			return localFilePath;
 		}

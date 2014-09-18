@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Dicom.Iod
@@ -466,64 +467,65 @@ namespace ClearCanvas.Dicom.Iod
 
 				PatientDirection component;
 
+			    var componentChar = code[charPos];
 				var nextChar = charPos + 1 < code.Length ? code[charPos + 1] : '\0';
-				if (code[charPos] == 'L' && nextChar == 'E')
+				if (componentChar == 'L' && nextChar == 'E')
 				{
 					component = QuadrupedLeft;
 					charPos++;
 				}
-				else if (code[charPos] == 'R' && nextChar == 'T')
+				else if (componentChar == 'R' && nextChar == 'T')
 				{
 					component = QuadrupedRight;
 					charPos++;
 				}
-				else if (code[charPos] == 'C' && nextChar == 'R')
+				else if (componentChar == 'C' && nextChar == 'R')
 				{
 					component = QuadrupedCranial;
 					charPos++;
 				}
-				else if (code[charPos] == 'C' && nextChar == 'D')
+				else if (componentChar == 'C' && nextChar == 'D')
 				{
 					component = QuadrupedCaudal;
 					charPos++;
 				}
-				else if (code[charPos] == 'D' && nextChar == 'I')
+				else if (componentChar == 'D' && nextChar == 'I')
 				{
 					component = QuadrupedDistal;
 					charPos++;
 				}
-				else if (code[charPos] == 'P' && nextChar == 'R')
+				else if (componentChar == 'P' && nextChar == 'R')
 				{
 					component = QuadrupedProximal;
 					charPos++;
 				}
-				else if (code[charPos] == 'P' && nextChar == 'A')
+				else if (componentChar == 'P' && nextChar == 'A')
 				{
 					component = QuadrupedPalmar;
 					charPos++;
 				}
-				else if (code[charPos] == 'P' && nextChar == 'L')
+				else if (componentChar == 'P' && nextChar == 'L')
 				{
 					component = QuadrupedPlantar;
 					charPos++;
 				}
-				else if (code[charPos] == 'R')
+				else if (componentChar == 'R')
 				{
 					component = QuadrupedRostral;
 				}
-				else if (code[charPos] == 'L')
+				else if (componentChar == 'L')
 				{
 					component = QuadrupedLateral;
 				}
-				else if (code[charPos] == 'D')
+				else if (componentChar == 'D')
 				{
 					component = QuadrupedDorsal;
 				}
-				else if (code[charPos] == 'V')
+				else if (componentChar == 'V')
 				{
 					component = QuadrupedVentral;
 				}
-				else if (code[charPos] == 'M')
+				else if (componentChar == 'M')
 				{
 					component = QuadrupedMedial;
 				}

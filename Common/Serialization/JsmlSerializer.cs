@@ -26,16 +26,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
+using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Xml;
-using System.IO;
 using ClearCanvas.Common.Utilities;
-
 
 namespace ClearCanvas.Common.Serialization
 {
+
 	#region Extensiblity
 
 	/// <summary>
@@ -140,14 +139,11 @@ namespace ClearCanvas.Common.Serialization
 		object Deserialize(Type dataType, XmlElement xmlElement);
 	}
 
-
 	/// <summary>
 	/// Defines an extension point for customizing the JSML serialization/deserialization services.
 	/// </summary>
 	[ExtensionPoint]
-	public class JsmlSerializerHookExtensionPoint : ExtensionPoint<IJsmlSerializerHook>
-	{
-	}
+	public class JsmlSerializerHookExtensionPoint : ExtensionPoint<IJsmlSerializerHook> {}
 
 	#endregion
 
@@ -265,7 +261,7 @@ namespace ClearCanvas.Common.Serialization
 
 			using (var sw = new StringWriter())
 			{
-				var writer = new XmlTextWriter(sw) { Formatting = Formatting.Indented };
+				var writer = new XmlTextWriter(sw) {Formatting = Formatting.Indented};
 				Serialize(writer, obj, objectName, options);
 				writer.Close();
 				return sw.ToString();
@@ -292,13 +288,12 @@ namespace ClearCanvas.Common.Serialization
 			serializer.Do(obj, objectName);
 		}
 
-
 		/// <summary>
 		/// Deserializes the specified JSML text into an object of the specified type.
 		/// </summary>
 		public static T Deserialize<T>(string jsml)
 		{
-			return (T)Deserialize(typeof(T), jsml);
+			return (T) Deserialize(typeof (T), jsml);
 		}
 
 		/// <summary>
@@ -306,16 +301,16 @@ namespace ClearCanvas.Common.Serialization
 		/// </summary>
 		public static T Deserialize<T>(string jsml, DeserializeOptions options)
 		{
-			return (T)Deserialize(typeof(T), jsml, options);
+			return (T) Deserialize(typeof (T), jsml, options);
 		}
 
-        /// <summary>
-        /// Deserializes the specified XML Document into an object of the specified type.
-        /// </summary>
-        public static T Deserialize<T>(XmlDocument xmlDoc, DeserializeOptions options)
-        {
-            return (T)Deserialize(typeof(T), xmlDoc, options);
-        }
+		/// <summary>
+		/// Deserializes the specified XML Document into an object of the specified type.
+		/// </summary>
+		public static T Deserialize<T>(XmlDocument xmlDoc, DeserializeOptions options)
+		{
+			return (T) Deserialize(typeof (T), xmlDoc, options);
+		}
 
 		/// <summary>
 		/// Deserializes the specified JSML text into an object of the specified type.
@@ -333,42 +328,42 @@ namespace ClearCanvas.Common.Serialization
 			if (String.IsNullOrEmpty(jsml))
 				return null;
 
-			var xmlDoc = new XmlDocument { PreserveWhitespace = true };
+			var xmlDoc = new XmlDocument {PreserveWhitespace = true};
 			xmlDoc.LoadXml(jsml);
 
 			var deserializer = new Deserializer(options);
 			return deserializer.Do(dataContract, xmlDoc.DocumentElement);
 		}
 
-        /// <summary>
-        /// Deserializes the specified XML document into an object of the specified type.
-        /// </summary>
-        /// 
-        public static object Deserialize(Type dataContract, XmlDocument xmlDoc, DeserializeOptions options)
-        {
-            if (xmlDoc == null)
-                return null;
-
-            xmlDoc.PreserveWhitespace = true;
-
-            var deserializer = new Deserializer(options);
-            return deserializer.Do(dataContract, xmlDoc.DocumentElement);
-        }
-
 		/// <summary>
-		/// Deserializes the specified JSML text into an object of the specified type.
+		/// Deserializes the specified XML document into an object of the specified type.
 		/// </summary>
-		public static object Deserialize<T>(XmlReader reader)
+		/// 
+		public static object Deserialize(Type dataContract, XmlDocument xmlDoc, DeserializeOptions options)
 		{
-			return Deserialize(reader, typeof(T));
+			if (xmlDoc == null)
+				return null;
+
+			xmlDoc.PreserveWhitespace = true;
+
+			var deserializer = new Deserializer(options);
+			return deserializer.Do(dataContract, xmlDoc.DocumentElement);
 		}
 
 		/// <summary>
 		/// Deserializes the specified JSML text into an object of the specified type.
 		/// </summary>
-		public static object Deserialize<T>(XmlReader reader, DeserializeOptions options)
+		public static T Deserialize<T>(XmlReader reader)
 		{
-			return Deserialize(reader, typeof(T), options);
+			return (T) Deserialize(reader, typeof (T));
+		}
+
+		/// <summary>
+		/// Deserializes the specified JSML text into an object of the specified type.
+		/// </summary>
+		public static T Deserialize<T>(XmlReader reader, DeserializeOptions options)
+		{
+			return (T) Deserialize(reader, typeof (T), options);
 		}
 
 		/// <summary>
@@ -412,10 +407,10 @@ namespace ClearCanvas.Common.Serialization
 			protected static IEnumerable<IObjectMemberContext> GetDataMemberFields(object dataObject, Predicate<MemberInfo> memberTest, bool includeNonPublicMembers)
 			{
 				var walker = new ObjectWalker(memberTest)
-				{
-					IncludeNonPublicFields = includeNonPublicMembers,
-					IncludeNonPublicProperties = includeNonPublicMembers
-				};
+				             	{
+				             		IncludeNonPublicFields = includeNonPublicMembers,
+				             		IncludeNonPublicProperties = includeNonPublicMembers
+				             	};
 
 				return walker.Walk(dataObject);
 			}
@@ -493,6 +488,7 @@ namespace ClearCanvas.Common.Serialization
 			{
 				Do(obj, objectName, new Dictionary<string, string>());
 			}
+
 			/// <summary>
 			/// Serializes the specified object, enclosing it with the specified name.
 			/// </summary>
@@ -539,7 +535,7 @@ namespace ClearCanvas.Common.Serialization
 					// the dictionary is serialized as if it were an object and each key is a property on the object
 					// jscript will not be able to distinguish that it was originally a dictionary
 					// note that if the dictionary contains non-string keys, unpredictable behaviour may result
-					var dic = (IDictionary)obj;
+					var dic = (IDictionary) obj;
 					_writer.WriteAttributeString("type", "hash");
 					foreach (DictionaryEntry entry in dic)
 					{
@@ -556,28 +552,28 @@ namespace ClearCanvas.Common.Serialization
 				}
 				else if (obj is DateTime)
 				{
-					_writer.WriteValue(DateTimeUtils.FormatISO((DateTime)obj));
+					_writer.WriteValue(DateTimeUtils.FormatISO((DateTime) obj));
 				}
 				else if (obj is DateTime?)
 				{
-					_writer.WriteValue(DateTimeUtils.FormatISO(((DateTime?)obj).Value));
+					_writer.WriteValue(DateTimeUtils.FormatISO(((DateTime?) obj).Value));
 				}
-                else if (obj is TimeSpan)
-                {
-                    _writer.WriteValue(DateTimeUtils.FormatTimeSpan((TimeSpan)obj));
-                }
-                else if (obj is TimeSpan?)
-                {
-                    _writer.WriteValue(DateTimeUtils.FormatTimeSpan(((TimeSpan?)obj).Value));
-                }
-                else if (obj is bool)
+				else if (obj is TimeSpan)
 				{
-					_writer.WriteValue((bool)obj ? "true" : "false");
+					_writer.WriteValue(DateTimeUtils.FormatTimeSpan((TimeSpan) obj));
+				}
+				else if (obj is TimeSpan?)
+				{
+					_writer.WriteValue(DateTimeUtils.FormatTimeSpan(((TimeSpan?) obj).Value));
+				}
+				else if (obj is bool)
+				{
+					_writer.WriteValue((bool) obj ? "true" : "false");
 				}
 				else if (obj is IList)
 				{
 					_writer.WriteAttributeString("type", "array");
-					foreach (var item in (IList)obj)
+					foreach (var item in (IList) obj)
 					{
 						Do(item, "item");
 					}
@@ -587,7 +583,7 @@ namespace ClearCanvas.Common.Serialization
 					// this clause supports serialization of an embedded JSML document inline with the
 					// output of the serializer
 					_writer.WriteAttributeString("type", "hash");
-					var xmlDoc = (XmlDocument)obj;
+					var xmlDoc = (XmlDocument) obj;
 					if (xmlDoc.DocumentElement != null)
 					{
 						xmlDoc.DocumentElement.WriteTo(_writer);
@@ -595,7 +591,7 @@ namespace ClearCanvas.Common.Serialization
 				}
 				else if (obj is Guid)
 				{
-					_writer.WriteValue(((Guid)obj).ToString("N"));
+					_writer.WriteValue(((Guid) obj).ToString("N"));
 				}
 				else if (obj is IConvertible)
 				{
@@ -632,13 +628,12 @@ namespace ClearCanvas.Common.Serialization
 				{
 					return this.Owner.Do(dataType, xmlElement);
 				}
+
 				private Deserializer Owner { get; set; }
 			}
 
 			public Deserializer(DeserializeOptions options)
-				: base(options)
-			{
-			}
+				: base(options) {}
 
 			/// <summary>
 			/// Create an object of type 'dataType' from the xmlElement.  Recurse if the object is a DataContractBase or IList
@@ -672,7 +667,7 @@ namespace ClearCanvas.Common.Serialization
 					return dataObject;
 				}
 
-				if (typeof(IDictionary).IsAssignableFrom(dataType))
+				if (typeof (IDictionary).IsAssignableFrom(dataType))
 				{
 					// this clause was added mainly to support de-serialization of ExtendedProperties
 					// note that only strongly-typed dictionaries are supported, and the key type *must* be "string",
@@ -680,7 +675,7 @@ namespace ClearCanvas.Common.Serialization
 					var dataObject = Activator.CreateInstance(dataType);
 					var genericTypes = dataType.GetGenericArguments();
 					var keyType = genericTypes[0];
-					if (keyType != typeof(string))
+					if (keyType != typeof (string))
 						throw new NotSupportedException("Only IDictionary<string, T>, where T is a JSML-serializable type, is supported.");
 					var valueType = genericTypes[1];
 
@@ -688,14 +683,14 @@ namespace ClearCanvas.Common.Serialization
 					{
 						if (node is XmlElement)
 						{
-							var value = Do(valueType, (XmlElement)node);
-							((IDictionary)dataObject).Add(node.Name, value);
+							var value = Do(valueType, (XmlElement) node);
+							((IDictionary) dataObject).Add(node.Name, value);
 						}
 					}
 					return dataObject;
 				}
 
-				if (dataType == typeof(string))
+				if (dataType == typeof (string))
 				{
 					return xmlElement.InnerText;
 				}
@@ -705,38 +700,38 @@ namespace ClearCanvas.Common.Serialization
 					return Enum.Parse(dataType, xmlElement.InnerText, true);
 				}
 
-				if (dataType == typeof(DateTime))
+				if (dataType == typeof (DateTime))
 				{
 					return DateTimeUtils.ParseISO(xmlElement.InnerText);
 				}
-                if (dataType == typeof(TimeSpan))
-                {
-                    return DateTimeUtils.ParseTimeSpan(xmlElement.InnerText);
-                }
+				if (dataType == typeof (TimeSpan))
+				{
+					return DateTimeUtils.ParseTimeSpan(xmlElement.InnerText);
+				}
 
-				if (dataType == typeof(bool))
+				if (dataType == typeof (bool))
 				{
 					return xmlElement.InnerText.Equals("true", StringComparison.InvariantCultureIgnoreCase);
 				}
 
-				if (dataType.IsGenericType && dataType.GetGenericTypeDefinition() == typeof(Nullable<>))
+				if (dataType.IsGenericType && dataType.GetGenericTypeDefinition() == typeof (Nullable<>))
 				{
 					// recur using the generic argument type in place of the nullable wrapper type
 					return Do(dataType.GetGenericArguments()[0], xmlElement);
 				}
 
-				if (dataType.GetInterface("IList") == typeof(IList))
+				if (dataType.GetInterface("IList") == typeof (IList))
 				{
 					var nodeList = xmlElement.SelectNodes("item");
 					var count = nodeList == null ? 0 : nodeList.Count;
-					if (dataType.BaseType == typeof(Array))
+					if (dataType.BaseType == typeof (Array))
 					{
 						var elementType = dataType.GetElementType();
 						var dataObject = Array.CreateInstance(elementType, count);
 
 						for (var i = 0; i < count; i++)
 						{
-							var item = Do(elementType, (XmlElement)nodeList[i]);
+							var item = Do(elementType, (XmlElement) nodeList[i]);
 							dataObject.SetValue(item, i);
 						}
 
@@ -751,14 +746,14 @@ namespace ClearCanvas.Common.Serialization
 						var dataObject = Activator.CreateInstance(dataType);
 						for (var i = 0; i < count; i++)
 						{
-							var item = Do(elementType, (XmlElement)nodeList[i]);
-							((IList)dataObject).Add(item);
+							var item = Do(elementType, (XmlElement) nodeList[i]);
+							((IList) dataObject).Add(item);
 						}
 						return dataObject;
 					}
 				}
 
-				if (dataType == typeof(XmlDocument))
+				if (dataType == typeof (XmlDocument))
 				{
 					// this clause supports deserialization of an embedded JSML document
 					var xml = xmlElement.InnerXml;
@@ -771,13 +766,13 @@ namespace ClearCanvas.Common.Serialization
 					return null;
 				}
 
-				if (dataType == typeof(Guid))
+				if (dataType == typeof (Guid))
 				{
 					// parse guid
 					return new Guid(xmlElement.InnerText);
 				}
 
-				if (dataType.GetInterface("IConvertible") == typeof(IConvertible))
+				if (dataType.GetInterface("IConvertible") == typeof (IConvertible))
 				{
 					return Convert.ChangeType(xmlElement.InnerText, dataType, CultureInfo.InvariantCulture);
 				}
@@ -787,7 +782,7 @@ namespace ClearCanvas.Common.Serialization
 
 			private static XmlElement GetFirstElementWithTagName(XmlNode xmlElement, string tagName)
 			{
-				return (XmlElement)CollectionUtils.FirstElement(xmlElement.SelectNodes(tagName));
+				return (XmlElement) CollectionUtils.FirstElement(xmlElement.SelectNodes(tagName));
 			}
 		}
 

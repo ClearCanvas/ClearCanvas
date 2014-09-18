@@ -26,6 +26,9 @@ using ClearCanvas.Common;
 using ClearCanvas.Dicom;
 using ClearCanvas.Dicom.Utilities.Command;
 using ClearCanvas.Enterprise.Core;
+using ClearCanvas.ImageServer.Common.StudyHistory;
+using ClearCanvas.ImageServer.Core.Data;
+using ClearCanvas.ImageServer.Core.Helpers;
 using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Model.EntityBrokers;
@@ -94,6 +97,15 @@ namespace ClearCanvas.ImageServer.Core
 
 			filesystemStorageUpdate.ServerTransferSyntaxKey = serverSyntax.Key;
 			filesystemStorageCritiera.StudyStorageKey.EqualTo(_location.Key);
+
+			// Save a StudyHistory record for the compression that occurred.
+			StudyHistoryHelper.CreateStudyHistoryRecord(updateContext, _location, _location, StudyHistoryTypeEnum.SopCompress,
+			                                            null, new CompressionStudyHistory
+				                                            {
+					                                            TimeStamp = Platform.Time,
+					                                            OriginalTransferSyntaxUid = dbSyntax.UidString,
+					                                            FinalTransferSyntaxUid = fileSyntax.UidString
+				                                            });
 
 			// Get the StudyStorage update broker ready
 			var studyStorageBroker =

@@ -31,7 +31,7 @@ using ClearCanvas.Ris.Application.Common;
 
 namespace ClearCanvas.Ris.Client.Admin
 {
-    [MenuAction("launch", "global-menus/Admin/Procedure Type Groups", "Launch")]
+    [MenuAction("launch", "global-menus/MenuAdmin/MenuProcedureTypeGroups", "Launch")]
     [ActionPermission("launch", ClearCanvas.Ris.Application.Common.AuthorityTokens.Admin.Data.ProcedureTypeGroup)]
 	[ExtensionOf(typeof(DesktopToolExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]
     public class ProcedureTypeGroupSummaryTool : Tool<IDesktopToolContext>

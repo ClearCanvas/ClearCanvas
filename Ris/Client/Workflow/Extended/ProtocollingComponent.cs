@@ -577,7 +577,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Extended
 			if (LaunchAsDialog(this.Host.DesktopWindow, linkProceduresComponent, SR.TitleLinkProcedures) ==
 				ApplicationComponentExitCode.Accepted)
 			{
-				linkedItems.AddRange(linkProceduresComponent.SelectedItems);
+				linkedItems.AddRange(linkProceduresComponent.CheckedItems);
 			}
 		}
 

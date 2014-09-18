@@ -44,13 +44,12 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Shreds
 		{
 			private readonly IImageServerArchivePlugin _archive;
 			private PartitionArchive _partitionArchive;
-			private ServerPartition _serverPartition;
-		
+
 			public PartitionArchiveService(IImageServerArchivePlugin archive, PartitionArchive partitionArchive, ServerPartition partition)
 			{
 				_archive = archive;
 				_partitionArchive = partitionArchive;
-				_serverPartition = partition;
+				ServerPartition = partition;
 			}
 
 			public PartitionArchive PartitionArchive
@@ -68,11 +67,7 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Shreds
 				get { return _archive; }
 			}
 
-			public ServerPartition ServerPartition
-			{
-				get { return _serverPartition; }
-				set { _serverPartition = value; }
-			}
+			public ServerPartition ServerPartition { get; set; }
 		}
 		#endregion
 
@@ -97,13 +92,7 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Shreds
 		/// </summary>
 		public static ArchivingShredManager Instance
 		{
-			get
-			{
-				if (_instance == null)
-					_instance = new ArchivingShredManager("Archiving");
-
-				return _instance;
-			}
+			get { return _instance ?? (_instance = new ArchivingShredManager("Archiving")); }
 			set
 			{
 				_instance = value;
@@ -120,9 +109,9 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Shreds
 		{
 			using (IReadContext readContext = PersistentStoreRegistry.GetDefaultStore().OpenReadContext())
 			{
-				IPartitionArchiveEntityBroker broker = readContext.GetBroker<IPartitionArchiveEntityBroker>();
+				var broker = readContext.GetBroker<IPartitionArchiveEntityBroker>();
 
-				PartitionArchiveSelectCriteria criteria = new PartitionArchiveSelectCriteria();
+				var criteria = new PartitionArchiveSelectCriteria();
 
 				criteria.Enabled.EqualTo(true);
 
@@ -141,8 +130,8 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Shreds
 
 			using (IReadContext read = store.OpenReadContext())
 			{
-				IServerPartitionEntityBroker broker = read.GetBroker<IServerPartitionEntityBroker>();
-				ServerPartitionSelectCriteria criteria = new ServerPartitionSelectCriteria();
+				var broker = read.GetBroker<IServerPartitionEntityBroker>();
+				var criteria = new ServerPartitionSelectCriteria();
 				return broker.Find(criteria);
 			}
 		}
@@ -194,7 +183,7 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Shreds
 					_archiveServiceList.Remove(archivePlugin);
 
 				// Load the current extension list
-				ImageServerArchiveExtensionPoint ep = new ImageServerArchiveExtensionPoint();
+				var ep = new ImageServerArchiveExtensionPoint();
 				ExtensionInfo[] extensionInfoList = ep.ListExtensions();
 
 
@@ -226,12 +215,12 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Shreds
 						// to run the service
 						foreach (ExtensionInfo extensionInfo in extensionInfoList)
 						{
-							IImageServerArchivePlugin archive =
+							var archive =
 								(IImageServerArchivePlugin)ep.CreateExtension(new ClassNameExtensionFilter(extensionInfo.FormalName));
 
 							if (archive.ArchiveType.Equals(partitionArchive.ArchiveTypeEnum))
 							{
-								PartitionArchiveService service = new PartitionArchiveService(archive, partitionArchive, newPartition);
+								var service = new PartitionArchiveService(archive, partitionArchive, newPartition);
 								Platform.Log(LogLevel.Info, "Detected PartitionArchive was added, starting archive {0}", partitionArchive.Description);
 								service.ArchivePlugin.Start(partitionArchive);
 								_archiveServiceList.Add(service);
@@ -260,7 +249,7 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Shreds
 			IList<PartitionArchive> partitionArchiveList = LoadEnabledPartitionArchives();
 
 
-			ImageServerArchiveExtensionPoint ep = new ImageServerArchiveExtensionPoint();
+			var ep = new ImageServerArchiveExtensionPoint();
 			ExtensionInfo[] extensionInfoList = ep.ListExtensions();
 
 			foreach (PartitionArchive partitionArchive in partitionArchiveList)
@@ -283,12 +272,11 @@ namespace ClearCanvas.ImageServer.Services.Archiving.Shreds
 
 				foreach (ExtensionInfo extensionInfo in extensionInfoList)
 				{
-					IImageServerArchivePlugin archive =
+					var archive =
 						(IImageServerArchivePlugin) ep.CreateExtension(new ClassNameExtensionFilter(extensionInfo.FormalName));
 
 					if (archive.ArchiveType.Equals(partitionArchive.ArchiveTypeEnum))
 					{
-						
 						_archiveServiceList.Add(new PartitionArchiveService(archive, partitionArchive, partition));
 						break;
 					}

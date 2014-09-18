@@ -22,6 +22,7 @@
 
 #endregion
 
+using System.Linq;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
 using ClearCanvas.ImageViewer.Graphics;
@@ -51,19 +52,14 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
 		private static CompositeScaleGraphic GetCompositeScaleGraphic(IPresentationImage image, bool createIfNull)
 		{
 			var applicationGraphicsProvider = image as IApplicationGraphicsProvider;
-			if (applicationGraphicsProvider != null)
-			{
-				var overlayGraphics = applicationGraphicsProvider.ApplicationGraphics;
-				var scale = CollectionUtils.SelectFirst(overlayGraphics, graphic => graphic is CompositeScaleGraphic
-				            	) as CompositeScaleGraphic;
+		    if (applicationGraphicsProvider == null) return null;
 
-				if (scale == null && createIfNull)
-					overlayGraphics.Insert(0, scale = new CompositeScaleGraphic());
+		    var overlayGraphics = applicationGraphicsProvider.ApplicationGraphics;
+		    var scale = overlayGraphics.OfType<CompositeScaleGraphic>().FirstOrDefault();
+		    if (scale == null && createIfNull)
+		        overlayGraphics.Insert(0, scale = new CompositeScaleGraphic());
 
-				return scale;
-			}
-
-			return null;
+		    return scale;
 		}
 	}
 }

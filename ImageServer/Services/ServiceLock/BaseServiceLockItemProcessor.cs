@@ -26,7 +26,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Xml;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
@@ -133,11 +132,11 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock
 			{
 				using (Stream fileStream = FileStreamOpener.OpenForRead(streamFile, FileMode.Open))
 				{
-					XmlDocument theDoc = new XmlDocument();
+					var theMemento = new StudyXmlMemento();
 
-					StudyXmlIo.Read(theDoc, fileStream);
+					StudyXmlIo.Read(theMemento, fileStream);
 
-					theXml.SetMemento(theDoc);
+					theXml.SetMemento(theMemento);
 
 					fileStream.Close();
 				}
@@ -190,17 +189,16 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock
 			string studyFolder = location.GetStudyPath();
 
 			string file = Path.Combine(studyFolder, location.StudyInstanceUid + ".xml");
-			if (File.Exists(file))
-			{
-				FileInfo finfo = new FileInfo(file);
-				folderSize += finfo.Length;
-			}
+
+			var finfo1 = new FileInfo(file);
+			if (finfo1.Exists)
+				folderSize += finfo1.Length;
+	
 			file = Path.Combine(studyFolder, location.StudyInstanceUid + ".xml.gz");
-			if (File.Exists(file))
-			{
-				FileInfo finfo = new FileInfo(file);
-				folderSize += finfo.Length;
-			}
+			
+			var finfo2 = new FileInfo(file);
+			if (finfo2.Exists)
+				folderSize += finfo2.Length;
 
 			StudyXml study = LoadStudyXml(location);
 			foreach (SeriesXml series in study)
@@ -216,11 +214,9 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock
 					else
 					{
 						file = Path.Combine(seriesFolder, String.Format("{0}.dcm", instance.SopInstanceUid));
-						if (File.Exists(file))
-						{
-							FileInfo finfo = new FileInfo(file);
+						var finfo = new FileInfo(file);
+						if (finfo.Exists)
 							folderSize += finfo.Length;
-						}
 					}
 				}
 			}
@@ -232,8 +228,8 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock
 		{
 			using (IReadContext context = PersistentStoreRegistry.GetDefaultStore().OpenReadContext())
 			{
-				IQueryStudyStorageLocation procedure = context.GetBroker<IQueryStudyStorageLocation>();
-				StudyStorageLocationQueryParameters parms = new StudyStorageLocationQueryParameters();
+				var procedure = context.GetBroker<IQueryStudyStorageLocation>();
+				var parms = new StudyStorageLocationQueryParameters();
 				parms.ServerPartitionKey = partitionKey;
 				parms.StudyInstanceUid = studyInstanceUid;
 				location = procedure.FindOne(parms);
@@ -383,11 +379,9 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock
             	{
             		foreach (string file in Directory.GetFiles(folder))
             		{
-            			if (File.Exists(file))
-            			{
-            				FileInfo finfo = new FileInfo(file);
+            			var finfo = new FileInfo(file);
+						if (finfo.Exists)
             				folderSize += finfo.Length;
-            			}
             		}
 
             		foreach (string dir in Directory.GetDirectories(folder))

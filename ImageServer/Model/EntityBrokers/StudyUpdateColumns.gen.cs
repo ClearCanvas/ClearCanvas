@@ -64,6 +64,26 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
         {
             set { SubParameters["NumberOfStudyRelatedInstances"] = new EntityUpdateColumn<Int32>("NumberOfStudyRelatedInstances", value); }
         }
+        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="QCStatusEnum")]
+        public QCStatusEnum QCStatusEnum
+        {
+            set { SubParameters["QCStatusEnum"] = new EntityUpdateColumn<QCStatusEnum>("QCStatusEnum", value); }
+        }
+        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="QCOutput")]
+        public String QCOutput
+        {
+            set { SubParameters["QCOutput"] = new EntityUpdateColumn<String>("QCOutput", value); }
+        }
+        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="QCUpdateTimeUtc")]
+        public DateTime? QCUpdateTimeUtc
+        {
+            set { SubParameters["QCUpdateTimeUtc"] = new EntityUpdateColumn<DateTime?>("QCUpdateTimeUtc", value); }
+        }
+        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="OrderGUID")]
+        public ServerEntityKey OrderKey
+        {
+            set { SubParameters["OrderKey"] = new EntityUpdateColumn<ServerEntityKey>("OrderKey", value); }
+        }
         [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="StudySizeInKB")]
         public Decimal StudySizeInKB
         {
@@ -85,11 +105,6 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
         public XmlDocument QueryXml
         {
             set { SubParameters["QueryXml"] = new EntityUpdateColumn<XmlDocument>("QueryXml", value); }
-        }
-        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="QCOutput")]
-        public String QCOutput
-        {
-            set { SubParameters["QCOutput"] = new EntityUpdateColumn<String>("QCOutput", value); }
         }
        [DicomField(DicomTags.SpecificCharacterSet, DefaultValue = DicomFieldDefault.Null)]
         [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="SpecificCharacterSet")]

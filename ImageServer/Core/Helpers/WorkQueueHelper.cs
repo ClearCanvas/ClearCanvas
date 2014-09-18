@@ -107,9 +107,8 @@ namespace ClearCanvas.ImageServer.Core.Helpers
                 // Note: this logic still works if the entry has never been processed (new). It will be
                 // considered as "inactive" if it was scheduled long time ago and had never been updated.
 
-                DateTime time = item.LastUpdatedTime != DateTime.MinValue ? item.LastUpdatedTime : item.ScheduledTime;
-                if (time < Platform.Time - Settings.Default.InactiveWorkQueueMinTime)
-                    return false;
+                DateTime lastActiveTime = item.LastUpdatedTime.GetValueOrDefault(item.ScheduledTime);
+	            return (Platform.Time - lastActiveTime < Settings.Default.InactiveWorkQueueMinTime);
             }
             else if (item.WorkQueueStatusEnum.Equals(WorkQueueStatusEnum.InProgress))
             {

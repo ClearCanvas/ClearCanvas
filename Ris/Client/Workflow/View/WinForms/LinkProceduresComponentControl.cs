@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Windows.Forms;
 using ClearCanvas.Desktop.View.WinForms;
 using ClearCanvas.Ris.Client.Workflow;
 
@@ -46,6 +47,9 @@ namespace ClearCanvas.Ris.Client.Workflow.View.WinForms
             _component = component;
             _sourceWorklistItem.Table = _component.SourceTable;
             _worklistItemTableView.Table = _component.CandidateTable;
+            _worklistItemTableView.DataBindings.Add("Selection", _component, "CandidateTableSelection", true, DataSourceUpdateMode.OnPropertyChanged);
+
+            _makePrimaryButton.DataBindings.Add("Enabled", _component, "MakePrimaryEnabled", true, DataSourceUpdateMode.OnPropertyChanged);
 
             _instructionsLabel.Text = _component.Instructions;
             _heading.Text = _component.Heading;
@@ -55,5 +59,10 @@ namespace ClearCanvas.Ris.Client.Workflow.View.WinForms
         {
             _component.Accept();
         }
+
+		private void _makePrimaryButton_Click(object sender, EventArgs e)
+		{
+			_component.MakePrimary();
+		}
     }
 }

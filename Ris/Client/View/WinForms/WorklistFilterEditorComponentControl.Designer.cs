@@ -59,6 +59,7 @@ namespace ClearCanvas.Ris.Client.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WorklistFilterEditorComponentControl));
 			this._portable = new ClearCanvas.Desktop.View.WinForms.DropListPickerField();
 			this._priority = new ClearCanvas.Desktop.View.WinForms.DropListPickerField();
 			this._patientClass = new ClearCanvas.Desktop.View.WinForms.DropListPickerField();
@@ -68,59 +69,33 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			// 
 			// _portable
 			// 
-			this._portable.AutoSize = true;
-			this._portable.LabelText = "Portable";
-			this._portable.Location = new System.Drawing.Point(14, 124);
-			this._portable.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._portable, "_portable");
 			this._portable.Name = "_portable";
-			this._portable.Size = new System.Drawing.Size(213, 40);
-			this._portable.TabIndex = 10;
 			// 
 			// _priority
 			// 
-			this._priority.AutoSize = true;
-			this._priority.LabelText = "Order Priority";
-			this._priority.Location = new System.Drawing.Point(246, 42);
-			this._priority.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._priority, "_priority");
 			this._priority.Name = "_priority";
-			this._priority.Size = new System.Drawing.Size(213, 40);
-			this._priority.TabIndex = 9;
 			// 
 			// _patientClass
 			// 
-			this._patientClass.AutoSize = true;
-			this._patientClass.LabelText = "Patient Class";
-			this._patientClass.Location = new System.Drawing.Point(14, 210);
-			this._patientClass.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._patientClass, "_patientClass");
 			this._patientClass.Name = "_patientClass";
-			this._patientClass.Size = new System.Drawing.Size(213, 40);
-			this._patientClass.TabIndex = 8;
 			// 
 			// _facilities
 			// 
-			this._facilities.AutoSize = true;
-			this._facilities.LabelText = "Facility";
-			this._facilities.Location = new System.Drawing.Point(14, 42);
-			this._facilities.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._facilities, "_facilities");
 			this._facilities.Name = "_facilities";
-			this._facilities.Size = new System.Drawing.Size(213, 40);
-			this._facilities.TabIndex = 7;
 			// 
 			// _orderingPractitioner
 			// 
-			this._orderingPractitioner.AutoSize = true;
-			this._orderingPractitioner.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this._orderingPractitioner.LabelText = "Ordering Practitioner";
-			this._orderingPractitioner.Location = new System.Drawing.Point(246, 121);
-			this._orderingPractitioner.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._orderingPractitioner, "_orderingPractitioner");
 			this._orderingPractitioner.Name = "_orderingPractitioner";
-			this._orderingPractitioner.Size = new System.Drawing.Size(213, 43);
-			this._orderingPractitioner.TabIndex = 11;
 			this._orderingPractitioner.Value = null;
 			// 
 			// WorklistFilterEditorComponentControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this._orderingPractitioner);
 			this.Controls.Add(this._portable);
@@ -128,7 +103,6 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			this.Controls.Add(this._priority);
 			this.Controls.Add(this._facilities);
 			this.Name = "WorklistFilterEditorComponentControl";
-			this.Size = new System.Drawing.Size(481, 296);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

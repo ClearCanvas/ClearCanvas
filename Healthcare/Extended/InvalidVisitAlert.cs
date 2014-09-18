@@ -43,26 +43,26 @@ namespace ClearCanvas.Healthcare.Extended
 			if (order.Visit == null)
 			{
 				// This should never happen in production because an order must have a visit
-				reasons.Add("This order is missing a visit");
+				reasons.Add(SR.AlertOrderMissingVisit);
 			}
 			else
 			{
 				// Check Visit status
 				if (order.Visit.Status != VisitStatus.AA)
-					reasons.Add("Visit Status is not active");
+					reasons.Add(SR.AlertVisitStatusNotActive);
 
 				// Check Visit date
 				if (order.Visit.AdmitTime == null)
 				{
 					// This should never happen in production since visit admit date should always be created from HIS
-					reasons.Add("Visit date is missing");
+					reasons.Add(SR.AlertVisitDateMissing);
 				}
 				else if (order.ScheduledStartTime != null)
 				{
 					if (order.Visit.AdmitTime.Value.Date > order.ScheduledStartTime.Value.Date)
-						reasons.Add("Visit date is in the future");
+						reasons.Add(SR.AlertVisitDateIsInFuture);
 					else if (order.Visit.AdmitTime.Value.Date < order.ScheduledStartTime.Value.Date)
-						reasons.Add("Visit date is in the past");
+						reasons.Add(SR.AlertVisitDateIsInPast);
 				}
 			}
 

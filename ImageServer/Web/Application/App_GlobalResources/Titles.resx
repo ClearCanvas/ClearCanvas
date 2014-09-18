@@ -453,4 +453,16 @@
   <data name="ViewAttachmentPageTitle" xml:space="preserve">
     <value>{1} | {0}</value>
   </data>
+  <data name="DeleteOrderConfirmDialogTitle" xml:space="preserve">
+    <value>Delete Order Confirmation</value>
+  </data>
+  <data name="Orders" xml:space="preserve">
+    <value>Orders</value>
+  </data>
+  <data name="OrdersPageTitle" xml:space="preserve">
+    <value>Orders | {0}</value>
+  </data>
+  <data name="QCSummaryPageTitle" xml:space="preserve">
+    <value>QC Metrics</value>
+  </data>
 </root>

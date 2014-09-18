@@ -172,7 +172,7 @@ namespace ClearCanvas.Ris.Client
 
 					_detailsEditor = new StaffDetailsEditorComponent(formDataResponse.StaffTypeChoices, formDataResponse.SexChoices)
 					                 	{StaffDetail = _staffDetail};
-					this.Pages.Add(new NavigatorPage("Staff", _detailsEditor));
+					this.Pages.Add(new NavigatorPage("NodeStaff", _detailsEditor));
 
 					_phoneNumbersSummary = new PhoneNumbersSummaryComponent(formDataResponse.PhoneTypeChoices)
 					                       	{
@@ -180,7 +180,7 @@ namespace ClearCanvas.Ris.Client
 					                       		SetModifiedOnListChange = true,
 					                       		Subject = _staffDetail.TelephoneNumbers
 					                       	};
-					this.Pages.Add(new NavigatorPage("Staff/Phone Numbers", _phoneNumbersSummary));
+					this.Pages.Add(new NavigatorPage("NodeStaff/NodePhoneNumbers", _phoneNumbersSummary));
 
 					_addressesSummary = new AddressesSummaryComponent(formDataResponse.AddressTypeChoices)
 					                    	{
@@ -188,7 +188,7 @@ namespace ClearCanvas.Ris.Client
 					                    		SetModifiedOnListChange = true,
 					                    		Subject = _staffDetail.Addresses
 					                    	};
-					this.Pages.Add(new NavigatorPage("Staff/Addresses", _addressesSummary));
+					this.Pages.Add(new NavigatorPage("NodeStaff/NodeAddresses", _addressesSummary));
 
 					_emailAddressesSummary = new EmailAddressesSummaryComponent
 					                         	{
@@ -196,13 +196,13 @@ namespace ClearCanvas.Ris.Client
 					                         		SetModifiedOnListChange = true,
 					                         		Subject = _staffDetail.EmailAddresses
 					                         	};
-					this.Pages.Add(new NavigatorPage("Staff/Email Addresses", _emailAddressesSummary));
+					this.Pages.Add(new NavigatorPage("NodeStaff/NodeEmailAddresses", _emailAddressesSummary));
 
 
 
 					// allow modification of non-elective groups only iff the user has StaffGroup admin permissions
-					this.Pages.Add(new NavigatorPage("Staff/Groups/Non-elective", _nonElectiveGroupsEditor = new StaffNonElectiveStaffGroupEditorComponent(_staffDetail.Groups, formDataResponse.StaffGroupChoices, !CanModifyNonElectiveGroups)));
-					this.Pages.Add(new NavigatorPage("Staff/Groups/Elective", _electiveGroupsEditor = new StaffElectiveStaffGroupEditorComponent(_staffDetail.Groups, formDataResponse.StaffGroupChoices, !CanModifyStaffProfile)));
+					this.Pages.Add(new NavigatorPage("NodeStaff/NodeGroups/NodeNonElective", _nonElectiveGroupsEditor = new StaffNonElectiveStaffGroupEditorComponent(_staffDetail.Groups, formDataResponse.StaffGroupChoices, !CanModifyNonElectiveGroups)));
+					this.Pages.Add(new NavigatorPage("NodeStaff/NodeGroups/NodeElective", _electiveGroupsEditor = new StaffElectiveStaffGroupEditorComponent(_staffDetail.Groups, formDataResponse.StaffGroupChoices, !CanModifyStaffProfile)));
 				});
 
 			// instantiate all extension pages

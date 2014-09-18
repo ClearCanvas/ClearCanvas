@@ -58,7 +58,7 @@ namespace ClearCanvas.Ris.Client
 			{
 				_owner = owner;
 
-				var nameColumn = new TableColumn<ExternalPractitionerSummary, string>(SR.ColumnName,
+				var nameColumn = new TableColumn<ExternalPractitionerSummary, string>(SR.ColulmnPractitionerName,
 					prac => PersonNameFormat.Format(prac.Name), 0.5f)
 					{ ClickLinkDelegate = _owner.LaunchSelectedPractitionerPreview };
 

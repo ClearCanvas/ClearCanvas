@@ -60,6 +60,7 @@ namespace ClearCanvas.Ris.Client.View.WinForms
         private void InitializeComponent()
         {
 			this.components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PhoneNumberEditorControl));
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this._phoneType = new ClearCanvas.Desktop.View.WinForms.ComboBoxField();
 			this._cancelButton = new System.Windows.Forms.Button();
@@ -77,115 +78,74 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			this._phoneType.DataSource = null;
 			this._phoneType.DisplayMember = "";
 			this._phoneType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this._phoneType.LabelText = "Type";
-			this._phoneType.Location = new System.Drawing.Point(3, 5);
-			this._phoneType.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._phoneType, "_phoneType");
 			this._phoneType.Name = "_phoneType";
-			this._phoneType.Size = new System.Drawing.Size(95, 41);
-			this._phoneType.TabIndex = 0;
 			this._phoneType.Value = null;
 			// 
 			// _cancelButton
 			// 
-			this._cancelButton.Location = new System.Drawing.Point(244, 144);
+			resources.ApplyResources(this._cancelButton, "_cancelButton");
 			this._cancelButton.Name = "_cancelButton";
-			this._cancelButton.Size = new System.Drawing.Size(75, 23);
-			this._cancelButton.TabIndex = 8;
-			this._cancelButton.Text = "Cancel";
 			this._cancelButton.UseVisualStyleBackColor = true;
 			this._cancelButton.Click += new System.EventHandler(this._cancelButton_Click);
 			// 
 			// _acceptButton
 			// 
-			this._acceptButton.Location = new System.Drawing.Point(165, 144);
+			resources.ApplyResources(this._acceptButton, "_acceptButton");
 			this._acceptButton.Name = "_acceptButton";
-			this._acceptButton.Size = new System.Drawing.Size(75, 23);
-			this._acceptButton.TabIndex = 7;
-			this._acceptButton.Text = "OK";
 			this._acceptButton.UseVisualStyleBackColor = true;
 			this._acceptButton.Click += new System.EventHandler(this._acceptButton_Click);
 			// 
 			// _countryCode
 			// 
-			this._countryCode.LabelText = "Country Code";
-			this._countryCode.Location = new System.Drawing.Point(113, 5);
-			this._countryCode.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._countryCode, "_countryCode");
 			this._countryCode.Mask = "";
 			this._countryCode.Name = "_countryCode";
-			this._countryCode.PasswordChar = '\0';
-			this._countryCode.Size = new System.Drawing.Size(95, 43);
-			this._countryCode.TabIndex = 1;
-			this._countryCode.ToolTip = null;
 			this._countryCode.Value = null;
 			// 
 			// _validFrom
 			// 
-			this._validFrom.LabelText = "Valid From";
-			this._validFrom.Location = new System.Drawing.Point(3, 97);
-			this._validFrom.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._validFrom, "_validFrom");
 			this._validFrom.Maximum = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
 			this._validFrom.Minimum = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
 			this._validFrom.Name = "_validFrom";
 			this._validFrom.Nullable = true;
-			this._validFrom.Size = new System.Drawing.Size(152, 41);
-			this._validFrom.TabIndex = 5;
 			this._validFrom.Value = null;
 			// 
 			// _number
 			// 
-			this._number.LabelText = "Number";
-			this._number.Location = new System.Drawing.Point(113, 48);
-			this._number.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._number, "_number");
 			this._number.Mask = "";
 			this._number.Name = "_number";
-			this._number.PasswordChar = '\0';
-			this._number.Size = new System.Drawing.Size(95, 41);
-			this._number.TabIndex = 3;
-			this._number.ToolTip = null;
 			this._number.Value = null;
 			// 
 			// _extension
 			// 
-			this._extension.LabelText = "Extension";
-			this._extension.Location = new System.Drawing.Point(223, 48);
-			this._extension.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._extension, "_extension");
 			this._extension.Mask = "";
 			this._extension.Name = "_extension";
-			this._extension.PasswordChar = '\0';
-			this._extension.Size = new System.Drawing.Size(96, 43);
-			this._extension.TabIndex = 4;
 			this._extension.Value = null;
 			// 
 			// _areaCode
 			// 
-			this._areaCode.LabelText = "Area Code";
-			this._areaCode.Location = new System.Drawing.Point(3, 48);
-			this._areaCode.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._areaCode, "_areaCode");
 			this._areaCode.Mask = "";
 			this._areaCode.Name = "_areaCode";
-			this._areaCode.PasswordChar = '\0';
-			this._areaCode.Size = new System.Drawing.Size(95, 43);
-			this._areaCode.TabIndex = 2;
-			this._areaCode.ToolTip = null;
 			this._areaCode.Value = null;
 			// 
 			// _validUntil
 			// 
-			this._validUntil.LabelText = "Valid Until";
-			this._validUntil.Location = new System.Drawing.Point(174, 95);
-			this._validUntil.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._validUntil, "_validUntil");
 			this._validUntil.Maximum = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
 			this._validUntil.Minimum = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
 			this._validUntil.Name = "_validUntil";
 			this._validUntil.Nullable = true;
-			this._validUntil.Size = new System.Drawing.Size(145, 41);
-			this._validUntil.TabIndex = 6;
 			this._validUntil.Value = null;
 			// 
 			// PhoneNumberEditorControl
 			// 
 			this.AcceptButton = this._acceptButton;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this._cancelButton;
 			this.Controls.Add(this._phoneType);
@@ -198,7 +158,6 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			this.Controls.Add(this._areaCode);
 			this.Controls.Add(this._validUntil);
 			this.Name = "PhoneNumberEditorControl";
-			this.Size = new System.Drawing.Size(339, 178);
 			this.Load += new System.EventHandler(this.PhoneNumberEditorControl_Load);
 			this.ResumeLayout(false);
 

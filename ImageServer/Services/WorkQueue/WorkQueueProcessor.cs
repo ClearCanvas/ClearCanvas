@@ -125,6 +125,17 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue
 		/// </remarks>
 		public void Run()
 		{
+			// Reset any queue items related to this system that are in a "In Progress" state.
+			try
+			{
+				ResetFailedItems();
+			}
+			catch (Exception e)
+			{
+				Platform.Log(LogLevel.Fatal, e,
+				             "Unable to reset WorkQueue items on startup.  There may be WorkQueue items orphaned in the queue.");
+			}
+
 			// Force the alert to be displayed right away, if it happens
 			DateTime lastLog = Platform.Time.AddMinutes(-61);
 
@@ -151,8 +162,9 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue
 						Model.WorkQueue queueListItem = GetWorkQueueItem(ServerPlatform.ProcessorId);
 						if (queueListItem == null)
 						{
-							/* No result found, or reach max queue entries for each type */
-							_terminateEvent.WaitOne(WorkQueueSettings.Instance.WorkQueueQueryDelay, false);
+							/* No result found, or MemoryLimited threads not available, and no non-memory limited WorkQueue items */
+							WaitHandle.WaitAny(new WaitHandle[] { _threadStop, _terminateEvent }, WorkQueueSettings.Instance.WorkQueueQueryDelay, false);
+							_threadStop.Reset();
 							continue;
 						}
 
@@ -214,6 +226,61 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue
 		#endregion
 
 		#region Private Methods
+
+		/// <summary>
+		/// Reset queue items that were unadvertly left in "in progress" state by previous run. 
+		/// </summary>
+		public static void ResetFailedItems()
+		{
+			WorkQueueStatusEnum pending = WorkQueueStatusEnum.Pending;
+			WorkQueueStatusEnum failed = WorkQueueStatusEnum.Failed;
+
+			using (IUpdateContext ctx = PersistentStoreRegistry.GetDefaultStore().OpenUpdateContext(UpdateContextSyncMode.Flush))
+			{
+				var reset = ctx.GetBroker<IWorkQueueReset>();
+				var parms = new WorkQueueResetParameters
+				{
+					ProcessorID = ServerPlatform.ProcessorId,
+					// reschedule to start again now
+					RescheduleTime = Platform.Time,
+					// retry will expire X minutes from now (so other process MAY NOT remove them)
+					RetryExpirationTime = Platform.Time.AddMinutes(2),
+					// if an entry has been retried more than WorkQueueMaxFailureCount, it should be failed
+					MaxFailureCount = 3,
+					// failed item expires now (so other process can remove them if desired)
+					FailedExpirationTime = Platform.Time,
+				};
+
+				IList<Model.WorkQueue> modifiedList = reset.Find(parms);
+
+				if (modifiedList != null)
+				{
+					// output the list of items that have been reset
+					foreach (Model.WorkQueue queueItem in modifiedList)
+					{
+						if (queueItem.WorkQueueStatusEnum.Equals(pending))
+							Platform.Log(LogLevel.Info, "Cleanup: Reset Queue Item : {0} --> Status={1} Scheduled={2} ExpirationTime={3}",
+										 queueItem.GetKey().Key,
+										 queueItem.WorkQueueStatusEnum,
+										 queueItem.ScheduledTime,
+										 queueItem.ExpirationTime);
+					}
+
+					// output the list of items that have been failed because it exceeds the max retry count
+					foreach (Model.WorkQueue queueItem in modifiedList)
+					{
+						if (queueItem.WorkQueueStatusEnum.Equals(failed))
+							Platform.Log(LogLevel.Info, "Cleanup: Fail Queue Item  : {0} : FailureCount={1} ExpirationTime={2}",
+										 queueItem.GetKey().Key,
+										 queueItem.FailureCount,
+										 queueItem.ExpirationTime);
+					}
+				}
+
+				ctx.Commit();
+			}
+		}
+
 		/// <summary>
 		/// The actual delegate 
 		/// </summary>

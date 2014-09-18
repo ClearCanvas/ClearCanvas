@@ -31,7 +31,7 @@ using ClearCanvas.Ris.Application.Common;
 
 namespace ClearCanvas.Ris.Client.Admin
 {
-    [MenuAction("launch", "global-menus/Admin/Worklists", "Launch")]
+    [MenuAction("launch", "global-menus/MenuAdmin/MenuWorklists", "Launch")]
     [ActionPermission("launch", ClearCanvas.Ris.Application.Common.AuthorityTokens.Admin.Data.Worklist)]
 	[ExtensionOf(typeof(DesktopToolExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]
     public class WorklistSummaryTool : Tool<IDesktopToolContext>

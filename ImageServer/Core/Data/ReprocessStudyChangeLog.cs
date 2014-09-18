@@ -24,10 +24,12 @@
 
 using System;
 using ClearCanvas.Common.Serialization;
+using ClearCanvas.ImageServer.Common.StudyHistory;
 using ClearCanvas.ImageServer.Common.WorkQueue;
 
 namespace ClearCanvas.ImageServer.Core.Data
 {
+	[ImageServerStudyHistoryType("4EE14CE6-8F2B-4A99-A89F-1AE96BDF2A21")]
     [WorkQueueDataType("0579EBC2-44EA-4C0F-B30B-2B2D9647B1E1")]
     public class ReprocessStudyChangeLog : DataContractBase
     {

@@ -24,6 +24,7 @@
 
 using System;
 using ClearCanvas.Common;
+using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Tables;
 using ClearCanvas.Ris.Application.Common.ModalityWorkflow;
@@ -65,7 +66,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 
 		Path IExtensionPage.Path
 		{
-			get { return new Path("Performing Documentation"); }
+			get { return new Path("TitlePerformingDocumentation", new ResourceResolver(GetType().Assembly)); }
 		}
 
 		IApplicationComponent IExtensionPage.GetComponent()

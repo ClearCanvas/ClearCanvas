@@ -366,9 +366,9 @@ namespace ClearCanvas.Dicom.DataDictionaryGenerator
 
             gen.WriteTags("DicomTags.cs");
 
-            gen.WriteTransferSyntaxes("TransferSyntax.cs");
+            gen.WriteTransferSyntaxes("TransferSyntaxes.cs");
 
-            gen.WriteSopClasses("SopClass.cs");
+            gen.WriteSopClasses("SopClasses.cs");
 
             gen.WriteSqlInsert("sopClassInsert.sql");
 

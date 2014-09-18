@@ -514,7 +514,22 @@ You can configure this item, but you do not have permission to use it.</value>
   <data name="MessageDisplayLanguageChangedRestartRequired" xml:space="preserve">
     <value>The application must restart in order to apply the new display language. Would you like to restart now?</value>
   </data>
-  <data name="MessageConfirmImportSettingsMetaData" xml:space="preserve">
-    <value>Import settings meta-data defined in locally installed plugins?</value>
+  <data name="FormatTimeYesterday">
+    <value xml:space="preserve">Yesterday {0}</value>
+  </data>
+  <data name="FormatTimeToday">
+    <value xml:space="preserve">Today {0}</value>
+  </data>
+  <data name="FormatTimeTomorrow">
+    <value xml:space="preserve">Tomorrow {0}</value>
+  </data>
+  <data name="FormatDateInFutureDays">
+    <value xml:space="preserve">{0} days from now</value>
+  </data>
+  <data name="FormatDateInPastDays">
+    <value xml:space="preserve">{0} days ago</value>
+  </data>
+  <data name="ColumnWorkspace">
+    <value xml:space="preserve">Workspace</value>
   </data>
 </root>

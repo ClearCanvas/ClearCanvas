@@ -161,15 +161,15 @@ namespace ClearCanvas.Ris.Client
 			_orderDocumentComponent = new AttachedDocumentPreviewComponent(true, AttachmentSite.Order);
 
 			_rightHandComponentContainer = new TabComponentContainer();
-			_rightHandComponentContainer.Pages.Add(new TabPage("Order Details", _orderDetailComponent));
+			_rightHandComponentContainer.Pages.Add(new TabPage(SR.TitleOrderDetails, _orderDetailComponent));
 
 			if (new WorkflowConfigurationReader().EnableVisitWorkflow)
 			{
-				_rightHandComponentContainer.Pages.Add(new TabPage("Visit Details", _visitDetailComponent));
+				_rightHandComponentContainer.Pages.Add(new TabPage(SR.VisitDetails, _visitDetailComponent));
 			}
 
-			_rightHandComponentContainer.Pages.Add(new TabPage("Reports", _orderReportsComponent));
-			_rightHandComponentContainer.Pages.Add(new TabPage("Order Attachments", _orderDocumentComponent));
+			_rightHandComponentContainer.Pages.Add(new TabPage(SR.TitleReports, _orderReportsComponent));
+			_rightHandComponentContainer.Pages.Add(new TabPage(SR.TitleOrderAttachments, _orderDocumentComponent));
 
 			// instantiate all extension pages
 			_extensionPages = new List<IBiographyOrderHistoryPage>();

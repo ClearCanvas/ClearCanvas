@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Web;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Enterprise.Common.Admin.AuthorityGroupAdmin;
@@ -134,7 +135,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
         {
             var select = new DataAccessGroupSelectCriteria();
             select.AuthorityGroupOID.EqualTo(new ServerEntityKey("AuthorityGroupOID", new Guid(oid)));
-            var broker = HttpContextData.Current.ReadContext.GetBroker<IDataAccessGroupEntityBroker>();
+			var broker = HttpContext.Current.GetSharedPersistentContext().GetBroker<IDataAccessGroupEntityBroker>();
             return broker.FindOne(select);
         
         }
@@ -189,7 +190,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
 
         public IEnumerable<ServerPartitionDataAccess> GetServerPartitionDataAccessGroups(ServerPartition partition)
        {
-           var broker = HttpContextData.Current.ReadContext.GetBroker<IServerPartitionDataAccessEntityBroker>();
+		   var broker = HttpContext.Current.GetSharedPersistentContext().GetBroker<IServerPartitionDataAccessEntityBroker>();
            var criteria = new ServerPartitionDataAccessSelectCriteria();
            criteria.ServerPartitionKey.EqualTo(partition.Key);
            return broker.Find(criteria);

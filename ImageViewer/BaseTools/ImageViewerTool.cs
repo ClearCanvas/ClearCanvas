@@ -24,6 +24,7 @@
 
 using System;
 using ClearCanvas.Common.Utilities;
+using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Tools;
 using ClearCanvas.ImageViewer.Annotations;
 using ClearCanvas.ImageViewer.Graphics;
@@ -91,6 +92,14 @@ namespace ClearCanvas.ImageViewer.BaseTools
 		{
 			add { _enabledChanged += value; }
 			remove { _enabledChanged -= value; }
+		}
+
+		/// <summary>
+		/// Gets the <see cref="IDesktopWindow"/> associated with this tool.
+		/// </summary>
+		protected IDesktopWindow DesktopWindow
+		{
+			get { return Context.DesktopWindow; }
 		}
 
 		/// <summary>

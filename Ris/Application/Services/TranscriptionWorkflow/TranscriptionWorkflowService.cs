@@ -147,7 +147,7 @@ namespace ClearCanvas.Ris.Application.Services.TranscriptionWorkflow
 			var supervisor = ResolveSupervisor(transcriptionStep, request.SupervisorRef);
 
 			if (supervisor == null)
-				throw new RequestValidationException("A supervisor is required.");
+				throw new RequestValidationException(SR.InvalidRequest_SupervisorIsRequired);
 
 			SaveReportHelper(transcriptionStep, request.ReportPartExtendedProperties, supervisor);
 

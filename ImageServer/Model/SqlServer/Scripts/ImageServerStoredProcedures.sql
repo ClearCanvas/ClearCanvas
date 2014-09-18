@@ -451,7 +451,7 @@ BEGIN
 			-- iterate through the GUIDs
 			SET @String = @UserAuthorityGroupGUIDs + @Delimiter
 			SET @Pos = charindex(@Delimiter,@String)
-			WHILE (@pos <> 0)
+			WHILE (@Pos <> 0)
 			BEGIN
 				SET @guid = substring(@String,1,@Pos - 1)
 				
@@ -461,8 +461,8 @@ BEGIN
 				--PRINT @guid
 				SET @guids = @guids + '''''''' + @guid + ''''''''
 
-				SET @String = substring(@String,@pos+1,len(@String))
-				SET @pos = charindex(@Delimiter,@String)
+				SET @String = substring(@String,@Pos+1,len(@String))
+				SET @Pos = charindex(@Delimiter,@String)
 			END 
 
 			SET @DataAccessJoinStmt = '' JOIN StudyDataAccess sda ON sda.StudyStorageGUID=workqueue.StudyStorageGUID 
@@ -1833,9 +1833,9 @@ BEGIN
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
 
-	if (@ProcessorID is NULL)
+	if (@ProcessorId is NULL)
 	begin
-		RAISERROR (N''Calling [dbo.QueryServiceLock] with @ProcessorID = NULL'', 18 /* severity.. >=20 means fatal but needs sysadmin role*/, 1 /*state*/)
+		RAISERROR (N''Calling [dbo.QueryServiceLock] with @ProcessorId = NULL'', 18 /* severity.. >=20 means fatal but needs sysadmin role*/, 1 /*state*/)
 		RETURN 50000
 	end
 
@@ -1989,7 +1989,7 @@ BEGIN
     -- Insert statements for procedure here
 		UPDATE ServiceLock
 		SET Lock = @Lock, ScheduledTime = @ScheduledTime,
-			ProcessorID = @ProcessorID, Enabled = @Enabled
+			ProcessorId = @ProcessorId, Enabled = @Enabled
 		WHERE GUID = @ServiceLockGUID
 END
 ' 
@@ -2060,12 +2060,13 @@ BEGIN
 EXEC dbo.sp_executesql @statement = N'-- =============================================
 -- Author:		Steve Wranovsky
 -- Create date: November 19, 2007
--- Update date: Sep 05, 2012
+-- Update date: May 25, 2014
 -- Description:	Completely delete a Study from the database
 -- History
 --	Oct 06, 2009:  Delete StudyHistory record if DestStudyStorageGUID matches
 --  Aug 18, 2011:  Delete StudyDataAccess
 --  Sep 05, 2012:  Move updating ServerPartition count to end of procedure
+--  May 25, 2014:  Add check for existing Orders attached to the patient
 -- =============================================
 CREATE PROCEDURE [dbo].[DeleteStudyStorage] 
 	-- Add the parameters for the stored procedure here
@@ -2163,7 +2164,7 @@ BEGIN
 	FROM Patient
 	WHERE GUID = @PatientGUID
 
-	if @NumberOfPatientRelatedStudies = 0
+	if @NumberOfPatientRelatedStudies = 0 
 	BEGIN
 		DELETE FROM Patient
 		WHERE GUID = @PatientGUID
@@ -2341,7 +2342,8 @@ CREATE PROCEDURE [dbo].[InsertInstance]
 	@PatientsAge varchar(4) = null,
 	@ResponsiblePerson nvarchar(64) = null,
 	@ResponsibleOrganization nvarchar(64) = null,
-	@QueryXml xml = null
+	@QueryXml xml = null,
+	@OrderGUID uniqueidentifier = null
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
@@ -2354,10 +2356,13 @@ BEGIN
 	declare @InsertPatient bit
 	declare @InsertStudy bit
 	declare @InsertSeries bit
+	declare @QCStatusNA smallint
 
 	set @InsertPatient = 0
 	set @InsertStudy = 0
 	set @InsertSeries = 0
+
+	select @QCStatusNA = Enum from QCStatusEnum where Lookup=''NA''
 
 	BEGIN TRANSACTION
 
@@ -2412,12 +2417,12 @@ BEGIN
 				StudyInstanceUid, PatientsName, PatientId, IssuerOfPatientId, PatientsBirthDate, PatientsAge,
 				PatientsSex, StudyDate, StudyTime, AccessionNumber, StudyId,
 				StudyDescription, ReferringPhysiciansName, NumberOfStudyRelatedSeries,
-				NumberOfStudyRelatedInstances,SpecificCharacterSet, ResponsiblePerson, ResponsibleOrganization, QueryXml)
+				NumberOfStudyRelatedInstances,SpecificCharacterSet, ResponsiblePerson, ResponsibleOrganization, QueryXml, QCStatusEnum, OrderGUID)
 		VALUES
 				(@StudyGUID, @ServerPartitionGUID, @StudyStorageGUID, @PatientGUID, 
 				@StudyInstanceUid, @PatientsName, @PatientId, @IssuerOfPatientId, @PatientsBirthDate, @PatientsAge,
 				@PatientsSex, @StudyDate, @StudyTime, @AccessionNumber, @StudyId,
-				@StudyDescription, @ReferringPhysiciansName, 0, 1,@SpecificCharacterSet, @ResponsiblePerson, @ResponsibleOrganization, @QueryXml)
+				@StudyDescription, @ReferringPhysiciansName, 0, 1,@SpecificCharacterSet, @ResponsiblePerson, @ResponsibleOrganization, @QueryXml, @QCStatusNA, @OrderGUID)
 
 		UPDATE dbo.ServerPartition SET StudyCount=StudyCount+1
 		WHERE GUID=@ServerPartitionGUID
@@ -2436,7 +2441,8 @@ BEGIN
 
 		-- Update Study, Patient TablesNext, the Study Table
 		UPDATE Study 
-		SET NumberOfStudyRelatedInstances = NumberOfStudyRelatedInstances + 1
+		SET NumberOfStudyRelatedInstances = NumberOfStudyRelatedInstances + 1,
+		OrderGUID = @OrderGUID
 		WHERE GUID = @StudyGUID
 
 	END
@@ -2578,7 +2584,7 @@ BEGIN
 EXEC dbo.sp_executesql @statement = N'-- =============================================
 -- Author:		Thanh Huynh
 -- Create date: April 24, 2008
--- Update date: April 24, 2008
+-- Update date: May 27, 2014
 -- Description:	Completely delete a Server Partition from the database.
 --				This involves deleting devies, rules, 
 -- =============================================
@@ -2664,7 +2670,10 @@ BEGIN
 		delete dbo.RequestAttributes where SeriesGUID in (Select GUID from dbo.Series where ServerPartitionGUID=@ServerPartitionGUID)
 		delete dbo.Series where ServerPartitionGUID=@ServerPartitionGUID
 		delete dbo.Study where ServerPartitionGUID=@ServerPartitionGUID
-		delete dbo.Patient where ServerPartitionGUID=@ServerPartitionGUID		
+		delete dbo.[Order] where ServerPartitionGUID=@ServerPartitionGUID
+		delete dbo.Patient where ServerPartitionGUID=@ServerPartitionGUID
+		delete dbo.Staff where ServerPartitionGUID=@ServerPartitionGUID
+		delete dbo.ProcedureCode where ServerPartitionGUID=@ServerPartitionGUID
 	END
 
 	--PRINT ''Deleting ServerPartition''
@@ -2761,7 +2770,7 @@ BEGIN
 		BEGIN TRANSACTION
 
 		-- Create ''CleanupStudy'' when deleting ''StudyProcess''
-		IF (@workQueueTypeEnum = @StudyProcessTypeEnum)
+		IF (@WorkQueueTypeEnum = @StudyProcessTypeEnum)
 		BEGIN
 			declare @CleanupStudyTypeEnum as smallint
 			select @CleanupStudyTypeEnum = Enum from WorkQueueTypeEnum where Lookup = ''CleanupStudy''
@@ -2777,7 +2786,7 @@ BEGIN
 			DELETE FROM WorkQueue where GUID = @WorkQueueGUID			
 		END
 		-- Create ''CleanupDuplicate'' when deleting ''ProcessDuplicate''
-		ELSE IF (@workQueueTypeEnum = @ProcessDuplicateTypeEnum)
+		ELSE IF (@WorkQueueTypeEnum = @ProcessDuplicateTypeEnum)
 		BEGIN
 			declare @CleanupDuplicateTypeEnum as smallint
 			select @CleanupDuplicateTypeEnum = Enum from WorkQueueTypeEnum where Lookup = ''CleanupDuplicate''
@@ -2794,7 +2803,7 @@ BEGIN
 			DELETE FROM WorkQueue where GUID = @WorkQueueGUID			
 		END
 		-- Create ''ReconcileCleanup'' when deleting ''ReconcileStudy'' 
-		ELSE IF (@workQueueTypeEnum = @ReconcileStudyTypeEnum)
+		ELSE IF (@WorkQueueTypeEnum = @ReconcileStudyTypeEnum)
 		BEGIN
 			DECLARE @StudyHistoryGUID as uniqueidentifier
 			DECLARE @CleanupReconcileTypeEnum as smallint
@@ -3025,14 +3034,14 @@ BEGIN
 		BEGIN
 			UPDATE ArchiveQueue
 			SET ArchiveQueueStatusEnum = @ArchiveQueueStatusEnum, ScheduledTime = @ScheduledTime,
-				ProcessorID = Null
+				ProcessorId = Null
 			WHERE GUID = @ArchiveQueueGUID
 		END
 		ELSE
 		BEGIN
 			UPDATE ArchiveQueue
 			SET ArchiveQueueStatusEnum = @ArchiveQueueStatusEnum, ScheduledTime = @ScheduledTime,
-				ProcessorID = Null, FailureDescription = @FailureDescription
+				ProcessorId = Null, FailureDescription = @FailureDescription
 			WHERE GUID = @ArchiveQueueGUID
 		END
 		UPDATE StudyStorage set ReadLock = ReadLock-1, LastAccessedTime = getdate() 
@@ -3062,16 +3071,16 @@ EXEC dbo.sp_executesql @statement = N'-- =======================================
 CREATE PROCEDURE [dbo].[QueryArchiveQueue] 
 	-- Add the parameters for the stored procedure here
 	@PartitionArchiveGUID uniqueidentifier,
-	@ProcessorID varchar(256)
+	@ProcessorId varchar(256)
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
 
-	if (@ProcessorID is NULL)
+	if (@ProcessorId is NULL)
 	begin
-		RAISERROR (N''Calling [dbo.QueryArchiveQueue] with @ProcessorID = NULL'', 18 /* severity.. >=20 means fatal but needs sysadmin role*/, 1 /*state*/)
+		RAISERROR (N''Calling [dbo.QueryArchiveQueue] with @ProcessorId = NULL'', 18 /* severity.. >=20 means fatal but needs sysadmin role*/, 1 /*state*/)
 		RETURN 50000
 	end
 
@@ -3115,7 +3124,7 @@ BEGIN
 		BEGIN
 			UPDATE ArchiveQueue
 				SET ArchiveQueueStatusEnum  = @InProgressStatusEnum,
-					ProcessorID = @ProcessorID
+					ProcessorId = @ProcessorId
 			WHERE 
 				GUID = @ArchiveQueueGUID
 				
@@ -3163,14 +3172,14 @@ EXEC dbo.sp_executesql @statement = N'-- =======================================
 CREATE PROCEDURE [dbo].[QueryRestoreQueue] 
 	@PartitionArchiveGUID uniqueidentifier,
 	@RestoreQueueStatusEnum smallint,
-	@ProcessorID varchar(256)
+	@ProcessorId varchar(256)
 AS
 BEGIN
 	SET NOCOUNT ON;
 
-	if (@ProcessorID is NULL)
+	if (@ProcessorId is NULL)
 	begin
-		RAISERROR (N''Calling [dbo.QueryRestoreQueue] with @ProcessorID = NULL'', 18 /* severity.. >=20 means fatal but needs sysadmin role*/, 1 /*state*/)
+		RAISERROR (N''Calling [dbo.QueryRestoreQueue] with @ProcessorId = NULL'', 18 /* severity.. >=20 means fatal but needs sysadmin role*/, 1 /*state*/)
 		RETURN 50000
 	end
 
@@ -3213,7 +3222,7 @@ BEGIN
 		BEGIN
 			UPDATE RestoreQueue
 				SET RestoreQueueStatusEnum  = @InProgressStatusEnum,
-					ProcessorID = @ProcessorID
+					ProcessorId = @ProcessorId
 			WHERE 
 				GUID = @RestoreQueueGUID
 				
@@ -3293,14 +3302,14 @@ BEGIN
 		BEGIN
 			UPDATE RestoreQueue
 			SET RestoreQueueStatusEnum = @RestoreQueueStatusEnum, ScheduledTime = @ScheduledTime,
-				ProcessorID = Null
+				ProcessorId = Null
 			WHERE GUID = @RestoreQueueGUID
 		END
 		ELSE
 		BEGIN
 			UPDATE RestoreQueue
 			SET RestoreQueueStatusEnum = @RestoreQueueStatusEnum, ScheduledTime = @ScheduledTime,
-				ProcessorID = Null, FailureDescription = @FailureDescription
+				ProcessorId = Null, FailureDescription = @FailureDescription
 			WHERE GUID = @RestoreQueueGUID
 		END
 
@@ -3598,7 +3607,7 @@ BEGIN
 			-- iterate through the GUIDs
 			SET @String = @UserAuthorityGroupGUIDs + @Delimiter
 			SET @Pos = charindex(@Delimiter,@String)
-			WHILE (@pos <> 0)
+			WHILE (@Pos <> 0)
 			BEGIN
 				SET @guid = substring(@String,1,@Pos - 1)
 				
@@ -3608,8 +3617,8 @@ BEGIN
 				--PRINT @guid
 				SET @guids = @guids + '''''''' + @guid + ''''''''
 
-				SET @String = substring(@String,@pos+1,len(@String))
-				SET @pos = charindex(@Delimiter,@String)
+				SET @String = substring(@String,@Pos+1,len(@String))
+				SET @Pos = charindex(@Delimiter,@String)
 			END 
 
 			SET @DataAccessJoinStmt = '' JOIN StudyDataAccess sda ON sda.StudyStorageGUID=ArchiveQueue.StudyStorageGUID 
@@ -3785,7 +3794,7 @@ BEGIN
 			-- iterate through the GUIDs
 			SET @String = @UserAuthorityGroupGUIDs + @Delimiter
 			SET @Pos = charindex(@Delimiter,@String)
-			WHILE (@pos <> 0)
+			WHILE (@Pos <> 0)
 			BEGIN
 				SET @guid = substring(@String,1,@Pos - 1)
 				
@@ -3795,8 +3804,8 @@ BEGIN
 				--PRINT @guid
 				SET @guids = @guids + '''''''' + @guid + ''''''''
 
-				SET @String = substring(@String,@pos+1,len(@String))
-				SET @pos = charindex(@Delimiter,@String)
+				SET @String = substring(@String,@Pos+1,len(@String))
+				SET @Pos = charindex(@Delimiter,@String)
 			END 
 
 			SET @DataAccessJoinStmt = '' JOIN StudyDataAccess sda ON sda.StudyStorageGUID=RestoreQueue.StudyStorageGUID 
@@ -3972,6 +3981,7 @@ BEGIN
 EXEC dbo.sp_executesql @statement = N'-- =============================================
 -- Author:		Thanh Huynh
 -- Create date: Oct 09, 2008
+-- Update date: May 27, 2014, Updates to take into account new Order table might have reference to Patient
 -- Description:	Attach a study to a new patient and update all object counts for the old and new patient.
 --
 -- =============================================
@@ -3988,7 +3998,7 @@ BEGIN
 	DECLARE @ServerPartitionGUID uniqueidentifier
 	DECLARE @CurrentPatientGUID uniqueidentifier
 	DECLARE @StudyInstanceUid varchar(64)
-
+	
 	SELECT @ServerPartitionGUID=Study.ServerPartitionGUID,
 		   @StudyInstanceUid = Study.StudyInstanceUid, @CurrentPatientGUID=PatientGUID
 	FROM Study WHERE Study.GUID=@StudyGUID
@@ -3997,14 +4007,7 @@ BEGIN
 	UPDATE Study 
 	SET PatientGUID=@NewPatientGUID
 	WHERE GUID=	@StudyGUID
-
-	UPDATE Study 
-	SET Study.PatientsName=Patient.PatientsName,
-		Study.PatientId=Patient.PatientId,
-		Study.IssuerOfPatientId = Patient.IssuerOfPatientId	
-	FROM Study JOIN Patient ON Patient.GUID=Study.PatientGUID
-	WHERE Study.GUID=@StudyGUID
-	
+		
 	UPDATE Patient 
 	SET NumberOfPatientRelatedStudies=NumberOfPatientRelatedStudies+1,
 		NumberOfPatientRelatedSeries=NumberOfPatientRelatedSeries+(SELECT Count(GUID)
@@ -4024,6 +4027,7 @@ BEGIN
 	FROM Patient WHERE GUID=@CurrentPatientGUID
 
 	PRINT @StudyCount
+
 	IF @StudyCount<=1
 	BEGIN
 		DELETE Patient WHERE GUID=@CurrentPatientGUID
@@ -4050,6 +4054,7 @@ EXEC dbo.sp_executesql @statement = N'-- =======================================
 -- Author:		Thanh Huynh
 -- Create date: Oct 09, 2008
 -- Updated:     Jan 14, 2014, Bug fix when concurrency issues occur with removing the old Patient
+-- Updated:     May 27, 2014, Updated to take into account if order exists for Patient when deleting
 -- Description:	Create a new Patient for a study
 -- =============================================
 CREATE PROCEDURE [dbo].[CreatePatientForStudy]
@@ -4111,12 +4116,13 @@ BEGIN
 		[NumberOfPatientRelatedInstances]=[NumberOfPatientRelatedInstances]-@NumInstances
 	WHERE GUID=@CurrentPatientGUID
 
+
 	SELECT @NumStudiesOwnedByCurrentPatient=NumberOfPatientRelatedStudies FROM Patient WHERE GUID=@CurrentPatientGUID
 
 	-- CR (Jan 2014): Although unlikely, an error may be thrown here if another process somehow inserted a study for this patient but hasn''t updated the count.
 	-- Instead of relying on the count, it is safer to delete the Patient record only if it is not being referenced in the Study table:
 	--    DELETE Patient WHERE GUID =@CurrentPatientGUID and NOT EXISTS(SELECT COUNT(*) FROM Study WITH (NOLOCK) WHERE Study.PatientGUID = Patient.GUID )		
-	IF @NumStudiesOwnedByCurrentPatient<=0
+	IF @NumStudiesOwnedByCurrentPatient<=0 
 	BEGIN
 		DELETE Patient WHERE GUID = @CurrentPatientGUID
 	END
@@ -4157,7 +4163,7 @@ CREATE PROCEDURE [dbo].[InsertDuplicateSopReceivedQueue]
 	@SopInstanceUid varchar(64),
 	@StudyData xml,
 	@Details xml,
-    @GroupId varchar(50),
+    @GroupID varchar(50),
 	@UidRelativePath varchar(256)
 AS
 BEGIN
@@ -4178,8 +4184,8 @@ BEGIN
 				AND GroupID = @GroupID
 			AND siq.GUID NOT IN (	
 				SELECT StudyIntegrityQueueGUID FROM StudyIntegrityQueueUid uid2
-				WHERE uid2.SeriesInstanceUID=@SeriesInstanceUid
-				AND uid2.SopInstanceUID=@SopInstanceUid
+				WHERE uid2.SeriesInstanceUid=@SeriesInstanceUid
+				AND uid2.SopInstanceUid=@SopInstanceUid
 			)			
 	GROUP BY siq.GUID
 	ORDER BY MAX(siq.InsertTime) DESC
@@ -4309,7 +4315,7 @@ BEGIN
 	UPDATE Patient SET 	NumberOfPatientRelatedInstances=NumberOfPatientRelatedInstances-@NumInstances WHERE GUID=@PatientGUID
 	UPDATE Patient SET 	NumberOfPatientRelatedSeries=NumberOfPatientRelatedSeries-@NumSeries WHERE GUID=@PatientGUID
 	UPDATE Patient SET 	NumberOfPatientRelatedStudies=NumberOfPatientRelatedStudies-1 WHERE GUID=@PatientGUID
-	DELETE Patient WHERE GUID=@PatientGUID AND NumberOfPatientRelatedStudies=0
+	DELETE Patient WHERE GUID=@PatientGUID AND NOT EXISTS (SELECT GUID FROM [Study] where PatientGUID=@PatientGUID)
 
 
 	UPDATE ServerPartition SET StudyCount=StudyCount-1 WHERE GUID=@ServerPartitionGUID	
@@ -4469,7 +4475,7 @@ EXEC dbo.sp_executesql @statement = N'
 CREATE PROCEDURE [dbo].[DeleteSeries] 
 	-- Add the parameters for the stored procedure here
 	@StudyStorageGUID uniqueidentifier, 
-	@SeriesInstanceUID varchar(64)	
+	@SeriesInstanceUid varchar(64)	
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
@@ -4485,7 +4491,7 @@ BEGIN
 	DECLARE @InstanceCount int
 	
 	SELECT @SeriesGUID=GUID, @InstanceCount = NumberOfSeriesRelatedInstances
-	FROM Series WHERE StudyGUID=@StudyGUID AND SeriesInstanceUid =@SeriesInstanceUID
+	FROM Series WHERE StudyGUID=@StudyGUID AND SeriesInstanceUid =@SeriesInstanceUid
 
 
 	IF @SeriesGUID IS NOT NULL
@@ -4650,7 +4656,7 @@ BEGIN
 	select @InProgressStatusEnum = Enum from WorkQueueStatusEnum where Lookup = ''In Progress''
 
 	SELECT * FROM WorkQueue WITH(NOLOCK)
-	WHERE DEVICEGUID=@DeviceGUID and WorkQueueStatusEnum=@InProgressStatusEnum	
+	WHERE DeviceGUID=@DeviceGUID and WorkQueueStatusEnum=@InProgressStatusEnum	
 	ORDER BY ScheduledTime ASC
 END
 '
@@ -4737,3 +4743,111 @@ END
 '
 END
 GO
+
+
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[QueryQCStatistics]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'
+-- =============================================
+-- Author:		Thanh Huynh
+-- Create date: 2014-06-05
+-- Description:	Query QC Statistics
+-- =============================================
+CREATE PROCEDURE QueryQCStatistics
+	@StartTime datetime,
+	@EndTime datetime,
+	@PartitionAE varchar(16) = NULL
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+	Declare @CheckingCount int
+	Declare @PassedCount int
+	Declare @FailedCount int
+	Declare @IncompleteCount int
+	Declare @NotApplicableCount int
+	Declare @OrdersForQC int
+	Declare @OrderStatusCancelled smallint
+
+	Declare @QCStatusChecking smallint
+	Declare @QCStatusNA smallint
+	Declare @QCStatusPassed smallint
+	Declare @QCStatusFailed smallint
+	Declare @QCStatusIncomplete smallint
+	Declare @PartitionGUID uniqueidentifier
+
+
+	SELECT @OrderStatusCancelled=Enum FROM [dbo].[OrderStatusEnum] WHERE Lookup=''Canceled''
+	SELECT @QCStatusChecking=Enum FROM [dbo].[QCStatusEnum] WHERE Lookup=''Checking''
+	SELECT @QCStatusNA=Enum FROM [dbo].[QCStatusEnum] WHERE Lookup=''NA''
+	SELECT @QCStatusPassed=Enum FROM [dbo].[QCStatusEnum] WHERE Lookup=''Passed''
+	SELECT @QCStatusFailed=Enum FROM [dbo].[QCStatusEnum] WHERE Lookup=''Failed''
+	SELECT @QCStatusIncomplete=Enum FROM [dbo].[QCStatusEnum] WHERE Lookup=''Incomplete''
+
+	IF @PartitionAE IS NULL or @PartitionAE=''''
+	BEGIN
+		SELECT 
+			@CheckingCount=SUM(case when [QCStatusEnum] = @QCStatusChecking then 1 else 0 end),
+			@NotApplicableCount=SUM(case when [QCStatusEnum] =@QCStatusNA OR [QCStatusEnum] IS NULL then 1 else 0 end),
+			@PassedCount=SUM(case when [QCStatusEnum] = @QCStatusPassed then 1 else 0 end),
+			@FailedCount=SUM(case when [QCStatusEnum] = @QCStatusFailed then 1 else 0 end),
+			@IncompleteCount=SUM(case when [QCStatusEnum] = @QCStatusIncomplete then 1 else 0 end)
+			FROM  [dbo].[Study] s WITH (NOLOCK)
+			JOIN [dbo].[StudyStorage] ss ON ss.[GUID] = s.[StudyStorageGUID]
+			WHERE CONVERT(datetime, s.[StudyDate], 112) >= @StartTime and CONVERT(datetime, s.[StudyDate], 112)<=@EndTime
+
+		-- Find orders that are SCHEDULED within this window
+		SELECT @OrdersForQC = COUNT(*) 
+		FROM [dbo].[Order] WITH(NOLOCK)
+		WHERE [OrderStatusEnum]<>@OrderStatusCancelled
+			AND [ScheduledDateTime] >= @StartTime AND [ScheduledDateTime]<=@EndTime
+
+	END
+	ELSE
+	BEGIN
+		SELECT @PartitionGUID=GUID from [dbo].[ServerPartition] WHERE AeTitle=@PartitionAE COLLATE Latin1_General_CS_AS  /* case-sensitive */
+
+		SELECT 
+			@CheckingCount=SUM(case when [QCStatusEnum] = @QCStatusChecking then 1 else 0 end),
+			@NotApplicableCount=SUM(case when [QCStatusEnum] =@QCStatusNA OR [QCStatusEnum] IS NULL then 1 else 0 end),
+			@PassedCount=SUM(case when [QCStatusEnum] = @QCStatusPassed then 1 else 0 end),
+			@FailedCount=SUM(case when [QCStatusEnum] = @QCStatusFailed then 1 else 0 end),
+			@IncompleteCount=SUM(case when [QCStatusEnum] = @QCStatusIncomplete then 1 else 0 end)
+			FROM  [dbo].[Study] s WITH (NOLOCK)
+			JOIN [dbo].[StudyStorage] ss ON ss.[GUID] = s.[StudyStorageGUID]
+			WHERE CONVERT(datetime, s.[StudyDate], 112) >= @StartTime and CONVERT(datetime, s.[StudyDate], 112)<=@EndTime
+				AND ss.[ServerPartitionGUID]=@PartitionGUID
+
+		-- Find orders that are SCHEDULED within this window
+		SELECT @OrdersForQC = COUNT(*) 
+		FROM [dbo].[Order] WITH(NOLOCK)
+		WHERE [OrderStatusEnum]<>@OrderStatusCancelled
+			AND [ScheduledDateTime] >= @StartTime AND [ScheduledDateTime]<=@EndTime
+			AND [ServerPartitionGUID]=@PartitionGUID
+			AND [QCExpected]=1
+
+	END
+
+	
+
+	SET NOCOUNT OFF;
+
+	SELECT @CheckingCount as Checking,
+		   @PassedCount as Passed,
+		   @FailedCount as Failed,
+		   @IncompleteCount as Incomplete,
+		   @NotApplicableCount as NotApplicable,
+		   @OrdersForQC as OrdersForQC
+
+END
+'
+END
+GO
+

@@ -46,7 +46,7 @@ namespace ClearCanvas.ImageViewer.Common
 		High = 2
 	}
 
-	/// <summary>
+    /// <summary>
 	/// Simple data class describing the contents of an <see cref="ILargeObjectContainer"/>.
 	/// </summary>
 	public class LargeObjectContainerData : ILargeObjectContainer
@@ -57,8 +57,8 @@ namespace ClearCanvas.ImageViewer.Common
 		private long _totalBytesHeld;
 		private volatile RegenerationCost _regenerationCost;
 		private DateTime _lastAccessTime;
-		private uint _lastAccessTimeAccuracyMilliseconds = 500;
-		private int _lastAccessUpdateTickCount;
+        [ThreadStatic]
+        private static FastDateTime _fastDateTime;
 
 		/// <summary>
 		/// Constructor.
@@ -68,7 +68,12 @@ namespace ClearCanvas.ImageViewer.Common
 			_identifier = identifier;
 		}
 
-		#region ILargeObjectContainer Members
+        private static FastDateTime FastDateTime
+        {
+            get { return _fastDateTime ?? (_fastDateTime = new FastDateTime()); }
+        }
+
+        #region ILargeObjectContainer Members
 
 		/// <summary>
 		/// Gets the unique identifier for the container.
@@ -97,20 +102,11 @@ namespace ClearCanvas.ImageViewer.Common
 			set { _totalBytesHeld = value; }
 		}
 
-		/// <summary>
-		/// Gets the precision/accuracy to be used when updating
-		/// the <see cref="LastAccessTime"/>, via a call to <see cref="UpdateLastAccessTime"/>.
-		/// </summary>
-		/// <remarks>
-		/// Repeated calls to <see cref="DateTime.Now"/> can be extremely expensive, especially when
-		/// called in a tight loop.  The <see cref="LastAccessTime"/> doesn't typically need to be
-		/// all that accurate, and this property helps to minimize the number of calls to <see cref="DateTime.Now"/>.
-		/// </remarks>
-		public uint LastAccessTimeAccuracyMilliseconds
-		{
-			get { return _lastAccessTimeAccuracyMilliseconds; }
-			set { _lastAccessTimeAccuracyMilliseconds = value; }
-		}
+        /// <summary>
+        /// No longer used.
+        /// </summary>
+        [Obsolete("No longer used by the framework. This property will be removed.")]
+		public int LastAccessTimeAccuracyMilliseconds { get; set; }
 
 		/// <summary>
 		/// Gets the last time the container was accessed.
@@ -144,18 +140,11 @@ namespace ClearCanvas.ImageViewer.Common
 		}
 
 		/// <summary>
-		/// Updates the <see cref="LastAccessTime"/> with the 
-		/// precision/accuracy of <see cref="LastAccessTimeAccuracyMilliseconds"/>.
+		/// Updates the <see cref="LastAccessTime"/>.
 		/// </summary>
 		public void UpdateLastAccessTime()
 		{
-			//DateTime.Now is extremely expensive if called in a tight loop, so we minimize the potential impact
-			//of this problem occurring by only updating the last access time every second or so.
-			if (Environment.TickCount - _lastAccessUpdateTickCount < _lastAccessTimeAccuracyMilliseconds)
-				return;
-
-			_lastAccessUpdateTickCount = Environment.TickCount;
-			_lastAccessTime = DateTime.Now;
+            _lastAccessTime = FastDateTime.Now;
 		}
 
 		/// <summary>

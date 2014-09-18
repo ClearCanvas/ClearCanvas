@@ -115,15 +115,15 @@ namespace ClearCanvas.Ris.Client
         public override void Start()
         {
             _worklistTable = new Table<WorklistTableEntry>();
-            _worklistTable.Columns.Add(new TableColumn<WorklistTableEntry, bool>("Create",
+            _worklistTable.Columns.Add(new TableColumn<WorklistTableEntry, bool>(SR.ColumnCreate,
                 delegate(WorklistTableEntry item) { return item.Checked; },
                 delegate(WorklistTableEntry item, bool value) { item.Checked = value; }, 0.5f));
-            _worklistTable.Columns.Add(new TableColumn<WorklistTableEntry, string>("Class",
+            _worklistTable.Columns.Add(new TableColumn<WorklistTableEntry, string>(SR.ColumnClass,
                 delegate(WorklistTableEntry item) { return string.Format("{0} - {1}", item.Class.DisplayName, item.Class.Description); }, 1.0f));
-            _worklistTable.Columns.Add(new TableColumn<WorklistTableEntry, string>("Name",
+            _worklistTable.Columns.Add(new TableColumn<WorklistTableEntry, string>(SR.ColumnWorklistName,
                 delegate(WorklistTableEntry item) { return item.Name; },
                 delegate(WorklistTableEntry item, string value) { item.Name = value; }, 1.0f));
-            _worklistTable.Columns.Add(new TableColumn<WorklistTableEntry, string>("Description",
+            _worklistTable.Columns.Add(new TableColumn<WorklistTableEntry, string>(SR.ColumnWorklistDescription,
                 delegate(WorklistTableEntry item) { return item.Description; },
                 delegate(WorklistTableEntry item, string value) { item.Description = value; }, 1.0f));
 
@@ -216,7 +216,7 @@ namespace ClearCanvas.Ris.Client
 
                 if(ApplicationComponent.LaunchAsDialog(this.Host.DesktopWindow,
 					editor,
-                    "Edit Worklist") == ApplicationComponentExitCode.Accepted)
+                    SR.TitleEditWorklist) == ApplicationComponentExitCode.Accepted)
                 {
                     _selectedWorklist.Name = detail.Name;
                     _selectedWorklist.Description = detail.Description;

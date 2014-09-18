@@ -40,11 +40,11 @@ namespace ClearCanvas.Ris.Client
 
 		public ProcedureRequisitionTable()
 		{
-			this.Columns.Add(_procedureColumn = new TableColumn<ProcedureRequisition, string>("Procedure", ProcedureFormat.Format));
-			this.Columns.Add(_facilityColumn = new TableColumn<ProcedureRequisition, string>("Facility", FormatPerformingFacility));
-			this.Columns.Add(_scheduledTimeColumn = new TableColumn<ProcedureRequisition, string>("Scheduled Time", FormatScheduledTime));
-			this.Columns.Add(_scheduledDurationColumn = new TableColumn<ProcedureRequisition, string>("Scheduled Duration", FormatScheduledDuration));
-			this.Columns.Add(_modalityColumn = new TableColumn<ProcedureRequisition, string>("Modality", FormatScheduledModality));
+			this.Columns.Add(_procedureColumn = new TableColumn<ProcedureRequisition, string>(SR.ColumnProcedure, ProcedureFormat.Format));
+			this.Columns.Add(_facilityColumn = new TableColumn<ProcedureRequisition, string>(SR.ColumnFacility, FormatPerformingFacility));
+			this.Columns.Add(_scheduledTimeColumn = new TableColumn<ProcedureRequisition, string>(SR.ColumnScheduledTime, FormatScheduledTime));
+			this.Columns.Add(_scheduledDurationColumn = new TableColumn<ProcedureRequisition, string>(SR.ColumnScheduledDuration, FormatScheduledDuration));
+			this.Columns.Add(_modalityColumn = new TableColumn<ProcedureRequisition, string>(SR.ColumnModality, FormatScheduledModality));
 		}
 
 		public TableColumn<ProcedureRequisition, string> ScheduledDurationColumn

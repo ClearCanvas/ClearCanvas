@@ -107,11 +107,8 @@ namespace ClearCanvas.ImageServer.Services.Dicom
 			{
 				try
 				{
-					if (File.Exists(_sourceFilename))
-					{
-						FileUtils.Delete(_sourceFilename);
-						_sourceFilename = null;
-					}
+					FileUtils.Delete(_sourceFilename);
+					_sourceFilename = null;
 				}
 				catch (Exception)
 				{
@@ -171,8 +168,7 @@ namespace ClearCanvas.ImageServer.Services.Dicom
 			if (!string.IsNullOrEmpty(_sourceFilename))
 				try
 				{
-					if (File.Exists(_sourceFilename))
-						FileUtils.Delete(_sourceFilename);
+					FileUtils.Delete(_sourceFilename);
 					_sourceFilename = null;
 				}
 				catch (Exception x)

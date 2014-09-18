@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ClearCanvas.Common;
 using ClearCanvas.Desktop;
+using ClearCanvas.ImageViewer.Common;
 using ClearCanvas.ImageViewer.Common.StudyManagement;
 using ClearCanvas.ImageViewer.Configuration;
 using ClearCanvas.ImageViewer.StudyManagement;
@@ -49,25 +50,26 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 
 				var seriesNumberIndex = new Dictionary<string, int>();
 				var nextSeriesNumberDelegate = new NextSeriesNumberDelegate(studyInstanceUid =>
-				                                                            	{
-				                                                            		int nextSeriesNumber;
-				                                                            		if (!seriesNumberIndex.TryGetValue(studyInstanceUid, out nextSeriesNumber))
-				                                                            		{
-				                                                            			var study = studyTree.GetStudy(studyInstanceUid);
-				                                                            			nextSeriesNumber = study != null ? study.Series.Select(series => series.SeriesNumber).Concat(new[] {0}).Max() : 0;
-				                                                            		}
-				                                                            		seriesNumberIndex[studyInstanceUid] = ++nextSeriesNumber;
-				                                                            		return nextSeriesNumber;
-				                                                            	});
+				                                                            {
+					                                                            int nextSeriesNumber;
+					                                                            if (!seriesNumberIndex.TryGetValue(studyInstanceUid, out nextSeriesNumber))
+					                                                            {
+						                                                            var study = studyTree.GetStudy(studyInstanceUid);
+						                                                            nextSeriesNumber = study != null ? study.Series.Select(series => series.SeriesNumber).Concat(new[] {0}).Max() : 0;
+					                                                            }
+					                                                            seriesNumberIndex[studyInstanceUid] = ++nextSeriesNumber;
+					                                                            return nextSeriesNumber;
+				                                                            });
 
 				foreach (var kod in keyImageContexts)
 				{
 					// add each created instance to a publisher by study
 					foreach (var studyInstances in kod.CreateSopInstances(nextSeriesNumberDelegate))
 					{
-						var publisher = GetValue(publishers, studyInstances.Key.StudyInstanceUid);
+						var studyInstanceUid = studyInstances.Key.StudyInstanceUid;
+						var publisher = GetValue(publishers, studyInstanceUid);
 						publisher.OriginServer = studyInstances.Key.OriginServer;
-						publisher.SourceServer = studyInstances.Key.SourceServer;
+						publisher.SourceServer = FindStudySourceServer(studyTree, studyInstanceUid);
 						foreach (var f in studyInstances.Value)
 							publisher.Files.Add(f);
 					}
@@ -95,6 +97,19 @@ namespace ClearCanvas.ImageViewer.Tools.Reporting.KeyImages
 					Platform.Log(LogLevel.Error, SR.MessageKeyImagePublishingFailed);
 				else
 					Application.ActiveDesktopWindow.ShowMessageBox(SR.MessageKeyImagePublishingFailed, MessageBoxActions.Ok);
+			}
+		}
+
+		private static IDicomServiceNode FindStudySourceServer(StudyTree studyTree, string studyInstanceUid)
+		{
+			try
+			{
+				return studyTree.GetStudy(studyInstanceUid).Series.SelectMany(s => s.Sops).Select(s => s.DataSource.Server).FirstOrDefault(source => source != null);
+			}
+			catch (Exception ex)
+			{
+				Platform.Log(LogLevel.Warn, ex, "Failed to identify source server for study {0}", studyInstanceUid);
+				return null;
 			}
 		}
 

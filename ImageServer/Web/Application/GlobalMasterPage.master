@@ -1,13 +1,8 @@
 <%@ Import Namespace="System.Globalization"%>
-<%@ Import Namespace="ClearCanvas.ImageServer.Web.Common.Security" %>
-<%@ Import Namespace="Resources"%>
 <%@ Master Language="C#" AutoEventWireup="true" Inherits="ClearCanvas.ImageServer.Web.Application.GlobalMasterPage" Codebehind="GlobalMasterPage.master.cs" %>
 
-<%@ Register Src="~/Controls/AlertIndicator.ascx" TagName="AlertIndicator" TagPrefix="ccAsp" %>
-<%@ Register Src="~/Controls/LoginWarningIndicator.ascx" TagName="LoginWarningIndicator" TagPrefix="ccAsp" %>
 <%@ Register Src="~/Controls/SessionTimeout.ascx" TagName="SessionTimeout" TagPrefix="ccAsp" %>
 <%@ Register Src="~/Controls/ApplicationAlertPanel.ascx" TagName="ApplicationAlertPanel" TagPrefix="ccAsp" %>
-<%@ Register TagPrefix="ccAsp" Namespace="ClearCanvas.ImageServer.Web.Application.Controls" Assembly="ClearCanvas.ImageServer.Web.Application.Assembly" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -54,6 +49,7 @@
         </asp:ScriptManager>   
         
         
+        
         <script type="text/javascript">
         	$(document).ready(function(){
         		var prm = Sys.WebForms.PageRequestManager.getInstance();
@@ -95,7 +91,7 @@
                                     <asp:Panel ID="Panel2" runat="server" CssClass="MainMenuPanel">
                                         <asp:ContentPlaceHolder ID="MainMenuPlaceHolder" runat="server">
                                             <asp:SiteMapDataSource ID="MainMenuSiteMapDataSource" runat="server" ShowStartingNode="False" />
-                                            <asp:Menu runat="server" ID="MainMenu" SkinID="MainMenu" DataSourceID="MainMenuSiteMapDataSource"
+                                            <asp:Menu runat="server" ID="MainMenu" SkinID="MainMenu" DataSourceID="MainMenuSiteMapDataSource" OnDataBound="OnMainMenuDataBound"
                                                 Style="font-family: Sans-Serif">
                                             </asp:Menu>
                                         </asp:ContentPlaceHolder>

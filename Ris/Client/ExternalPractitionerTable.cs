@@ -61,7 +61,7 @@ namespace ClearCanvas.Ris.Client
 		public ExternalPractitionerWorkflowTable()
 		{
 
-			this.Columns.Add(new TableColumn<ExternalPractitionerSummary, string>(SR.ColumnName
+			this.Columns.Add(new TableColumn<ExternalPractitionerSummary, string>(SR.ColulmnPractitionerName
 				, item => PersonNameFormat.Format(item.Name), 1.0f));
 			this.Columns.Add(new TableColumn<ExternalPractitionerSummary, string>(SR.ColumnLicenseNumber,
 				item => item.LicenseNumber, 0.5f));

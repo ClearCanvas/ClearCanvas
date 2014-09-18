@@ -59,6 +59,7 @@ namespace ClearCanvas.Ris.Client.Workflow.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DowntimeReportEntryComponentControl));
 			this._radioToBeReported = new System.Windows.Forms.RadioButton();
 			this._radioPasteReport = new System.Windows.Forms.RadioButton();
 			this._reportText = new ClearCanvas.Desktop.View.WinForms.RichTextField();
@@ -70,87 +71,57 @@ namespace ClearCanvas.Ris.Client.Workflow.View.WinForms
 			// 
 			// _radioToBeReported
 			// 
-			this._radioToBeReported.AutoSize = true;
-			this._radioToBeReported.Location = new System.Drawing.Point(34, 23);
+			resources.ApplyResources(this._radioToBeReported, "_radioToBeReported");
 			this._radioToBeReported.Name = "_radioToBeReported";
-			this._radioToBeReported.Size = new System.Drawing.Size(119, 17);
-			this._radioToBeReported.TabIndex = 0;
 			this._radioToBeReported.TabStop = true;
-			this._radioToBeReported.Text = "Send to be reported";
 			this._radioToBeReported.UseVisualStyleBackColor = true;
 			this._radioToBeReported.CheckedChanged += new System.EventHandler(this._radioToBeReported_CheckedChanged);
 			// 
 			// _radioPasteReport
 			// 
-			this._radioPasteReport.AutoSize = true;
-			this._radioPasteReport.Location = new System.Drawing.Point(34, 49);
+			resources.ApplyResources(this._radioPasteReport, "_radioPasteReport");
 			this._radioPasteReport.Name = "_radioPasteReport";
-			this._radioPasteReport.Size = new System.Drawing.Size(135, 17);
-			this._radioPasteReport.TabIndex = 1;
 			this._radioPasteReport.TabStop = true;
-			this._radioPasteReport.Text = "Enter transcribed report";
 			this._radioPasteReport.UseVisualStyleBackColor = true;
 			this._radioPasteReport.CheckedChanged += new System.EventHandler(this._radioPasteReport_CheckedChanged);
 			// 
 			// _reportText
 			// 
-			this._reportText.LabelText = "Report";
-			this._reportText.Location = new System.Drawing.Point(34, 81);
-			this._reportText.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._reportText, "_reportText");
 			this._reportText.MaximumLength = 2147483647;
 			this._reportText.Name = "_reportText";
 			this._reportText.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Both;
-			this._reportText.Size = new System.Drawing.Size(442, 235);
-			this._reportText.TabIndex = 2;
 			this._reportText.Value = null;
 			// 
 			// _okButton
 			// 
-			this._okButton.Location = new System.Drawing.Point(320, 445);
+			resources.ApplyResources(this._okButton, "_okButton");
 			this._okButton.Name = "_okButton";
-			this._okButton.Size = new System.Drawing.Size(75, 23);
-			this._okButton.TabIndex = 5;
-			this._okButton.Text = "OK";
 			this._okButton.UseVisualStyleBackColor = true;
 			this._okButton.Click += new System.EventHandler(this._okButton_Click);
 			// 
 			// _cancelButton
 			// 
-			this._cancelButton.Location = new System.Drawing.Point(401, 445);
+			resources.ApplyResources(this._cancelButton, "_cancelButton");
 			this._cancelButton.Name = "_cancelButton";
-			this._cancelButton.Size = new System.Drawing.Size(75, 23);
-			this._cancelButton.TabIndex = 6;
-			this._cancelButton.Text = "Cancel";
 			this._cancelButton.UseVisualStyleBackColor = true;
 			this._cancelButton.Click += new System.EventHandler(this._cancelButton_Click);
 			// 
 			// _transcriptionistLookup
 			// 
-			this._transcriptionistLookup.AutoSize = true;
-			this._transcriptionistLookup.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this._transcriptionistLookup.LabelText = "Transcribed by";
-			this._transcriptionistLookup.Location = new System.Drawing.Point(34, 387);
-			this._transcriptionistLookup.Margin = new System.Windows.Forms.Padding(0);
+			resources.ApplyResources(this._transcriptionistLookup, "_transcriptionistLookup");
 			this._transcriptionistLookup.Name = "_transcriptionistLookup";
-			this._transcriptionistLookup.Size = new System.Drawing.Size(442, 41);
-			this._transcriptionistLookup.TabIndex = 4;
 			this._transcriptionistLookup.Value = null;
 			// 
 			// _interpreterLookup
 			// 
-			this._interpreterLookup.AutoSize = true;
-			this._interpreterLookup.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this._interpreterLookup.LabelText = "Interpreted by";
-			this._interpreterLookup.Location = new System.Drawing.Point(34, 329);
-			this._interpreterLookup.Margin = new System.Windows.Forms.Padding(0);
+			resources.ApplyResources(this._interpreterLookup, "_interpreterLookup");
 			this._interpreterLookup.Name = "_interpreterLookup";
-			this._interpreterLookup.Size = new System.Drawing.Size(442, 41);
-			this._interpreterLookup.TabIndex = 3;
 			this._interpreterLookup.Value = null;
 			// 
 			// DowntimeReportEntryComponentControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this._cancelButton);
 			this.Controls.Add(this._okButton);
@@ -160,7 +131,6 @@ namespace ClearCanvas.Ris.Client.Workflow.View.WinForms
 			this.Controls.Add(this._radioPasteReport);
 			this.Controls.Add(this._radioToBeReported);
 			this.Name = "DowntimeReportEntryComponentControl";
-			this.Size = new System.Drawing.Size(513, 488);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

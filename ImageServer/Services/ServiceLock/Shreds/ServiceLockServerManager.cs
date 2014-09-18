@@ -24,7 +24,6 @@
 
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
-using ClearCanvas.ImageServer.Services.ServiceLock;
 
 namespace ClearCanvas.ImageServer.Services.ServiceLock.Shreds
 {
@@ -49,13 +48,7 @@ namespace ClearCanvas.ImageServer.Services.ServiceLock.Shreds
 		/// </summary>
 		public static ServiceLockServerManager Instance
 		{
-			get
-			{
-				if (_instance == null)
-					_instance = new ServiceLockServerManager("ServiceLock");
-
-				return _instance;
-			}
+			get { return _instance ?? (_instance = new ServiceLockServerManager("ServiceLock")); }
 			set
 			{
 				_instance = value;

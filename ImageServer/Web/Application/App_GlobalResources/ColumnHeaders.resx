@@ -491,8 +491,8 @@
   <data name="ExternalRequestQueueStatus" xml:space="preserve">
     <value>Status</value>
   </data>
-  <data name="InsertDateTime" xml:space="preserve">
-    <value>Insert Date/Time</value>
+  <data name="InsertTime" xml:space="preserve">
+    <value>Insert Time</value>
   </data>
   <data name="OperationToken" xml:space="preserve">
     <value>Operation Token</value>
@@ -508,5 +508,29 @@
   </data>
   <data name="QCStatus" xml:space="preserve">
     <value>QC Status</value>
+  </data>
+  <data name="OrderStatus" xml:space="preserve">
+    <value>Order Status</value>
+  </data>
+  <data name="Priority" xml:space="preserve">
+    <value>Priority</value>
+  </data>
+  <data name="ReasonForStudy" xml:space="preserve">
+    <value>Reason for Study</value>
+  </data>
+  <data name="RequestedProcedure" xml:space="preserve">
+    <value>Requested Procedure</value>
+  </data>
+  <data name="ScheduledDate" xml:space="preserve">
+    <value>Scheduled Date</value>
+  </data>
+  <data name="ScheduledTime" xml:space="preserve">
+    <value>Scheduled Time</value>
+  </data>
+  <data name="RelatedStudies" xml:space="preserve">
+    <value>Related Studies</value>
+  </data>
+  <data name="QCExpected" xml:space="preserve">
+    <value>QC Expected</value>
   </data>
 </root>

@@ -24,6 +24,7 @@
 
 using System;
 using System.Security.Permissions;
+using ClearCanvas.ImageServer.Common.ExternalRequest;
 using ClearCanvas.ImageServer.Model;
 using ClearCanvas.ImageServer.Web.Application.Controls;
 using ClearCanvas.ImageServer.Web.Application.Pages.Common;
@@ -86,7 +87,21 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServerPa
         #endregion Protected Methods
 
         #region Private Methods
+#if false
+		private ImageServerDuplicateSopPolicyEnum GetDup(DuplicateSopPolicyEnum e)
+		{
+			if (e == DuplicateSopPolicyEnum.AcceptLatest)
+				 return ImageServerDuplicateSopPolicyEnum.AcceptLatest;
+			if (e == DuplicateSopPolicyEnum.CompareDuplicates)
+				return ImageServerDuplicateSopPolicyEnum.CompareDuplicates;
+			if (e == DuplicateSopPolicyEnum.RejectDuplicates)
+				return ImageServerDuplicateSopPolicyEnum.RejectDuplicates;
+			if (e == DuplicateSopPolicyEnum.SendSuccess)
+				return ImageServerDuplicateSopPolicyEnum.SendSuccess;
 
+			return ImageServerDuplicateSopPolicyEnum.SendSuccess;
+		}
+#endif
         private void AddEditPartitionDialog_OKClicked(ServerPartitionInfo info)
         {
             if (AddEditPartitionDialog.EditMode)
@@ -99,17 +114,45 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServerPa
             }
             else
             {
-                // Add partition into db and refresh the list
+#if false
+	            var state = EnterpriseConfigurationBridge.AddServerPartition(new AddServerPartitionRequest
+		            {
+			            AcceptAnyDevice = info.Partition.AcceptAnyDevice,
+			            AcceptLatestReport = info.Partition.AcceptLatestReport,
+			            AeTitle = info.Partition.AeTitle,
+			            AuditDeleteStudy = info.Partition.AuditDeleteStudy,
+			            AutoInsertDevice = info.Partition.AutoInsertDevice,
+			            DefaultRemotePort = info.Partition.DefaultRemotePort,
+			            Description = info.Partition.Description,
+			            DuplicateSopPolicy = GetDup(info.Partition.DuplicateSopPolicyEnum),
+			            Enabled = info.Partition.Enabled,
+			            GroupsWithDataAccess = info.GroupsWithDataAccess,
+			            MatchAccessionNumber = info.Partition.MatchAccessionNumber,
+			            Port = info.Partition.Port,
+
+			            PartitionFolder = info.Partition.PartitionFolder,
+			            MatchPatientsName = info.Partition.MatchPatientsName,
+			            MatchPatientId = info.Partition.MatchPatientId,
+			            MatchPatientsBirthDate = info.Partition.MatchPatientsBirthDate,
+			            MatchIssuerOfPatientId = info.Partition.MatchIssuerOfPatientId,
+			            MatchPatientsSex = info.Partition.MatchPatientsSex
+		            });
+				if (state.ExternalRequestState == ExternalRequestStateEnum.Complete )
+					UpdateUI();
+#else
+
+	// Add partition into db and refresh the list
                 if (_controller.AddPartition(info.Partition, info.GroupsWithDataAccess))
                 {
                     UpdateUI();
                 }
+#endif
             }
         }
 
         private void DeleteConfirmDialog_Confirmed(object data)
         {
-            ServerPartition partition = data as ServerPartition;
+            var partition = data as ServerPartition;
             if (partition != null)
             {
                 if (!_controller.Delete(partition))

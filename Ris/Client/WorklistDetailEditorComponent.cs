@@ -90,7 +90,7 @@ namespace ClearCanvas.Ris.Client
 					delegate
 					{
 						var success = _adminMode || this.IsPersonal || (this.IsGroup && this.SelectedGroup != null);
-						return new ValidationResult(success, "Value Required");
+						return new ValidationResult(success, SR.MessageValueRequired);
 					}));
 
 			this.Validation.Add(new ValidationRule("IsPersonal",

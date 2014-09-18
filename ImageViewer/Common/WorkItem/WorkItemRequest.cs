@@ -81,6 +81,11 @@ namespace ClearCanvas.ImageViewer.Common.WorkItem
 	[WorkItemKnownType]
 	public abstract class WorkItemRequest : DataContractBase
 	{
+		protected WorkItemRequest()
+		{
+			Priority = WorkItemPriorityEnum.Normal;
+		}
+
 		public abstract WorkItemConcurrency ConcurrencyType { get; }
 
 		[DataMember]

@@ -79,16 +79,17 @@ namespace ClearCanvas.ImageServer.Core.SharpZipLib
 
         #region Methods
 
-        public void Extract(string sourceFile, string destinationFile, bool overwrite)
+        public void Extract(string sourceFile, string destinationFolder, bool overwrite)
         {
             var zipEntry = _zipFile.GetEntry(sourceFile);
-            var byteArray = new byte[1024 * 16];
+			Directory.CreateDirectory(destinationFolder);
+			var destinationFile = Path.Combine(destinationFolder, zipEntry.Name);
             using (var s = _zipFile.GetInputStream(zipEntry))
-            using (var o = new FileStream(destinationFile, overwrite ? FileMode.OpenOrCreate : FileMode.CreateNew))
+            using (var o = new FileStream(destinationFile, overwrite ? FileMode.OpenOrCreate : FileMode.CreateNew, FileAccess.Write))
             {
-                var bytesRead = s.Read(byteArray, 0, byteArray.Length);
-
-                o.Write(byteArray, 0, bytesRead);
+	            s.CopyTo(o);
+				o.Flush(true);
+				o.Close();
             }
         }
 
@@ -99,15 +100,16 @@ namespace ClearCanvas.ImageServer.Core.SharpZipLib
                 var zipEntry = zip as ZipEntry;
                 if (zipEntry != null)
                 {
-                    var byteArray = new byte[1024 * 16];
                     var destinationFile = Path.Combine(destinationFolder, zipEntry.Name);
+					Directory.CreateDirectory(Path.GetDirectoryName(destinationFile));
                     using (var s = _zipFile.GetInputStream(zipEntry))
                     using (
-                        var o = new FileStream(destinationFile, overwrite ? FileMode.OpenOrCreate : FileMode.CreateNew))
+                        var o = new FileStream(destinationFile, overwrite ? FileMode.OpenOrCreate : FileMode.CreateNew, FileAccess.Write))
                     {
-                        var bytesRead = s.Read(byteArray, 0, byteArray.Length);
-                        o.Write(byteArray, 0, bytesRead);
-                    }
+						s.CopyTo(o);
+						o.Flush(true);
+						o.Close();
+					}
                 }
             }
         }

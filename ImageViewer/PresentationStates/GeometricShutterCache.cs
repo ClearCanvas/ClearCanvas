@@ -322,9 +322,6 @@ namespace ClearCanvas.ImageViewer.PresentationStates
 
 		private static byte[] CreateShutter(IList<GeometricShutter> shutters, Rectangle imageRectangle, Color fillColor)
 		{
-			CodeClock clock = new CodeClock();
-			clock.Start();
-
 			int stride = imageRectangle.Width * 4;
 			int size = imageRectangle.Height * stride;
 			byte[] buffer = MemoryManager.Allocate<byte>(size);
@@ -362,9 +359,6 @@ namespace ClearCanvas.ImageViewer.PresentationStates
 			finally
 			{
 				bufferHandle.Free();
-
-				clock.Stop();
-				PerformanceReportBroker.PublishReport("Shutters", "Render", clock.Seconds);
 			}
 		}
 	}

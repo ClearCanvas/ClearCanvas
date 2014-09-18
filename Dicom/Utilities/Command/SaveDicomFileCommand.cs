@@ -30,7 +30,7 @@ using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Dicom.Utilities.Command
 {
-    public class SaveDicomFileCommand : CommandBase, IAggregateCommand
+    public class SaveDicomFileCommand : CommandBase, IAggregateCommand, IDisposable
     {
         #region Private Members
         private readonly string _path;
@@ -163,20 +163,21 @@ namespace ClearCanvas.Dicom.Utilities.Command
             {
                 // restore original file
                 File.Copy(_backupPath, _path, true);
-                File.Delete(_backupPath);
+                FileUtils.Delete(_backupPath);
                 _backupPath = null;
             }
-            else if (File.Exists(_path) && _fileCreated)
-                File.Delete(_path);
+            else if (_fileCreated)
+                FileUtils.Delete(_path); // Will check for existance
         }
 
         #region IDisposable Members
 
         public void Dispose()
         {
-            if (false == String.IsNullOrEmpty(_backupPath) && File.Exists(_backupPath))
+            if (false == String.IsNullOrEmpty(_backupPath))
             {
-                File.Delete(_backupPath);
+				// Will check for existence
+                FileUtils.Delete(_backupPath);
             }
         }
 

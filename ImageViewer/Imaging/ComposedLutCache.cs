@@ -26,26 +26,24 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.Common;
-using ClearCanvas.Common;
 
 namespace ClearCanvas.ImageViewer.Imaging
 {
 	internal static class ComposedLutCache
 	{
 		#region Cached Lut
-		
-		public interface ICachedLut : IComposedLut, IDisposable
-		{
-		}
+
+		public interface ICachedLut : IComposedLut, IDisposable {}
 
 		public static ICachedLut GetLut(LutCollection sourceLuts)
 		{
 			Platform.CheckForNullReference(sourceLuts, "sourceLuts");
 			return new CachedLutProxy(sourceLuts);
 		}
-		
+
 		private class CachedLutProxy : ICachedLut
 		{
 			private readonly LutCollection _sourceLuts;
@@ -77,7 +75,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 					}
 
 					return _cacheItemProxy;
-				}	
+				}
 			}
 
 			private void DisposeCacheItemProxy()
@@ -105,6 +103,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 			}
 
 			#endregion
+
 			#endregion
 
 			#region IComposedLut Members
@@ -152,6 +151,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 		}
 
 		#endregion
+
 		#region Cache Item
 
 		private interface ICacheItem : IDisposable
@@ -227,6 +227,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 			private readonly LargeObjectContainerData _largeObjectData;
 			private readonly string _key;
 			private readonly BufferCache<int> _bufferCache = SharedBufferCache;
+			private readonly BufferCache<double> _doubleBufferCache = SharedDoubleBufferCache;
 
 			private readonly object _syncLock = new object();
 			private volatile ComposedLut _realComposedLut;
@@ -234,7 +235,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 			internal CacheItem(string key)
 			{
 				_key = key;
-				_largeObjectData = new LargeObjectContainerData(Guid.NewGuid()){RegenerationCost = LargeObjectContainerData.PresetGeneratedData};
+				_largeObjectData = new LargeObjectContainerData(Guid.NewGuid()) {RegenerationCost = LargeObjectContainerData.PresetGeneratedData};
 			}
 
 			~CacheItem()
@@ -247,7 +248,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 				get { return _key; }
 			}
 
-            public IComposedLut GetLut(LutCollection sourceLuts)
+			public IComposedLut GetLut(LutCollection sourceLuts)
 			{
 				IComposedLut lut = _realComposedLut;
 				if (lut != null)
@@ -260,10 +261,11 @@ namespace ClearCanvas.ImageViewer.Imaging
 
 					//Trace.WriteLine(String.Format("Creating Composed Lut '{0}'", Key), "LUT");
 
-					_realComposedLut = new ComposedLut(sourceLuts.ToArray(), _bufferCache);
+					_realComposedLut = new ComposedLut(sourceLuts.ToArray(), _bufferCache, _doubleBufferCache);
+
 					//just use the creation time as the "last access time", otherwise it can get expensive when called in a tight loop.
 					_largeObjectData.UpdateLastAccessTime();
-					_largeObjectData.BytesHeldCount = _realComposedLut.Data.Length * sizeof(int);
+					_largeObjectData.BytesHeldCount = _realComposedLut.Data.Length*sizeof (int);
 					_largeObjectData.LargeObjectCount = 1;
 					MemoryManager.Add(this);
 					Diagnostics.OnLargeObjectAllocated(_largeObjectData.BytesHeldCount);
@@ -356,7 +358,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 				{
 					//if (_realComposedLut != null) 
 					//    Trace.WriteLine(String.Format("Dispose unloading Composed Lut '{0}'", Key), "LUT");
-					
+
 					Unload(true);
 					GC.SuppressFinalize(this);
 				}
@@ -383,6 +385,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 
 		private static readonly object _bufferCacheLock = new object();
 		private static volatile WeakReference _sharedBufferCache;
+		private static volatile WeakReference _sharedDoubleBufferCache;
 
 		private static BufferCache<int> SharedBufferCache
 		{
@@ -416,6 +419,47 @@ namespace ClearCanvas.ImageViewer.Imaging
 			try
 			{
 				bufferCache = _sharedBufferCache.Target as BufferCache<int>;
+			}
+			catch (InvalidOperationException)
+			{
+				bufferCache = null;
+			}
+
+			return bufferCache;
+		}
+
+		private static BufferCache<double> SharedDoubleBufferCache
+		{
+			get
+			{
+				BufferCache<double> bufferCache = GetSharedDoubleBufferCache();
+				if (bufferCache == null)
+				{
+					lock (_bufferCacheLock)
+					{
+						bufferCache = GetSharedDoubleBufferCache();
+						if (bufferCache == null)
+						{
+							//Trace.WriteLine("Creating new ComposedLut.SharedBufferCache", "LUT");
+							bufferCache = new BufferCache<double>(10, true);
+							_sharedDoubleBufferCache = new WeakReference(bufferCache);
+						}
+					}
+				}
+
+				return bufferCache;
+			}
+		}
+
+		private static BufferCache<double> GetSharedDoubleBufferCache()
+		{
+			if (_sharedDoubleBufferCache == null)
+				return null;
+
+			BufferCache<double> bufferCache;
+			try
+			{
+				bufferCache = _sharedDoubleBufferCache.Target as BufferCache<double>;
 			}
 			catch (InvalidOperationException)
 			{
@@ -521,6 +565,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 		}
 
 		#endregion
+
 		#endregion
 	}
 }

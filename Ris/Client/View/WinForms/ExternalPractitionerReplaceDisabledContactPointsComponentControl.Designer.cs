@@ -59,6 +59,7 @@ namespace ClearCanvas.Ris.Client.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExternalPractitionerReplaceDisabledContactPointsComponentControl));
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this._instruction = new System.Windows.Forms.Label();
 			this._table = new ClearCanvas.Ris.Client.View.WinForms.ExternalPractitionerReplaceDisabledContactPointsTable();
@@ -67,53 +68,27 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			// 
 			// tableLayoutPanel1
 			// 
-			this.tableLayoutPanel1.ColumnCount = 1;
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			resources.ApplyResources(this.tableLayoutPanel1, "tableLayoutPanel1");
 			this.tableLayoutPanel1.Controls.Add(this._instruction, 0, 0);
 			this.tableLayoutPanel1.Controls.Add(this._table, 0, 1);
-			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-			this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(0, 0, 15, 0);
-			this.tableLayoutPanel1.RowCount = 2;
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(464, 364);
-			this.tableLayoutPanel1.TabIndex = 7;
 			// 
 			// _instruction
 			// 
-			this._instruction.AutoSize = true;
-			this._instruction.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._instruction.Location = new System.Drawing.Point(3, 0);
+			resources.ApplyResources(this._instruction, "_instruction");
 			this._instruction.Name = "_instruction";
-			this._instruction.Size = new System.Drawing.Size(443, 30);
-			this._instruction.TabIndex = 6;
-			this._instruction.Text = "Please choose an active contact point to replace each of the following disabled c" +
-				"ontact points.";
-			this._instruction.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// _table
 			// 
-			this._table.AutoScroll = true;
-			this._table.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Inset;
-			this._table.ColumnCount = 1;
-			this._table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this._table.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._table.Location = new System.Drawing.Point(3, 33);
+			resources.ApplyResources(this._table, "_table");
 			this._table.Name = "_table";
-			this._table.RowCount = 1;
-			this._table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this._table.Size = new System.Drawing.Size(443, 328);
-			this._table.TabIndex = 7;
 			// 
 			// ExternalPractitionerReplaceDisabledContactPointsComponentControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this.tableLayoutPanel1);
 			this.Name = "ExternalPractitionerReplaceDisabledContactPointsComponentControl";
-			this.Size = new System.Drawing.Size(464, 364);
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
 			this.ResumeLayout(false);

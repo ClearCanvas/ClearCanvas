@@ -38,7 +38,7 @@ using ClearCanvas.Ris.Application.Common.Admin.DiagnosticServiceAdmin;
 
 namespace ClearCanvas.Ris.Client
 {
-	[MenuAction("launch", "global-menus/Admin/Imaging Services", "Launch")]
+	[MenuAction("launch", "global-menus/MenuAdmin/MenuImagingServices", "Launch")]
 	[ActionPermission("launch", ClearCanvas.Ris.Application.Common.AuthorityTokens.Admin.Data.DiagnosticService)]
 	[ExtensionOf(typeof(DesktopToolExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]
 	public class DiagnosticServiceAdminTool : Tool<IDesktopToolContext>
@@ -56,7 +56,7 @@ namespace ClearCanvas.Ris.Client
 					_workspace = ApplicationComponent.LaunchAsWorkspace(
 						this.Context.DesktopWindow,
 						component,
-						"Imaging Services");
+						SR.TitleImagingServices);
 					_workspace.Closed += delegate { _workspace = null; };
 
 				}
@@ -87,11 +87,11 @@ namespace ClearCanvas.Ris.Client
 
 		public DiagnosticServiceSummaryTable()
 		{
-			this.Columns.Add(new TableColumn<DiagnosticServiceSummary, string>("ID",
+			this.Columns.Add(new TableColumn<DiagnosticServiceSummary, string>(SR.ColumnID,
 			                                                                   delegate(DiagnosticServiceSummary rpt) { return rpt.Id; },
 			                                                                   0.2f));
 
-			this.Columns.Add(new TableColumn<DiagnosticServiceSummary, string>("Name",
+			this.Columns.Add(new TableColumn<DiagnosticServiceSummary, string>(SR.ColumnDiagnosticServiceName,
 			                                                                   delegate(DiagnosticServiceSummary rpt) { return rpt.Name; },
 			                                                                   1.0f));
 
@@ -205,7 +205,7 @@ namespace ClearCanvas.Ris.Client
 
 			DiagnosticServiceEditorComponent editor = new DiagnosticServiceEditorComponent(item.DiagnosticServiceRef);
 			ApplicationComponentExitCode exitCode = LaunchAsDialog(
-				this.Host.DesktopWindow, editor, SR.TitleUpdateDiagnosticService + " - " + "(" + item.Id + ") " + item.Name);
+				this.Host.DesktopWindow, editor, string.Format("{0} - ({1}) {2}", SR.TitleUpdateDiagnosticService, item.Id, item.Name));
 			if (exitCode == ApplicationComponentExitCode.Accepted)
 			{
 				editedItems.Add(editor.DiagnosticServiceSummary);

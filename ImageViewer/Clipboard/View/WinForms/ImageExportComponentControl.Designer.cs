@@ -84,9 +84,9 @@ namespace ClearCanvas.ImageViewer.Clipboard.View.WinForms
 			this._checkOptionFixed = new System.Windows.Forms.RadioButton();
 			this._checkOptionScale = new System.Windows.Forms.RadioButton();
 			this._groupDpi = new System.Windows.Forms.GroupBox();
-			this._lblDpi = new System.Windows.Forms.Label();
-			this._outputDpi = new ClearCanvas.Desktop.View.WinForms.NonEmptyNumericUpDown();
 			this._lblDpiDefault = new System.Windows.Forms.Label();
+			this._outputDpi = new ClearCanvas.Desktop.View.WinForms.NonEmptyNumericUpDown();
+			this._lblDpi = new System.Windows.Forms.Label();
 			this._groupFieldOfView.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this._scale)).BeginInit();
 			this._pnlDialogButtons.SuspendLayout();
@@ -298,10 +298,10 @@ namespace ClearCanvas.ImageViewer.Clipboard.View.WinForms
 			this._groupDpi.Name = "_groupDpi";
 			this._groupDpi.TabStop = false;
 			// 
-			// _lblDpi
+			// _lblDpiDefault
 			// 
-			resources.ApplyResources(this._lblDpi, "_lblDpi");
-			this._lblDpi.Name = "_lblDpi";
+			resources.ApplyResources(this._lblDpiDefault, "_lblDpiDefault");
+			this._lblDpiDefault.Name = "_lblDpiDefault";
 			// 
 			// _outputDpi
 			// 
@@ -323,10 +323,10 @@ namespace ClearCanvas.ImageViewer.Clipboard.View.WinForms
             0,
             0});
 			// 
-			// _lblDpiDefault
+			// _lblDpi
 			// 
-			resources.ApplyResources(this._lblDpiDefault, "_lblDpiDefault");
-			this._lblDpiDefault.Name = "_lblDpiDefault";
+			resources.ApplyResources(this._lblDpi, "_lblDpi");
+			this._lblDpi.Name = "_lblDpi";
 			// 
 			// ImageExportComponentControl
 			// 

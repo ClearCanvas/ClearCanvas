@@ -24,16 +24,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
-using ClearCanvas.Desktop.Tools;
 using ClearCanvas.Desktop.Tables;
+using ClearCanvas.Desktop.Tools;
 using ClearCanvas.Enterprise.Common;
 using ClearCanvas.Ris.Application.Common;
 using ClearCanvas.Ris.Application.Common.BrowsePatientData;
-using System.Diagnostics;
 
 namespace ClearCanvas.Ris.Client
 {
@@ -41,14 +41,10 @@ namespace ClearCanvas.Ris.Client
 	/// Extension point for views onto <see cref="AttachedDocumentPreviewComponent"/>
 	/// </summary>
 	[ExtensionPoint]
-	public class AttachedDocumentPreviewComponentViewExtensionPoint : ExtensionPoint<IApplicationComponentView>
-	{
-	}
+	public class AttachedDocumentPreviewComponentViewExtensionPoint : ExtensionPoint<IApplicationComponentView> {}
 
 	[ExtensionPoint]
-	public class AttachedDocumentToolExtensionPoint : ExtensionPoint<ITool>
-	{
-	}
+	public class AttachedDocumentToolExtensionPoint : ExtensionPoint<ITool> {}
 
 	public interface IAttachedDocumentToolContext : IToolContext
 	{
@@ -74,11 +70,10 @@ namespace ClearCanvas.Ris.Client
 	/// <summary>
 	/// AttachedDocumentPreviewComponent class
 	/// </summary>
-	[AssociateView(typeof(AttachedDocumentPreviewComponentViewExtensionPoint))]
+	[AssociateView(typeof (AttachedDocumentPreviewComponentViewExtensionPoint))]
 	public class AttachedDocumentPreviewComponent : ApplicationComponent
 	{
-
-		class AttachedDocumentToolContext : ToolContext, IAttachedDocumentToolContext
+		private class AttachedDocumentToolContext : ToolContext, IAttachedDocumentToolContext
 		{
 			private readonly AttachedDocumentPreviewComponent _component;
 
@@ -267,7 +262,7 @@ namespace ClearCanvas.Ris.Client
 			get { return new Selection(_selectedAttachment); }
 			set
 			{
-				var newSelection = (AttachmentSummary)value.Item;
+				var newSelection = (AttachmentSummary) value.Item;
 				if (_selectedAttachment != newSelection)
 				{
 					_selectedAttachment = newSelection;
@@ -327,11 +322,18 @@ namespace ClearCanvas.Ris.Client
 			if (document == null)
 				return;
 
-			BlockingOperation.Run(() =>
+			try
 			{
-				var localUri = AttachedDocument.DownloadFile(document);
-				Process.Start(localUri);
-			});
+				BlockingOperation.Run(() =>
+				                      {
+					                      var localUri = AttachedDocument.DownloadFile(document);
+					                      Process.Start(localUri);
+				                      });
+			}
+			catch (Exception ex)
+			{
+				ExceptionHandler.Report(ex, SR.ExceptionFailedToDisplayDocument, Host.DesktopWindow);
+			}
 		}
 
 		private void LoadPatientAttachments()
@@ -344,13 +346,13 @@ namespace ClearCanvas.Ris.Client
 				(IBrowsePatientDataService service) =>
 				{
 					var request = new GetDataRequest
-					{
-						GetPatientProfileDetailRequest = new GetPatientProfileDetailRequest
-						{
-							PatientProfileRef = _patientProfileRef,
-							IncludeAttachments = true
-						}
-					};
+					              {
+						              GetPatientProfileDetailRequest = new GetPatientProfileDetailRequest
+						                                               {
+							                                               PatientProfileRef = _patientProfileRef,
+							                                               IncludeAttachments = true
+						                                               }
+					              };
 					return service.GetData(request);
 				},
 				response =>
@@ -371,13 +373,13 @@ namespace ClearCanvas.Ris.Client
 				(IBrowsePatientDataService service) =>
 				{
 					var request = new GetDataRequest
-					{
-						GetOrderDetailRequest = new GetOrderDetailRequest
-						{
-							OrderRef = _orderRef,
-							IncludeAttachments = true
-						}
-					};
+					              {
+						              GetOrderDetailRequest = new GetOrderDetailRequest
+						                                      {
+							                                      OrderRef = _orderRef,
+							                                      IncludeAttachments = true
+						                                      }
+					              };
 					return service.GetData(request);
 				},
 				response =>
@@ -387,6 +389,5 @@ namespace ClearCanvas.Ris.Client
 						this.SetInitialSelection(this.Attachments[0]);
 				});
 		}
-
 	}
 }

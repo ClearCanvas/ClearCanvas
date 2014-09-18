@@ -59,6 +59,7 @@ namespace ClearCanvas.Ris.Client.Workflow.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(VisitDetailsEditorComponentControl));
 			this._visitNumber = new ClearCanvas.Desktop.View.WinForms.TextField();
 			this._visitNumberAssigningAuthority = new ClearCanvas.Desktop.View.WinForms.ComboBoxField();
 			this._admitDateTime = new ClearCanvas.Desktop.View.WinForms.DateTimeField();
@@ -79,154 +80,94 @@ namespace ClearCanvas.Ris.Client.Workflow.View.WinForms
 			// 
 			// _visitNumber
 			// 
-			this._visitNumber.AutoSize = true;
-			this._visitNumber.LabelText = "Visit Number";
-			this._visitNumber.Location = new System.Drawing.Point(5, 2);
-			this._visitNumber.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._visitNumber, "_visitNumber");
 			this._visitNumber.Mask = "";
 			this._visitNumber.Name = "_visitNumber";
-			this._visitNumber.PasswordChar = '\0';
-			this._visitNumber.Size = new System.Drawing.Size(140, 40);
-			this._visitNumber.TabIndex = 0;
-			this._visitNumber.ToolTip = null;
 			this._visitNumber.Value = null;
 			// 
 			// _visitNumberAssigningAuthority
 			// 
-			this._visitNumberAssigningAuthority.AutoSize = true;
+			resources.ApplyResources(this._visitNumberAssigningAuthority, "_visitNumberAssigningAuthority");
 			this._visitNumberAssigningAuthority.DataSource = null;
 			this._visitNumberAssigningAuthority.DisplayMember = "";
 			this._visitNumberAssigningAuthority.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this._visitNumberAssigningAuthority.LabelText = "Information Authority";
-			this._visitNumberAssigningAuthority.Location = new System.Drawing.Point(159, 2);
-			this._visitNumberAssigningAuthority.Margin = new System.Windows.Forms.Padding(2);
 			this._visitNumberAssigningAuthority.Name = "_visitNumberAssigningAuthority";
-			this._visitNumberAssigningAuthority.Size = new System.Drawing.Size(140, 41);
-			this._visitNumberAssigningAuthority.TabIndex = 1;
 			this._visitNumberAssigningAuthority.Value = null;
 			// 
 			// _admitDateTime
 			// 
-			this._admitDateTime.AutoSize = true;
-			this._admitDateTime.LabelText = "Admit Date/Time";
-			this._admitDateTime.Location = new System.Drawing.Point(159, 91);
-			this._admitDateTime.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._admitDateTime, "_admitDateTime");
 			this._admitDateTime.Maximum = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
 			this._admitDateTime.Minimum = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
 			this._admitDateTime.Name = "_admitDateTime";
 			this._admitDateTime.Nullable = true;
 			this._admitDateTime.ShowTime = true;
-			this._admitDateTime.Size = new System.Drawing.Size(140, 40);
-			this._admitDateTime.TabIndex = 7;
 			this._admitDateTime.Value = null;
 			// 
 			// _dischargeDateTime
 			// 
-			this._dischargeDateTime.LabelText = "Discharge Date/Time";
-			this._dischargeDateTime.Location = new System.Drawing.Point(313, 91);
-			this._dischargeDateTime.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._dischargeDateTime, "_dischargeDateTime");
 			this._dischargeDateTime.Maximum = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
 			this._dischargeDateTime.Minimum = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
 			this._dischargeDateTime.Name = "_dischargeDateTime";
 			this._dischargeDateTime.Nullable = true;
 			this._dischargeDateTime.ShowTime = true;
-			this._dischargeDateTime.Size = new System.Drawing.Size(140, 40);
-			this._dischargeDateTime.TabIndex = 8;
 			this._dischargeDateTime.Value = null;
 			// 
 			// _dischargeDisposition
 			// 
-			this._dischargeDisposition.AutoSize = true;
-			this._dischargeDisposition.LabelText = "Discharge Disposition";
-			this._dischargeDisposition.Location = new System.Drawing.Point(5, 221);
-			this._dischargeDisposition.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._dischargeDisposition, "_dischargeDisposition");
 			this._dischargeDisposition.Mask = "";
 			this._dischargeDisposition.Name = "_dischargeDisposition";
-			this._dischargeDisposition.PasswordChar = '\0';
-			this._dischargeDisposition.Size = new System.Drawing.Size(448, 40);
-			this._dischargeDisposition.TabIndex = 11;
-			this._dischargeDisposition.ToolTip = null;
 			this._dischargeDisposition.Value = null;
 			// 
 			// _preadmitNumber
 			// 
-			this._preadmitNumber.AutoSize = true;
-			this._preadmitNumber.LabelText = "Pre-Admit Number";
-			this._preadmitNumber.Location = new System.Drawing.Point(313, 3);
-			this._preadmitNumber.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._preadmitNumber, "_preadmitNumber");
 			this._preadmitNumber.Mask = "";
 			this._preadmitNumber.Name = "_preadmitNumber";
-			this._preadmitNumber.PasswordChar = '\0';
-			this._preadmitNumber.Size = new System.Drawing.Size(140, 40);
-			this._preadmitNumber.TabIndex = 2;
-			this._preadmitNumber.ToolTip = null;
 			this._preadmitNumber.Value = null;
 			// 
 			// _vip
 			// 
-			this._vip.AutoSize = true;
-			this._vip.Location = new System.Drawing.Point(328, 268);
+			resources.ApplyResources(this._vip, "_vip");
 			this._vip.Name = "_vip";
-			this._vip.Padding = new System.Windows.Forms.Padding(0, 16, 0, 0);
-			this._vip.Size = new System.Drawing.Size(49, 33);
-			this._vip.TabIndex = 13;
-			this._vip.Text = "VIP?";
 			this._vip.UseVisualStyleBackColor = true;
 			// 
 			// _patientClass
 			// 
-			this._patientClass.AutoSize = true;
+			resources.ApplyResources(this._patientClass, "_patientClass");
 			this._patientClass.DataSource = null;
 			this._patientClass.DisplayMember = "";
 			this._patientClass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this._patientClass.LabelText = "Patient Class";
-			this._patientClass.Location = new System.Drawing.Point(5, 46);
-			this._patientClass.Margin = new System.Windows.Forms.Padding(2);
 			this._patientClass.Name = "_patientClass";
-			this._patientClass.Size = new System.Drawing.Size(140, 41);
-			this._patientClass.TabIndex = 3;
 			this._patientClass.Value = null;
 			// 
 			// _visitStatus
 			// 
-			this._visitStatus.AutoSize = true;
+			resources.ApplyResources(this._visitStatus, "_visitStatus");
 			this._visitStatus.DataSource = null;
 			this._visitStatus.DisplayMember = "";
 			this._visitStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this._visitStatus.LabelText = "Visit Status";
-			this._visitStatus.Location = new System.Drawing.Point(5, 91);
-			this._visitStatus.Margin = new System.Windows.Forms.Padding(2);
 			this._visitStatus.Name = "_visitStatus";
-			this._visitStatus.Size = new System.Drawing.Size(140, 41);
-			this._visitStatus.TabIndex = 6;
 			this._visitStatus.Value = null;
 			// 
 			// _patientType
 			// 
-			this._patientType.AutoSize = true;
+			resources.ApplyResources(this._patientType, "_patientType");
 			this._patientType.DataSource = null;
 			this._patientType.DisplayMember = "";
 			this._patientType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this._patientType.LabelText = "Patient Type";
-			this._patientType.Location = new System.Drawing.Point(159, 46);
-			this._patientType.Margin = new System.Windows.Forms.Padding(2);
 			this._patientType.Name = "_patientType";
-			this._patientType.Size = new System.Drawing.Size(140, 41);
-			this._patientType.TabIndex = 4;
 			this._patientType.Value = null;
 			// 
 			// _ambulatoryStatus
 			// 
-			this._ambulatoryStatus.AutoSize = true;
+			resources.ApplyResources(this._ambulatoryStatus, "_ambulatoryStatus");
 			this._ambulatoryStatus.DataSource = null;
 			this._ambulatoryStatus.DisplayMember = "";
 			this._ambulatoryStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this._ambulatoryStatus.LabelText = "Ambulatory Status";
-			this._ambulatoryStatus.Location = new System.Drawing.Point(5, 265);
-			this._ambulatoryStatus.Margin = new System.Windows.Forms.Padding(2);
 			this._ambulatoryStatus.Name = "_ambulatoryStatus";
-			this._ambulatoryStatus.Size = new System.Drawing.Size(313, 41);
-			this._ambulatoryStatus.TabIndex = 12;
 			this._ambulatoryStatus.Value = null;
 			// 
 			// _admissionType
@@ -234,12 +175,8 @@ namespace ClearCanvas.Ris.Client.Workflow.View.WinForms
 			this._admissionType.DataSource = null;
 			this._admissionType.DisplayMember = "";
 			this._admissionType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this._admissionType.LabelText = "Admission Type";
-			this._admissionType.Location = new System.Drawing.Point(313, 46);
-			this._admissionType.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._admissionType, "_admissionType");
 			this._admissionType.Name = "_admissionType";
-			this._admissionType.Size = new System.Drawing.Size(140, 40);
-			this._admissionType.TabIndex = 5;
 			this._admissionType.Value = null;
 			// 
 			// _currentLocation
@@ -247,12 +184,8 @@ namespace ClearCanvas.Ris.Client.Workflow.View.WinForms
 			this._currentLocation.DataSource = null;
 			this._currentLocation.DisplayMember = "";
 			this._currentLocation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this._currentLocation.LabelText = "Current Location";
-			this._currentLocation.Location = new System.Drawing.Point(159, 136);
-			this._currentLocation.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._currentLocation, "_currentLocation");
 			this._currentLocation.Name = "_currentLocation";
-			this._currentLocation.Size = new System.Drawing.Size(294, 41);
-			this._currentLocation.TabIndex = 10;
 			this._currentLocation.Value = null;
 			// 
 			// _facility
@@ -260,43 +193,27 @@ namespace ClearCanvas.Ris.Client.Workflow.View.WinForms
 			this._facility.DataSource = null;
 			this._facility.DisplayMember = "";
 			this._facility.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this._facility.LabelText = "Facility";
-			this._facility.Location = new System.Drawing.Point(5, 136);
-			this._facility.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._facility, "_facility");
 			this._facility.Name = "_facility";
-			this._facility.Size = new System.Drawing.Size(140, 41);
-			this._facility.TabIndex = 9;
 			this._facility.Value = null;
 			// 
 			// _currentBed
 			// 
-			this._currentBed.LabelText = "Bed";
-			this._currentBed.Location = new System.Drawing.Point(313, 181);
-			this._currentBed.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._currentBed, "_currentBed");
 			this._currentBed.Mask = "";
 			this._currentBed.Name = "_currentBed";
-			this._currentBed.PasswordChar = '\0';
-			this._currentBed.Size = new System.Drawing.Size(140, 41);
-			this._currentBed.TabIndex = 15;
-			this._currentBed.ToolTip = null;
 			this._currentBed.Value = null;
 			// 
 			// _currentRoom
 			// 
-			this._currentRoom.LabelText = "Room";
-			this._currentRoom.Location = new System.Drawing.Point(159, 181);
-			this._currentRoom.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._currentRoom, "_currentRoom");
 			this._currentRoom.Mask = "";
 			this._currentRoom.Name = "_currentRoom";
-			this._currentRoom.PasswordChar = '\0';
-			this._currentRoom.Size = new System.Drawing.Size(140, 41);
-			this._currentRoom.TabIndex = 14;
-			this._currentRoom.ToolTip = null;
 			this._currentRoom.Value = null;
 			// 
 			// VisitDetailsEditorComponentControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this._currentBed);
 			this.Controls.Add(this._currentRoom);
@@ -315,7 +232,6 @@ namespace ClearCanvas.Ris.Client.Workflow.View.WinForms
 			this.Controls.Add(this._patientClass);
 			this.Controls.Add(this._patientType);
 			this.Name = "VisitDetailsEditorComponentControl";
-			this.Size = new System.Drawing.Size(476, 313);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

@@ -246,7 +246,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Admin.Configure.ServerPa
                 MatchPatientSex.Checked = true;
                 MatchAccessionNumber.Checked = true;
                 MatchIssuer.Checked = true;
-                AuditDeleteStudyCheckBox.Checked = true;  //TODO: Load from system setting instead
+                AuditDeleteStudyCheckBox.Checked = false;  //TODO: Load from system setting instead
             }
             else if (Page.IsValid)
                 // only update the UI with the partition if the data is valid, otherwise, keep them on the screen

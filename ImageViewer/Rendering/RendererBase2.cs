@@ -222,9 +222,10 @@ namespace ClearCanvas.ImageViewer.Rendering
 		/// </summary>
 		protected virtual void DrawTextOverlay(TPresentationImage presentationImage)
 		{
+#if DEBUG
 			var clock = new CodeClock();
 			clock.Start();
-
+#endif
 			var annotationLayoutProvider = presentationImage as IAnnotationLayoutProvider;
 			if (annotationLayoutProvider == null)
 				return;
@@ -242,9 +243,10 @@ namespace ClearCanvas.ImageViewer.Rendering
 						DrawAnnotationBox(annotationText, annotationBox);
 				}
 			}
-
+#if DEBUG
 			clock.Stop();
 			PerformanceReportBroker.PublishReport(_rendererTypeId, "DrawTextOverlay", clock.Seconds);
+#endif
 		}
 
 		/// <summary>

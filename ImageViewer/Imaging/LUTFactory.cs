@@ -24,11 +24,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.Common;
-using System.Threading;
-using System.Diagnostics;
 
 namespace ClearCanvas.ImageViewer.Imaging
 {
@@ -37,9 +37,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 	/// </summary>
 	public abstract class LutFactory : IDisposable
 	{
-		private LutFactory()
-		{
-		}
+		private LutFactory() {}
 
 		#region Abstract Methods
 
@@ -68,9 +66,8 @@ namespace ClearCanvas.ImageViewer.Imaging
 		/// <summary>
 		/// Implementation of the <see cref="IDisposable"/> pattern.
 		/// </summary>
-		protected virtual void Dispose(bool disposing)
-		{}
-		
+		protected virtual void Dispose(bool disposing) {}
+
 		#region IDisposable Members
 
 		/// <summary>
@@ -149,7 +146,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 
 			protected CacheItem()
 			{
-				_largeObjectData = new LargeObjectContainerData(Guid.NewGuid()) { RegenerationCost = LargeObjectContainerData.PresetGeneratedData };
+				_largeObjectData = new LargeObjectContainerData(Guid.NewGuid()) {RegenerationCost = LargeObjectContainerData.PresetGeneratedData};
 			}
 
 			protected abstract TLut CreateLut();
@@ -271,13 +268,13 @@ namespace ClearCanvas.ImageViewer.Imaging
 
 			public override int GetHashCode()
 			{
-				return FactoryName.GetHashCode() + 3 * MinInputValue.GetHashCode() + 5 * MaxInputValue.GetHashCode();
+				return FactoryName.GetHashCode() + 3*MinInputValue.GetHashCode() + 5*MaxInputValue.GetHashCode();
 			}
 
 			public override bool Equals(object obj)
 			{
 				if (obj is ColorMapKey)
-					return Equals((ColorMapKey)obj);
+					return Equals((ColorMapKey) obj);
 
 				return false;
 			}
@@ -287,8 +284,8 @@ namespace ClearCanvas.ImageViewer.Imaging
 			public bool Equals(ColorMapKey other)
 			{
 				return FactoryName.Equals(other.FactoryName) &&
-					   MinInputValue.Equals(other.MinInputValue) &&
-					   MaxInputValue.Equals(other.MaxInputValue);
+				       MinInputValue.Equals(other.MinInputValue) &&
+				       MaxInputValue.Equals(other.MaxInputValue);
 			}
 
 			#endregion
@@ -339,9 +336,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 			private ColorMapCacheItem _cacheItem;
 
 			//For cloning.
-			private CachedColorMapProxy()
-			{
-			}
+			private CachedColorMapProxy() {}
 
 			public CachedColorMapProxy(string factoryName)
 			{
@@ -361,10 +356,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 
 			public override int MinInputValue
 			{
-				get
-				{
-					return _minInputValue;
-				}
+				get { return _minInputValue; }
 				set
 				{
 					if (value == _minInputValue)
@@ -378,10 +370,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 
 			public override int MaxInputValue
 			{
-				get
-				{
-					return _maxInputValue;
-				}
+				get { return _maxInputValue; }
 				set
 				{
 					if (value == _maxInputValue)
@@ -395,14 +384,8 @@ namespace ClearCanvas.ImageViewer.Imaging
 
 			public override int this[int index]
 			{
-				get
-				{
-					return RealColorMap[index];
-				}
-				protected set
-				{
-					throw new InvalidOperationException("The color map data cannot be altered.");
-				}
+				get { return RealColorMap[index]; }
+				protected set { throw new InvalidOperationException("The color map data cannot be altered."); }
 			}
 
 			public override string GetKey()
@@ -449,10 +432,8 @@ namespace ClearCanvas.ImageViewer.Imaging
 		{
 			public CachedModalityLutLinear(IDataModalityLut source)
 				: base(source.MinInputValue, source.Data,
-						source.MinOutputValue, source.MaxOutputValue,
-						source.GetKey(), source.GetDescription())
-			{
-			}
+				       source.MinOutputValue, source.MaxOutputValue,
+				       source.GetKey(), source.GetDescription()) {}
 		}
 
 		private class ModalityLutCacheItem : CacheItem<IDataModalityLut>
@@ -495,9 +476,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 			}
 
 			//for cloning.
-			private CachedModalityLutProxy()
-			{
-			}
+			private CachedModalityLutProxy() {}
 
 			private IDataModalityLut RealLut
 			{
@@ -531,6 +510,11 @@ namespace ClearCanvas.ImageViewer.Imaging
 			public override double this[int index]
 			{
 				get { return RealLut[index]; }
+			}
+
+			protected override void LookupValues(double[] input, double[] output, int count)
+			{
+				RealLut.LookupValues(input, output, count);
 			}
 
 			public override string GetKey()
@@ -686,7 +670,6 @@ namespace ClearCanvas.ImageViewer.Imaging
 					return item;
 				}
 			}
-
 
 			#endregion
 
