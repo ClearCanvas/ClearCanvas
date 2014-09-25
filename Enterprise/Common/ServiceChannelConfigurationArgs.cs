@@ -38,7 +38,7 @@ namespace ClearCanvas.Enterprise.Common
             Type channelFactoryClass,
             Uri serviceUri,
             bool authenticationRequired,
-            int maxReceivedMessageSize,
+            long maxReceivedMessageSize,
             X509CertificateValidationMode certificateValidationMode,
             X509RevocationMode revocationMode)
         {
@@ -70,7 +70,7 @@ namespace ClearCanvas.Enterprise.Common
 		/// <summary>
 		/// The maximum size of received messages to allow, in bytes.
 		/// </summary>
-        public int MaxReceivedMessageSize;
+        public long MaxReceivedMessageSize;
 
 		/// <summary>
 		/// The time, in seconds, in which a send operation must complete.

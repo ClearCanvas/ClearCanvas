@@ -56,8 +56,8 @@ namespace ClearCanvas.Enterprise.Common.ServiceConfiguration.Client
 			binding.MaxReceivedMessageSize = args.MaxReceivedMessageSize;
 
 			// allow individual string content to be same size as entire message
-			binding.ReaderQuotas.MaxStringContentLength = args.MaxReceivedMessageSize;
-			binding.ReaderQuotas.MaxArrayLength = args.MaxReceivedMessageSize;
+			binding.ReaderQuotas.MaxStringContentLength = (int)Math.Min(int.MaxValue, args.MaxReceivedMessageSize);
+			binding.ReaderQuotas.MaxArrayLength = (int)Math.Min(int.MaxValue, args.MaxReceivedMessageSize);
 
 			var channelFactory = (ChannelFactory)Activator.CreateInstance(args.ChannelFactoryClass, binding, new EndpointAddress(args.ServiceUri));
 			channelFactory.Credentials.ServiceCertificate.Authentication.CertificateValidationMode = args.CertificateValidationMode;

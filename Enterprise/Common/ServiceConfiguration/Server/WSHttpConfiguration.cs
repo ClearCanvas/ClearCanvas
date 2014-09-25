@@ -47,8 +47,8 @@ namespace ClearCanvas.Enterprise.Common.ServiceConfiguration.Server
 			if (args.SendTimeoutSeconds > 0)
 				binding.SendTimeout = TimeSpan.FromSeconds(args.SendTimeoutSeconds);
 
-			binding.ReaderQuotas.MaxStringContentLength = args.MaxReceivedMessageSize;
-			binding.ReaderQuotas.MaxArrayLength = args.MaxReceivedMessageSize;
+			binding.ReaderQuotas.MaxStringContentLength = (int)Math.Min(int.MaxValue, args.MaxReceivedMessageSize);
+			binding.ReaderQuotas.MaxArrayLength = (int)Math.Min(int.MaxValue, args.MaxReceivedMessageSize);
 			binding.Security.Mode = SecurityMode.Message;
 			binding.Security.Message.ClientCredentialType = args.Authenticated ?
 				MessageCredentialType.UserName : MessageCredentialType.None;
@@ -68,7 +68,7 @@ namespace ClearCanvas.Enterprise.Common.ServiceConfiguration.Server
 			//TODO (Rockstar): remove this after refactoring to do per-sop edits
 			foreach (var endpoint in host.Description.Endpoints)
 				foreach (var operation in endpoint.Contract.Operations)
-					operation.Behaviors.Find<DataContractSerializerOperationBehavior>().MaxItemsInObjectGraph = args.MaxReceivedMessageSize;
+					operation.Behaviors.Find<DataContractSerializerOperationBehavior>().MaxItemsInObjectGraph = (int)Math.Min(int.MaxValue, args.MaxReceivedMessageSize);
 
 			// set up the certificate - required for WSHttpBinding
 			host.Credentials.ServiceCertificate.SetCertificate(

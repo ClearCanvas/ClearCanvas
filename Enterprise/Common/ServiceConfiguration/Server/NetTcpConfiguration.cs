@@ -43,20 +43,33 @@ namespace ClearCanvas.Enterprise.Common.ServiceConfiguration.Server
 		/// <param name="args"></param>
 		public void ConfigureServiceHost(ServiceHost host, ServiceHostConfigurationArgs args)
 		{
-			var binding = new NetTcpBinding();
-			binding.MaxReceivedMessageSize = args.MaxReceivedMessageSize;
+			var binding = new NetTcpBinding
+				{
+					MaxReceivedMessageSize = args.TransferMode == TransferMode.Buffered
+						                         ? Math.Min(int.MaxValue, args.MaxReceivedMessageSize)
+						                         : args.MaxReceivedMessageSize,
+					TransferMode = args.TransferMode,
+					ReaderQuotas =
+						{
+							MaxStringContentLength = (int) Math.Min(int.MaxValue, args.MaxReceivedMessageSize),
+							MaxArrayLength = (int) Math.Min(int.MaxValue, args.MaxReceivedMessageSize)
+						},
+					Security =
+						{
+							Mode = args.Authenticated ? SecurityMode.TransportWithMessageCredential : SecurityMode.Transport,
+							Message =
+								{
+									ClientCredentialType = args.Authenticated
+										                       ? MessageCredentialType.UserName
+										                       : MessageCredentialType.None
+								},
+							// turn off transport security altogether
+							Transport = {ClientCredentialType = TcpClientCredentialType.None}
+						}
+				};
+
 			if (args.SendTimeoutSeconds > 0)
 				binding.SendTimeout = TimeSpan.FromSeconds(args.SendTimeoutSeconds);
-			binding.TransferMode = args.TransferMode;
-
-			binding.ReaderQuotas.MaxStringContentLength = args.MaxReceivedMessageSize;
-			binding.ReaderQuotas.MaxArrayLength = args.MaxReceivedMessageSize;
-			binding.Security.Mode = args.Authenticated ? SecurityMode.TransportWithMessageCredential : SecurityMode.Transport;
-			binding.Security.Message.ClientCredentialType = args.Authenticated ?
-				MessageCredentialType.UserName : MessageCredentialType.None;
-
-			// turn off transport security altogether
-			binding.Security.Transport.ClientCredentialType = TcpClientCredentialType.None;
 
 			// establish endpoint
 			host.AddServiceEndpoint(args.ServiceContract, binding, "");

@@ -53,8 +53,8 @@ namespace ClearCanvas.Enterprise.Common.ServiceConfiguration.Client
 				binding.SendTimeout = TimeSpan.FromSeconds(args.SendTimeoutSeconds);
 
 			// allow individual string content to be same size as entire message
-			binding.ReaderQuotas.MaxStringContentLength = args.MaxReceivedMessageSize;
-			binding.ReaderQuotas.MaxArrayLength = args.MaxReceivedMessageSize;
+			binding.ReaderQuotas.MaxStringContentLength = (int)Math.Min(int.MaxValue, args.MaxReceivedMessageSize);
+			binding.ReaderQuotas.MaxArrayLength = (int)Math.Min(int.MaxValue, args.MaxReceivedMessageSize);
 
 			//binding.ReceiveTimeout = new TimeSpan(0, 0 , 20);
 			//binding.SendTimeout = new TimeSpan(0, 0, 10);
@@ -66,7 +66,7 @@ namespace ClearCanvas.Enterprise.Common.ServiceConfiguration.Client
 
 			//TODO (Rockstar): remove this after refactoring to do per-sop edits
 			foreach (var operation in channelFactory.Endpoint.Contract.Operations)
-				operation.Behaviors.Find<DataContractSerializerOperationBehavior>().MaxItemsInObjectGraph = args.MaxReceivedMessageSize;
+				operation.Behaviors.Find<DataContractSerializerOperationBehavior>().MaxItemsInObjectGraph = (int)Math.Min(int.MaxValue, args.MaxReceivedMessageSize);
 
 			return channelFactory;
 		}
