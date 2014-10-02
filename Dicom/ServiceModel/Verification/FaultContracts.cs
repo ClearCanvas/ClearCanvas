@@ -1,6 +1,6 @@
-#region License
+﻿#region License
 
-// Copyright (c) 2013, ClearCanvas Inc.
+// Copyright (c) 2014, ClearCanvas Inc.
 // All rights reserved.
 // http://www.clearcanvas.ca
 //
@@ -23,77 +23,44 @@
 #endregion
 
 using System.Runtime.Serialization;
+using ClearCanvas.Dicom.Network.Scu;
 
-namespace ClearCanvas.Dicom.ServiceModel.Query
+namespace ClearCanvas.Dicom.ServiceModel.Verification
 {
 	/// <summary>
 	/// The namespace for all the query data and service contracts.
 	/// </summary>
-	public class QueryNamespace
+	public class VerificationNamespace
 	{
 		/// <summary>
 		/// The namespace for all the query data and service contracts.
 		/// </summary>
-		public const string Value = DicomNamespace.Value + "/query";
+		public const string Value = DicomNamespace.Value + "/verification";
 	}
 
 	/// <summary>
-	/// Data contract for 'query failed' faults.
+	/// Data contract for 'verification failed' faults.
 	/// </summary>
-	[DataContract(Namespace = QueryNamespace.Value)]
-	public class QueryFailedFault
+	[DataContract(Namespace = VerificationNamespace.Value)]
+	public class VerificationFailedFault
 	{
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		public QueryFailedFault()
+		public VerificationFailedFault()
 		{
 		}
 
 		/// <summary>
-		/// A textual description of the query failure.
+		/// A textual description of the verification failure.
 		/// </summary>
 		[DataMember(IsRequired = true)]
 		public string Description;
-	}
-
-	/// <summary>
-	/// Data contract for 'retrieve failed' faults.
-	/// </summary>
-	[DataContract(Namespace = QueryNamespace.Value)]
-	public class RetrieveFailedFault
-	{
-		/// <summary>
-		/// Constructor.
-		/// </summary>
-		public RetrieveFailedFault()
-		{
-		}
 
 		/// <summary>
-		/// A textual description of the retrieve failure.
+		/// An enumerated result.
 		/// </summary>
 		[DataMember(IsRequired = true)]
-		public string Description;
-	}
-
-	/// <summary>
-	/// Data contract for data validation faults; when the data in the request is poorly formatted or incorrect.
-	/// </summary>
-	[DataContract(Namespace = QueryNamespace.Value)]
-	public class DataValidationFault
-	{
-		/// <summary>
-		/// Constructor.
-		/// </summary>
-		public DataValidationFault()
-		{
-		}
-
-		/// <summary>
-		/// A textual description of the fault.
-		/// </summary>
-		[DataMember(IsRequired = false)]
-		public string Description;
+		public VerificationResult Result;
 	}
 }

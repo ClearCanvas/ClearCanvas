@@ -24,7 +24,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ServiceModel;
 using ClearCanvas.Common;
 using ClearCanvas.Dicom.Iod;
 using ClearCanvas.Dicom.Network.Scu;
@@ -39,6 +38,7 @@ namespace ClearCanvas.Dicom.ServiceModel.Query
 	{
 		private readonly string _localAE;
 	    private readonly IApplicationEntity _remoteAE;
+		private readonly int _maxResults;
 
 		public DicomStudyRootQuery(string localAETitle, string remoteAETitle, string remoteHost, int remotePort)
             : this(localAETitle, new ApplicationEntity{Name = remoteAETitle, AETitle  = remoteAETitle, ScpParameters = new ScpParameters(remoteHost, remotePort)})
@@ -55,163 +55,47 @@ namespace ClearCanvas.Dicom.ServiceModel.Query
 
 		public IList<StudyRootStudyIdentifier> StudyQuery(StudyRootStudyIdentifier queryCriteria)
 		{
-			return Query<StudyRootStudyIdentifier, StudyRootFindScu>(queryCriteria);
+			var request = new StudyQueryRequest
+				{
+					Criteria = queryCriteria,
+					LocalApplicationEntity = _localAE,
+					RemoteApplicationEntity = new ApplicationEntity(_remoteAE)
+				};
+
+			var query = new DicomStudyRootQueryApplication();
+			var result = query.StudyQuery(request);
+			return result.Results;
 		}
 
 		public IList<SeriesIdentifier> SeriesQuery(SeriesIdentifier queryCriteria)
 		{
-			return Query<SeriesIdentifier, StudyRootFindScu>(queryCriteria);
+			var request = new SeriesQueryRequest
+			{
+				Criteria = queryCriteria,
+				LocalApplicationEntity = _localAE,
+				RemoteApplicationEntity = new ApplicationEntity(_remoteAE)
+			};
+
+			var query = new DicomStudyRootQueryApplication();
+			var result = query.SeriesQuery(request);
+			return result.Results;
 		}
 
 		public IList<ImageIdentifier> ImageQuery(ImageIdentifier queryCriteria)
 		{
-			return Query<ImageIdentifier, StudyRootFindScu>(queryCriteria);
+			var request = new ImageQueryRequest
+			{
+				Criteria = queryCriteria,
+				LocalApplicationEntity = _localAE,
+				RemoteApplicationEntity = new ApplicationEntity(_remoteAE)
+			};
+
+			var query = new DicomStudyRootQueryApplication();
+			var result = query.ImageQuery(request);
+			return result.Results;
 		}
 
 		#endregion
-
-		private IList<TIdentifier> Query<TIdentifier, TFindScu>(TIdentifier queryCriteria)
-			where TIdentifier : Identifier, new()
-			where TFindScu : FindScuBase, new()
-		{
-			Platform.CheckForEmptyString(_localAE, "localAE");
-			Platform.CheckForNullReference(_remoteAE, "remoteAE");
-
-            Platform.CheckForEmptyString(_remoteAE.AETitle, "AETitle");
-
-            Platform.CheckForNullReference(_remoteAE.ScpParameters, "ScpParameters");
-            Platform.CheckArgumentRange(_remoteAE.ScpParameters.Port, 1, 65535, "Port");
-            Platform.CheckForEmptyString(_remoteAE.ScpParameters.HostName, "HostName");
-
-			if (queryCriteria == null)
-			{
-				string message = "The query identifier cannot be null.";
-				Platform.Log(LogLevel.Error, message);
-				throw new FaultException(message);
-			}
-
-			IList<DicomAttributeCollection> scuResults;
-			using (TFindScu scu = new TFindScu())
-			{
-				DicomAttributeCollection criteria;
-
-			    var oldCharacterSet = queryCriteria.SpecificCharacterSet;
-                const string utf8 = "ISO_IR 192";
-                //.NET strings are unicode, so the query criteria are unicode.
-                queryCriteria.SpecificCharacterSet = utf8;
-
-				try
-				{
-					criteria = queryCriteria.ToDicomAttributeCollection();
-					criteria[DicomTags.InstanceAvailability] = null;
-					criteria[DicomTags.RetrieveAeTitle] = null;
-				}
-				catch (DicomException e)
-				{
-					DataValidationFault fault = new DataValidationFault();
-					fault.Description = "Failed to convert contract object to DicomAttributeCollection.";
-					Platform.Log(LogLevel.Error, e, fault.Description);
-					throw new FaultException<DataValidationFault>(fault, fault.Description);
-				}
-				catch (Exception e)
-				{
-					DataValidationFault fault = new DataValidationFault();
-					fault.Description = "Unexpected exception when converting contract object to DicomAttributeCollection.";
-					Platform.Log(LogLevel.Error, e, fault.Description);
-					throw new FaultException<DataValidationFault>(fault, fault.Description);
-				}
-                finally
-				{
-                    queryCriteria.SpecificCharacterSet = oldCharacterSet;
-				}
-
-			    try
-				{
-					scuResults = scu.Find(_localAE, _remoteAE.AETitle, _remoteAE.ScpParameters.HostName, _remoteAE.ScpParameters.Port, criteria);
-					scu.Join();
-
-					if (scu.Status == ScuOperationStatus.Canceled)
-					{
-						String message = String.Format("The remote server cancelled the query ({0})",
-													   scu.FailureDescription ?? "no failure description provided");
-						QueryFailedFault fault = new QueryFailedFault();
-						fault.Description = message;
-						throw new FaultException<QueryFailedFault>(fault, fault.Description);
-					}
-					if (scu.Status == ScuOperationStatus.ConnectFailed)
-					{
-						String message = String.Format("Connection failed ({0})",
-													   scu.FailureDescription ?? "no failure description provided");
-						QueryFailedFault fault = new QueryFailedFault();
-						fault.Description = message;
-						throw new FaultException<QueryFailedFault>(fault, fault.Description);
-					}
-					if (scu.Status == ScuOperationStatus.AssociationRejected)
-					{
-						String message = String.Format("Association rejected ({0})",
-													   scu.FailureDescription ?? "no failure description provided");
-						QueryFailedFault fault = new QueryFailedFault();
-						fault.Description = message;
-						throw new FaultException<QueryFailedFault>(fault, fault.Description);
-					}
-					if (scu.Status == ScuOperationStatus.Failed)
-					{
-						String message = String.Format("The query operation failed ({0})",
-													   scu.FailureDescription ?? "no failure description provided");
-						QueryFailedFault fault = new QueryFailedFault();
-						fault.Description = message;
-						throw new FaultException<QueryFailedFault>(fault, fault.Description);
-					}
-					if (scu.Status == ScuOperationStatus.TimeoutExpired)
-					{
-						String message = String.Format("The connection timeout expired ({0})",
-													   scu.FailureDescription ?? "no failure description provided");
-						QueryFailedFault fault = new QueryFailedFault();
-						fault.Description = message;
-						throw new FaultException<QueryFailedFault>(fault, fault.Description);
-					}
-					if (scu.Status == ScuOperationStatus.NetworkError)
-					{
-						String message = String.Format("An unexpected network error has occurred.");
-						QueryFailedFault fault = new QueryFailedFault();
-						fault.Description = message;
-						throw new FaultException<QueryFailedFault>(fault, fault.Description);
-					}
-					if (scu.Status == ScuOperationStatus.UnexpectedMessage)
-					{
-						String message = String.Format("An unexpected message was received; aborted association.");
-						QueryFailedFault fault = new QueryFailedFault();
-						fault.Description = message;
-						throw new FaultException<QueryFailedFault>(fault, fault.Description);
-					}
-
-				}
-				catch (FaultException)
-				{
-					throw;
-				}
-				catch (Exception e)
-				{
-					QueryFailedFault fault = new QueryFailedFault();
-					fault.Description = String.Format("An unexpected error has occurred ({0})",
-													  scu.FailureDescription ?? "no failure description provided");
-					Platform.Log(LogLevel.Error, e, fault.Description);
-					throw new FaultException<QueryFailedFault>(fault, fault.Description);
-				}
-			}
-
-            var results = new List<TIdentifier>(scuResults.Count);
-			foreach (DicomAttributeCollection result in scuResults)
-			{
-				var identifier = Identifier.FromDicomAttributeCollection<TIdentifier>(result);
-                if (String.IsNullOrEmpty(identifier.RetrieveAeTitle) || identifier.RetrieveAeTitle == _remoteAE.AETitle)
-                    identifier.RetrieveAE = _remoteAE;
-
-			    results.Add(identifier);
-			}
-
-			return results;
-		}
 
 		public override string ToString()
 		{

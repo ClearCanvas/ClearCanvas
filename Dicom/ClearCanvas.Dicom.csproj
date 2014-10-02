@@ -310,9 +310,20 @@
     <Compile Include="ServiceModel\Editing\Condition.cs" />
     <Compile Include="ServiceModel\Editing\Edit.cs" />
     <Compile Include="ServiceModel\Editing\Namespace.cs" />
+    <Compile Include="ServiceModel\Query\IStudyRootQueryApplication.cs" />
+    <Compile Include="ServiceModel\Query\IStudyRootRetrieve.cs" />
+    <Compile Include="ServiceModel\Query\DicomStudyRootQueryApplication.cs" />
+    <Compile Include="ServiceModel\SR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
     <Compile Include="ServiceModel\Streaming\DicomImportServiceClient.cs" />
     <Compile Include="ServiceModel\Streaming\HeaderStreamingServiceClient.cs" />
     <Compile Include="ServiceModel\Streaming\IDicomImportService.cs" />
+    <Compile Include="ServiceModel\Verification\FaultContracts.cs" />
+    <Compile Include="ServiceModel\Verification\IVerifyApplication.cs" />
+    <Compile Include="ServiceModel\Verification\VerifyApplication.cs" />
     <Compile Include="Tests\ChangeTransferSyntaxTests.cs" />
     <Compile Include="Tests\SopClassTests.cs" />
     <Compile Include="Tests\DicomAttributeBinaryDataTests.cs" />
@@ -388,6 +399,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SR.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServiceModel\SR.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="SR.resx">
       <SubType>Designer</SubType>
