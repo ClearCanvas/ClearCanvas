@@ -258,5 +258,12 @@ namespace ClearCanvas.Dicom.Audit
 			_networkAccessPointId = DicomAuditHelper.ProcessIpAddress;
 			_networkAccessPointType = NetworkAccessPointTypeEnum.IpAddress;
 		}
+		public AuditProcessActiveParticipant()
+		{
+			_userName = DicomAuditHelper.ProcessName;
+			_userId = DicomAuditHelper.ProcessId;
+			_networkAccessPointId = DicomAuditHelper.ProcessIpAddress;
+			_networkAccessPointType = NetworkAccessPointTypeEnum.IpAddress;
+		}
 	}
 }

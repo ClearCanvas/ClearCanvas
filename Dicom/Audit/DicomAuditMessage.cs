@@ -55,6 +55,8 @@ namespace ClearCanvas.Dicom.Audit
 		public static EventID PatientCareEpisode = new EventID("IHE0004", "IHE", "Patient Care Episode","Specific patient care episodes or problems that occur within an instance of care. This includes initial assignment, updates or amendments, resolution, completion, and cancellation.");
 		public static EventID PatientCareProtocol = new EventID("IHE0005", "IHE", "Patient Care Protocol","Patient association with a care protocol. This includes initial assignment, scheduling, updates or amendments, completion, and cancellation");
 		public static EventID CCHealthcareDataEvent = new EventID("CC001","ClearCanvas","Healthcare Data Event", "Event to signal when healthcare data has been updated");
+		public static EventID CCHealthcareDataDeleted = new EventID("CC002", "ClearCanvas", "Healthcare Data Deleted", "Event to signal when healthcare data has been deleted");
+		public static EventID CCHealthcareDataSearch = new EventID("CC003", "ClearCanvas", "Search Event", "Event to signal when healthcare data has been searched");
 
 		public EventID(string _code, string _codeSystemNameField,
                        string _displayNameField, string description)

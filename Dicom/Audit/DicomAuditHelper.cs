@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -114,8 +115,7 @@ namespace ClearCanvas.Dicom.Audit
 			{
 				lock (SyncLock)
 				{
-					if (_processId == null) _processId = Process.GetCurrentProcess().Id.ToString();
-					return _processId;
+					return _processId ?? (_processId = Process.GetCurrentProcess().Id.ToString(CultureInfo.InvariantCulture));
 				}
 			}
 
