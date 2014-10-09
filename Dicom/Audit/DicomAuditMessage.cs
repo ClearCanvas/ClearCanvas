@@ -155,6 +155,7 @@ namespace ClearCanvas.Dicom.Audit
         public static ParticipantObjectIDTypeCode StudyInstanceUID = new ParticipantObjectIDTypeCode("110180", "DCM", "Study Instance UID", "Study Instance UID Participant Object ID type");
         public static ParticipantObjectIDTypeCode ClassUID = new ParticipantObjectIDTypeCode("110181", "DCM", "SOP Class UID", "SOP Class UID Participant Object ID type");
         public static ParticipantObjectIDTypeCode NodeID = new ParticipantObjectIDTypeCode("110182", "DCM", "Node ID", "ID of a node that is a participant object of an audit message");
+		public static ParticipantObjectIDTypeCode VfsPath = new ParticipantObjectIDTypeCode("CCPO001","ClearCanvas","VFS Path", "Virtual Filesystem Path of an object that is a participant object of an audit message");
 
         public ParticipantObjectIDTypeCode(string _code, string _codeSystemNameField,
                           string _displayNameField, string description)

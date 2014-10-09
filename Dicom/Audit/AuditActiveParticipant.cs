@@ -24,6 +24,8 @@
 
 using System;
 using System.Text;
+using System.Web;
+using System.Web.Hosting;
 
 namespace ClearCanvas.Dicom.Audit
 {
@@ -226,7 +228,19 @@ namespace ClearCanvas.Dicom.Audit
 			_userName = userName;
 
 			_networkAccessPointType = NetworkAccessPointTypeEnum.IpAddress;
-			_networkAccessPointId = DicomAuditHelper.ProcessIpAddress;
+			_networkAccessPointId = HostingEnvironment.IsHosted ? GetUserIP() : DicomAuditHelper.ProcessIpAddress;
+		}
+
+		private string GetUserIP()
+		{
+			string ipList = HttpContext.Current.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+
+			if (!string.IsNullOrEmpty(ipList))
+			{
+				return ipList.Split(',')[0];
+			}
+
+			return HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"];
 		}
 	}
 
@@ -238,7 +252,7 @@ namespace ClearCanvas.Dicom.Audit
 		public AuditProcessActiveParticipant(string[] aeTitles)
 		{
 			_userName = DicomAuditHelper.ProcessName;
-			StringBuilder sb = new StringBuilder("AETITLES=");
+			var sb = new StringBuilder("AETITLES=");
 			foreach (string aeTitle in aeTitles)
 			{
 				sb.Append(aeTitle);
@@ -264,6 +278,11 @@ namespace ClearCanvas.Dicom.Audit
 			_userId = DicomAuditHelper.ProcessId;
 			_networkAccessPointId = DicomAuditHelper.ProcessIpAddress;
 			_networkAccessPointType = NetworkAccessPointTypeEnum.IpAddress;
+		}
+
+		public void SetAlternateUserId(string val)
+		{
+			_alternateUserId = val;
 		}
 	}
 }
