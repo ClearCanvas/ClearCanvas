@@ -376,7 +376,10 @@ namespace ClearCanvas.Dicom.IO
 								FileReference reference = new FileReference(StreamOpener, _stream.Position, _len, _endian, DicomVr.OBvr);
 								DicomFragment fragment = new DicomFragment(reference);
 								_fragment.AddFragment(fragment);
-								_stream.Seek(_len, SeekOrigin.Current);
+								if (_stream.CanSeek)
+									_stream.Seek(_len, SeekOrigin.Current);
+								else
+									ConsumeStreamBytes(_stream, _len);
 							}
 							else
 							{
@@ -587,15 +590,22 @@ namespace ClearCanvas.Dicom.IO
 								    && Flags.IsSet(options, DicomReadOptions.DoNotStorePixelDataInDataSet))
 								{
 									// Skip PixelData !!
-									_stream.Seek((int) _len, SeekOrigin.Current);
+									if (_stream.CanSeek)
+										_stream.Seek((int) _len, SeekOrigin.Current);
+									else
+										ConsumeStreamBytes(_stream, _len);
+									
 									_remain -= _len;
 									BytesRead += _len;
 								}
 								else if ((LastTagRead.TagValue == DicomTags.PixelData) &&
 								         Flags.IsSet(options, DicomReadOptions.StorePixelDataReferences))
 								{
-									FileReference reference = new FileReference(StreamOpener, _stream.Position, _len, _endian, LastTagRead.VR);
-									_stream.Seek((int) _len, SeekOrigin.Current);
+									var reference = new FileReference(StreamOpener, _stream.Position, _len, _endian, LastTagRead.VR);
+									if (_stream.CanSeek)
+										_stream.Seek((int) _len, SeekOrigin.Current);
+									else
+										ConsumeStreamBytes(_stream, _len);
 
 									if (LastTagRead.VR.Equals(DicomVr.OWvr))
 									{
@@ -724,6 +734,18 @@ namespace ClearCanvas.Dicom.IO
 				// should never happen
 				Platform.Log(LogLevel.Error, "Unexpected exception when reading file: {0}", e.ToString());
 				return DicomReadStatus.UnknownError;
+			}
+		}
+
+		public static void ConsumeStreamBytes(Stream stream, long length)
+		{
+			const int bufferSize = 4096;
+			int bytesLeft = (int)length;
+			var buffer = new byte[bufferSize];
+			while (bytesLeft > 0)
+			{
+				int count = stream.Read(buffer, 0, Math.Min(buffer.Length, bytesLeft));
+				bytesLeft -= count;
 			}
 		}
 	}
