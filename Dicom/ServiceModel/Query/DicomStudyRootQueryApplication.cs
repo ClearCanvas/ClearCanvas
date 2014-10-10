@@ -42,7 +42,7 @@ namespace ClearCanvas.Dicom.ServiceModel.Query
 	{
 		#region IRemoteStudyRootQuery
 
-		public StudyQueryResponse StudyQuery(StudyQueryRequest request)
+		public virtual StudyQueryResponse StudyQuery(StudyQueryRequest request)
 		{
 			var response = new StudyQueryResponse();
 			var result = Query<StudyRootStudyIdentifier, StudyRootFindScu>(request.Criteria, request, response);
@@ -50,7 +50,7 @@ namespace ClearCanvas.Dicom.ServiceModel.Query
 			return response;
 		}
 
-		public SeriesQueryResponse SeriesQuery(SeriesQueryRequest request)
+		public virtual SeriesQueryResponse SeriesQuery(SeriesQueryRequest request)
 		{
 			var response = new SeriesQueryResponse();
 			var result = Query<SeriesIdentifier, StudyRootFindScu>(request.Criteria, request, response);
@@ -58,7 +58,7 @@ namespace ClearCanvas.Dicom.ServiceModel.Query
 			return response;
 		}
 
-		public ImageQueryResponse ImageQuery(ImageQueryRequest request)
+		public virtual ImageQueryResponse ImageQuery(ImageQueryRequest request)
 		{
 			var response = new ImageQueryResponse();
 			var result = Query<ImageIdentifier, StudyRootFindScu>(request.Criteria, request, response);

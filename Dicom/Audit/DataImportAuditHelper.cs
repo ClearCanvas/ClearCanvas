@@ -94,5 +94,14 @@ namespace ClearCanvas.Dicom.Audit
 		{
 			InternalAddStorageInstance(instance);
 		}
+
+		/// <summary>
+		/// Add details of a general purpose participant object.
+		/// </summary>
+		/// <param name="o"></param>
+		public void AddGeneralParticipantObject(AuditParticipantObject o)
+		{
+			InternalAddParticipantObject(o.ParticipantObjectId, o);
+		}
 	}
 }
