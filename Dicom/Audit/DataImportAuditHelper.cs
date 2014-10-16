@@ -55,6 +55,25 @@ namespace ClearCanvas.Dicom.Audit
 		}
 
 		/// <summary>
+		/// Constructor.
+		/// </summary>
+		/// <param name="auditSource">The source of the audit message.</param>
+		/// <param name="outcome">The outcome (success or failure)</param>
+		/// DICOMDIR SOP Instance UID.</param>
+		public DataImportAuditHelper(DicomAuditSource auditSource,
+			EventIdentificationContentsEventOutcomeIndicator outcome)
+			: base("DataImport")
+		{
+			AuditMessage.EventIdentification = new EventIdentificationContents();
+			AuditMessage.EventIdentification.EventID = EventID.Import;
+			AuditMessage.EventIdentification.EventActionCode = EventIdentificationContentsEventActionCode.C;
+			AuditMessage.EventIdentification.EventActionCodeSpecified = true;
+			AuditMessage.EventIdentification.EventDateTime = Platform.Time.ToUniversalTime();
+			AuditMessage.EventIdentification.EventOutcomeIndicator = outcome;
+
+			InternalAddAuditSource(auditSource);
+		}
+		/// <summary>
 		/// Add an importer.
 		/// </summary>
 		/// <param name="userId">The identity of the local user or process importer the data. If both
