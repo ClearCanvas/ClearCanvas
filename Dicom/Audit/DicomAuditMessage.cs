@@ -23,6 +23,8 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Dicom.Audit
@@ -422,9 +424,7 @@ namespace ClearCanvas.Dicom.Audit
 
 			if (item.SopClassDictionary != null && item.SopClassDictionary.Count > 0)
 			{
-                // TODO: right now the schema only allows one SOP Class. It nees to be fixed.
-                var sopClass = CollectionUtils.FirstElement(item.SopClassDictionary.Values);
-                SOPClass = new ParticipantObjectDescriptionTypeSOPClass(sopClass.UID,sopClass.NumberOfInstances);
+				SOPClass = item.SopClassDictionary.Values.Select(sopClass => new ParticipantObjectDescriptionTypeSOPClass(sopClass.UID, sopClass.NumberOfInstances)).ToArray();
 			}
 		}
 	}
