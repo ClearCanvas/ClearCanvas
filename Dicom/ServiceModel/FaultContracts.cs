@@ -91,4 +91,19 @@ namespace ClearCanvas.Dicom.ServiceModel
         public SeriesNotFoundFault()
         { }
     }
+
+	[DataContract(Namespace = DicomNamespace.Value)]
+	public class CodecFault
+	{
+		public CodecFault()
+		{ }
+
+		public CodecFault(string transferSyntaxUid)
+		{
+			TransferSyntaxUid = transferSyntaxUid;
+		}
+
+		[DataMember(IsRequired = true)]
+		public string TransferSyntaxUid { get; set; }
+	}
 }
