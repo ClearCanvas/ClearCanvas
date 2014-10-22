@@ -28,6 +28,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using ClearCanvas.Common.Utilities;
+using JetBrains.Annotations;
 using log4net;
 using log4net.Config;
 
@@ -833,6 +834,7 @@ namespace ClearCanvas.Common
 		/// <param name="category">The log level.</param>
 		/// <param name="message">Format message, as used with <see cref="System.Text.StringBuilder"/>.</param>
 		/// <param name="args">Optional arguments used with <paramref name="message"/>.</param>
+		[StringFormatMethod("message")]
 		public static void Log(LogLevel category, String message, params object[] args)
 		{
 			Log(_log, category, null, message, args);
@@ -846,6 +848,7 @@ namespace ClearCanvas.Common
 		/// <param name="category">The log level.</param>
 		/// <param name="message">Format message, as used with <see cref="System.Text.StringBuilder"/>.</param>
 		/// <param name="args">Optional arguments used with <paramref name="message"/>.</param>
+		[StringFormatMethod("message")]
 		public static void Log(LogLevel category, Exception ex, String message, params object[] args)
 		{
 			Log(_log, category, ex, message, args);
@@ -859,6 +862,7 @@ namespace ClearCanvas.Common
 		/// <param name="category">The log level.</param>
 		/// <param name="message">Format message, as used with <see cref="System.Text.StringBuilder"/>.</param>
 		/// <param name="args">Optional arguments used with <paramref name="message"/>.</param>
+		[StringFormatMethod("message")]
 		public static void Log(string logName, LogLevel category, String message, params object[] args)
 		{
 			Log(logName, category, null, message, args);
@@ -873,6 +877,7 @@ namespace ClearCanvas.Common
 		/// <param name="category">The log level.</param>
 		/// <param name="message">Format message, as used with <see cref="System.Text.StringBuilder"/>.</param>
 		/// <param name="args">Optional arguments used with <paramref name="message"/>.</param>
+		[StringFormatMethod("message")]
 		public static void Log(string logName, LogLevel category, Exception ex, String message, params object[] args)
 		{
 			Log(GetLog(logName), category, ex, message, args);

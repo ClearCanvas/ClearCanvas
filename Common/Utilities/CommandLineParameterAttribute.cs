@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using JetBrains.Annotations;
 
 namespace ClearCanvas.Common.Utilities
 {
@@ -35,7 +36,7 @@ namespace ClearCanvas.Common.Utilities
 	/// the <see cref="Position"/> property of the attribute is set, in which case it is treated as a positional
 	/// parameter.  If the field/property is of type boolean, it is treated as a switch.
 	/// </remarks>
-	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
+	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = false), MeansImplicitUse]
 	public class CommandLineParameterAttribute : Attribute
 	{
 		private readonly int _position = -1;

@@ -64,7 +64,7 @@ namespace ClearCanvas.Common
 		/// <summary>
 		/// Gets the interface that an extension must implement.
 		/// </summary>
-		public TypeRef ExtensionInteface
+		public TypeRef ExtensionInterface
 		{
 			get { return _extensionInterface; }
 		}
