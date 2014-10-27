@@ -311,10 +311,13 @@ namespace ClearCanvas.Dicom
         public static DicomUid GenerateUid()
         {
             var guidBytes = string.Format("0{0:N}", Guid.NewGuid());
-            var bigInteger = BigInteger.Parse(guidBytes, NumberStyles.HexNumber);
-
-            return new DicomUid(string.Format(CultureInfo.InvariantCulture, "2.25.{0}", bigInteger), "Instance UID", UidType.SOPInstance);
-        }
+#if __MonoCS__
+			return ObsoleteGenerateUid();
+#else
+			var bigInteger = BigInteger.Parse(guidBytes, NumberStyles.HexNumber);
+			return new DicomUid(string.Format(CultureInfo.InvariantCulture, "2.25.{0}", bigInteger), "Instance UID", UidType.SOPInstance);
+#endif
+		}
 
         #endregion
     } 
