@@ -74,7 +74,7 @@ namespace ClearCanvas.Enterprise.Common.ServiceConfiguration.Server
 			// establish endpoint
 			host.AddServiceEndpoint(args.ServiceContract, binding, "");
 
-#if DEBUG
+#if DEBUG && MEX
 			// We need to expose the metadata in order to generate client proxy code for some service
 			// used in applications that cannot reference any CC assemblies (e.g utilities for installer).
 			if (host.Description.Behaviors.Find<ServiceMetadataBehavior>() == null)
