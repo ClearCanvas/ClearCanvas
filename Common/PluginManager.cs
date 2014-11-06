@@ -246,11 +246,10 @@ namespace ClearCanvas.Common
 			PluginInfo.DiscoverExtensionPointsAndExtensions(GetType().Assembly, points, extensions);
 
 			// #742: order the extensions according to the XML configuration
-			List<ExtensionInfo> ordered, remainder;
-			ExtensionSettings.Default.OrderExtensions(extensions, out ordered, out remainder);
+			var ordered = ExtensionSettings.Default.OrderExtensions(extensions);
 
-			// create global extension list, with the ordered set appearing first
-			_extensions.AddRange(CollectionUtils.Concat<ExtensionInfo>(ordered, remainder));
+			// create global extension list
+			_extensions.AddRange(ordered);
 
 			// points do not need to be ordered
 			_extensionPoints.AddRange(points);
