@@ -612,7 +612,7 @@ namespace ClearCanvas.Dicom.IO
 										_stream.Seek((int) _len, SeekOrigin.Current);
 									else
 										ConsumeStreamBytes(_stream, _len);
-									
+
 									_remain -= _len;
 									BytesRead += _len;
 								}
@@ -777,7 +777,7 @@ namespace ClearCanvas.Dicom.IO
 		public static void ConsumeStreamBytes(Stream stream, long length)
 		{
 			const int bufferSize = 4096;
-			int bytesLeft = (int)length;
+			int bytesLeft = (int) length;
 			var buffer = new byte[bufferSize];
 			while (bytesLeft > 0)
 			{

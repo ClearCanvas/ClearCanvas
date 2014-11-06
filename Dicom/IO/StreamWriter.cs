@@ -36,7 +36,7 @@ namespace ClearCanvas.Dicom.IO
 	{
 		#region Private Members
 
-		private const uint UndefinedLength = 0xFFFFFFFF;
+		private const uint _undefinedLength = 0xFFFFFFFF;
 
 		private readonly Stream _stream;
 		private BinaryWriter _writer;
@@ -128,10 +128,10 @@ namespace ClearCanvas.Dicom.IO
 					}
 					else
 					{
-						_writer.Write((uint) UndefinedLength);
+						_writer.Write((uint) _undefinedLength);
 					}
 
-					foreach (DicomSequenceItem ids in item.Values as DicomSequenceItem[])
+					foreach (DicomSequenceItem ids in (DicomSequenceItem[]) sq.Values)
 					{
 						_writer.Write((ushort) DicomTag.Item.Group);
 						_writer.Write((ushort) DicomTag.Item.Element);
@@ -142,7 +142,7 @@ namespace ClearCanvas.Dicom.IO
 						}
 						else
 						{
-							_writer.Write((uint) UndefinedLength);
+							_writer.Write((uint) _undefinedLength);
 						}
 
 						Write(TransferSyntax, ids, options & ~DicomWriteOptions.CalculateGroupLengths);
@@ -169,7 +169,7 @@ namespace ClearCanvas.Dicom.IO
 
 					if (_syntax.ExplicitVr)
 						_writer.Write((ushort) 0x0000);
-					_writer.Write((uint) UndefinedLength);
+					_writer.Write((uint) _undefinedLength);
 
 					_writer.Write((ushort) DicomTag.Item.Group);
 					_writer.Write((ushort) DicomTag.Item.Element);
