@@ -325,6 +325,8 @@
     <Compile Include="ServiceModel\Verification\IVerifyApplication.cs" />
     <Compile Include="ServiceModel\Verification\VerifyApplication.cs" />
     <Compile Include="Tests\ChangeTransferSyntaxTests.cs" />
+    <Compile Include="Tests\IconImageSequenceTests.cs" />
+    <Compile Include="Tests\SequenceTests.cs" />
     <Compile Include="Tests\SopClassTests.cs" />
     <Compile Include="Tests\DicomAttributeBinaryDataTests.cs" />
     <Compile Include="Tests\DicomImageTestHelper.cs" />

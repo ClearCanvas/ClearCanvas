@@ -24,6 +24,7 @@
 
 #if UNIT_TESTS
 
+using System.Xml;
 using System.IO;
 
 namespace ClearCanvas.Dicom.Codec.Tests
@@ -34,10 +35,25 @@ namespace ClearCanvas.Dicom.Codec.Tests
 	public sealed class NullDicomCodec : IDicomCodec
 	{
 		public const string TransferSyntaxUid = "1.3.6.1.4.1.25403.2200303521616.1888.20130201032029.1";
+		private const string _codecName = "Null Compression Codec Implementation for Unit Tests";
 
-		public static readonly TransferSyntax TransferSyntax = new TransferSyntax("Null Compression Codec Implementation for Unit Tests",
+		public static readonly TransferSyntax TransferSyntax = new TransferSyntax(_codecName,
 		                                                                          TransferSyntaxUid,
 		                                                                          true, true, true, false, false, true);
+
+		public static readonly IDicomCodecFactory DicomCodecFactory = new CodecFactory(_codecName);
+
+		public static void Register()
+		{
+			TransferSyntax.RegisterTransferSyntax(TransferSyntax);
+			DicomCodecRegistry.SetCodec(TransferSyntax, DicomCodecFactory);
+		}
+
+		public static void Unregister()
+		{
+			DicomCodecRegistry.SetCodec(TransferSyntax, null);
+			TransferSyntax.UnregisterTransferSyntax(TransferSyntax);
+		}
 
 		public string Name
 		{
@@ -93,6 +109,46 @@ namespace ClearCanvas.Dicom.Codec.Tests
 			else
 			{
 				newPixelData.AppendFrame(oldPixelData.GetFrameFragmentData(frame));
+			}
+		}
+
+		private class CodecFactory : IDicomCodecFactory
+		{
+			private readonly string _name;
+
+			public CodecFactory(string name)
+			{
+				_name = name;
+			}
+
+			public string Name
+			{
+				get { return _name; }
+			}
+
+			public bool Enabled
+			{
+				get { return true; }
+			}
+
+			public TransferSyntax CodecTransferSyntax
+			{
+				get { return TransferSyntax; }
+			}
+
+			public DicomCodecParameters GetCodecParameters(DicomAttributeCollection dataSet)
+			{
+				return null;
+			}
+
+			public DicomCodecParameters GetCodecParameters(XmlDocument parms)
+			{
+				return null;
+			}
+
+			public IDicomCodec GetDicomCodec()
+			{
+				return new NullDicomCodec();
 			}
 		}
 	}
