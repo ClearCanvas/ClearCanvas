@@ -228,19 +228,17 @@ namespace ClearCanvas.Dicom.Audit
 			_userName = userName;
 
 			_networkAccessPointType = NetworkAccessPointTypeEnum.IpAddress;
-			_networkAccessPointId = HostingEnvironment.IsHosted ? GetUserIP() : DicomAuditHelper.ProcessIpAddress;
+			_networkAccessPointId = HostingEnvironment.IsHosted ? DicomAuditHelper.ClientIpAddress : DicomAuditHelper.ProcessIpAddress;
 		}
 
-		private string GetUserIP()
+		public AuditPersonActiveParticipant(string userId, string alternateUserId, string userName, string ipAddress)
 		{
-			string ipList = HttpContext.Current.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+			_userId = userId;
+			_alternateUserId = alternateUserId;
+			_userName = userName;
 
-			if (!string.IsNullOrEmpty(ipList))
-			{
-				return ipList.Split(',')[0];
-			}
-
-			return HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"];
+			_networkAccessPointType = NetworkAccessPointTypeEnum.IpAddress;
+			_networkAccessPointId = ipAddress;
 		}
 	}
 
@@ -262,6 +260,7 @@ namespace ClearCanvas.Dicom.Audit
 			_alternateUserId = sb.ToString();
 			_networkAccessPointId = DicomAuditHelper.ProcessIpAddress;
 			_networkAccessPointType = NetworkAccessPointTypeEnum.IpAddress;
+			_roleIdCode = RoleIDCode.Application;
 		}
 
 		public AuditProcessActiveParticipant(string aeTitle)
@@ -271,6 +270,7 @@ namespace ClearCanvas.Dicom.Audit
 			_alternateUserId = String.Format("AETITLES={0}", aeTitle);
 			_networkAccessPointId = DicomAuditHelper.ProcessIpAddress;
 			_networkAccessPointType = NetworkAccessPointTypeEnum.IpAddress;
+			_roleIdCode = RoleIDCode.Application;
 		}
 		public AuditProcessActiveParticipant()
 		{
@@ -278,6 +278,7 @@ namespace ClearCanvas.Dicom.Audit
 			_userId = DicomAuditHelper.ProcessId;
 			_networkAccessPointId = DicomAuditHelper.ProcessIpAddress;
 			_networkAccessPointType = NetworkAccessPointTypeEnum.IpAddress;
+			_roleIdCode = RoleIDCode.Application;
 		}
 
 		public void SetAlternateUserId(string val)

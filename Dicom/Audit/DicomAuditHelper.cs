@@ -29,6 +29,8 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Web;
+using System.Web.Hosting;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -95,7 +97,25 @@ namespace ClearCanvas.Dicom.Audit
 				}
 			}
 		}
+		public static string ClientIpAddress
+		{
+			get
+			{
+				if (HostingEnvironment.IsHosted)
+				{
+					string ipList = HttpContext.Current.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
 
+					if (!string.IsNullOrEmpty(ipList))
+					{
+						return ipList.Split(',')[0];
+					}
+
+					return HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"];
+				}
+
+				return string.Empty;
+			}
+		}
 		public static string ProcessName
 		{
 			get

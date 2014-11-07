@@ -23,9 +23,8 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Dicom.Audit
 {
@@ -296,8 +295,8 @@ namespace ClearCanvas.Dicom.Audit
 
 			if (auditSource.AuditSourceType.HasValue)
 			{
-				AuditSourceTypeCode = new string[1];
-				AuditSourceTypeCode[0] = auditSource.AuditSourceType.Value.ToString();
+				// Note this was being encoded as the string representation of the enumerated value, and it shoudl be encoded as a numeric value
+				code = ((int)auditSource.AuditSourceType.Value).ToString(CultureInfo.InvariantCulture);
 			}
 		}
         public AuditSourceIdentificationContents(string sourceId)

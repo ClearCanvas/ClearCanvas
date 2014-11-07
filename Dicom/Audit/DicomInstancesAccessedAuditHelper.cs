@@ -52,8 +52,8 @@ namespace ClearCanvas.Dicom.Audit
 		                                               EventDateTime = Platform.Time.ToUniversalTime(),
 		                                               EventOutcomeIndicator = outcome
 		                                           };
-
-		    InternalAddAuditSource(auditSource);
+			InternalAddAuditSource(auditSource);
+			AddUser(new AuditProcessActiveParticipant());
 		}
 
         /// <summary>
@@ -72,8 +72,8 @@ namespace ClearCanvas.Dicom.Audit
                                                        EventDateTime = Platform.Time.ToUniversalTime(),
                                                        EventOutcomeIndicator = outcome
                                                    };
-
-            InternalAddAuditSource(auditSource);
+			InternalAddAuditSource(auditSource);
+			AddUser(new AuditProcessActiveParticipant());
         }
 
 		/// <summary>

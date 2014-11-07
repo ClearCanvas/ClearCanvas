@@ -52,6 +52,7 @@ namespace ClearCanvas.Dicom.Audit
 				};
 
 			InternalAddAuditSource(auditSource);
+			AddUserParticipant(new AuditProcessActiveParticipant());
 		}
 
 		/// <summary>
