@@ -17,7 +17,7 @@ namespace ClearCanvas.Dicom.Audit
 		/// </summary>
 		public HealthcareDataAuditHelper(DicomAuditSource auditSource, EventIdentificationContentsEventOutcomeIndicator outcome,
 			EventIdentificationContentsEventActionCode action)
-			: base("HealthcareData")
+			: base("HealthcareDataAccessed")
 		{
 			AuditMessage.EventIdentification = new EventIdentificationContents
 			{
