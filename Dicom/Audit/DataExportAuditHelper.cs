@@ -58,6 +58,7 @@ namespace ClearCanvas.Dicom.Audit
 				};
 
 			InternalAddAuditSource(auditSource);
+			AddUserParticipant(new AuditProcessActiveParticipant());
 
 			// Add the Destination
 			_participantList.Add(
@@ -73,14 +74,17 @@ namespace ClearCanvas.Dicom.Audit
 		public DataExportAuditHelper(DicomAuditSource auditSource, EventIdentificationContentsEventOutcomeIndicator outcome, AuditActiveParticipant participant)
 			: base("DataExport")
 		{
-			AuditMessage.EventIdentification = new EventIdentificationContents();
-			AuditMessage.EventIdentification.EventID = EventID.Export;
-			AuditMessage.EventIdentification.EventActionCode = EventIdentificationContentsEventActionCode.E;
-			AuditMessage.EventIdentification.EventActionCodeSpecified = true;
-			AuditMessage.EventIdentification.EventDateTime = Platform.Time.ToUniversalTime();
-			AuditMessage.EventIdentification.EventOutcomeIndicator = outcome;
+			AuditMessage.EventIdentification = new EventIdentificationContents
+				{
+					EventID = EventID.Export,
+					EventActionCode = EventIdentificationContentsEventActionCode.E,
+					EventActionCodeSpecified = true,
+					EventDateTime = Platform.Time.ToUniversalTime(),
+					EventOutcomeIndicator = outcome
+				};
 
 			InternalAddAuditSource(auditSource);
+			AddUserParticipant(new AuditProcessActiveParticipant());
 
 			// Add the Destination
 			_participantList.Add(

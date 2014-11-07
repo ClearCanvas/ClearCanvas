@@ -48,6 +48,7 @@ namespace ClearCanvas.Dicom.Audit
 			AuditMessage.EventIdentification.EventOutcomeIndicator = outcome;
 
 			InternalAddAuditSource(auditSource);
+			AddUserParticipant(new AuditProcessActiveParticipant());
 
 			// Add the Destination
 			_participantList.Add(
@@ -59,7 +60,6 @@ namespace ClearCanvas.Dicom.Audit
 		/// </summary>
 		/// <param name="auditSource">The source of the audit message.</param>
 		/// <param name="outcome">The outcome (success or failure)</param>
-		/// DICOMDIR SOP Instance UID.</param>
 		public DataImportAuditHelper(DicomAuditSource auditSource,
 			EventIdentificationContentsEventOutcomeIndicator outcome)
 			: base("DataImport")
@@ -71,26 +71,24 @@ namespace ClearCanvas.Dicom.Audit
 			AuditMessage.EventIdentification.EventDateTime = Platform.Time.ToUniversalTime();
 			AuditMessage.EventIdentification.EventOutcomeIndicator = outcome;
 
+			AddUserParticipant(new AuditProcessActiveParticipant());
 			InternalAddAuditSource(auditSource);
 		}
 		/// <summary>
 		/// Add an importer.
 		/// </summary>
-		/// <param name="userId">The identity of the local user or process importer the data. If both
-		/// are known, then two active participants shall be included (both the
-		/// person and the process).</param>
 		/// <param name="participant">The active participant</param>
 		public void AddImporter(AuditActiveParticipant participant)
 		{
 			participant.UserIsRequestor = true;
-			participant.RoleIdCode = RoleIDCode.Destination;
+			participant.RoleIdCode = RoleIDCode.Source;
 			InternalAddActiveParticipant(participant);
 		}
 
 		/// <summary>
 		/// Add details of a Patient.
 		/// </summary>
-		/// <param name="study"></param>
+		/// <param name="patient"></param>
 		public void AddPatientParticipantObject(AuditPatientParticipantObject patient)
 		{
 			InternalAddParticipantObject(patient.PatientId + patient.PatientsName, patient);
@@ -121,6 +119,17 @@ namespace ClearCanvas.Dicom.Audit
 		public void AddGeneralParticipantObject(AuditParticipantObject o)
 		{
 			InternalAddParticipantObject(o.ParticipantObjectId, o);
+		}
+
+		/// <summary>
+		/// Add a process participatant
+		/// </summary>
+		/// <param name="auditProcessActiveParticipant"></param>
+		public void AddUserParticipant(AuditProcessActiveParticipant auditProcessActiveParticipant)
+		{
+			auditProcessActiveParticipant.UserIsRequestor = true;
+
+			InternalAddActiveParticipant(auditProcessActiveParticipant);
 		}
 	}
 }
