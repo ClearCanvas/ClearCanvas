@@ -512,8 +512,8 @@ namespace ClearCanvas.Common
 
 			var xp = new ApplicationRootExtensionPoint();
 			_applicationRoot = (applicationRootFilter == null) ?
-			                                                   	(IApplicationRoot) xp.CreateExtension() :
-			                                                   	                                        	(IApplicationRoot) xp.CreateExtension(applicationRootFilter);
+				(IApplicationRoot) xp.CreateExtension() :
+				(IApplicationRoot) xp.CreateExtension(applicationRootFilter);
 			_applicationRoot.RunApplication(args);
 		}
 
@@ -759,7 +759,7 @@ namespace ClearCanvas.Common
 		/// <returns>true if the <see cref="LogLevel"/> is enabled, or else false.</returns>
 		public static bool IsLogLevelEnabled(LogLevel category)
 		{
-			return IsLogLevelEnabled(null, category);
+			return IsLogLevelEnabled((string) null, category);
 		}
 
 		/// <summary>
@@ -771,6 +771,11 @@ namespace ClearCanvas.Common
 		public static bool IsLogLevelEnabled(string logName, LogLevel category)
 		{
 			var log = GetLog(logName);
+			return IsLogLevelEnabled(log, category);
+		}
+
+		private static bool IsLogLevelEnabled(ILog log, LogLevel category)
+		{
 			switch (category)
 			{
 				case LogLevel.Debug:
@@ -885,7 +890,7 @@ namespace ClearCanvas.Common
 
 		private static void Log(ILog log, LogLevel category, Exception ex, String message, object[] args)
 		{
-			if (IsLogLevelEnabled(category))
+			if (IsLogLevelEnabled(log, category))
 				Log(log, category, ex, GetLogMessage(ex != null, message, args));
 		}
 
