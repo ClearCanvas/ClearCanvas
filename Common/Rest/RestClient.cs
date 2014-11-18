@@ -231,6 +231,24 @@ namespace ClearCanvas.Common.Rest
 			}
 
 			/// <summary>
+			/// Specifies the KeepAlive value for the web request
+			/// </summary>
+			public bool KeepAlive
+			{
+				set { _request.KeepAlive = value; }
+				get { return _request.KeepAlive; }
+			}
+
+			/// <summary>
+			/// Specifies the ProtocolVersion value for the web request
+			/// </summary>
+			public Version ProtocolVersion
+			{
+				set { _request.ProtocolVersion = value; }
+				get { return _request.ProtocolVersion; }
+			}
+
+			/// <summary>
 			/// Sends this request using the GET verb and returns the response.
 			/// </summary>
 			/// <returns></returns>
