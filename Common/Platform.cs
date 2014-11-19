@@ -1038,17 +1038,16 @@ namespace ClearCanvas.Common
 		/// <summary>
 		/// Checks if a string is empty.
 		/// </summary>
-		/// <param name="variable">The string to check.</param>
+		/// <param name="value">The string to check.</param>
 		/// <param name="variableName">The variable name of the string to checked.</param>
-		/// <exception cref="ArgumentNullException"><paramref name="variable"/> or or <paramref name="variableName"/>
+		/// <exception cref="ArgumentNullException"><paramref name="value"/> or or <paramref name="variableName"/>
 		/// is <b>null</b>.</exception>
-		/// <exception cref="ArgumentException"><paramref name="variable"/> is zero length.</exception>
-		public static void CheckForEmptyString(string variable, string variableName)
+		/// <exception cref="ArgumentException"><paramref name="value"/> is zero length.</exception>
+		public static void CheckForEmptyString(string value, [InvokerParameterName] string variableName)
 		{
-			CheckForNullReference(variable, variableName);
+			CheckForNullReference(value, variableName);
 			CheckForNullReference(variableName, "variableName");
-
-			if (variable.Length == 0)
+			if (value.Length == 0)
 				throw new ArgumentException(String.Format(SR.ExceptionEmptyString, variableName));
 		}
 
@@ -1058,10 +1057,10 @@ namespace ClearCanvas.Common
 		/// <param name="variable">The object reference to check.</param>
 		/// <param name="variableName">The variable name of the object reference to check.</param>
 		/// <remarks>Use for checking if an input argument is <b>null</b>.  To check if a member variable
-		/// is <b>null</b> (i.e., to see if an object is in a valid state), use <b>CheckMemberIsSet</b> instead.</remarks>
+		/// is <b>null</b> (i.e., to see if an object is in a valid state), use <see cref="CheckMemberIsSet(object,string)"/> instead.</remarks>
 		/// <exception cref="ArgumentNullException"><paramref name="variable"/> or <paramref name="variableName"/>
 		/// is <b>null</b>.</exception>
-		public static void CheckForNullReference(object variable, string variableName)
+		public static void CheckForNullReference(object variable, [InvokerParameterName] string variableName)
 		{
 			if (variableName == null)
 				throw new ArgumentNullException("variableName");
@@ -1083,7 +1082,7 @@ namespace ClearCanvas.Common
 			CheckForNullReference(variable, "variable");
 			CheckForNullReference(type, "type");
 
-			if (!type.IsAssignableFrom(variable.GetType()))
+			if (!type.IsInstanceOfType(variable))
 				throw new ArgumentException(String.Format(SR.ExceptionExpectedType, type.FullName));
 		}
 
@@ -1136,7 +1135,7 @@ namespace ClearCanvas.Common
 		/// <param name="variableName">The variable name of the value to check.</param>
 		/// <exception cref="ArgumentNullException"><paramref name="variableName"/> is <b>null</b>.</exception>
 		/// <exception cref="ArgumentException"><paramref name="n"/> &lt;= 0.</exception>
-		public static void CheckPositive(int n, string variableName)
+		public static void CheckPositive(int n, [InvokerParameterName] string variableName)
 		{
 			CheckForNullReference(variableName, "variableName");
 
@@ -1155,7 +1154,7 @@ namespace ClearCanvas.Common
 		{
 			CheckForNullReference(conditionName, "conditionName");
 
-			if (testTrueCondition != true)
+			if (!testTrueCondition)
 				throw new ArgumentException(String.Format(SR.ExceptionConditionIsNotMet, conditionName));
 		}
 
@@ -1170,7 +1169,7 @@ namespace ClearCanvas.Common
 		{
 			CheckForNullReference(conditionName, "conditionName");
 
-			if (testFalseCondition != false)
+			if (testFalseCondition)
 				throw new ArgumentException(String.Format(SR.ExceptionConditionIsNotMet, conditionName));
 		}
 
@@ -1181,7 +1180,7 @@ namespace ClearCanvas.Common
 		/// <param name="variableName">The variable name of the value to check.</param>
 		/// <exception cref="ArgumentNullException"><paramref name="variableName"/> is <b>null</b>.</exception>
 		/// <exception cref="ArgumentException"><paramref name="x"/> &lt;= 0.</exception>
-		public static void CheckPositive(float x, string variableName)
+		public static void CheckPositive(float x, [InvokerParameterName] string variableName)
 		{
 			CheckForNullReference(variableName, "variableName");
 
@@ -1196,7 +1195,7 @@ namespace ClearCanvas.Common
 		/// <param name="variableName">The variable name of the value to check.</param>
 		/// <exception cref="ArgumentNullException"><paramref name="variableName"/> is <b>null</b>.</exception>
 		/// <exception cref="ArgumentException"><paramref name="x"/> &lt;= 0.</exception>
-		public static void CheckPositive(double x, string variableName)
+		public static void CheckPositive(double x, [InvokerParameterName] string variableName)
 		{
 			CheckForNullReference(variableName, "variableName");
 
@@ -1211,7 +1210,7 @@ namespace ClearCanvas.Common
 		/// <param name="variableName">The variable name of the value to check.</param>
 		/// <exception cref="ArgumentNullException"><paramref name="variableName"/> is <b>null</b>.</exception>
 		/// <exception cref="ArgumentException"><paramref name="n"/> &lt; 0.</exception>
-		public static void CheckNonNegative(int n, string variableName)
+		public static void CheckNonNegative(int n, [InvokerParameterName] string variableName)
 		{
 			CheckForNullReference(variableName, "variableName");
 
@@ -1230,7 +1229,7 @@ namespace ClearCanvas.Common
 		/// <exception cref="ArgumentNullException"><paramref name="variableName"/> is <b>null</b>.</exception>
 		/// <exception cref="ArgumentOutOfRangeException"><paramref name="argumentValue"/> is not within the
 		/// specified range.</exception>
-		public static void CheckArgumentRange(int argumentValue, int min, int max, string variableName)
+		public static void CheckArgumentRange(int argumentValue, int min, int max, [InvokerParameterName] string variableName)
 		{
 			CheckForNullReference(variableName, "variableName");
 
@@ -1267,7 +1266,7 @@ namespace ClearCanvas.Common
 		/// have been set, i.e., are not null.</remarks>
 		/// <exception cref="ArgumentNullException"><paramref name="variableName"/> is <b>null</b>.</exception>
 		/// <exception cref="System.InvalidOperationException"><paramref name="variable"/> is <b>null</b>.</exception>
-		public static void CheckMemberIsSet(object variable, string variableName)
+		public static void CheckMemberIsSet(object variable, [InvokerParameterName] string variableName)
 		{
 			CheckForNullReference(variableName, "variableName");
 
@@ -1287,7 +1286,7 @@ namespace ClearCanvas.Common
 		/// have been set, i.e., are not null.</remarks>
 		/// <exception cref="ArgumentNullException"><paramref name="variableName"/> is <b>null</b>.</exception>
 		/// <exception cref="System.InvalidOperationException"><paramref name="variable"/> is <b>null</b>.</exception>
-		public static void CheckMemberIsSet(object variable, string variableName, string detailedMessage)
+		public static void CheckMemberIsSet(object variable, [InvokerParameterName] string variableName, string detailedMessage)
 		{
 			CheckForNullReference(variableName, "variableName");
 			CheckForNullReference(detailedMessage, "detailedMessage");
