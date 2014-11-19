@@ -38,8 +38,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 	[Tooltip("activate", "TooltipRotateRight")]
 	[IconSet("activate", "Icons.RotateRightToolSmall.png", "Icons.RotateRightToolMedium.png", "Icons.RotateRightToolLarge.png")]
 	[GroupHint("activate", "Tools.Image.Manipulation.Orientation.Rotate.Right")]
-
-    [ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
+	[ExtensionOf(typeof (ImageViewerToolExtensionPoint))]
 	public class RotateRightTool : ImageViewerTool
 	{
 		private readonly SpatialTransformImageOperation _operation;
@@ -73,8 +72,8 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 		public void Apply(IPresentationImage image)
 		{
-			ISpatialTransform transform = (ISpatialTransform)_operation.GetOriginator(image);
-			transform.RotationXY += 90;
+			ISpatialTransform transform = (ISpatialTransform) _operation.GetOriginator(image);
+			transform.Rotate(90);
 		}
 	}
 }

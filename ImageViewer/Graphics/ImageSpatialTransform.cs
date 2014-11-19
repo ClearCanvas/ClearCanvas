@@ -73,7 +73,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// <param name="pixelAspectRatioY"></param>
 		public ImageSpatialTransform(
 			IGraphic ownerGraphic,
-			int rows, 
+			int rows,
 			int columns,
 			double pixelSpacingX,
 			double pixelSpacingY,
@@ -137,7 +137,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 
 				return _clientRectangle;
 			}
-			set 
+			set
 			{
 				if (_clientRectangle == value)
 					return;
@@ -159,7 +159,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 
 		protected float AdjustedSourceHeight
 		{
-			get { return this.SourceHeight * this.PixelAspectRatio; }
+			get { return this.SourceHeight*this.PixelAspectRatio; }
 		}
 
 		private float PixelAspectRatio
@@ -173,16 +173,22 @@ namespace ClearCanvas.ImageViewer.Graphics
 						if (_pixelSpacingX == 0 || _pixelSpacingY == 0)
 							_pixelAspectRatio = 1;
 						else
-							_pixelAspectRatio = (float)_pixelSpacingY / (float)_pixelSpacingX;
+							_pixelAspectRatio = (float) _pixelSpacingY/(float) _pixelSpacingX;
 					}
 					else
 					{
-						_pixelAspectRatio = (float)_pixelAspectRatioY / (float)_pixelAspectRatioX;
+						_pixelAspectRatio = (float) _pixelAspectRatioY/(float) _pixelAspectRatioX;
 					}
 				}
 
 				return _pixelAspectRatio;
 			}
+		}
+
+		protected override void ResetCore()
+		{
+			base.ResetCore();
+			ScaleToFit = true;
 		}
 
 		/// <summary>
@@ -214,7 +220,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		protected override void CalculatePreTransform(Matrix cumulativeTransform)
 		{
 			// Move origin to center of tile before performing transform
-			cumulativeTransform.Translate(this.ClientRectangle.Width / 2.0f, this.ClientRectangle.Height/ 2.0f);
+			cumulativeTransform.Translate(this.ClientRectangle.Width/2.0f, this.ClientRectangle.Height/2.0f);
 		}
 
 		/// <summary>
@@ -224,7 +230,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		{
 			// Move origin to the center of source image after performing transform.
 			// This will center the image in the tile
-			cumulativeTransform.Translate(-this.SourceWidth / 2.0f, -this.SourceHeight / 2.0f);
+			cumulativeTransform.Translate(-this.SourceWidth/2.0f, -this.SourceHeight/2.0f);
 		}
 
 		/// <summary>
@@ -251,11 +257,11 @@ namespace ClearCanvas.ImageViewer.Graphics
 			if (this.PixelAspectRatio >= 1)
 			{
 				scaleX = this.Scale;
-				scaleY = this.Scale * this.PixelAspectRatio;
+				scaleY = this.Scale*this.PixelAspectRatio;
 			}
 			else
 			{
-				scaleX = this.Scale / this.PixelAspectRatio;
+				scaleX = this.Scale/this.PixelAspectRatio;
 				scaleY = this.Scale;
 			}
 
@@ -273,34 +279,34 @@ namespace ClearCanvas.ImageViewer.Graphics
 
 			if (this.RotationXY == 90 || this.RotationXY == 270)
 			{
-				float imageAspectRatio = (float)this.SourceWidth / this.AdjustedSourceHeight;
-				float clientAspectRatio = (float)destinationHeight / (float)destinationWidth;
+				float imageAspectRatio = (float) this.SourceWidth/this.AdjustedSourceHeight;
+				float clientAspectRatio = (float) destinationHeight/(float) destinationWidth;
 
 				if (clientAspectRatio >= imageAspectRatio)
 				{
-					scaleX = (float)destinationWidth / this.AdjustedSourceHeight;
-					scaleY = (float)destinationWidth / this.SourceHeight;
+					scaleX = (float) destinationWidth/this.AdjustedSourceHeight;
+					scaleY = (float) destinationWidth/this.SourceHeight;
 				}
 				else
 				{
-					scaleX = (float)destinationHeight / (float)this.SourceWidth;
-					scaleY = (float)destinationHeight / (float)this.SourceWidth * this.PixelAspectRatio;
+					scaleX = (float) destinationHeight/(float) this.SourceWidth;
+					scaleY = (float) destinationHeight/(float) this.SourceWidth*this.PixelAspectRatio;
 				}
 			}
 			else
 			{
-				float imageAspectRatio = this.AdjustedSourceHeight / (float)this.SourceWidth;
-				float clientAspectRatio = (float)destinationHeight / (float)destinationWidth;
+				float imageAspectRatio = this.AdjustedSourceHeight/(float) this.SourceWidth;
+				float clientAspectRatio = (float) destinationHeight/(float) destinationWidth;
 
 				if (clientAspectRatio >= imageAspectRatio)
 				{
-					scaleX = (float)destinationWidth / (float)this.SourceWidth;
-					scaleY = (float)destinationWidth / (float)this.SourceWidth * this.PixelAspectRatio;
+					scaleX = (float) destinationWidth/(float) this.SourceWidth;
+					scaleY = (float) destinationWidth/(float) this.SourceWidth*this.PixelAspectRatio;
 				}
 				else
 				{
-					scaleX = (float)destinationHeight / this.AdjustedSourceHeight;
-					scaleY = (float)destinationHeight / this.SourceHeight;
+					scaleX = (float) destinationHeight/this.AdjustedSourceHeight;
+					scaleY = (float) destinationHeight/this.SourceHeight;
 				}
 			}
 

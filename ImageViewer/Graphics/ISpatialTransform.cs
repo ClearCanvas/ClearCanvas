@@ -22,6 +22,7 @@
 
 #endregion
 
+using System;
 using System.Drawing;
 using ClearCanvas.Desktop;
 
@@ -78,17 +79,50 @@ namespace ClearCanvas.ImageViewer.Graphics
 		// ReSharper restore InconsistentNaming
 
 		/// <summary>
-		/// Gets the cumulative scale.
+		/// Gets the cumulative scale (i.e. relative to the root of the scene graph).
 		/// </summary>
-		/// <remarks>
-		/// Gets the scale relative to the root of the scene graph.
-		/// </remarks>
 		float CumulativeScale { get; }
 
 		/// <summary>
 		/// Resets all transform parameters to their defaults.
 		/// </summary>
 		void Initialize();
+
+		/// <summary>
+		/// Resets all transform parameters to their defaults.
+		/// </summary>
+		void Reset();
+
+		/// <summary>
+		/// Performs a horizontal flip relative to the current transform state (i.e. in destination coordinates).
+		/// </summary>
+		void FlipHorizontal();
+
+		/// <summary>
+		/// Performs a vertical flip relative to the current transform state (i.e. in destination coordinates).
+		/// </summary>
+		void FlipVertical();
+
+		/// <summary>
+		/// Performs a clockwise rotation relative to the current transform state (i.e. in destination coordinates).
+		/// </summary>
+		/// <param name="degrees">The clockwise rotation in degrees.</param>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="degrees"/> specifies an unsupported rotation.</exception>
+		void Rotate(int degrees);
+
+		/// <summary>
+		/// Performs scaling relative to the current transform state (i.e. in destination coordinates)
+		/// </summary>
+		/// <param name="scale">The scaling factor to apply.</param>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="scale"/> is non-positive.</exception>
+		void Zoom(float scale);
+
+		/// <summary>
+		/// Performs translation relative to the current transform state (i.e. in destination coordinates)
+		/// </summary>
+		/// <param name="dx">The translation in the X direction.</param>
+		/// <param name="dy">The translation in the Y direction.</param>
+		void Translate(float dx, float dy);
 
 		/// <summary>
 		/// Converts a <see cref="PointF"/> from source to destination coordinates.

@@ -28,7 +28,7 @@ using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Desktop;
 using ClearCanvas.ImageViewer.Mathematics;
-using Matrix=System.Drawing.Drawing2D.Matrix;
+using Matrix = System.Drawing.Drawing2D.Matrix;
 
 namespace ClearCanvas.ImageViewer.Graphics
 {
@@ -55,8 +55,10 @@ namespace ClearCanvas.ImageViewer.Graphics
 		private Matrix _cumulativeTransform;
 		private Matrix _transform;
 		private bool _recalculationRequired;
+
 		[CloneIgnore]
 		private IGraphic _ownerGraphic;
+
 		private SpatialTransformValidationPolicy _validationPolicy;
 
 		#endregion
@@ -93,7 +95,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// </summary>
 		protected bool RecalculationRequired
 		{
-			get 
+			get
 			{
 				//check if the scale values have changed before returning.
 				UpdateScaleInternal();
@@ -115,7 +117,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 				if (value && OwnerGraphic is CompositeGraphic)
 				{
 					//If we need recalculation, so does everything below us.
-					foreach (Graphic graphic in ((CompositeGraphic)OwnerGraphic).Graphics)
+					foreach (var graphic in ((CompositeGraphic) OwnerGraphic).Graphics)
 						graphic.SpatialTransform.ForceRecalculation();
 				}
 
@@ -142,7 +144,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 					throw new ArgumentOutOfRangeException("value", "Cannot set Scale to zero.");
 
 				_scale = value;
-				this.RecalculationRequired = true;
+				RecalculationRequired = true;
 			}
 		}
 
@@ -161,7 +163,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 				UpdateScaleInternal();
 				return _scaleX;
 			}
-			protected set 
+			protected set
 			{
 				if (_scaleX == value)
 					return;
@@ -170,7 +172,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 					throw new ArgumentOutOfRangeException("value", "Cannot set ScaleX to zero.");
 
 				_scaleX = value;
-				this.RecalculationRequired = true;
+				RecalculationRequired = true;
 			}
 		}
 
@@ -189,7 +191,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 				UpdateScaleInternal();
 				return _scaleY;
 			}
-			protected set 
+			protected set
 			{
 				if (_scaleY == value)
 					return;
@@ -198,7 +200,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 					throw new ArgumentOutOfRangeException("value", "Cannot set ScaleY to zero.");
 
 				_scaleY = value;
-				this.RecalculationRequired = true;
+				RecalculationRequired = true;
 			}
 		}
 
@@ -208,13 +210,13 @@ namespace ClearCanvas.ImageViewer.Graphics
 		public float TranslationX
 		{
 			get { return _translationX; }
-			set	
+			set
 			{
 				if (_translationX == value)
 					return;
-				
+
 				_translationX = value;
-				this.RecalculationRequired = true;
+				RecalculationRequired = true;
 			}
 		}
 
@@ -223,14 +225,14 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// </summary>
 		public float TranslationY
 		{
-			get	{ return _translationY; }
-			set	
-			{ 
+			get { return _translationY; }
+			set
+			{
 				if (_translationY == value)
 					return;
 
 				_translationY = value;
-				this.RecalculationRequired = true;
+				RecalculationRequired = true;
 			}
 		}
 
@@ -241,13 +243,13 @@ namespace ClearCanvas.ImageViewer.Graphics
 		public bool FlipX
 		{
 			get { return _flipX; }
-			set 
-			{ 
+			set
+			{
 				if (_flipX == value)
 					return;
 
 				_flipX = value;
-				this.RecalculationRequired = true;
+				RecalculationRequired = true;
 			}
 		}
 
@@ -258,13 +260,13 @@ namespace ClearCanvas.ImageViewer.Graphics
 		public bool FlipY
 		{
 			get { return _flipY; }
-			set 
-			{ 
+			set
+			{
 				if (_flipY == value)
 					return;
 
 				_flipY = value;
-				this.RecalculationRequired = true;
+				RecalculationRequired = true;
 			}
 		}
 
@@ -277,10 +279,10 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// </remarks>
 		public int RotationXY
 		{
-			get { return (int)_rotationXY; }
-			set 
+			get { return (int) _rotationXY; }
+			set
 			{
-				value = value % 360;
+				value = value%360;
 
 				if (value < 0)
 					value += 360;
@@ -289,7 +291,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 					return;
 
 				_rotationXY = value;
-				this.RecalculationRequired = true;
+				RecalculationRequired = true;
 			}
 		}
 
@@ -309,10 +311,9 @@ namespace ClearCanvas.ImageViewer.Graphics
 					return;
 
 				_centerOfRotationXY = value;
-				this.RecalculationRequired = true;
+				RecalculationRequired = true;
 			}
 		}
-
 
 		/// <summary>
 		/// Gets the transform relative to the <see cref="IGraphic"/> object's
@@ -326,10 +327,10 @@ namespace ClearCanvas.ImageViewer.Graphics
 					_transform = new Matrix();
 
 				_transform.Reset();
-				_transform.Rotate(this.RotationXY);
-				_transform.Scale(this.ScaleX * (this.FlipY ? -1 : 1), this.ScaleY * (this.FlipX ? -1 : 1));
-				_transform.Translate(this.TranslationX, this.TranslationY);
-				 
+				_transform.Rotate(RotationXY);
+				_transform.Scale(ScaleX*(FlipY ? -1 : 1), ScaleY*(FlipX ? -1 : 1));
+				_transform.Translate(TranslationX, TranslationY);
+
 				return _transform;
 			}
 		}
@@ -363,7 +364,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// </remarks>
 		public Matrix CumulativeTransform
 		{
-			get 
+			get
 			{
 				Calculate();
 				return _cumulativeTransform;
@@ -400,13 +401,84 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// </summary>
 		public void Initialize()
 		{
-			this.Scale = 1.0F;
-			this.TranslationX = 0.0F;
-			this.TranslationY = 0.0F;
-			this.RotationXY = 0;
-			this.FlipY = false;
-			this.FlipX = false;
+			Reset();
+		}
+
+		public void Reset()
+		{
+			ResetCore();
 			ForceRecalculation();
+		}
+
+		/// <summary>
+		/// Called to reset transform parameters to default values.
+		/// </summary>
+		protected virtual void ResetCore()
+		{
+			Scale = 1.0F;
+			TranslationX = 0.0F;
+			TranslationY = 0.0F;
+			RotationXY = 0;
+			FlipY = false;
+			FlipX = false;
+		}
+
+		public void FlipHorizontal()
+		{
+			switch (RotationXY)
+			{
+				case 0:
+				case 180:
+					FlipY = !FlipY;
+					return;
+				case 90:
+				case 270:
+					FlipX = !FlipX;
+					return;
+			}
+
+			var hVector = ConvertToSource(new SizeF(100, 0));
+			FlipY = !FlipY;
+			if (!FloatComparer.AreEqual(new SizeF(-100, 0), ConvertToDestination(hVector)))
+				RotationXY += 180;
+		}
+
+		public void FlipVertical()
+		{
+			switch (RotationXY)
+			{
+				case 0:
+				case 180:
+					FlipX = !FlipX;
+					return;
+				case 90:
+				case 270:
+					FlipY = !FlipY;
+					return;
+			}
+
+			var vVector = ConvertToSource(new SizeF(0, 100));
+			FlipX = !FlipX;
+			if (!FloatComparer.AreEqual(new SizeF(0, -100), ConvertToDestination(vVector)))
+				RotationXY += 180;
+		}
+
+		public void Rotate(int degrees)
+		{
+			RotationXY += degrees;
+		}
+
+		public void Zoom(float scale)
+		{
+			Platform.CheckPositive(scale, "scale");
+			Scale *= scale;
+		}
+
+		public void Translate(float dx, float dy)
+		{
+			var sourceIncrement = ConvertToSource(new SizeF(dx, dy));
+			TranslationX += sourceIncrement.Width;
+			TranslationY += sourceIncrement.Height;
 		}
 
 		/// <summary>
@@ -419,7 +491,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 			PointF[] points = new PointF[1];
 			points[0] = sourcePoint;
 			this.CumulativeTransform.TransformPoints(points);
-			
+
 			return points[0];
 		}
 
@@ -436,7 +508,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 			PointF[] points = new PointF[1];
 			points[0] = destinationPoint;
 			inverse.TransformPoints(points);
-			
+
 			return points[0];
 		}
 
@@ -476,7 +548,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// </remarks>
 		public SizeF ConvertToDestination(SizeF sourceDimensions)
 		{
-			PointF[] transformed = new PointF[] { sourceDimensions.ToPointF() };
+			PointF[] transformed = new PointF[] {sourceDimensions.ToPointF()};
 			this.CumulativeTransform.TransformVectors(transformed);
 			return new SizeF(transformed[0]);
 		}
@@ -491,7 +563,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// </remarks>
 		public SizeF ConvertToSource(SizeF destinationDimensions)
 		{
-			PointF[] transformed = new PointF[] { destinationDimensions.ToPointF() };
+			PointF[] transformed = new PointF[] {destinationDimensions.ToPointF()};
 			Matrix inverse = this.CumulativeTransform.Clone();
 			inverse.Invert();
 			inverse.TransformVectors(transformed);
@@ -551,7 +623,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		/// <summary>
 		/// Forces the <see cref="CumulativeTransform"/> to be recalculated.
 		/// </summary>
-		internal protected void ForceRecalculation()
+		protected internal void ForceRecalculation()
 		{
 			RecalculationRequired = true;
 		}
