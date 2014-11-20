@@ -33,286 +33,298 @@ using ClearCanvas.Common;
 
 namespace ClearCanvas.Dicom.Network
 {
-    /// <summary>
-    /// Class used by DICOM Clients for all network functionality.
-    /// </summary>
-    public sealed class DicomClient : NetworkBase, IDisposable
-    {
-        #region Private Members
+	/// <summary>
+	/// Class used by DICOM Clients for all network functionality.
+	/// </summary>
+	public sealed class DicomClient : NetworkBase, IDisposable
+	{
+		#region Private Members
+
 		private IPEndPoint _remoteEndPoint;
 		private int _timeout;
 		private Socket _socket;
 		private Stream _network;
 		private ManualResetEvent _closedEvent;
 		private bool _closedOnError;
-        readonly IDicomClientHandler _handler;
-        private bool _disposed;
+		private readonly IDicomClientHandler _handler;
+		private bool _disposed;
+
 		#endregion
 
 		#region Public Constructors
-        private DicomClient(AssociationParameters assoc, IDicomClientHandler handler)
-        {
-            _remoteEndPoint = assoc.RemoteEndPoint;
-            _socket = null;
-            _network = null;
-            _closedEvent = null;
-            _timeout = 10;
-            _handler = handler;
-            _assoc = assoc;
-        }
+
+		private DicomClient(AssociationParameters assoc, IDicomClientHandler handler)
+		{
+			_remoteEndPoint = assoc.RemoteEndPoint;
+			_socket = null;
+			_network = null;
+			_closedEvent = null;
+			_timeout = 10;
+			_handler = handler;
+			_assoc = assoc;
+		}
+
 		#endregion
 
 		#region Public Properties
-		public int Timeout {
+
+		public int Timeout
+		{
 			get { return _timeout; }
 			set { _timeout = value; }
 		}
 
-		public Socket InternalSocket {
+		public Socket InternalSocket
+		{
 			get { return _socket; }
 		}
 
-        /// <summary>
-        /// Flag telling if the connection was closed on an error.
-        /// </summary>
-		public bool ClosedOnError {
+		/// <summary>
+		/// Flag telling if the connection was closed on an error.
+		/// </summary>
+		public bool ClosedOnError
+		{
 			get { return _closedOnError; }
 		}
+
 		#endregion
 
-        #region Private Methods
-        private void SetSocketOptions(ClientAssociationParameters parameters)
-        {
-            _socket.ReceiveBufferSize = parameters.ReceiveBufferSize;
-            _socket.SendBufferSize = parameters.SendBufferSize;
-            _socket.ReceiveTimeout = parameters.ReadTimeout;
-            _socket.SendTimeout = parameters.WriteTimeout;
-            _socket.LingerState = new LingerOption(false, 0);
-            // Nagle option
+		#region Private Methods
+
+		private void SetSocketOptions(ClientAssociationParameters parameters)
+		{
+			_socket.ReceiveBufferSize = parameters.ReceiveBufferSize;
+			_socket.SendBufferSize = parameters.SendBufferSize;
+			_socket.ReceiveTimeout = parameters.ReadTimeout;
+			_socket.SendTimeout = parameters.WriteTimeout;
+			_socket.LingerState = new LingerOption(false, 0);
+			// Nagle option
 			_socket.NoDelay = parameters.DisableNagle;
-        }
+		}
 
-        private void Connect(IPEndPoint ep)
-        {
-            _socket = new Socket(ep.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            SetSocketOptions(_assoc as ClientAssociationParameters);
+		private void Connect(IPEndPoint ep)
+		{
+			_socket = new Socket(ep.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+			SetSocketOptions(_assoc as ClientAssociationParameters);
 
-            IAsyncResult result = _socket.BeginConnect(ep, null, null);
+			IAsyncResult result = _socket.BeginConnect(ep, null, null);
 
-            bool success = result.AsyncWaitHandle.WaitOne(_assoc.ConnectTimeout, true);
+			bool success = result.AsyncWaitHandle.WaitOne(_assoc.ConnectTimeout, true);
 
-            if (!success)
-            {
-                // NOTE, MUST CLOSE THE SOCKET
-                _socket.Close();
-                throw new DicomNetworkException(String.Format("Timeout while attempting to connect to remote server {0}",ep));
-            }
+			if (!success)
+			{
+				// NOTE, MUST CLOSE THE SOCKET
+				_socket.Close();
+				throw new DicomNetworkException(String.Format("Timeout while attempting to connect to remote server {0}", ep));
+			}
 
 			if (!_socket.Connected)
 			{
 				// NOTE, MUST CLOSE THE SOCKET
 				_socket.Close();
-				throw new DicomNetworkException(String.Format("Connection failed to remote server {0}",ep));
+				throw new DicomNetworkException(String.Format("Connection failed to remote server {0}", ep));
 			}
 
+			_network = new NetworkStream(_socket);
 
-            _network = new NetworkStream(_socket);
+			InitializeNetwork(_network, "DicomClient: " + ep, false);
 
-            InitializeNetwork(_network, "DicomClient: " + ep, false);
+			_closedEvent = new ManualResetEvent(false);
 
-            _closedEvent = new ManualResetEvent(false);
+			_remoteEndPoint = ep;
 
-            _remoteEndPoint = ep;
+			_assoc.RemoteEndPoint = ep;
+			_assoc.LocalEndPoint = _socket.LocalEndPoint as IPEndPoint;
 
-            _assoc.RemoteEndPoint = ep;
-            _assoc.LocalEndPoint = _socket.LocalEndPoint as IPEndPoint;
+			OnClientConnected();
+		}
 
-            OnClientConnected();
-        }
+		private void Connect()
+		{
+			_closedOnError = false;
 
-        private void Connect()
-        {
-            _closedOnError = false;
+			if (_assoc.RemoteEndPoint != null)
+			{
+				Connect(_assoc.RemoteEndPoint);
+			}
+			else
+			{
+				IPHostEntry entry;
 
-            if (_assoc.RemoteEndPoint != null)
-            {
-                Connect(_assoc.RemoteEndPoint);
-            }
-            else
-            {
-                IPHostEntry entry;
-
-	            try
-	            {
+				try
+				{
 					entry = Dns.GetHostEntry(_assoc.RemoteHostname);
-	            }
-	            catch (SocketException x)
-	            {
+				}
+				catch (SocketException x)
+				{
 					if (x.SocketErrorCode == SocketError.NoData || x.SocketErrorCode == SocketError.HostNotFound)
 						throw new DicomException(SR.UnknownHost, x);
-		            throw;
-	            }
-				
-                IPAddress[] list = entry.AddressList;
-                foreach (IPAddress dnsAddr in list)
-                {
-                    if (dnsAddr.AddressFamily == AddressFamily.InterNetwork)
-                    {
-                        try
-                        {
-                            Connect(new IPEndPoint(dnsAddr, _assoc.RemotePort));
-                            return;
-                        }
-                        catch (Exception e)
-                        {
+					throw;
+				}
+
+				IPAddress[] list = entry.AddressList;
+				foreach (IPAddress dnsAddr in list)
+				{
+					if (dnsAddr.AddressFamily == AddressFamily.InterNetwork)
+					{
+						try
+						{
+							Connect(new IPEndPoint(dnsAddr, _assoc.RemotePort));
+							return;
+						}
+						catch (Exception e)
+						{
 							Platform.Log(LogLevel.Error, e,
-                                                          "Unable to connect to remote host, attempting other addresses: {0}",
-                                                          dnsAddr.ToString());
-                        }
-                    }
-                }
-                foreach (IPAddress dnsAddr in list)
-                {
-                    if (dnsAddr.AddressFamily == AddressFamily.InterNetworkV6)
-                    {
-                        try
-                        {
-                            Connect(new IPEndPoint(dnsAddr, _assoc.RemotePort));
-                            return;
-                        }
-                        catch (Exception e)
-                        {
+							             "Unable to connect to remote host, attempting other addresses: {0}",
+							             dnsAddr.ToString());
+						}
+					}
+				}
+				foreach (IPAddress dnsAddr in list)
+				{
+					if (dnsAddr.AddressFamily == AddressFamily.InterNetworkV6)
+					{
+						try
+						{
+							Connect(new IPEndPoint(dnsAddr, _assoc.RemotePort));
+							return;
+						}
+						catch (Exception e)
+						{
 							Platform.Log(LogLevel.Error, e,
-                                                          "Unable to connection to remote host, attempting other addresses: {0}",
-                                                          dnsAddr.ToString());
-                        }
-                    }
-                }
-                String message = String.Format("Unable to connect to: {0}:{1}, no valid addresses to connect to",_assoc.RemoteHostname,_assoc.RemotePort);
+							             "Unable to connection to remote host, attempting other addresses: {0}",
+							             dnsAddr.ToString());
+						}
+					}
+				}
+				String message = String.Format("Unable to connect to: {0}:{1}, no valid addresses to connect to", _assoc.RemoteHostname, _assoc.RemotePort);
 
 				Platform.Log(LogLevel.Error, message);
-                throw new DicomException(message);
-            }
-        }
-
-    	private void ConnectTLS()
-        {
-            _closedOnError = false;
-
-            _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            
-            SetSocketOptions(_assoc as ClientAssociationParameters);
-
-            _socket.Connect(_remoteEndPoint);
-
-            _network = new SslStream(new NetworkStream(_socket));
-
-            InitializeNetwork(_network, "TLS Client handler to: " + _remoteEndPoint);
-
-            _closedEvent = new ManualResetEvent(false);
-
-            OnClientConnected();
-        }
-        #endregion
-
-        #region Public Members
-        /// <summary>
-        /// Connection to a remote DICOM application.
-        /// </summary>
-        /// <param name="assoc"></param>
-        /// <param name="handler"></param>
-        /// <returns></returns>
-        public static DicomClient Connect(AssociationParameters assoc, IDicomClientHandler handler)
-        {
-            DicomClient client = new DicomClient(assoc, handler);
-            client.Connect();
-            return client;
+				throw new DicomException(message);
+			}
 		}
 
-        /// <summary>
-        /// Connection to a remote DICOM application via TLS.
-        /// </summary>
-        /// <param name="assoc"></param>
-        /// <param name="handler"></param>
-        /// <returns></returns>
-        public static DicomClient ConnectTLS(AssociationParameters assoc, IDicomClientHandler handler)
-        {
-            DicomClient client = new DicomClient(assoc, handler);
-            client.ConnectTLS();
-            return client;
+		private void ConnectTLS()
+		{
+			_closedOnError = false;
+
+			_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+			SetSocketOptions(_assoc as ClientAssociationParameters);
+
+			_socket.Connect(_remoteEndPoint);
+
+			_network = new SslStream(new NetworkStream(_socket));
+
+			InitializeNetwork(_network, "TLS Client handler to: " + _remoteEndPoint);
+
+			_closedEvent = new ManualResetEvent(false);
+
+			OnClientConnected();
 		}
 
-        /// <summary>
-        /// Wait for the background thread for the client to close.
-        /// </summary>
-		public void Join() {
+		#endregion
+
+		#region Public Members
+
+		/// <summary>
+		/// Connection to a remote DICOM application.
+		/// </summary>
+		/// <param name="assoc"></param>
+		/// <param name="handler"></param>
+		/// <returns></returns>
+		public static DicomClient Connect(AssociationParameters assoc, IDicomClientHandler handler)
+		{
+			DicomClient client = new DicomClient(assoc, handler);
+			client.Connect();
+			return client;
+		}
+
+		/// <summary>
+		/// Connection to a remote DICOM application via TLS.
+		/// </summary>
+		/// <param name="assoc"></param>
+		/// <param name="handler"></param>
+		/// <returns></returns>
+		public static DicomClient ConnectTLS(AssociationParameters assoc, IDicomClientHandler handler)
+		{
+			DicomClient client = new DicomClient(assoc, handler);
+			client.ConnectTLS();
+			return client;
+		}
+
+		/// <summary>
+		/// Wait for the background thread for the client to close.
+		/// </summary>
+		public void Join()
+		{
 			_closedEvent.WaitOne();
 		}
 
-        /// <summary>
-        /// Wait a specified timeout for the background thread for the client to close.
-        /// </summary>
-        /// <returns>
-        /// True if the background thread has exited.
-        /// </returns>
-        /// <param name="timeout"></param>
-        public bool Join(TimeSpan timeout)
-        {
-            return _closedEvent.WaitOne(timeout, true);
-        }
+		/// <summary>
+		/// Wait a specified timeout for the background thread for the client to close.
+		/// </summary>
+		/// <returns>
+		/// True if the background thread has exited.
+		/// </returns>
+		/// <param name="timeout"></param>
+		public bool Join(TimeSpan timeout)
+		{
+			return _closedEvent.WaitOne(timeout, true);
+		}
 
 		#endregion
 
 		#region NetworkBase Overrides
 
-        /// <summary>
-        /// Close the DICOM connection.
-        /// </summary>
+		/// <summary>
+		/// Close the DICOM connection.
+		/// </summary>
 		/// <param name="millisecondsTimeout">The timeout in milliseconds to wait for the closure
 		/// of the network thread.</param>
-        protected override void CloseNetwork(int millisecondsTimeout)
-        {
+		protected override void CloseNetwork(int millisecondsTimeout)
+		{
 			ShutdownNetworkThread(millisecondsTimeout);
 			lock (this)
-            {
-                if (_network != null)
-                {
-                    _network.Close();
-                	_network.Dispose();
-                    _network = null;
-                }
-                if (_socket != null)
-                {
-                    if (_socket.Connected)
-                        _socket.Close();
-                    _socket = null;
-                }
-                if (_closedEvent != null)
-                {
-                    _closedEvent.Set();
-                }
+			{
+				if (_network != null)
+				{
+					_network.Close();
+					_network.Dispose();
+					_network = null;
+				}
+				if (_socket != null)
+				{
+					if (_socket.Connected)
+						_socket.Close();
+					_socket = null;
+				}
+				if (_closedEvent != null)
+				{
+					_closedEvent.Set();
+				}
 				State = DicomAssociationState.Sta1_Idle;
-            }        	
-        }
+			}
+		}
 
-        private void OnClientConnected()
-        {
-            if (LogInformation) Platform.Log(LogLevel.Debug, "{0} SCU -> Network Connected: {2} {1}", _assoc.CallingAE, InternalSocket.RemoteEndPoint.ToString(), _assoc.CalledAE);
+		private void OnClientConnected()
+		{
+			if (LogInformation) Platform.Log(LogLevel.Debug, "{0} SCU -> Network Connected: {2} {1}", _assoc.CallingAE, InternalSocket.RemoteEndPoint.ToString(), _assoc.CalledAE);
 
-            SendAssociateRequest(_assoc);
-        }
+			SendAssociateRequest(_assoc);
+		}
 
-		protected override bool NetworkHasData() 
-        {
-            if (_socket == null)
-                return false;
+		protected override bool NetworkHasData()
+		{
+			if (_socket == null)
+				return false;
 
-            // Tells the state of the connection as of the last activity on the socket
-            if (!_socket.Connected)
-            {
-            	OnNetworkError(null, true);
-                return false;
-            }
+			// Tells the state of the connection as of the last activity on the socket
+			if (!_socket.Connected)
+			{
+				OnNetworkError(null, true);
+				return false;
+			}
 
 			// This is the recommended way to determine if a socket is still active, make a
 			// zero byte send call, and see if an exception is thrown.  See the Socket.Connected
@@ -333,150 +345,136 @@ namespace ClearCanvas.Dicom.Network
 				_socket.Send(new byte[1], 0, 0);
 			}
 			catch (SocketException e)
-            {
-                // 10035 == WSAEWOULDBLOCK
-                if (!e.NativeErrorCode.Equals(10035))
+			{
+				// 10035 == WSAEWOULDBLOCK
+				if (!e.NativeErrorCode.Equals(10035))
 					OnNetworkError(e, true);
-            }
+			}
 
-            return false;
+			return false;
 		}
 
-        protected override void OnNetworkError(Exception e, bool closeConnection)
-        {
-            try
-            {
-                _handler.OnNetworkError(this, _assoc as ClientAssociationParameters, e);
-            }
-            catch (Exception ex) 
-            {
+		protected override void OnNetworkError(Exception e, bool closeConnection)
+		{
+			try
+			{
+				_handler.OnNetworkError(this, _assoc as ClientAssociationParameters, e);
+			}
+			catch (Exception ex)
+			{
 				Platform.Log(LogLevel.Error, ex, "Unexpected exception when calling IDicomClientHandler.OnNetworkError");
-            }
+			}
 
 			_closedOnError = true;
-            if (closeConnection)
+			if (closeConnection)
 				CloseNetwork(System.Threading.Timeout.Infinite);
 		}
 
-		protected override void OnDimseTimeout() {
-            try
-            {
-                _handler.OnDimseTimeout(this, _assoc as ClientAssociationParameters);
-            }
-            catch (Exception e)
-            {
-                OnUserException(e, "Unexpected exception on OnDimseTimeout");
-            }
+		protected override void OnDimseTimeout()
+		{
+			try
+			{
+				_handler.OnDimseTimeout(this, _assoc as ClientAssociationParameters);
+			}
+			catch (Exception e)
+			{
+				OnUserException(e, "Unexpected exception on OnDimseTimeout");
+			}
 		}
 
-        protected override void OnReceiveAssociateAccept(AssociationParameters association)
-        {
-            try
-            {
-                _handler.OnReceiveAssociateAccept(this, association as ClientAssociationParameters);
-            }
-            catch (Exception e)
-            {
-                OnUserException(e, "Unexpected exception on OnReceiveAssociateAccept");
-            }
-        }
-
-        protected override void OnReceiveAssociateReject(DicomRejectResult result, DicomRejectSource source, DicomRejectReason reason) {
-
-            _handler.OnReceiveAssociateReject(this, _assoc as ClientAssociationParameters, result, source, reason);
-
-            _closedOnError = true;
-			CloseNetwork(System.Threading.Timeout.Infinite);
+		protected override void OnReceiveAssociateAccept(AssociationParameters association)
+		{
+			try
+			{
+				_handler.OnReceiveAssociateAccept(this, association as ClientAssociationParameters);
+			}
+			catch (Exception e)
+			{
+				OnUserException(e, "Unexpected exception on OnReceiveAssociateAccept");
+			}
 		}
 
-		protected override void OnReceiveAbort(DicomAbortSource source, DicomAbortReason reason) {
-            try
-            {
-                _handler.OnReceiveAbort(this, _assoc as ClientAssociationParameters, source, reason);
-            }
-            catch (Exception e)
-            {
-                OnUserException(e, "Unexpected exception on OnReceiveAbort");
-            }
+		protected override void OnReceiveAssociateReject(DicomRejectResult result, DicomRejectSource source, DicomRejectReason reason)
+		{
+			_handler.OnReceiveAssociateReject(this, _assoc as ClientAssociationParameters, result, source, reason);
+
 			_closedOnError = true;
 			CloseNetwork(System.Threading.Timeout.Infinite);
 		}
 
-		protected override void OnReceiveReleaseResponse() {
-            try
-            {
-                _handler.OnReceiveReleaseResponse(this, _assoc as ClientAssociationParameters);
-            }
-            catch (Exception e)
-            {
-                OnUserException(e, "Unexpected exception on OnReceiveReleaseResponse");
-            }
-            _closedOnError = false;
+		protected override void OnReceiveAbort(DicomAbortSource source, DicomAbortReason reason)
+		{
+			try
+			{
+				_handler.OnReceiveAbort(this, _assoc as ClientAssociationParameters, source, reason);
+			}
+			catch (Exception e)
+			{
+				OnUserException(e, "Unexpected exception on OnReceiveAbort");
+			}
+			_closedOnError = true;
 			CloseNetwork(System.Threading.Timeout.Infinite);
 		}
 
-        protected override void OnReceiveDimseRequest(byte pcid, DicomMessage msg)
-        {
-            try
-            {
-                _handler.OnReceiveRequestMessage(this, _assoc as ClientAssociationParameters, pcid, msg);
-            }
-            catch (Exception e)
-            {
-                OnUserException(e, "Unexpected exception on OnReceiveRequestMessage");
-            }
-        }
+		protected override void OnReceiveReleaseResponse()
+		{
+			try
+			{
+				_handler.OnReceiveReleaseResponse(this, _assoc as ClientAssociationParameters);
+			}
+			catch (Exception e)
+			{
+				OnUserException(e, "Unexpected exception on OnReceiveReleaseResponse");
+			}
+			_closedOnError = false;
+			CloseNetwork(System.Threading.Timeout.Infinite);
+		}
 
-        protected override void OnReceiveDimseResponse(byte pcid, DicomMessage msg)
-        {
-            try
-            {
-                _handler.OnReceiveResponseMessage(this, _assoc as ClientAssociationParameters, pcid, msg);
-            }
-            catch (Exception e)
-            {
-                OnUserException(e, "Unexpected exception on OnReceiveResponseMessage");
-            }
-        }
+		protected override void OnReceiveDimseRequest(byte pcid, DicomMessage msg)
+		{
+			try
+			{
+				_handler.OnReceiveRequestMessage(this, _assoc as ClientAssociationParameters, pcid, msg);
+			}
+			catch (Exception e)
+			{
+				OnUserException(e, "Unexpected exception on OnReceiveRequestMessage");
+			}
+		}
 
-        #endregion
+		protected override void OnReceiveDimseResponse(byte pcid, DicomMessage msg)
+		{
+			try
+			{
+				_handler.OnReceiveResponseMessage(this, _assoc as ClientAssociationParameters, pcid, msg);
+			}
+			catch (Exception e)
+			{
+				OnUserException(e, "Unexpected exception on OnReceiveResponseMessage");
+			}
+		}
 
-        #region IDisposable Members
-        ///
-        /// Releases unmanaged resources and performs other cleanup operations before the
-        /// object is reclaimed by garbage collection.
-        ///
-        ~DicomClient()
-        {
-            Dispose(false);
-        }
+		#endregion
 
-        ///
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        ///
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+		#region IDisposable Members
 
-        ///
-        /// Disposes the specified disposing.
-        ///
-        /// if set to true [disposing].
-        private void Dispose(bool disposing)
-        {
-            if (_disposed)
-                return;
-            if (disposing)
-            {
-                // Dispose of other Managed objects,
+		public void Dispose()
+		{
+			if (_disposed)
+				return;
+
+			_disposed = true;
+			try
+			{
 				// 2500 millisecond timeout
-                Abort(2500);
-            }
-            // FREE UNMANAGED RESOURCES
-            _disposed = true;
-        }
-        #endregion
-    }
+				Abort(2500);
+			}
+			catch (Exception ex)
+			{
+				Platform.Log(LogLevel.Debug, ex, "Exception thrown during dispose");
+			}
+		}
+
+		#endregion
+	}
 }
