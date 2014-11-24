@@ -4,11 +4,17 @@ namespace ClearCanvas.Dicom.Iod
 {
 	public class StorageInfo
 	{
-		public StorageInfo(long fileSize, TransferSyntax transferSyntax)
+		public StorageInfo(string sourceFile, long fileSize, TransferSyntax transferSyntax)
 		{
+			SourceFile = sourceFile;
 			FileSize = fileSize;
 			TransferSyntax = transferSyntax;
 		}
+
+		/// <summary>
+		/// Gets the name of the source file (or blob key).
+		/// </summary>
+		public string SourceFile { get; private set; }
 
 		/// <summary>
 		/// Gets the size in bytes of the associated DICOM file.
