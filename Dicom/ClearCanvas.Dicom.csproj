@@ -298,6 +298,7 @@
     <Compile Include="IO\Tests\LegacyByteBuffer.cs" />
     <Compile Include="IO\Tests\TestByteBuffer.cs" />
     <Compile Include="IReadOnlyDicomAttribute.cs" />
+    <Compile Include="IReadOnlyDicomSequenceItem.cs" />
     <Compile Include="Network\SR.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
