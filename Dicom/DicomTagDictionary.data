@@ -162,7 +162,7 @@
 528738;Calculated Frame List;CalculatedFrameList;UL;False;3;4294967295;False
 528739;Time Range;TimeRange;FD;False;2;2;False
 528740;Frame Extraction Sequence;FrameExtractionSequence;SQ;False;1;1;False
-528743;Multi-Frame Source SOP Instance UID ;MultiFrameSourceSopInstanceUid;UI;False;1;1;False
+528743;Multi-Frame Source SOP Instance UID;MultiFrameSourceSopInstanceUid;UI;False;1;1;False
 528789;Transaction UID;TransactionUid;UI;False;1;1;False
 528791;Failure Reason;FailureReason;US;False;1;1;False
 528792;Failed SOP Sequence;FailedSopSequence;SQ;False;1;1;False
@@ -322,7 +322,7 @@
 1318918;Evaluator Name;EvaluatorName;PN;False;1;1;False
 1318920;Evaluation Attempt;EvaluationAttempt;IS;False;1;1;False
 1318930;Indication Sequence;IndicationSequence;SQ;False;1;1;False
-1318932;Indication Number ;IndicationNumber;IS;False;1;1;False
+1318932;Indication Number;IndicationNumber;IS;False;1;1;False
 1318934;Indication Label;IndicationLabel;SH;False;1;1;False
 1318936;Indication Description;IndicationDescription;ST;False;1;1;False
 1318938;Indication Type;IndicationType;CS;False;1;4294967295;False
@@ -330,7 +330,7 @@
 1318942;Indication ROI Sequence;IndicationRoiSequence;SQ;False;1;1;False
 1318960;Indication Physical Property Sequence;IndicationPhysicalPropertySequence;SQ;False;1;1;False
 1318962;Property Label;PropertyLabel;SH;False;1;1;False
-1319426;Coordinate System Number of Axes ;CoordinateSystemNumberOfAxes;IS;False;1;1;False
+1319426;Coordinate System Number of Axes;CoordinateSystemNumberOfAxes;IS;False;1;1;False
 1319428;Coordinate System Axes Sequence;CoordinateSystemAxesSequence;SQ;False;1;1;False
 1319430;Coordinate System Axis Description;CoordinateSystemAxisDescription;ST;False;1;1;False
 1319432;Coordinate System Data Set Mapping;CoordinateSystemDataSetMapping;CS;False;1;1;False
@@ -451,7 +451,7 @@
 1572920;Intervention Status;InterventionStatus;CS;False;1;1;False
 1572921;Therapy Description;TherapyDescriptionRetired;CS;False;1;1;True
 1572922;Intervention Description;InterventionDescription;ST;False;1;1;False
-1572928;Cine Rate ;CineRate;IS;False;1;1;False
+1572928;Cine Rate;CineRate;IS;False;1;1;False
 1572930;Initial Cine Run State;InitialCineRunState;CS;False;1;1;False
 1572944;Slice Thickness;SliceThickness;DS;False;1;1;False
 1572960;KVP;Kvp;DS;False;1;1;False
@@ -500,8 +500,8 @@
 1577008;Protocol Name;ProtocolName;LO;False;1;1;False
 1577024;Contrast/Bolus Route;ContrastBolusRoute;LO;False;1;1;False
 1577025;Contrast/Bolus Volume;ContrastBolusVolume;DS;False;1;1;False
-1577026;Contrast/Bolus Start Time ;ContrastBolusStartTime;TM;False;1;1;False
-1577027;Contrast/Bolus Stop Time ;ContrastBolusStopTime;TM;False;1;1;False
+1577026;Contrast/Bolus Start Time;ContrastBolusStartTime;TM;False;1;1;False
+1577027;Contrast/Bolus Stop Time;ContrastBolusStopTime;TM;False;1;1;False
 1577028;Contrast/Bolus Total Dose;ContrastBolusTotalDose;DS;False;1;1;False
 1577029;Syringe Counts;SyringeCounts;IS;False;1;1;False
 1577030;Contrast Flow Rate;ContrastFlowRate;DS;False;1;4294967295;False
@@ -567,7 +567,7 @@
 1577289;Field of View Dimension(s);FieldOfViewDimensions;IS;False;1;2;False
 1577296;Exposure Time;ExposureTime;IS;False;1;1;False
 1577297;X-Ray Tube Current;XRayTubeCurrent;IS;False;1;1;False
-1577298;Exposure ;Exposure;IS;False;1;1;False
+1577298;Exposure;Exposure;IS;False;1;1;False
 1577299;Exposure in µAs;ExposureInUas;IS;False;1;1;False
 1577300;Average Pulse Width;AveragePulseWidth;DS;False;1;1;False
 1577301;Radiation Setting;RadiationSetting;CS;False;1;1;False
@@ -580,7 +580,7 @@
 1577316;Imager Pixel Spacing;ImagerPixelSpacing;DS;False;2;2;False
 1577318;Grid;Grid;CS;False;1;4294967295;False
 1577328;Generator Power;GeneratorPower;IS;False;1;1;False
-1577344;Collimator/grid Name ;CollimatorGridName;SH;False;1;1;False
+1577344;Collimator/grid Name;CollimatorGridName;SH;False;1;1;False
 1577345;Collimator Type;CollimatorType;CS;False;1;1;False
 1577346;Focal Distance;FocalDistance;IS;False;1;2;False
 1577347;X Focus Center;XFocusCenter;DS;False;1;2;False
@@ -609,7 +609,7 @@
 1577749;Variable Flip Angle Flag;VariableFlipAngleFlag;CS;False;1;1;False
 1577750;SAR;Sar;DS;False;1;1;False
 1577752;dB/dt;DbDt;DS;False;1;1;False
-1577984;Acquisition Device Processing Description ;AcquisitionDeviceProcessingDescription;LO;False;1;1;False
+1577984;Acquisition Device Processing Description;AcquisitionDeviceProcessingDescription;LO;False;1;1;False
 1577985;Acquisition Device Processing Code;AcquisitionDeviceProcessingCode;LO;False;1;1;False
 1577986;Cassette Orientation;CassetteOrientation;CS;False;1;1;False
 1577987;Cassette Size;CassetteSize;CS;False;1;1;False
@@ -670,7 +670,7 @@
 1585410;IVUS Gated Rate;IvusGatedRate;DS;False;1;1;False
 1585411;IVUS Pullback Start Frame Number;IvusPullbackStartFrameNumber;IS;False;1;1;False
 1585412;IVUS Pullback Stop Frame Number;IvusPullbackStopFrameNumber;IS;False;1;1;False
-1585413;Lesion Number ;LesionNumber;IS;False;1;4294967295;False
+1585413;Lesion Number;LesionNumber;IS;False;1;4294967295;False
 1589248;Acquisition Comments;AcquisitionCommentsRetired;LT;False;1;1;True
 1593344;Output Power;OutputPower;SH;False;1;4294967295;False
 1593360;Transducer Data;TransducerData;LO;False;1;4294967295;False
@@ -738,21 +738,21 @@
 1597528;Table of Pixel Values;TableOfPixelValues;UL;False;1;4294967295;False
 1597530;Table of Parameter Values;TableOfParameterValues;FL;False;1;4294967295;False
 1597536;R Wave Time Vector;RWaveTimeVector;FL;False;1;4294967295;False
-1601536;Detector Conditions Nominal Flag ;DetectorConditionsNominalFlag;CS;False;1;1;False
+1601536;Detector Conditions Nominal Flag;DetectorConditionsNominalFlag;CS;False;1;1;False
 1601537;Detector Temperature;DetectorTemperature;DS;False;1;1;False
 1601540;Detector Type;DetectorType;CS;False;1;1;False
 1601541;Detector Configuration;DetectorConfiguration;CS;False;1;1;False
 1601542;Detector Description;DetectorDescription;LT;False;1;1;False
 1601544;Detector Mode;DetectorMode;LT;False;1;1;False
 1601546;Detector ID;DetectorId;SH;False;1;1;False
-1601548;Date of Last Detector Calibration ;DateOfLastDetectorCalibration;DA;False;1;1;False
+1601548;Date of Last Detector Calibration;DateOfLastDetectorCalibration;DA;False;1;1;False
 1601550;Time of Last Detector Calibration;TimeOfLastDetectorCalibration;TM;False;1;1;False
-1601552;Exposures on Detector Since Last Calibration ;ExposuresOnDetectorSinceLastCalibration;IS;False;1;1;False
-1601553;Exposures on Detector Since Manufactured ;ExposuresOnDetectorSinceManufactured;IS;False;1;1;False
-1601554;Detector Time Since Last Exposure ;DetectorTimeSinceLastExposure;DS;False;1;1;False
-1601556;Detector Active Time ;DetectorActiveTime;DS;False;1;1;False
+1601552;Exposures on Detector Since Last Calibration;ExposuresOnDetectorSinceLastCalibration;IS;False;1;1;False
+1601553;Exposures on Detector Since Manufactured;ExposuresOnDetectorSinceManufactured;IS;False;1;1;False
+1601554;Detector Time Since Last Exposure;DetectorTimeSinceLastExposure;DS;False;1;1;False
+1601556;Detector Active Time;DetectorActiveTime;DS;False;1;1;False
 1601558;Detector Activation Offset From Exposure;DetectorActivationOffsetFromExposure;DS;False;1;1;False
-1601562;Detector Binning ;DetectorBinning;DS;False;2;2;False
+1601562;Detector Binning;DetectorBinning;DS;False;2;2;False
 1601568;Detector Element Physical Size;DetectorElementPhysicalSize;DS;False;2;2;False
 1601570;Detector Element Spacing;DetectorElementSpacing;DS;False;2;2;False
 1601572;Detector Active Shape;DetectorActiveShape;CS;False;1;1;False
@@ -815,10 +815,10 @@
 1609783;Cardiac Synchronization Technique;CardiacSynchronizationTechnique;CS;False;1;1;False
 1609793;Receive Coil Manufacturer Name;ReceiveCoilManufacturerName;LO;False;1;1;False
 1609794;MR Receive Coil Sequence;MrReceiveCoilSequence;SQ;False;1;1;False
-1609795;Receive Coil Type ;ReceiveCoilType;CS;False;1;1;False
-1609796;Quadrature Receive Coil ;QuadratureReceiveCoil;CS;False;1;1;False
+1609795;Receive Coil Type;ReceiveCoilType;CS;False;1;1;False
+1609796;Quadrature Receive Coil;QuadratureReceiveCoil;CS;False;1;1;False
 1609797;Multi-Coil Definition Sequence;MultiCoilDefinitionSequence;SQ;False;1;1;False
-1609798;Multi-Coil Configuration ;MultiCoilConfiguration;LO;False;1;1;False
+1609798;Multi-Coil Configuration;MultiCoilConfiguration;LO;False;1;1;False
 1609799;Multi-Coil Element Name;MultiCoilElementName;SH;False;1;1;False
 1609800;Multi-Coil Element Used;MultiCoilElementUsed;CS;False;1;1;False
 1609801;MR Transmit Coil Sequence;MrTransmitCoilSequence;SQ;False;1;1;False
@@ -963,7 +963,7 @@
 1610521;Reconstruction Angle;ReconstructionAngle;FD;False;1;1;False
 1610528;Image Filter;ImageFilter;SH;False;1;1;False
 1610529;CT Exposure Sequence;CtExposureSequence;SQ;False;1;1;False
-1610530;Reconstruction Pixel Spacing ;ReconstructionPixelSpacing;FD;False;2;2;False
+1610530;Reconstruction Pixel Spacing;ReconstructionPixelSpacing;FD;False;2;2;False
 1610531;Exposure Modulation Type;ExposureModulationType;CS;False;1;1;False
 1610532;Estimated Dose Saving;EstimatedDoseSaving;FD;False;1;1;False
 1610533;CT X-Ray Details Sequence;CtXRayDetailsSequence;SQ;False;1;1;False
@@ -973,7 +973,7 @@
 1610537;CT Image Frame Type Sequence;CtImageFrameTypeSequence;SQ;False;1;1;False
 1610544;X-Ray Tube Current in mA;XRayTubeCurrentInMa;FD;False;1;1;False
 1610546;Exposure in mAs;ExposureInMas;FD;False;1;1;False
-1610547;Constant Volume Flag ;ConstantVolumeFlag;CS;False;1;1;False
+1610547;Constant Volume Flag;ConstantVolumeFlag;CS;False;1;1;False
 1610548;Fluoroscopy Flag;FluoroscopyFlag;CS;False;1;1;False
 1610549;Distance Source to Data Collection Center;DistanceSourceToDataCollectionCenter;FD;False;1;1;False
 1610551;Contrast/Bolus Agent Number;ContrastBolusAgentNumber;US;False;1;1;False
@@ -1096,18 +1096,18 @@
 1611601;PET Frame Type Sequence;PetFrameTypeSequence;SQ;False;1;1;False
 1611605;Time of Flight Information Used;TimeOfFlightInformationUsed;CS;False;1;1;False
 1611606;Reconstruction Type;ReconstructionType;CS;False;1;1;False
-1611608;Decay Corrected ;DecayCorrected;CS;False;1;1;False
-1611609;Attenuation Corrected ;AttenuationCorrected;CS;False;1;1;False
-1611616;Scatter Corrected ;ScatterCorrected;CS;False;1;1;False
-1611617;Dead Time Corrected ;DeadTimeCorrected;CS;False;1;1;False
-1611618;Gantry Motion Corrected ;GantryMotionCorrected;CS;False;1;1;False
-1611619;Patient Motion Corrected ;PatientMotionCorrected;CS;False;1;1;False
+1611608;Decay Corrected;DecayCorrected;CS;False;1;1;False
+1611609;Attenuation Corrected;AttenuationCorrected;CS;False;1;1;False
+1611616;Scatter Corrected;ScatterCorrected;CS;False;1;1;False
+1611617;Dead Time Corrected;DeadTimeCorrected;CS;False;1;1;False
+1611618;Gantry Motion Corrected;GantryMotionCorrected;CS;False;1;1;False
+1611619;Patient Motion Corrected;PatientMotionCorrected;CS;False;1;1;False
 1611620;Count Loss Normalization Corrected;CountLossNormalizationCorrected;CS;False;1;1;False
 1611621;Randoms Corrected;RandomsCorrected;CS;False;1;1;False
 1611622;Non-uniform Radial Sampling Corrected;NonUniformRadialSamplingCorrected;CS;False;1;1;False
 1611623;Sensitivity Calibrated;SensitivityCalibrated;CS;False;1;1;False
 1611624;Detector Normalization Correction;DetectorNormalizationCorrection;CS;False;1;1;False
-1611625;Iterative Reconstruction Method ;IterativeReconstructionMethod;CS;False;1;1;False
+1611625;Iterative Reconstruction Method;IterativeReconstructionMethod;CS;False;1;1;False
 1611632;Attenuation Correction Temporal Relationship;AttenuationCorrectionTemporalRelationship;CS;False;1;1;False
 1611633;Patient Physiological State Sequence;PatientPhysiologicalStateSequence;SQ;False;1;1;False
 1611634;Patient Physiological State Code Sequence;PatientPhysiologicalStateCodeSequence;SQ;False;1;1;False
@@ -1296,14 +1296,14 @@
 2232327;Ophthalmic Axial Measurements Right Eye Sequence;OphthalmicAxialMeasurementsRightEyeSequence;SQ;False;1;1;False
 2232328;Ophthalmic Axial Measurements Left Eye Sequence;OphthalmicAxialMeasurementsLeftEyeSequence;SQ;False;1;1;False
 2232336;Ophthalmic Axial Length Measurements Type;OphthalmicAxialLengthMeasurementsType;CS;False;1;1;False
-2232345;Ophthalmic Axial Length ;OphthalmicAxialLength;FL;False;1;1;False
+2232345;Ophthalmic Axial Length;OphthalmicAxialLength;FL;False;1;1;False
 2232356;Lens Status Code Sequence;LensStatusCodeSequence;SQ;False;1;1;False
 2232357;Vitreous Status Code Sequence;VitreousStatusCodeSequence;SQ;False;1;1;False
 2232360;IOL Formula Code Sequence;IolFormulaCodeSequence;SQ;False;1;1;False
 2232361;IOL Formula Detail;IolFormulaDetail;LO;False;1;1;False
 2232371;Keratometer Index;KeratometerIndex;FL;False;1;1;False
 2232373;Source of Ophthalmic Axial Length Code Sequence;SourceOfOphthalmicAxialLengthCodeSequence;SQ;False;1;1;False
-2232375;Target Refraction ;TargetRefraction;FL;False;1;1;False
+2232375;Target Refraction;TargetRefraction;FL;False;1;1;False
 2232377;Refractive Procedure Occurred;RefractiveProcedureOccurred;CS;False;1;1;False
 2232384;Refractive Surgery Type Code Sequence;RefractiveSurgeryTypeCodeSequence;SQ;False;1;1;False
 2232388;Ophthalmic Ultrasound Axial Measurements Type Code Sequence;OphthalmicUltrasoundAxialMeasurementsTypeCodeSequence;SQ;False;1;1;False
@@ -1317,7 +1317,7 @@
 2232466;Lens Constant Sequence;LensConstantSequence;SQ;False;1;1;False
 2232467;IOL Manufacturer;IolManufacturer;LO;False;1;1;False
 2232468;Lens Constant Description;LensConstantDescription;LO;False;1;1;False
-2232470;Keratometry Measurement Type Code Sequence ;KeratometryMeasurementTypeCodeSequence;SQ;False;1;1;False
+2232470;Keratometry Measurement Type Code Sequence;KeratometryMeasurementTypeCodeSequence;SQ;False;1;1;False
 2232576;Referenced Ophthalmic Axial Measurements Sequence;ReferencedOphthalmicAxialMeasurementsSequence;SQ;False;1;1;False
 2232577;Ophthalmic Axial Length Measurements Segment Name Code Sequence;OphthalmicAxialLengthMeasurementsSegmentNameCodeSequence;SQ;False;1;1;False
 2232579;Refractive Error Before Refractive Surgery Code Sequence;RefractiveErrorBeforeRefractiveSurgeryCodeSequence;SQ;False;1;1;False
@@ -1349,14 +1349,14 @@
 2233088;Intraocular Lens Calculations Right Eye Sequence;IntraocularLensCalculationsRightEyeSequence;SQ;False;1;1;False
 2233104;Intraocular Lens Calculations Left Eye Sequence;IntraocularLensCalculationsLeftEyeSequence;SQ;False;1;1;False
 2233136;Referenced Ophthalmic Axial Length Measurement QC Image Sequence;ReferencedOphthalmicAxialLengthMeasurementQcImageSequence;SQ;False;1;1;False
-2359312;Visual Field Horizontal Extent ;VisualFieldHorizontalExtent;FL;False;1;1;False
+2359312;Visual Field Horizontal Extent;VisualFieldHorizontalExtent;FL;False;1;1;False
 2359313;Visual Field Vertical Extent;VisualFieldVerticalExtent;FL;False;1;1;False
 2359314;Visual Field Shape;VisualFieldShape;CS;False;1;1;False
 2359318;Screening Test Mode Code Sequence;ScreeningTestModeCodeSequence;SQ;False;1;1;False
 2359320;Maximum Stimulus Luminance;MaximumStimulusLuminance;FL;False;1;1;False
-2359328;Background Luminance ;BackgroundLuminance;FL;False;1;1;False
+2359328;Background Luminance;BackgroundLuminance;FL;False;1;1;False
 2359329;Stimulus Color Code Sequence;StimulusColorCodeSequence;SQ;False;1;1;False
-2359332;Background Illumination Color Code Sequence ;BackgroundIlluminationColorCodeSequence;SQ;False;1;1;False
+2359332;Background Illumination Color Code Sequence;BackgroundIlluminationColorCodeSequence;SQ;False;1;1;False
 2359333;Stimulus Area;StimulusArea;FL;False;1;1;False
 2359336;Stimulus Presentation Time;StimulusPresentationTime;FL;False;1;1;False
 2359346;Fixation Sequence;FixationSequence;SQ;False;1;1;False
@@ -1392,7 +1392,7 @@
 2359398;Global Deviation From Normal;GlobalDeviationFromNormal;FL;False;1;1;False
 2359399;Generalized Defect Sensitivity Deviation Algorithm Sequence;GeneralizedDefectSensitivityDeviationAlgorithmSequence;SQ;False;1;1;False
 2359400;Localized Deviation from Normal;LocalizedDeviationFromNormal;FL;False;1;1;False
-2359401;Patient Reliability Indicator  ;PatientReliabilityIndicator;LO;False;1;1;False
+2359401;Patient Reliability Indicator ;PatientReliabilityIndicator;LO;False;1;1;False
 2359408;Visual Field Mean Sensitivity;VisualFieldMeanSensitivity;FL;False;1;1;False
 2359409;Global Deviation Probability;GlobalDeviationProbability;FL;False;1;1;False
 2359410;Local Deviation Probability Normals Flag;LocalDeviationProbabilityNormalsFlag;CS;False;1;1;False
@@ -1421,15 +1421,15 @@
 2359447;Visual Field Test Point Normals Sequence;VisualFieldTestPointNormalsSequence;SQ;False;1;1;False
 2359448;Quantified Defect;QuantifiedDefect;FL;False;1;1;False
 2359552;Age Corrected Sensitivity Deviation Probability Value;AgeCorrectedSensitivityDeviationProbabilityValue;FL;False;1;1;False
-2359554;Generalized Defect Corrected Sensitivity Deviation Flag ;GeneralizedDefectCorrectedSensitivityDeviationFlag;CS;False;1;1;False
-2359555;Generalized Defect Corrected Sensitivity Deviation Value ;GeneralizedDefectCorrectedSensitivityDeviationValue;FL;False;1;1;False
-2359556;Generalized Defect Corrected Sensitivity Deviation Probability Value ;GeneralizedDefectCorrectedSensitivityDeviationProbabilityValue;FL;False;1;1;False
+2359554;Generalized Defect Corrected Sensitivity Deviation Flag;GeneralizedDefectCorrectedSensitivityDeviationFlag;CS;False;1;1;False
+2359555;Generalized Defect Corrected Sensitivity Deviation Value;GeneralizedDefectCorrectedSensitivityDeviationValue;FL;False;1;1;False
+2359556;Generalized Defect Corrected Sensitivity Deviation Probability Value;GeneralizedDefectCorrectedSensitivityDeviationProbabilityValue;FL;False;1;1;False
 2359557;Minimum Sensitivity Value;MinimumSensitivityValue;FL;False;1;1;False
 2359558;Blind Spot Localized;BlindSpotLocalized;CS;False;1;1;False
 2359559;Blind Spot X-Coordinate;BlindSpotXCoordinate;FL;False;1;1;False
-2359560;Blind Spot Y-Coordinate ;BlindSpotYCoordinate;FL;False;1;1;False
+2359560;Blind Spot Y-Coordinate;BlindSpotYCoordinate;FL;False;1;1;False
 2359568;Visual Acuity Measurement Sequence;VisualAcuityMeasurementSequence;SQ;False;1;1;False
-2359570;Refractive Parameters Used on Patient Sequence ;RefractiveParametersUsedOnPatientSequence;SQ;False;1;1;False
+2359570;Refractive Parameters Used on Patient Sequence;RefractiveParametersUsedOnPatientSequence;SQ;False;1;1;False
 2359571;Measurement Laterality;MeasurementLaterality;CS;False;1;1;False
 2359572;Ophthalmic Patient Clinical Information Left Eye Sequence;OphthalmicPatientClinicalInformationLeftEyeSequence;SQ;False;1;1;False
 2359573;Ophthalmic Patient Clinical Information Right Eye Sequence;OphthalmicPatientClinicalInformationRightEyeSequence;SQ;False;1;1;False
@@ -1588,7 +1588,7 @@
 2637824;Image Presentation Comments;ImagePresentationCommentsRetired;LT;False;1;1;True
 2641920;Bi-Plane Acquisition Sequence;BiPlaneAcquisitionSequenceRetired;SQ;False;1;1;True
 2646032;Representative Frame Number;RepresentativeFrameNumber;US;False;1;1;False
-2646048;Frame Numbers of Interest (FOI) ;FrameNumbersOfInterestFoi;US;False;1;4294967295;False
+2646048;Frame Numbers of Interest (FOI);FrameNumbersOfInterestFoi;US;False;1;4294967295;False
 2646050;Frame of Interest Description;FrameOfInterestDescription;LO;False;1;4294967295;False
 2646051;Frame of Interest Type;FrameOfInterestType;CS;False;1;4294967295;False
 2646064;Mask Pointer(s);MaskPointersRetired;US;False;1;4294967295;True
@@ -1686,22 +1686,22 @@
 3671298;Patient Clinical Trial Participation Sequence;PatientClinicalTrialParticipationSequence;SQ;False;1;1;False
 3686400;Visit Comments;VisitComments;LT;False;1;1;False
 3801092;Waveform Originality;WaveformOriginality;CS;False;1;1;False
-3801093;Number of Waveform Channels ;NumberOfWaveformChannels;US;False;1;1;False
-3801104;Number of Waveform Samples ;NumberOfWaveformSamples;UL;False;1;1;False
-3801114;Sampling Frequency ;SamplingFrequency;DS;False;1;1;False
-3801120;Multiplex Group Label ;MultiplexGroupLabel;SH;False;1;1;False
+3801093;Number of Waveform Channels;NumberOfWaveformChannels;US;False;1;1;False
+3801104;Number of Waveform Samples;NumberOfWaveformSamples;UL;False;1;1;False
+3801114;Sampling Frequency;SamplingFrequency;DS;False;1;1;False
+3801120;Multiplex Group Label;MultiplexGroupLabel;SH;False;1;1;False
 3801600;Channel Definition Sequence;ChannelDefinitionSequence;SQ;False;1;1;False
-3801602;Waveform Channel Number ;WaveformChannelNumber;IS;False;1;1;False
+3801602;Waveform Channel Number;WaveformChannelNumber;IS;False;1;1;False
 3801603;Channel Label;ChannelLabel;SH;False;1;1;False
 3801605;Channel Status;ChannelStatus;CS;False;1;4294967295;False
 3801608;Channel Source Sequence;ChannelSourceSequence;SQ;False;1;1;False
 3801609;Channel Source Modifiers Sequence;ChannelSourceModifiersSequence;SQ;False;1;1;False
 3801610;Source Waveform Sequence;SourceWaveformSequence;SQ;False;1;1;False
 3801612;Channel Derivation Description;ChannelDerivationDescription;LO;False;1;1;False
-3801616;Channel Sensitivity ;ChannelSensitivity;DS;False;1;1;False
+3801616;Channel Sensitivity;ChannelSensitivity;DS;False;1;1;False
 3801617;Channel Sensitivity Units Sequence;ChannelSensitivityUnitsSequence;SQ;False;1;1;False
 3801618;Channel Sensitivity Correction Factor;ChannelSensitivityCorrectionFactor;DS;False;1;1;False
-3801619;Channel Baseline ;ChannelBaseline;DS;False;1;1;False
+3801619;Channel Baseline;ChannelBaseline;DS;False;1;1;False
 3801620;Channel Time Skew;ChannelTimeSkew;DS;False;1;1;False
 3801621;Channel Sample Skew;ChannelSampleSkew;DS;False;1;1;False
 3801624;Channel Offset;ChannelOffset;DS;False;1;1;False
@@ -1748,7 +1748,7 @@
 4194361;Assigning Jurisdiction Code Sequence;AssigningJurisdictionCodeSequence;SQ;False;1;1;False
 4194362;Assigning Agency or Department Code Sequence;AssigningAgencyOrDepartmentCodeSequence;SQ;False;1;1;False
 4194560;Scheduled Procedure Step Sequence;ScheduledProcedureStepSequence;SQ;False;1;1;False
-4194848;Referenced Non-Image Composite SOP Instance Sequence ;ReferencedNonImageCompositeSopInstanceSequence;SQ;False;1;1;False
+4194848;Referenced Non-Image Composite SOP Instance Sequence;ReferencedNonImageCompositeSopInstanceSequence;SQ;False;1;1;False
 4194881;Performed Station AE Title;PerformedStationAeTitle;AE;False;1;1;False
 4194882;Performed Station Name;PerformedStationName;SH;False;1;1;False
 4194883;Performed Location;PerformedLocation;SH;False;1;1;False
@@ -1808,8 +1808,8 @@
 4195680;Specimen Description Sequence;SpecimenDescriptionSequence;SQ;False;1;1;False
 4195682;Issuer of the Specimen Identifier Sequence;IssuerOfTheSpecimenIdentifierSequence;SQ;False;1;1;False
 4195738;Specimen Type Code Sequence;SpecimenTypeCodeSequence;SQ;False;1;1;False
-4195840;Specimen Short Description ;SpecimenShortDescription;LO;False;1;1;False
-4195842;Specimen Detailed Description ;SpecimenDetailedDescription;UT;False;1;1;False
+4195840;Specimen Short Description;SpecimenShortDescription;LO;False;1;1;False
+4195842;Specimen Detailed Description;SpecimenDetailedDescription;UT;False;1;1;False
 4195856;Specimen Preparation Sequence;SpecimenPreparationSequence;SQ;False;1;1;False
 4195858;Specimen Preparation Step Content Item Sequence;SpecimenPreparationStepContentItemSequence;SQ;False;1;1;False
 4195872;Specimen Localization Content Item Sequence;SpecimenLocalizationContentItemSequence;SQ;False;1;1;False
@@ -1824,7 +1824,7 @@
 4196856;Vital Stain Code Sequence (Trial);VitalStainCodeSequenceTrialRetired;SQ;False;1;1;True
 4198401;Requested Procedure ID;RequestedProcedureId;SH;False;1;1;False
 4198402;Reason for the Requested Procedure;ReasonForTheRequestedProcedure;LO;False;1;1;False
-4198403;Requested Procedure Priority ;RequestedProcedurePriority;SH;False;1;1;False
+4198403;Requested Procedure Priority;RequestedProcedurePriority;SH;False;1;1;False
 4198404;Patient Transport Arrangements;PatientTransportArrangements;LO;False;1;1;False
 4198405;Requested Procedure Location;RequestedProcedureLocation;LO;False;1;1;False
 4198406;Placer Order Number / Procedure;PlacerOrderNumberProcedureRetired;SH;False;1;1;True
@@ -1890,7 +1890,7 @@
 4210770;Procedure Step Cancellation DateTime;ProcedureStepCancellationDatetime;DT;False;1;1;False
 4227842;Entrance Dose in mGy;EntranceDoseInMgy;DS;False;1;1;False
 4231316;Referenced Image Real World Value Mapping Sequence;ReferencedImageRealWorldValueMappingSequence;SQ;False;1;1;False
-4231318;Real World Value Mapping Sequence ;RealWorldValueMappingSequence;SQ;False;1;1;False
+4231318;Real World Value Mapping Sequence;RealWorldValueMappingSequence;SQ;False;1;1;False
 4231320;Pixel Value Mapping Code Sequence;PixelValueMappingCodeSequence;SQ;False;1;1;False
 4231696;LUT Label;LutLabel;SH;False;1;1;False
 4231697;Real World Value Last Value Mapped;RealWorldValueLastValueMapped;US;True;1;1;False
@@ -1947,7 +1947,7 @@
 4235570;Referenced Sample Positions;ReferencedSamplePositions;UL;False;1;4294967295;False
 4235574;Referenced Frame Numbers;ReferencedFrameNumbers;US;False;1;4294967295;False
 4235576;Referenced Time Offsets;ReferencedTimeOffsets;DS;False;1;4294967295;False
-4235578;Referenced DateTime ;ReferencedDatetime;DT;False;1;4294967295;False
+4235578;Referenced DateTime;ReferencedDatetime;DT;False;1;4294967295;False
 4235616;Text Value;TextValue;UT;False;1;1;False
 4235623;Observation Category Code Sequence (Trial);ObservationCategoryCodeSequenceTrialRetired;SQ;False;1;1;True
 4235624;Concept Code Sequence;ConceptCodeSequence;SQ;False;1;1;False
@@ -1961,7 +1961,7 @@
 4235666;Observation Date (Trial);ObservationDateTrialRetired;DA;False;1;1;True
 4235667;Observation Time (Trial);ObservationTimeTrialRetired;TM;False;1;1;True
 4235668;Measurement Automation (Trial);MeasurementAutomationTrialRetired;CS;False;1;1;True
-4235669;Modifier Code Sequence ;ModifierCodeSequence;SQ;False;1;1;False
+4235669;Modifier Code Sequence;ModifierCodeSequence;SQ;False;1;1;False
 4235812;Identification Description (Trial);IdentificationDescriptionTrialRetired;ST;False;1;1;True
 4235920;Coordinates Set Geometric Type (Trial);CoordinatesSetGeometricTypeTrialRetired;CS;False;1;1;True
 4235926;Algorithm Code Sequence (Trial);AlgorithmCodeSequenceTrialRetired;SQ;False;1;1;True
@@ -2011,11 +2011,11 @@
 4250380;Template Extension Organization UID;TemplateExtensionOrganizationUidRetired;UI;False;1;1;True
 4250381;Template Extension Creator UID;TemplateExtensionCreatorUidRetired;UI;False;1;1;True
 4250483;Referenced Content Item Identifier;ReferencedContentItemIdentifier;UL;False;1;4294967295;False
-4251649;HL7 Instance Identifier ;Hl7InstanceIdentifier;ST;False;1;1;False
+4251649;HL7 Instance Identifier;Hl7InstanceIdentifier;ST;False;1;1;False
 4251652;HL7 Document Effective Time;Hl7DocumentEffectiveTime;DT;False;1;1;False
 4251654;HL7 Document Type Code Sequence;Hl7DocumentTypeCodeSequence;SQ;False;1;1;False
 4251656;Document Class Code Sequence;DocumentClassCodeSequence;SQ;False;1;1;False
-4251664;Retrieve URI ;RetrieveUri;UT;False;1;1;False
+4251664;Retrieve URI;RetrieveUri;UT;False;1;1;False
 4251665;Retrieve Location UID;RetrieveLocationUid;UI;False;1;1;False
 4251680;Type of Instances;TypeOfInstances;CS;False;1;1;False
 4251681;DICOM Retrieval Sequence;DicomRetrievalSequence;SQ;False;1;1;False
@@ -2032,7 +2032,7 @@
 4456449;Product Package Identifier;ProductPackageIdentifier;ST;False;1;1;False
 4456450;Substance Administration Approval;SubstanceAdministrationApproval;CS;False;1;1;False
 4456451;Approval Status Further Description;ApprovalStatusFurtherDescription;LT;False;1;1;False
-4456452;Approval Status DateTime ;ApprovalStatusDatetime;DT;False;1;1;False
+4456452;Approval Status DateTime;ApprovalStatusDatetime;DT;False;1;1;False
 4456455;Product Type Code Sequence;ProductTypeCodeSequence;SQ;False;1;1;False
 4456456;Product Name;ProductName;LO;False;1;4294967295;False
 4456457;Product Description;ProductDescription;LT;False;1;1;False
@@ -2139,7 +2139,7 @@
 5242909;Container Component Diameter;ContainerComponentDiameter;FD;False;1;1;False
 5242910;Container Component Description;ContainerComponentDescription;LO;False;1;1;False
 5242912;Device Description;DeviceDescription;LO;False;1;1;False
-5373953;Contrast/Bolus Ingredient Percent by Volume ;ContrastBolusIngredientPercentByVolume;FL;False;1;1;False
+5373953;Contrast/Bolus Ingredient Percent by Volume;ContrastBolusIngredientPercentByVolume;FL;False;1;1;False
 5373954;OCT Focal Distance;OctFocalDistance;FD;False;1;1;False
 5373955;Beam Spot Size;BeamSpotSize;FD;False;1;1;False
 5373956;Effective Refractive Index;EffectiveRefractiveIndex;FD;False;1;1;False
@@ -2324,8 +2324,8 @@
 6840865;Implant Template Version;ImplantTemplateVersion;LO;False;1;1;False
 6840866;Replaced Implant Template Sequence;ReplacedImplantTemplateSequence;SQ;False;1;1;False
 6840867;Implant Type;ImplantType;CS;False;1;1;False
-6840868;Derivation Implant Template Sequence ;DerivationImplantTemplateSequence;SQ;False;1;1;False
-6840869;Original Implant Template Sequence ;OriginalImplantTemplateSequence;SQ;False;1;1;False
+6840868;Derivation Implant Template Sequence;DerivationImplantTemplateSequence;SQ;False;1;1;False
+6840869;Original Implant Template Sequence;OriginalImplantTemplateSequence;SQ;False;1;1;False
 6840870;Effective DateTime;EffectiveDatetime;DT;False;1;1;False
 6840880;Implant Target Anatomy Sequence;ImplantTargetAnatomySequence;SQ;False;1;1;False
 6840928;Information From Manufacturer Sequence;InformationFromManufacturerSequence;SQ;False;1;1;False
@@ -2403,14 +2403,14 @@
 7340050;Bounding Box Text Horizontal Justification;BoundingBoxTextHorizontalJustification;CS;False;1;1;False
 7340052;Anchor Point;AnchorPoint;FL;False;2;2;False
 7340053;Anchor Point Visibility;AnchorPointVisibility;CS;False;1;1;False
-7340064;Graphic Dimensions ;GraphicDimensions;US;False;1;1;False
+7340064;Graphic Dimensions;GraphicDimensions;US;False;1;1;False
 7340065;Number of Graphic Points;NumberOfGraphicPoints;US;False;1;1;False
 7340066;Graphic Data;GraphicData;FL;False;2;4294967295;False
 7340067;Graphic Type;GraphicType;CS;False;1;1;False
 7340068;Graphic Filled;GraphicFilled;CS;False;1;1;False
 7340096;Image Rotation (Retired);ImageRotationRetired;IS;False;1;1;True
 7340097;Image Horizontal Flip;ImageHorizontalFlip;CS;False;1;1;False
-7340098;Image Rotation ;ImageRotation;US;False;1;1;False
+7340098;Image Rotation;ImageRotation;US;False;1;1;False
 7340112;Displayed Area Top Left Hand Corner (Trial);DisplayedAreaTopLeftHandCornerTrialRetired;US;False;2;2;True
 7340113;Displayed Area Bottom Right Hand Corner (Trial);DisplayedAreaBottomRightHandCornerTrialRetired;US;False;2;2;True
 7340114;Displayed Area Top Left Hand Corner;DisplayedAreaTopLeftHandCorner;SL;False;2;2;False
@@ -2557,7 +2557,7 @@
 7471632;Synchronized Scrolling Sequence;SynchronizedScrollingSequence;SQ;False;1;1;False
 7471634;Display Set Scrolling Group;DisplaySetScrollingGroup;US;False;2;4294967295;False
 7471636;Navigation Indicator Sequence;NavigationIndicatorSequence;SQ;False;1;1;False
-7471638;Navigation Display Set ;NavigationDisplaySet;US;False;1;1;False
+7471638;Navigation Display Set;NavigationDisplaySet;US;False;1;1;False
 7471640;Reference Display Sets;ReferenceDisplaySets;US;False;1;4294967295;False
 7471872;Image Boxes Sequence;ImageBoxesSequence;SQ;False;1;1;False
 7471874;Image Box Number;ImageBoxNumber;US;False;1;1;False
@@ -2601,7 +2601,7 @@
 7472914;Show Graphic Annotation Flag;ShowGraphicAnnotationFlag;CS;False;1;1;False
 7472916;Show Patient Demographics Flag;ShowPatientDemographicsFlag;CS;False;1;1;False
 7472918;Show Acquisition Techniques Flag;ShowAcquisitionTechniquesFlag;CS;False;1;1;False
-7472919;Display Set Horizontal Justification ;DisplaySetHorizontalJustification;CS;False;1;1;False
+7472919;Display Set Horizontal Justification;DisplaySetHorizontalJustification;CS;False;1;1;False
 7472920;Display Set Vertical Justification;DisplaySetVerticalJustification;CS;False;1;1;False
 7602464;Continuation Start Meterset;ContinuationStartMeterset;FD;False;1;1;False
 7602465;Continuation End Meterset;ContinuationEndMeterset;FD;False;1;1;False
@@ -2664,13 +2664,13 @@
 7733249;Implant Assembly Template Name;ImplantAssemblyTemplateName;LO;False;1;1;False
 7733251;Implant Assembly Template Issuer;ImplantAssemblyTemplateIssuer;LO;False;1;1;False
 7733254;Implant Assembly Template Version;ImplantAssemblyTemplateVersion;LO;False;1;1;False
-7733256;Replaced Implant Assembly Template Sequence ;ReplacedImplantAssemblyTemplateSequence;SQ;False;1;1;False
+7733256;Replaced Implant Assembly Template Sequence;ReplacedImplantAssemblyTemplateSequence;SQ;False;1;1;False
 7733258;Implant Assembly Template Type;ImplantAssemblyTemplateType;CS;False;1;1;False
-7733260;Original Implant Assembly Template Sequence ;OriginalImplantAssemblyTemplateSequence;SQ;False;1;1;False
-7733262;Derivation Implant Assembly Template Sequence ;DerivationImplantAssemblyTemplateSequence;SQ;False;1;1;False
+7733260;Original Implant Assembly Template Sequence;OriginalImplantAssemblyTemplateSequence;SQ;False;1;1;False
+7733262;Derivation Implant Assembly Template Sequence;DerivationImplantAssemblyTemplateSequence;SQ;False;1;1;False
 7733264;Implant Assembly Template Target Anatomy Sequence;ImplantAssemblyTemplateTargetAnatomySequence;SQ;False;1;1;False
 7733280;Procedure Type Code Sequence;ProcedureTypeCodeSequence;SQ;False;1;1;False
-7733296;Surgical Technique ;SurgicalTechnique;LO;False;1;1;False
+7733296;Surgical Technique;SurgicalTechnique;LO;False;1;1;False
 7733298;Component Types Sequence;ComponentTypesSequence;SQ;False;1;1;False
 7733300;Component Type Code Sequence;ComponentTypeCodeSequence;CS;False;1;1;False
 7733302;Exclusive Component Type;ExclusiveComponentType;CS;False;1;1;False
@@ -2683,19 +2683,19 @@
 7733392;Component 1 Referenced Mating Feature ID;Component1ReferencedMatingFeatureId;US;False;1;1;False
 7733408;Component 2 Referenced ID;Component2ReferencedId;US;False;1;1;False
 7733424;Component 2 Referenced Mating Feature Set ID;Component2ReferencedMatingFeatureSetId;US;False;1;1;False
-7733440;Component 2 Referenced Mating Feature ID ;Component2ReferencedMatingFeatureId;US;False;1;1;False
+7733440;Component 2 Referenced Mating Feature ID;Component2ReferencedMatingFeatureId;US;False;1;1;False
 7864321;Implant Template Group Name;ImplantTemplateGroupName;LO;False;1;1;False
 7864336;Implant Template Group Description;ImplantTemplateGroupDescription;ST;False;1;1;False
 7864352;Implant Template Group Issuer;ImplantTemplateGroupIssuer;LO;False;1;1;False
 7864356;Implant Template Group Version;ImplantTemplateGroupVersion;LO;False;1;1;False
-7864358;Replaced Implant Template Group Sequence ;ReplacedImplantTemplateGroupSequence;SQ;False;1;1;False
+7864358;Replaced Implant Template Group Sequence;ReplacedImplantTemplateGroupSequence;SQ;False;1;1;False
 7864360;Implant Template Group Target Anatomy Sequence;ImplantTemplateGroupTargetAnatomySequence;SQ;False;1;1;False
 7864362;Implant Template Group Members Sequence;ImplantTemplateGroupMembersSequence;SQ;False;1;1;False
 7864366;Implant Template Group Member ID;ImplantTemplateGroupMemberId;US;False;1;1;False
 7864400;3D Implant Template Group Member Matching Point;ThreeDImplantTemplateGroupMemberMatchingPoint;FD;False;3;3;False
 7864416;3D Implant Template Group Member Matching Axes;ThreeDImplantTemplateGroupMemberMatchingAxes;FD;False;9;9;False
 7864432;Implant Template Group Member Matching 2D Coordinates Sequence;ImplantTemplateGroupMemberMatching2dCoordinatesSequence;SQ;False;1;1;False
-7864464;2D Implant Template Group Member Matching Point ;TwoDImplantTemplateGroupMemberMatchingPoint;FD;False;2;2;False
+7864464;2D Implant Template Group Member Matching Point;TwoDImplantTemplateGroupMemberMatchingPoint;FD;False;2;2;False
 7864480;2D Implant Template Group Member Matching Axes;TwoDImplantTemplateGroupMemberMatchingAxes;FD;False;4;4;False
 7864496;Implant Template Group Variation Dimension Sequence;ImplantTemplateGroupVariationDimensionSequence;SQ;False;1;1;False
 7864498;Implant Template Group Variation Dimension Name;ImplantTemplateGroupVariationDimensionName;LO;False;1;1;False
@@ -2765,7 +2765,7 @@
 537919570;Printer Resolution ID;PrinterResolutionId;CS;False;1;1;False
 537919572;Default Printer Resolution ID;DefaultPrinterResolutionId;CS;False;1;1;False
 537919584;Magnification Type;MagnificationType;CS;False;1;1;False
-537919616;Smoothing Type  ;SmoothingType;CS;False;1;1;False
+537919616;Smoothing Type ;SmoothingType;CS;False;1;1;False
 537919654;Default Magnification Type;DefaultMagnificationType;CS;False;1;1;False
 537919655;Other Magnification Types Available;OtherMagnificationTypesAvailable;CS;False;1;4294967295;False
 537919656;Default Smoothing Type;DefaultSmoothingType;CS;False;1;1;False
@@ -2794,7 +2794,7 @@
 538968336;Basic Grayscale Image Sequence;BasicGrayscaleImageSequence;SQ;False;1;1;False
 538968337;Basic Color Image Sequence;BasicColorImageSequence;SQ;False;1;1;False
 538968368;Referenced Image Overlay Box Sequence;ReferencedImageOverlayBoxSequenceRetired;SQ;False;1;1;True
-538968384;Referenced VOI LUT Box Sequence ;ReferencedVoiLutBoxSequenceRetired;SQ;False;1;1;True
+538968384;Referenced VOI LUT Box Sequence;ReferencedVoiLutBoxSequenceRetired;SQ;False;1;1;True
 540016656;Annotation Position;AnnotationPosition;US;False;1;1;False
 540016672;Text String;TextString;LO;False;1;1;False
 541065232;Referenced Overlay Plane Sequence;ReferencedOverlayPlaneSequenceRetired;SQ;False;1;1;True
@@ -2964,10 +2964,10 @@
 805830699;Treatment Termination Code;TreatmentTerminationCode;SH;False;1;1;False
 805830700;Treatment Verification Status;TreatmentVerificationStatus;CS;False;1;1;False
 805830704;Referenced Treatment Record Sequence;ReferencedTreatmentRecordSequence;SQ;False;1;1;False
-805830706;Specified Primary Meterset ;SpecifiedPrimaryMeterset;DS;False;1;1;False
-805830707;Specified Secondary Meterset ;SpecifiedSecondaryMeterset;DS;False;1;1;False
-805830710;Delivered Primary Meterset ;DeliveredPrimaryMeterset;DS;False;1;1;False
-805830711;Delivered Secondary Meterset ;DeliveredSecondaryMeterset;DS;False;1;1;False
+805830706;Specified Primary Meterset;SpecifiedPrimaryMeterset;DS;False;1;1;False
+805830707;Specified Secondary Meterset;SpecifiedSecondaryMeterset;DS;False;1;1;False
+805830710;Delivered Primary Meterset;DeliveredPrimaryMeterset;DS;False;1;1;False
+805830711;Delivered Secondary Meterset;DeliveredSecondaryMeterset;DS;False;1;1;False
 805830714;Specified Treatment Time;SpecifiedTreatmentTime;DS;False;1;1;False
 805830715;Delivered Treatment Time;DeliveredTreatmentTime;DS;False;1;1;False
 805830720;Control Point Delivery Sequence;ControlPointDeliverySequence;SQ;False;1;1;False
@@ -3106,7 +3106,7 @@
 805961890;Brachy Application Setup Dose Specification Point;BrachyApplicationSetupDoseSpecificationPoint;DS;False;3;3;False
 805961892;Brachy Application Setup Dose;BrachyApplicationSetupDose;DS;False;1;1;False
 805961904;Beam Sequence;BeamSequence;SQ;False;1;1;False
-805961906;Treatment Machine Name ;TreatmentMachineName;SH;False;1;1;False
+805961906;Treatment Machine Name;TreatmentMachineName;SH;False;1;1;False
 805961907;Primary Dosimeter Unit;PrimaryDosimeterUnit;CS;False;1;1;False
 805961908;Source-Axis Distance;SourceAxisDistance;DS;False;1;1;False
 805961910;Beam Limiting Device Sequence;BeamLimitingDeviceSequence;SQ;False;1;1;False
@@ -3456,7 +3456,7 @@
 1074790404;Detector Geometry Sequence;DetectorGeometrySequence;SQ;False;1;1;False
 1074794497;Threat ROI Voxel Sequence;ThreatRoiVoxelSequence;SQ;False;1;1;False
 1074794500;Threat ROI Base;ThreatRoiBase;FL;False;3;3;False
-1074794501;Threat ROI Extents ;ThreatRoiExtents;FL;False;3;3;False
+1074794501;Threat ROI Extents;ThreatRoiExtents;FL;False;3;3;False
 1074794502;Threat ROI Bitmap;ThreatRoiBitmap;OB;False;1;1;False
 1074794503;Route Segment ID;RouteSegmentId;SH;False;1;1;False
 1074794504;Gantry Type;GantryType;CS;False;1;1;False
@@ -3464,7 +3464,7 @@
 1074794506;Route Segment Sequence;RouteSegmentSequence;SQ;False;1;1;False
 1074794512;Potential Threat Object ID;PotentialThreatObjectId;US;False;1;1;False
 1074794513;Threat Sequence;ThreatSequence;SQ;False;1;1;False
-1074794514;Threat Category ;ThreatCategory;CS;False;1;1;False
+1074794514;Threat Category;ThreatCategory;CS;False;1;1;False
 1074794515;Threat Category Description;ThreatCategoryDescription;LT;False;1;1;False
 1074794516;ATD Ability Assessment;AtdAbilityAssessment;CS;False;1;1;False
 1074794517;ATD Assessment Flag;AtdAssessmentFlag;CS;False;1;1;False
@@ -3487,7 +3487,7 @@
 1074794535;TDR Type;TdrType;CS;False;1;1;False
 1074794536;International Route Segment;InternationalRouteSegment;CS;False;1;1;False
 1074794537;Threat Detection Algorithm and Version;ThreatDetectionAlgorithmAndVersion;LO;False;1;4294967295;False
-1074794538;Assigned Location ;AssignedLocation;SH;False;1;1;False
+1074794538;Assigned Location;AssignedLocation;SH;False;1;1;False
 1074794539;Alarm Decision Time;AlarmDecisionTime;DT;False;1;1;False
 1074794545;Alarm Decision;AlarmDecision;CS;False;1;1;False
 1074794547;Number of Total Objects;NumberOfTotalObjects;US;False;1;1;False
@@ -3521,20 +3521,20 @@
 1074794601;Total Processing Time;TotalProcessingTime;FL;False;1;1;False
 1074794604;Detector Calibration Data;DetectorCalibrationData;OB;False;1;1;False
 1342046209;MAC Parameters Sequence;MacParametersSequence;SQ;False;1;1;False
-1342177285;Curve Dimensions ;CurveDimensionsRetired;US;False;1;1;True
-1342177296;Number of Points ;NumberOfPointsRetired;US;False;1;1;True
+1342177285;Curve Dimensions;CurveDimensionsRetired;US;False;1;1;True
+1342177296;Number of Points;NumberOfPointsRetired;US;False;1;1;True
 1342177312;Type of Data;TypeOfDataRetired;CS;False;1;1;True
 1342177314;Curve Description;CurveDescriptionRetired;LO;False;1;1;True
-1342177328;Axis Units ;AxisUnitsRetired;SH;False;1;4294967295;True
-1342177344;Axis Labels ;AxisLabelsRetired;SH;False;1;4294967295;True
-1342177539;Data Value Representation ;DataValueRepresentationRetired;US;False;1;1;True
-1342177540;Minimum Coordinate Value ;MinimumCoordinateValueRetired;US;False;1;4294967295;True
-1342177541;Maximum Coordinate Value ;MaximumCoordinateValueRetired;US;False;1;4294967295;True
+1342177328;Axis Units;AxisUnitsRetired;SH;False;1;4294967295;True
+1342177344;Axis Labels;AxisLabelsRetired;SH;False;1;4294967295;True
+1342177539;Data Value Representation;DataValueRepresentationRetired;US;False;1;1;True
+1342177540;Minimum Coordinate Value;MinimumCoordinateValueRetired;US;False;1;4294967295;True
+1342177541;Maximum Coordinate Value;MaximumCoordinateValueRetired;US;False;1;4294967295;True
 1342177542;Curve Range;CurveRangeRetired;SH;False;1;4294967295;True
 1342177552;Curve Data Descriptor;CurveDataDescriptorRetired;US;False;1;4294967295;True
 1342177554;Coordinate Start Value;CoordinateStartValueRetired;US;False;1;4294967295;True
 1342177556;Coordinate Step Value;CoordinateStepValueRetired;US;False;1;4294967295;True
-1342181377;Curve Activation Layer ;CurveActivationLayerRetired;CS;False;1;1;True
+1342181377;Curve Activation Layer;CurveActivationLayerRetired;CS;False;1;1;True
 1342185472;Audio Type;AudioTypeRetired;US;False;1;1;True
 1342185474;Audio Sample Format;AudioSampleFormatRetired;US;False;1;1;True
 1342185476;Number of Channels;NumberOfChannelsRetired;US;False;1;1;True
@@ -3544,18 +3544,18 @@
 1342185484;Audio Sample Data;AudioSampleDataRetired;OW;True;1;1;True
 1342185486;Audio Comments;AudioCommentsRetired;LT;False;1;1;True
 1342186752;Curve Label;CurveLabelRetired;LO;False;1;1;True
-1342187008;Curve Referenced Overlay Sequence ;CurveReferencedOverlaySequenceRetired;SQ;False;1;1;True
+1342187008;Curve Referenced Overlay Sequence;CurveReferencedOverlaySequenceRetired;SQ;False;1;1;True
 1342187024;Curve Referenced Overlay Group;CurveReferencedOverlayGroupRetired;US;False;1;1;True
 1342189568;Curve Data;CurveDataRetired;OW;True;1;1;True
 1375769129;Shared Functional Groups Sequence;SharedFunctionalGroupsSequence;SQ;False;1;1;False
 1375769136;Per-frame Functional Groups Sequence;PerFrameFunctionalGroupsSequence;SQ;False;1;1;False
-1409286400;Waveform Sequence ;WaveformSequence;SQ;False;1;1;False
-1409286416;Channel Minimum Value ;ChannelMinimumValue;OB;True;1;1;False
-1409286418;Channel Maximum Value ;ChannelMaximumValue;OB;True;1;1;False
+1409286400;Waveform Sequence;WaveformSequence;SQ;False;1;1;False
+1409286416;Channel Minimum Value;ChannelMinimumValue;OB;True;1;1;False
+1409286418;Channel Maximum Value;ChannelMaximumValue;OB;True;1;1;False
 1409290244;Waveform Bits Allocated;WaveformBitsAllocated;US;False;1;1;False
 1409290246;Waveform Sample Interpretation;WaveformSampleInterpretation;CS;False;1;1;False
 1409290250;Waveform Padding Value;WaveformPaddingValue;OB;True;1;1;False
-1409290256;Waveform Data ;WaveformData;OB;True;1;1;False
+1409290256;Waveform Data;WaveformData;OB;True;1;1;False
 1442840592;First Order Phase Correction Angle;FirstOrderPhaseCorrectionAngle;OF;False;1;1;False
 1442840608;Spectroscopy Data;SpectroscopyData;OF;False;1;1;False
 1610612752;Overlay Rows;OverlayRows;US;False;1;1;False
@@ -3583,7 +3583,7 @@
 1610614786;Overlay Number of Tables;OverlayNumberOfTablesRetired;US;False;1;1;True
 1610614787;Overlay Code Table Location;OverlayCodeTableLocationRetired;AT;False;1;4294967295;True
 1610614788;Overlay Bits For Code Word;OverlayBitsForCodeWordRetired;US;False;1;1;True
-1610616833;Overlay Activation Layer ;OverlayActivationLayer;CS;False;1;1;False
+1610616833;Overlay Activation Layer;OverlayActivationLayer;CS;False;1;1;False
 1610617088;Overlay Descriptor - Gray;OverlayDescriptorGrayRetired;US;False;1;1;True
 1610617089;Overlay Descriptor - Red;OverlayDescriptorRedRetired;US;False;1;1;True
 1610617090;Overlay Descriptor - Green;OverlayDescriptorGreenRetired;US;False;1;1;True
