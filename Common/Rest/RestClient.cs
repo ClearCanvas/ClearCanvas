@@ -102,6 +102,7 @@ namespace ClearCanvas.Common.Rest
 								return;
 
 							_responseStream.CopyTo(stream);
+							_responseStream.Close();
 						}
 						_responseStream = null;
 					}
@@ -140,7 +141,7 @@ namespace ClearCanvas.Common.Rest
 							{
 								result = reader.ReadToEnd();
 							}
-
+							_responseStream.Close();
 							_responseStream = null;
 							return result;
 						}
@@ -167,6 +168,7 @@ namespace ClearCanvas.Common.Rest
 					if (_responseStream != null)
 					{
 						_responseStream.Close();
+						_responseStream.Dispose();
 						_responseStream = null;
 					}
 				}
