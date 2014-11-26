@@ -27,7 +27,7 @@ namespace ClearCanvas.Dicom
     /// <summary>
     /// A class representing a DICOM Sequence Item.
     /// </summary>
-    public class DicomSequenceItem : DicomAttributeCollection
+    public class DicomSequenceItem : DicomAttributeCollection, IReadOnlyDicomSequenceItem
     {
         #region Constructors
         /// <summary>
@@ -74,5 +74,19 @@ namespace ClearCanvas.Dicom
             return new DicomSequenceItem(this,copyBinary,copyPrivate,copyUnknown);
         }
         #endregion
+
+	    #region IReadOnlyDicomSequenceItem implementation
+
+	    IReadOnlyDicomAttribute IReadOnlyDicomSequenceItem.GetAttribute(uint dicomTag)
+	    {
+		    return GetAttribute(dicomTag);
+	    }
+
+	    IReadOnlyDicomAttribute IReadOnlyDicomSequenceItem.GetAttribute(DicomTag dicomTag)
+	    {
+		    return GetAttribute(dicomTag);
+	    }
+
+	    #endregion
     }
 }

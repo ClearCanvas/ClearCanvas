@@ -109,7 +109,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 
 		public StorageInfo StorageInfo
 		{
-			get { return new StorageInfo(_xml.FileSize, _xml.TransferSyntax); }
+			get { return new StorageInfo(_xml.SourceFileName, _xml.FileSize, _xml.TransferSyntax); }
 		}
 
 		public string SourceApplicationEntityTitle

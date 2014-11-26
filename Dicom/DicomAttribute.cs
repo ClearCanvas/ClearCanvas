@@ -25,6 +25,7 @@
 using System;
 using System.Text;
 using ClearCanvas.Dicom.IO;
+using JetBrains.Annotations;
 
 namespace ClearCanvas.Dicom
 {
@@ -603,7 +604,8 @@ namespace ClearCanvas.Dicom
                 return defaultVal;
             }
         }
-        #endregion
+
+	    #endregion
 
         /// <summary>
         /// Method for adding a <see cref="DicomSequenceItem"/> to an attributes value.
@@ -617,6 +619,29 @@ namespace ClearCanvas.Dicom
             throw new DicomException(SR.InvalidType);
         }
 
+		/// <summary>
+		/// Gets the specified sequence item from the attribute (applicable only to SQ attributes).
+		/// </summary>
+		/// <param name="i">The index of the item to retrieve.</param>
+		/// <returns>The sequence item, or null if there is no item at the specified index.</returns>
+		/// <exception cref="DicomException">The attribute is not a sequence.</exception>
+		[CanBeNull]
+		public virtual DicomSequenceItem GetSequenceItem(int i)
+	    {
+			throw new DicomException(SR.InvalidType);
+		}
+
+		/// <summary>
+		/// Gets the specified sequence item from the attribute, if it exists.
+		/// </summary>
+		/// <remarks>
+		/// For non-sequence attributes, this method always returns false.
+		/// </remarks>
+		public virtual bool TryGetSequenceItem(int i, out DicomSequenceItem item)
+		{
+			item = null;
+			return false;
+		}
 
         
         #endregion
@@ -704,7 +729,24 @@ namespace ClearCanvas.Dicom
 			return ToString();
 		}
 
-		#endregion
+	    IReadOnlyDicomSequenceItem IReadOnlyDicomAttribute.GetSequenceItem(int i)
+	    {
+		    return GetSequenceItem(i);
+	    }
+
+	    bool IReadOnlyDicomAttribute.TryGetSequenceItem(int i, out IReadOnlyDicomSequenceItem value)
+	    {
+		    DicomSequenceItem item;
+		    if (TryGetSequenceItem(i, out item))
+		    {
+			    value = item;
+			    return true;
+		    }
+		    value = null;
+		    return false;
+	    }
+
+	    #endregion
 
 		#region Public Properties
 

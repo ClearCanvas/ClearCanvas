@@ -432,7 +432,10 @@ namespace ClearCanvas.Dicom
 			var streamOpener = StreamOpener;
 			Platform.CheckForNullReference(streamOpener, "filename"); // the only reason why stream opener is null here is because filename is empty
 			using (var stream = streamOpener.Open())
+			{
 				LoadCore(stream, streamOpener, stopTag, options);
+				stream.Close();
+			}
 		}
 
 		/// <summary>
@@ -475,7 +478,10 @@ namespace ClearCanvas.Dicom
 			Platform.CheckForNullReference(streamOpener, "streamOpener");
 			StreamOpener = streamOpener;
 			using (var stream = streamOpener.Open())
+			{
 				LoadCore(stream, streamOpener, stopTag, options);
+				stream.Close();
+			}
 		}
 
 		/// <summary>
@@ -777,6 +783,17 @@ namespace ClearCanvas.Dicom
 				_prefixStream = prefix;
 				_realStream = realStream;
 				_position = 0;
+			}
+
+			public override void Close()
+			{
+				if (_realStream != null)
+					_realStream.Close();
+
+				if (_prefixStream != null)
+					_prefixStream.Close();
+
+				base.Close();
 			}
 
 			protected override void Dispose(bool disposing)

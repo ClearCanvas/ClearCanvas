@@ -1,13 +1,16 @@
 using System;
+using JetBrains.Annotations;
 
 namespace ClearCanvas.Dicom
 {
 	/// <summary>
-	/// Provides read-only access to an <see cref="DicomAttribute"/> instance.
+	/// Provides read-only access to a <see cref="DicomAttribute"/> instance.
 	/// </summary>
 	/// <remarks>
-	/// A <see cref="DicomAttribute"/> instance that is accessed solely via this interface is guaranteed to be immutable,
-	/// and can therefore safely be accessed by multiple threads without requiring synchronization.
+	/// A <see cref="DicomAttribute"/> instance that is accessed solely via this interface is guaranteed
+	/// to be externally immutable. However, no guarantee can be made as to the immutability of the internal
+	/// state of the object, and therefore synchronization is required if the object is to be safely used
+	/// by multiple threads.
 	/// </remarks>
 	public interface IReadOnlyDicomAttribute
 	{
@@ -186,5 +189,22 @@ namespace ClearCanvas.Dicom
 		/// <param name="defaultVal"></param>
 		/// <returns></returns>
 		DicomUid GetUid(int i, DicomUid defaultVal);
+
+		/// <summary>
+		/// Gets the specified sequence item from the attribute (applicable only to SQ attributes).
+		/// </summary>
+		/// <param name="i">The index of the item to retrieve.</param>
+		/// <returns>The sequence item, or null if there is no item at the specified index.</returns>
+		/// <exception cref="DicomException">The attribute is not a sequence.</exception>
+		[CanBeNull]
+		IReadOnlyDicomSequenceItem GetSequenceItem(int i);
+
+		/// <summary>
+		/// Gets the specified sequence item from the attribute, if it exists.
+		/// </summary>
+		/// <remarks>
+		/// For non-sequence attributes, this method always returns false.
+		/// </remarks>
+		bool TryGetSequenceItem(int i, out IReadOnlyDicomSequenceItem value);
 	}
 }
