@@ -1,4 +1,7 @@
-﻿#if __MonoCS__
+﻿//NOTE: this is only here so we *can* compile against Mono in Xamarin,
+//but you can use assemblies built against .NET in mono also. However,
+//if the unimplemented Evidence methods were ever accessed, it would throw an exception.
+#if __MonoCS__
 
 using System;
 using System.Security.Policy;

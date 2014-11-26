@@ -25,9 +25,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
+using System.Linq;
 using System.Net.NetworkInformation;
-using System.Numerics;
 using System.Text;
 
 namespace ClearCanvas.Dicom
@@ -53,9 +52,11 @@ namespace ClearCanvas.Dicom
     public class DicomUid
     {
         #region Private Members
+
         private readonly string _uid;
         private readonly string _description;
         private readonly UidType _type;
+
         #endregion
 
         #region Constructors
@@ -75,9 +76,11 @@ namespace ClearCanvas.Dicom
             _description = desc;
             _type = type;
         }
+
         #endregion
 
         #region Public Properties
+
         /// <summary>
         /// The string representation of the UID.
         /// </summary>
@@ -101,6 +104,7 @@ namespace ClearCanvas.Dicom
         {
             get { return _type; }
         }
+
         #endregion
 
         /// <summary>
@@ -142,6 +146,7 @@ namespace ClearCanvas.Dicom
         }
 
         #region Static UID Generation Routines
+
         /* members for UID Generation */
         private static String _lastTimestamp;
         private static String _baseUid = null;
@@ -270,7 +275,7 @@ namespace ClearCanvas.Dicom
 
                 uid.AppendFormat(".{0}.{1}", time, _count);
 
-                return new DicomUid(uid.ToString(),"Instance UID",UidType.SOPInstance);
+                return new DicomUid(uid.ToString(), "Instance UID", UidType.SOPInstance);
             }
         }
 
@@ -298,29 +303,119 @@ namespace ClearCanvas.Dicom
         /// <item>
         ///   <term>GUID as Integer</term>
         ///   <description>
-        ///   The Guid is converted to an integer and displayed in base 10.  Can be upto 39 characters long.
+        ///   The GUID is converted to an integer and displayed in base 10, which can be up to 39 characters long.
         ///   </description>
         /// </item>
         /// </list>
         /// <para>
-        /// The UID generator uses the above components to insure uniqueness.  It simply converts a GUID acquired by a 
-        /// call to Guid.NewGuid() into an integer and appends it to the UID for uniqueness.
+        /// The UID generator uses the above components to ensure uniqueness.  It simply converts a GUID acquired by a 
+        /// call to <see cref="Guid.NewGuid"/> into an integer and appends it to the UID for uniqueness.
         /// </para>
         /// </remarks>
         /// <returns></returns>
         public static DicomUid GenerateUid()
         {
-            var guidBytes = string.Format("0{0:N}", Guid.NewGuid());
-#if __MonoCS__
-			return ObsoleteGenerateUid();
-#else
-			var bigInteger = BigInteger.Parse(guidBytes, NumberStyles.HexNumber);
-			return new DicomUid(string.Format(CultureInfo.InvariantCulture, "2.25.{0}", bigInteger), "Instance UID", UidType.SOPInstance);
-#endif
+            return new DicomUid("2.25." + FormatGuidAsString(Guid.NewGuid()), "Instance UID", UidType.SOPInstance);
+        }
+
+#if UNIT_TESTS
+		internal static string ConvertGuid(Guid guid)
+		{
+			return FormatGuidAsString(guid);
 		}
+#endif
+        internal static byte[] GuidToSystemEndianBytes(Guid guid)
+        {
+            var bytes = guid.ToByteArray();
+            // our conversion algorithm uses 4x 32-bit unsigned ints in most-to-least significant word order
+            // but .NET GUIDs are broken up into parts and separately encoded with first 3 in system endian and last 2 in big endian
+            //   (4 system endian)-(2 system endian)-(2 system endian)-(2 big endian)-(6 big endian)
+            //
+            // if system is little endian, we byte-swap here to build the 4 little endian words in the correct order
+            //
+            // if system is big endian, the bytes are already big endian and most-to-least significant word order
+            // so no swapping is necessary (and all the calculations will be done in big endian anyway)
+            if (BitConverter.IsLittleEndian)
+            {
+                var t = bytes[4];
+                bytes[4] = bytes[6];
+                bytes[6] = t;
+
+                t = bytes[5];
+                bytes[5] = bytes[7];
+                bytes[7] = t;
+
+                t = bytes[8];
+                bytes[8] = bytes[11];
+                bytes[11] = t;
+
+                t = bytes[9];
+                bytes[9] = bytes[10];
+                bytes[10] = t;
+
+                t = bytes[12];
+                bytes[12] = bytes[15];
+                bytes[15] = t;
+
+                t = bytes[13];
+                bytes[13] = bytes[14];
+                bytes[14] = t;
+            }
+
+            return bytes;
+        }
+
+        private static unsafe string FormatGuidAsString(Guid guid)
+        {
+            var bytes = GuidToSystemEndianBytes(guid);
+
+            // the conversion is based on the pen-and-paper algorithm for converting between bases:
+            // 1. divide input by base, remainder is least significant output digit.
+            // 2. divide quotient by base, remainder is next least significant output digit.
+            // 3. repeat quotient is zero.
+            // 
+            // however, we represent the input as 4 separate words, so we have to do "long division" here
+            // A. divide the most significant word by base, quotient is most significant word of overall quotient
+            // B. divide the number (remainder * word base + next most significant word) by base, quotient is next most significant word of overall quotient
+            // C. repeat until least significant word, where the remainder is simply the overall remainder
+            const int maxDigits = 39;
+            var chars = new char[maxDigits];
+            fixed (char* pChars = chars)
+            fixed (byte* pBytes = bytes)
+            {
+                var countDigits = 0;
+                var pC = &pChars[maxDigits - 1];
+                var pB = (uint*)pBytes;
+                do
+                {
+                    ulong r = pB[0];
+                    ulong q = r / 10;
+                    pB[0] = (uint)q;
+
+                    r = ((r - q * 10) << 32) + pB[1];
+                    q = r / 10;
+                    pB[1] = (uint)q;
+
+                    r = ((r - q * 10) << 32) + pB[2];
+                    q = r / 10;
+                    pB[2] = (uint)q;
+
+                    r = ((r - q * 10) << 32) + pB[3];
+                    q = r / 10;
+                    pB[3] = (uint)q;
+
+                    r = r - q * 10;
+                    // the digits are yielded from least to most significant, so we fill the char array from the end
+                    *pC-- = (char)('0' + r);
+                    ++countDigits;
+                } while (pB[0] != 0 || pB[1] != 0 || pB[2] != 0 || pB[3] != 0);
+                // return a string from pointer and offset based on number of digits we actually have
+                return new string(pChars, maxDigits - countDigits, countDigits);
+            }
+        }
 
         #endregion
-    } 
+    }
 
     public static class DicomUids
     {
@@ -329,205 +424,206 @@ namespace ClearCanvas.Dicom
         static DicomUids()
         {
             #region Load Internal UIDs
-            Entries.Add(DicomUids.ImplicitVRLittleEndian.UID, DicomUids.ImplicitVRLittleEndian);
-            Entries.Add(DicomUids.ExplicitVRLittleEndian.UID, DicomUids.ExplicitVRLittleEndian);
-            Entries.Add(DicomUids.DeflatedExplicitVRLittleEndian.UID, DicomUids.DeflatedExplicitVRLittleEndian);
-            Entries.Add(DicomUids.ExplicitVRBigEndian.UID, DicomUids.ExplicitVRBigEndian);
-            Entries.Add(DicomUids.JPEGProcess1.UID, DicomUids.JPEGProcess1);
-            Entries.Add(DicomUids.JPEGProcess2_4.UID, DicomUids.JPEGProcess2_4);
-            Entries.Add(DicomUids.JPEGProcess3_5Retired.UID, DicomUids.JPEGProcess3_5Retired);
-            Entries.Add(DicomUids.JPEGProcess6_8Retired.UID, DicomUids.JPEGProcess6_8Retired);
-            Entries.Add(DicomUids.JPEGProcess7_9Retired.UID, DicomUids.JPEGProcess7_9Retired);
-            Entries.Add(DicomUids.JPEGProcess10_12Retired.UID, DicomUids.JPEGProcess10_12Retired);
-            Entries.Add(DicomUids.JPEGProcess11_13Retired.UID, DicomUids.JPEGProcess11_13Retired);
-            Entries.Add(DicomUids.JPEGProcess14.UID, DicomUids.JPEGProcess14);
-            Entries.Add(DicomUids.JPEGProcess15Retired.UID, DicomUids.JPEGProcess15Retired);
-            Entries.Add(DicomUids.JPEGProcess16_18Retired.UID, DicomUids.JPEGProcess16_18Retired);
-            Entries.Add(DicomUids.JPEGProcess17_19Retired.UID, DicomUids.JPEGProcess17_19Retired);
-            Entries.Add(DicomUids.JPEGProcess20_22Retired.UID, DicomUids.JPEGProcess20_22Retired);
-            Entries.Add(DicomUids.JPEGProcess21_23Retired.UID, DicomUids.JPEGProcess21_23Retired);
-            Entries.Add(DicomUids.JPEGProcess24_26Retired.UID, DicomUids.JPEGProcess24_26Retired);
-            Entries.Add(DicomUids.JPEGProcess25_27Retired.UID, DicomUids.JPEGProcess25_27Retired);
-            Entries.Add(DicomUids.JPEGProcess28Retired.UID, DicomUids.JPEGProcess28Retired);
-            Entries.Add(DicomUids.JPEGProcess29Retired.UID, DicomUids.JPEGProcess29Retired);
-            Entries.Add(DicomUids.JPEGProcess14SV1.UID, DicomUids.JPEGProcess14SV1);
-            Entries.Add(DicomUids.JPEGLSLossless.UID, DicomUids.JPEGLSLossless);
-            Entries.Add(DicomUids.JPEGLSNearLossless.UID, DicomUids.JPEGLSNearLossless);
-            Entries.Add(DicomUids.JPEG2000Lossless.UID, DicomUids.JPEG2000Lossless);
-            Entries.Add(DicomUids.JPEG2000Lossy.UID, DicomUids.JPEG2000Lossy);
-            Entries.Add(DicomUids.MPEG2.UID, DicomUids.MPEG2);
-            Entries.Add(DicomUids.RLELossless.UID, DicomUids.RLELossless);
-            Entries.Add(DicomUids.Verification.UID, DicomUids.Verification);
-            Entries.Add(DicomUids.MediaStorageDirectoryStorage.UID, DicomUids.MediaStorageDirectoryStorage);
-            Entries.Add(DicomUids.BasicStudyContentNotification.UID, DicomUids.BasicStudyContentNotification);
-            Entries.Add(DicomUids.StorageCommitmentPushModel.UID, DicomUids.StorageCommitmentPushModel);
-            Entries.Add(DicomUids.StorageCommitmentPullModel.UID, DicomUids.StorageCommitmentPullModel);
-            Entries.Add(DicomUids.ProceduralEventLoggingSOPClass.UID, DicomUids.ProceduralEventLoggingSOPClass);
-            Entries.Add(DicomUids.DetachedPatientManagement.UID, DicomUids.DetachedPatientManagement);
-            Entries.Add(DicomUids.DetachedVisitManagement.UID, DicomUids.DetachedVisitManagement);
-            Entries.Add(DicomUids.DetachedStudyManagement.UID, DicomUids.DetachedStudyManagement);
-            Entries.Add(DicomUids.StudyComponentManagement.UID, DicomUids.StudyComponentManagement);
-            Entries.Add(DicomUids.ModalityPerformedProcedureStep.UID, DicomUids.ModalityPerformedProcedureStep);
-            Entries.Add(DicomUids.ModalityPerformedProcedureStepRetrieve.UID, DicomUids.ModalityPerformedProcedureStepRetrieve);
-            Entries.Add(DicomUids.ModalityPerformedProcedureStepNotification.UID, DicomUids.ModalityPerformedProcedureStepNotification);
-            Entries.Add(DicomUids.DetachedResultsManagement.UID, DicomUids.DetachedResultsManagement);
-            Entries.Add(DicomUids.DetachedInterpretationManagement.UID, DicomUids.DetachedInterpretationManagement);
-            Entries.Add(DicomUids.StorageServiceClass.UID, DicomUids.StorageServiceClass);
-            Entries.Add(DicomUids.BasicFilmSession.UID, DicomUids.BasicFilmSession);
-            Entries.Add(DicomUids.BasicFilmBoxSOP.UID, DicomUids.BasicFilmBoxSOP);
-            Entries.Add(DicomUids.BasicGrayscaleImageBox.UID, DicomUids.BasicGrayscaleImageBox);
-            Entries.Add(DicomUids.BasicColorImageBox.UID, DicomUids.BasicColorImageBox);
-            Entries.Add(DicomUids.ReferencedImageBoxRetired.UID, DicomUids.ReferencedImageBoxRetired);
-            Entries.Add(DicomUids.PrintJob.UID, DicomUids.PrintJob);
-            Entries.Add(DicomUids.BasicAnnotationBox.UID, DicomUids.BasicAnnotationBox);
-            Entries.Add(DicomUids.Printer.UID, DicomUids.Printer);
-            Entries.Add(DicomUids.PrinterConfigurationRetrieval.UID, DicomUids.PrinterConfigurationRetrieval);
-            Entries.Add(DicomUids.VOILUTBox.UID, DicomUids.VOILUTBox);
-            Entries.Add(DicomUids.PresentationLUT.UID, DicomUids.PresentationLUT);
-            Entries.Add(DicomUids.ImageOverlayBox.UID, DicomUids.ImageOverlayBox);
-            Entries.Add(DicomUids.BasicPrintImageOverlayBox.UID, DicomUids.BasicPrintImageOverlayBox);
-            Entries.Add(DicomUids.PrintQueueManagement.UID, DicomUids.PrintQueueManagement);
-            Entries.Add(DicomUids.StoredPrintStorage.UID, DicomUids.StoredPrintStorage);
-            Entries.Add(DicomUids.HardcopyGrayscaleImageStorage.UID, DicomUids.HardcopyGrayscaleImageStorage);
-            Entries.Add(DicomUids.HardcopyColorImageStorage.UID, DicomUids.HardcopyColorImageStorage);
-            Entries.Add(DicomUids.PullPrintRequest.UID, DicomUids.PullPrintRequest);
-            Entries.Add(DicomUids.MediaCreationManagementSOPClass.UID, DicomUids.MediaCreationManagementSOPClass);
-            Entries.Add(DicomUids.ComputedRadiographyImageStorage.UID, DicomUids.ComputedRadiographyImageStorage);
-            Entries.Add(DicomUids.DigitalXRayImageStorageForPresentation.UID, DicomUids.DigitalXRayImageStorageForPresentation);
-            Entries.Add(DicomUids.DigitalXRayImageStorageForProcessing.UID, DicomUids.DigitalXRayImageStorageForProcessing);
-            Entries.Add(DicomUids.DigitalMammographyXRayImageStorageForPresentation.UID, DicomUids.DigitalMammographyXRayImageStorageForPresentation);
-            Entries.Add(DicomUids.DigitalMammographyXRayImageStorageForProcessing.UID, DicomUids.DigitalMammographyXRayImageStorageForProcessing);
-            Entries.Add(DicomUids.DigitalIntraoralXRayImageStorageForPresentation.UID, DicomUids.DigitalIntraoralXRayImageStorageForPresentation);
-            Entries.Add(DicomUids.DigitalIntraoralXRayImageStorageForProcessing.UID, DicomUids.DigitalIntraoralXRayImageStorageForProcessing);
-            Entries.Add(DicomUids.CTImageStorage.UID, DicomUids.CTImageStorage);
-            Entries.Add(DicomUids.EnhancedCTImageStorage.UID, DicomUids.EnhancedCTImageStorage);
-            Entries.Add(DicomUids.UltrasoundMultiframeImageStorageRetired.UID, DicomUids.UltrasoundMultiframeImageStorageRetired);
-            Entries.Add(DicomUids.UltrasoundMultiframeImageStorage.UID, DicomUids.UltrasoundMultiframeImageStorage);
-            Entries.Add(DicomUids.MRImageStorage.UID, DicomUids.MRImageStorage);
-            Entries.Add(DicomUids.EnhancedMRImageStorage.UID, DicomUids.EnhancedMRImageStorage);
-            Entries.Add(DicomUids.MRSpectroscopyStorage.UID, DicomUids.MRSpectroscopyStorage);
-            Entries.Add(DicomUids.NuclearMedicineImageStorageRetired.UID, DicomUids.NuclearMedicineImageStorageRetired);
-            Entries.Add(DicomUids.UltrasoundImageStorageRetired.UID, DicomUids.UltrasoundImageStorageRetired);
-            Entries.Add(DicomUids.UltrasoundImageStorage.UID, DicomUids.UltrasoundImageStorage);
-            Entries.Add(DicomUids.SecondaryCaptureImageStorage.UID, DicomUids.SecondaryCaptureImageStorage);
-            Entries.Add(DicomUids.MultiframeSingleBitSecondaryCaptureImageStorage.UID, DicomUids.MultiframeSingleBitSecondaryCaptureImageStorage);
-            Entries.Add(DicomUids.MultiframeGrayscaleByteSecondaryCaptureImageStorage.UID, DicomUids.MultiframeGrayscaleByteSecondaryCaptureImageStorage);
-            Entries.Add(DicomUids.MultiframeGrayscaleWordSecondaryCaptureImageStorage.UID, DicomUids.MultiframeGrayscaleWordSecondaryCaptureImageStorage);
-            Entries.Add(DicomUids.MultiframeTrueColorSecondaryCaptureImageStorage.UID, DicomUids.MultiframeTrueColorSecondaryCaptureImageStorage);
-            Entries.Add(DicomUids.StandaloneOverlayStorage.UID, DicomUids.StandaloneOverlayStorage);
-            Entries.Add(DicomUids.StandaloneCurveStorage.UID, DicomUids.StandaloneCurveStorage);
-            Entries.Add(DicomUids.TwelveLeadECGWaveformStorage.UID, DicomUids.TwelveLeadECGWaveformStorage);
-            Entries.Add(DicomUids.GeneralECGWaveformStorage.UID, DicomUids.GeneralECGWaveformStorage);
-            Entries.Add(DicomUids.AmbulatoryECGWaveformStorage.UID, DicomUids.AmbulatoryECGWaveformStorage);
-            Entries.Add(DicomUids.HemodynamicWaveformStorage.UID, DicomUids.HemodynamicWaveformStorage);
-            Entries.Add(DicomUids.CardiacElectrophysiologyWaveformStorage.UID, DicomUids.CardiacElectrophysiologyWaveformStorage);
-            Entries.Add(DicomUids.BasicVoiceAudioWaveformStorage.UID, DicomUids.BasicVoiceAudioWaveformStorage);
-            Entries.Add(DicomUids.StandaloneModalityLUTStorage.UID, DicomUids.StandaloneModalityLUTStorage);
-            Entries.Add(DicomUids.StandaloneVOILUTStorage.UID, DicomUids.StandaloneVOILUTStorage);
-            Entries.Add(DicomUids.GrayscaleSoftcopyPresentationStateStorage.UID, DicomUids.GrayscaleSoftcopyPresentationStateStorage);
-            Entries.Add(DicomUids.ColorSoftcopyPresentationStateStorage.UID, DicomUids.ColorSoftcopyPresentationStateStorage);
-            Entries.Add(DicomUids.PseudoColorSoftcopyPresentationStateStorage.UID, DicomUids.PseudoColorSoftcopyPresentationStateStorage);
-            Entries.Add(DicomUids.BlendingSoftcopyPresentationStateStorage.UID, DicomUids.BlendingSoftcopyPresentationStateStorage);
-            Entries.Add(DicomUids.XRayAngiographicImageStorage.UID, DicomUids.XRayAngiographicImageStorage);
-            Entries.Add(DicomUids.EnhancedXRayAngiographicImageStorage.UID, DicomUids.EnhancedXRayAngiographicImageStorage);
-            Entries.Add(DicomUids.XRayRadiofluoroscopicImageStorage.UID, DicomUids.XRayRadiofluoroscopicImageStorage);
-            Entries.Add(DicomUids.EnhancedXRayRadiofluoroscopicImageStorage.UID, DicomUids.EnhancedXRayRadiofluoroscopicImageStorage);
-            Entries.Add(DicomUids.XRayAngiographicBiPlaneImageStorageRetired.UID, DicomUids.XRayAngiographicBiPlaneImageStorageRetired);
-            Entries.Add(DicomUids.NuclearMedicineImageStorage.UID, DicomUids.NuclearMedicineImageStorage);
-            Entries.Add(DicomUids.RawDataStorage.UID, DicomUids.RawDataStorage);
-            Entries.Add(DicomUids.SpatialRegistrationStorage.UID, DicomUids.SpatialRegistrationStorage);
-            Entries.Add(DicomUids.SpatialFiducialsStorage.UID, DicomUids.SpatialFiducialsStorage);
-            Entries.Add(DicomUids.RealWorldValueMappingStorage.UID, DicomUids.RealWorldValueMappingStorage);
-            Entries.Add(DicomUids.VLImageStorageRetired.UID, DicomUids.VLImageStorageRetired);
-            Entries.Add(DicomUids.VLMultiframeImageStorageRetired.UID, DicomUids.VLMultiframeImageStorageRetired);
-            Entries.Add(DicomUids.VLEndoscopicImageStorage.UID, DicomUids.VLEndoscopicImageStorage);
-            Entries.Add(DicomUids.VLMicroscopicImageStorage.UID, DicomUids.VLMicroscopicImageStorage);
-            Entries.Add(DicomUids.VLSlideCoordinatesMicroscopicImageStorage.UID, DicomUids.VLSlideCoordinatesMicroscopicImageStorage);
-            Entries.Add(DicomUids.VLPhotographicImageStorage.UID, DicomUids.VLPhotographicImageStorage);
-            Entries.Add(DicomUids.VideoEndoscopicImageStorage.UID, DicomUids.VideoEndoscopicImageStorage);
-            Entries.Add(DicomUids.VideoMicroscopicImageStorage.UID, DicomUids.VideoMicroscopicImageStorage);
-            Entries.Add(DicomUids.VideoPhotographicImageStorage.UID, DicomUids.VideoPhotographicImageStorage);
-            Entries.Add(DicomUids.OphthalmicPhotography8BitImageStorage.UID, DicomUids.OphthalmicPhotography8BitImageStorage);
-            Entries.Add(DicomUids.OphthalmicPhotography16BitImageStorage.UID, DicomUids.OphthalmicPhotography16BitImageStorage);
-            Entries.Add(DicomUids.StereometricRelationshipStorage.UID, DicomUids.StereometricRelationshipStorage);
-            Entries.Add(DicomUids.BasicTextSR.UID, DicomUids.BasicTextSR);
-            Entries.Add(DicomUids.EnhancedSR.UID, DicomUids.EnhancedSR);
-            Entries.Add(DicomUids.ComprehensiveSR.UID, DicomUids.ComprehensiveSR);
-            Entries.Add(DicomUids.ProcedureLogStorage.UID, DicomUids.ProcedureLogStorage);
-            Entries.Add(DicomUids.MammographyCADSR.UID, DicomUids.MammographyCADSR);
-            Entries.Add(DicomUids.KeyObjectSelectionDocument.UID, DicomUids.KeyObjectSelectionDocument);
-            Entries.Add(DicomUids.ChestCADSR.UID, DicomUids.ChestCADSR);
-            Entries.Add(DicomUids.XRayRadiationDoseSR.UID, DicomUids.XRayRadiationDoseSR);
-            Entries.Add(DicomUids.EncapsulatedPDFStorage.UID, DicomUids.EncapsulatedPDFStorage);
-            Entries.Add(DicomUids.PositronEmissionTomographyImageStorage.UID, DicomUids.PositronEmissionTomographyImageStorage);
-            Entries.Add(DicomUids.StandalonePETCurveStorage.UID, DicomUids.StandalonePETCurveStorage);
-            Entries.Add(DicomUids.RTImageStorage.UID, DicomUids.RTImageStorage);
-            Entries.Add(DicomUids.RTDoseStorage.UID, DicomUids.RTDoseStorage);
-            Entries.Add(DicomUids.RTStructureSetStorage.UID, DicomUids.RTStructureSetStorage);
-            Entries.Add(DicomUids.RTBeamsTreatmentRecordStorage.UID, DicomUids.RTBeamsTreatmentRecordStorage);
-            Entries.Add(DicomUids.RTPlanStorage.UID, DicomUids.RTPlanStorage);
-            Entries.Add(DicomUids.RTBrachyTreatmentRecordStorage.UID, DicomUids.RTBrachyTreatmentRecordStorage);
-            Entries.Add(DicomUids.RTTreatmentSummaryRecordStorage.UID, DicomUids.RTTreatmentSummaryRecordStorage);
-            Entries.Add(DicomUids.RTIonPlanStorage.UID, DicomUids.RTIonPlanStorage);
-            Entries.Add(DicomUids.RTIonBeamsTreatmentRecordStorage.UID, DicomUids.RTIonBeamsTreatmentRecordStorage);
-            Entries.Add(DicomUids.PatientRootQueryRetrieveInformationModelFIND.UID, DicomUids.PatientRootQueryRetrieveInformationModelFIND);
-            Entries.Add(DicomUids.PatientRootQueryRetrieveInformationModelMOVE.UID, DicomUids.PatientRootQueryRetrieveInformationModelMOVE);
-            Entries.Add(DicomUids.PatientRootQueryRetrieveInformationModelGET.UID, DicomUids.PatientRootQueryRetrieveInformationModelGET);
-            Entries.Add(DicomUids.StudyRootQueryRetrieveInformationModelFIND.UID, DicomUids.StudyRootQueryRetrieveInformationModelFIND);
-            Entries.Add(DicomUids.StudyRootQueryRetrieveInformationModelMOVE.UID, DicomUids.StudyRootQueryRetrieveInformationModelMOVE);
-            Entries.Add(DicomUids.StudyRootQueryRetrieveInformationModelGET.UID, DicomUids.StudyRootQueryRetrieveInformationModelGET);
-            Entries.Add(DicomUids.PatientStudyOnlyQueryRetrieveInformationModelFIND.UID, DicomUids.PatientStudyOnlyQueryRetrieveInformationModelFIND);
-            Entries.Add(DicomUids.PatientStudyOnlyQueryRetrieveInformationModelMOVE.UID, DicomUids.PatientStudyOnlyQueryRetrieveInformationModelMOVE);
-            Entries.Add(DicomUids.PatientStudyOnlyQueryRetrieveInformationModelGET.UID, DicomUids.PatientStudyOnlyQueryRetrieveInformationModelGET);
-            Entries.Add(DicomUids.ModalityWorklistInformationModelFIND.UID, DicomUids.ModalityWorklistInformationModelFIND);
-            Entries.Add(DicomUids.GeneralPurposeWorklistInformationModelFIND.UID, DicomUids.GeneralPurposeWorklistInformationModelFIND);
-            Entries.Add(DicomUids.GeneralPurposeScheduledProcedureStepSOPClass.UID, DicomUids.GeneralPurposeScheduledProcedureStepSOPClass);
-            Entries.Add(DicomUids.GeneralPurposePerformedProcedureStepSOPClass.UID, DicomUids.GeneralPurposePerformedProcedureStepSOPClass);
-            Entries.Add(DicomUids.InstanceAvailabilityNotificationSOPClass.UID, DicomUids.InstanceAvailabilityNotificationSOPClass);
-            Entries.Add(DicomUids.PatientInformationQuery.UID, DicomUids.PatientInformationQuery);
-            Entries.Add(DicomUids.BreastImagingRelevantPatientInformationQuery.UID, DicomUids.BreastImagingRelevantPatientInformationQuery);
-            Entries.Add(DicomUids.CardiacRelevantPatientInformationQuery.UID, DicomUids.CardiacRelevantPatientInformationQuery);
-            Entries.Add(DicomUids.HangingProtocolStorage.UID, DicomUids.HangingProtocolStorage);
-            Entries.Add(DicomUids.HangingProtocolInformationModelFIND.UID, DicomUids.HangingProtocolInformationModelFIND);
-            Entries.Add(DicomUids.HangingProtocolInformationModelMOVE.UID, DicomUids.HangingProtocolInformationModelMOVE);
-            Entries.Add(DicomUids.DetachedPatientManagementMetaSOPClass.UID, DicomUids.DetachedPatientManagementMetaSOPClass);
-            Entries.Add(DicomUids.DetachedResultsManagementMetaSOPClass.UID, DicomUids.DetachedResultsManagementMetaSOPClass);
-            Entries.Add(DicomUids.DetachedStudyManagementMetaSOPClass.UID, DicomUids.DetachedStudyManagementMetaSOPClass);
-            Entries.Add(DicomUids.BasicGrayscalePrintManagement.UID, DicomUids.BasicGrayscalePrintManagement);
-            Entries.Add(DicomUids.ReferencedGrayscalePrintManagementRetired.UID, DicomUids.ReferencedGrayscalePrintManagementRetired);
-            Entries.Add(DicomUids.BasicColorPrintManagement.UID, DicomUids.BasicColorPrintManagement);
-            Entries.Add(DicomUids.ReferencedColorPrintManagementRetired.UID, DicomUids.ReferencedColorPrintManagementRetired);
-            Entries.Add(DicomUids.PullStoredPrintManagement.UID, DicomUids.PullStoredPrintManagement);
-            Entries.Add(DicomUids.GeneralPurposeWorklistManagementMetaSOPClass.UID, DicomUids.GeneralPurposeWorklistManagementMetaSOPClass);
-            Entries.Add(DicomUids.StorageCommitmentPushModelSOPInstance.UID, DicomUids.StorageCommitmentPushModelSOPInstance);
-            Entries.Add(DicomUids.StorageCommitmentPullModelSOPInstance.UID, DicomUids.StorageCommitmentPullModelSOPInstance);
-            Entries.Add(DicomUids.ProceduralEventLoggingSOPInstance.UID, DicomUids.ProceduralEventLoggingSOPInstance);
-            Entries.Add(DicomUids.TalairachBrainAtlasFrameOfReference.UID, DicomUids.TalairachBrainAtlasFrameOfReference);
-            Entries.Add(DicomUids.SPM2T1FrameOfReference.UID, DicomUids.SPM2T1FrameOfReference);
-            Entries.Add(DicomUids.SPM2T2FrameOfReference.UID, DicomUids.SPM2T2FrameOfReference);
-            Entries.Add(DicomUids.SPM2PDFrameOfReference.UID, DicomUids.SPM2PDFrameOfReference);
-            Entries.Add(DicomUids.SPM2EPIFrameOfReference.UID, DicomUids.SPM2EPIFrameOfReference);
-            Entries.Add(DicomUids.SPM2FILT1FrameOfReference.UID, DicomUids.SPM2FILT1FrameOfReference);
-            Entries.Add(DicomUids.SPM2PETFrameOfReference.UID, DicomUids.SPM2PETFrameOfReference);
-            Entries.Add(DicomUids.SPM2TRANSMFrameOfReference.UID, DicomUids.SPM2TRANSMFrameOfReference);
-            Entries.Add(DicomUids.SPM2SPECTFrameOfReference.UID, DicomUids.SPM2SPECTFrameOfReference);
-            Entries.Add(DicomUids.SPM2GRAYFrameOfReference.UID, DicomUids.SPM2GRAYFrameOfReference);
-            Entries.Add(DicomUids.SPM2WHITEFrameOfReference.UID, DicomUids.SPM2WHITEFrameOfReference);
-            Entries.Add(DicomUids.SPM2CSFFrameOfReference.UID, DicomUids.SPM2CSFFrameOfReference);
-            Entries.Add(DicomUids.SPM2BRAINMASKFrameOfReference.UID, DicomUids.SPM2BRAINMASKFrameOfReference);
-            Entries.Add(DicomUids.SPM2AVG305T1FrameOfReference.UID, DicomUids.SPM2AVG305T1FrameOfReference);
-            Entries.Add(DicomUids.SPM2AVG152T1FrameOfReference.UID, DicomUids.SPM2AVG152T1FrameOfReference);
-            Entries.Add(DicomUids.SPM2AVG152T2FrameOfReference.UID, DicomUids.SPM2AVG152T2FrameOfReference);
-            Entries.Add(DicomUids.SPM2AVG152PDFrameOfReference.UID, DicomUids.SPM2AVG152PDFrameOfReference);
-            Entries.Add(DicomUids.SPM2SINGLESUBJT1FrameOfReference.UID, DicomUids.SPM2SINGLESUBJT1FrameOfReference);
-            Entries.Add(DicomUids.ICBM452T1FrameOfReference.UID, DicomUids.ICBM452T1FrameOfReference);
-            Entries.Add(DicomUids.ICBMSingleSubjectMRIFrameOfReference.UID, DicomUids.ICBMSingleSubjectMRIFrameOfReference);
-            Entries.Add(DicomUids.PrinterSOPInstance.UID, DicomUids.PrinterSOPInstance);
-            Entries.Add(DicomUids.PrinterConfigurationRetrievalSOPInstance.UID, DicomUids.PrinterConfigurationRetrievalSOPInstance);
-            Entries.Add(DicomUids.PrintQueueSOPInstance.UID, DicomUids.PrintQueueSOPInstance);
-            Entries.Add(DicomUids.DICOMApplicationContextName.UID, DicomUids.DICOMApplicationContextName);
-            Entries.Add(DicomUids.DICOMControlledTerminologyCodingScheme.UID, DicomUids.DICOMControlledTerminologyCodingScheme);
-            Entries.Add(DicomUids.UniversalCoordinatedTime.UID, DicomUids.UniversalCoordinatedTime);
+
+            Entries.Add(ImplicitVRLittleEndian.UID, ImplicitVRLittleEndian);
+            Entries.Add(ExplicitVRLittleEndian.UID, ExplicitVRLittleEndian);
+            Entries.Add(DeflatedExplicitVRLittleEndian.UID, DeflatedExplicitVRLittleEndian);
+            Entries.Add(ExplicitVRBigEndian.UID, ExplicitVRBigEndian);
+            Entries.Add(JPEGProcess1.UID, JPEGProcess1);
+            Entries.Add(JPEGProcess2_4.UID, JPEGProcess2_4);
+            Entries.Add(JPEGProcess3_5Retired.UID, JPEGProcess3_5Retired);
+            Entries.Add(JPEGProcess6_8Retired.UID, JPEGProcess6_8Retired);
+            Entries.Add(JPEGProcess7_9Retired.UID, JPEGProcess7_9Retired);
+            Entries.Add(JPEGProcess10_12Retired.UID, JPEGProcess10_12Retired);
+            Entries.Add(JPEGProcess11_13Retired.UID, JPEGProcess11_13Retired);
+            Entries.Add(JPEGProcess14.UID, JPEGProcess14);
+            Entries.Add(JPEGProcess15Retired.UID, JPEGProcess15Retired);
+            Entries.Add(JPEGProcess16_18Retired.UID, JPEGProcess16_18Retired);
+            Entries.Add(JPEGProcess17_19Retired.UID, JPEGProcess17_19Retired);
+            Entries.Add(JPEGProcess20_22Retired.UID, JPEGProcess20_22Retired);
+            Entries.Add(JPEGProcess21_23Retired.UID, JPEGProcess21_23Retired);
+            Entries.Add(JPEGProcess24_26Retired.UID, JPEGProcess24_26Retired);
+            Entries.Add(JPEGProcess25_27Retired.UID, JPEGProcess25_27Retired);
+            Entries.Add(JPEGProcess28Retired.UID, JPEGProcess28Retired);
+            Entries.Add(JPEGProcess29Retired.UID, JPEGProcess29Retired);
+            Entries.Add(JPEGProcess14SV1.UID, JPEGProcess14SV1);
+            Entries.Add(JPEGLSLossless.UID, JPEGLSLossless);
+            Entries.Add(JPEGLSNearLossless.UID, JPEGLSNearLossless);
+            Entries.Add(JPEG2000Lossless.UID, JPEG2000Lossless);
+            Entries.Add(JPEG2000Lossy.UID, JPEG2000Lossy);
+            Entries.Add(MPEG2.UID, MPEG2);
+            Entries.Add(RLELossless.UID, RLELossless);
+            Entries.Add(Verification.UID, Verification);
+            Entries.Add(MediaStorageDirectoryStorage.UID, MediaStorageDirectoryStorage);
+            Entries.Add(BasicStudyContentNotification.UID, BasicStudyContentNotification);
+            Entries.Add(StorageCommitmentPushModel.UID, StorageCommitmentPushModel);
+            Entries.Add(StorageCommitmentPullModel.UID, StorageCommitmentPullModel);
+            Entries.Add(ProceduralEventLoggingSOPClass.UID, ProceduralEventLoggingSOPClass);
+            Entries.Add(DetachedPatientManagement.UID, DetachedPatientManagement);
+            Entries.Add(DetachedVisitManagement.UID, DetachedVisitManagement);
+            Entries.Add(DetachedStudyManagement.UID, DetachedStudyManagement);
+            Entries.Add(StudyComponentManagement.UID, StudyComponentManagement);
+            Entries.Add(ModalityPerformedProcedureStep.UID, ModalityPerformedProcedureStep);
+            Entries.Add(ModalityPerformedProcedureStepRetrieve.UID, ModalityPerformedProcedureStepRetrieve);
+            Entries.Add(ModalityPerformedProcedureStepNotification.UID, ModalityPerformedProcedureStepNotification);
+            Entries.Add(DetachedResultsManagement.UID, DetachedResultsManagement);
+            Entries.Add(DetachedInterpretationManagement.UID, DetachedInterpretationManagement);
+            Entries.Add(StorageServiceClass.UID, StorageServiceClass);
+            Entries.Add(BasicFilmSession.UID, BasicFilmSession);
+            Entries.Add(BasicFilmBoxSOP.UID, BasicFilmBoxSOP);
+            Entries.Add(BasicGrayscaleImageBox.UID, BasicGrayscaleImageBox);
+            Entries.Add(BasicColorImageBox.UID, BasicColorImageBox);
+            Entries.Add(ReferencedImageBoxRetired.UID, ReferencedImageBoxRetired);
+            Entries.Add(PrintJob.UID, PrintJob);
+            Entries.Add(BasicAnnotationBox.UID, BasicAnnotationBox);
+            Entries.Add(Printer.UID, Printer);
+            Entries.Add(PrinterConfigurationRetrieval.UID, PrinterConfigurationRetrieval);
+            Entries.Add(VOILUTBox.UID, VOILUTBox);
+            Entries.Add(PresentationLUT.UID, PresentationLUT);
+            Entries.Add(ImageOverlayBox.UID, ImageOverlayBox);
+            Entries.Add(BasicPrintImageOverlayBox.UID, BasicPrintImageOverlayBox);
+            Entries.Add(PrintQueueManagement.UID, PrintQueueManagement);
+            Entries.Add(StoredPrintStorage.UID, StoredPrintStorage);
+            Entries.Add(HardcopyGrayscaleImageStorage.UID, HardcopyGrayscaleImageStorage);
+            Entries.Add(HardcopyColorImageStorage.UID, HardcopyColorImageStorage);
+            Entries.Add(PullPrintRequest.UID, PullPrintRequest);
+            Entries.Add(MediaCreationManagementSOPClass.UID, MediaCreationManagementSOPClass);
+            Entries.Add(ComputedRadiographyImageStorage.UID, ComputedRadiographyImageStorage);
+            Entries.Add(DigitalXRayImageStorageForPresentation.UID, DigitalXRayImageStorageForPresentation);
+            Entries.Add(DigitalXRayImageStorageForProcessing.UID, DigitalXRayImageStorageForProcessing);
+            Entries.Add(DigitalMammographyXRayImageStorageForPresentation.UID, DigitalMammographyXRayImageStorageForPresentation);
+            Entries.Add(DigitalMammographyXRayImageStorageForProcessing.UID, DigitalMammographyXRayImageStorageForProcessing);
+            Entries.Add(DigitalIntraoralXRayImageStorageForPresentation.UID, DigitalIntraoralXRayImageStorageForPresentation);
+            Entries.Add(DigitalIntraoralXRayImageStorageForProcessing.UID, DigitalIntraoralXRayImageStorageForProcessing);
+            Entries.Add(CTImageStorage.UID, CTImageStorage);
+            Entries.Add(EnhancedCTImageStorage.UID, EnhancedCTImageStorage);
+            Entries.Add(UltrasoundMultiframeImageStorageRetired.UID, UltrasoundMultiframeImageStorageRetired);
+            Entries.Add(UltrasoundMultiframeImageStorage.UID, UltrasoundMultiframeImageStorage);
+            Entries.Add(MRImageStorage.UID, MRImageStorage);
+            Entries.Add(EnhancedMRImageStorage.UID, EnhancedMRImageStorage);
+            Entries.Add(MRSpectroscopyStorage.UID, MRSpectroscopyStorage);
+            Entries.Add(NuclearMedicineImageStorageRetired.UID, NuclearMedicineImageStorageRetired);
+            Entries.Add(UltrasoundImageStorageRetired.UID, UltrasoundImageStorageRetired);
+            Entries.Add(UltrasoundImageStorage.UID, UltrasoundImageStorage);
+            Entries.Add(SecondaryCaptureImageStorage.UID, SecondaryCaptureImageStorage);
+            Entries.Add(MultiframeSingleBitSecondaryCaptureImageStorage.UID, MultiframeSingleBitSecondaryCaptureImageStorage);
+            Entries.Add(MultiframeGrayscaleByteSecondaryCaptureImageStorage.UID, MultiframeGrayscaleByteSecondaryCaptureImageStorage);
+            Entries.Add(MultiframeGrayscaleWordSecondaryCaptureImageStorage.UID, MultiframeGrayscaleWordSecondaryCaptureImageStorage);
+            Entries.Add(MultiframeTrueColorSecondaryCaptureImageStorage.UID, MultiframeTrueColorSecondaryCaptureImageStorage);
+            Entries.Add(StandaloneOverlayStorage.UID, StandaloneOverlayStorage);
+            Entries.Add(StandaloneCurveStorage.UID, StandaloneCurveStorage);
+            Entries.Add(TwelveLeadECGWaveformStorage.UID, TwelveLeadECGWaveformStorage);
+            Entries.Add(GeneralECGWaveformStorage.UID, GeneralECGWaveformStorage);
+            Entries.Add(AmbulatoryECGWaveformStorage.UID, AmbulatoryECGWaveformStorage);
+            Entries.Add(HemodynamicWaveformStorage.UID, HemodynamicWaveformStorage);
+            Entries.Add(CardiacElectrophysiologyWaveformStorage.UID, CardiacElectrophysiologyWaveformStorage);
+            Entries.Add(BasicVoiceAudioWaveformStorage.UID, BasicVoiceAudioWaveformStorage);
+            Entries.Add(StandaloneModalityLUTStorage.UID, StandaloneModalityLUTStorage);
+            Entries.Add(StandaloneVOILUTStorage.UID, StandaloneVOILUTStorage);
+            Entries.Add(GrayscaleSoftcopyPresentationStateStorage.UID, GrayscaleSoftcopyPresentationStateStorage);
+            Entries.Add(ColorSoftcopyPresentationStateStorage.UID, ColorSoftcopyPresentationStateStorage);
+            Entries.Add(PseudoColorSoftcopyPresentationStateStorage.UID, PseudoColorSoftcopyPresentationStateStorage);
+            Entries.Add(BlendingSoftcopyPresentationStateStorage.UID, BlendingSoftcopyPresentationStateStorage);
+            Entries.Add(XRayAngiographicImageStorage.UID, XRayAngiographicImageStorage);
+            Entries.Add(EnhancedXRayAngiographicImageStorage.UID, EnhancedXRayAngiographicImageStorage);
+            Entries.Add(XRayRadiofluoroscopicImageStorage.UID, XRayRadiofluoroscopicImageStorage);
+            Entries.Add(EnhancedXRayRadiofluoroscopicImageStorage.UID, EnhancedXRayRadiofluoroscopicImageStorage);
+            Entries.Add(XRayAngiographicBiPlaneImageStorageRetired.UID, XRayAngiographicBiPlaneImageStorageRetired);
+            Entries.Add(NuclearMedicineImageStorage.UID, NuclearMedicineImageStorage);
+            Entries.Add(RawDataStorage.UID, RawDataStorage);
+            Entries.Add(SpatialRegistrationStorage.UID, SpatialRegistrationStorage);
+            Entries.Add(SpatialFiducialsStorage.UID, SpatialFiducialsStorage);
+            Entries.Add(RealWorldValueMappingStorage.UID, RealWorldValueMappingStorage);
+            Entries.Add(VLImageStorageRetired.UID, VLImageStorageRetired);
+            Entries.Add(VLMultiframeImageStorageRetired.UID, VLMultiframeImageStorageRetired);
+            Entries.Add(VLEndoscopicImageStorage.UID, VLEndoscopicImageStorage);
+            Entries.Add(VLMicroscopicImageStorage.UID, VLMicroscopicImageStorage);
+            Entries.Add(VLSlideCoordinatesMicroscopicImageStorage.UID, VLSlideCoordinatesMicroscopicImageStorage);
+            Entries.Add(VLPhotographicImageStorage.UID, VLPhotographicImageStorage);
+            Entries.Add(VideoEndoscopicImageStorage.UID, VideoEndoscopicImageStorage);
+            Entries.Add(VideoMicroscopicImageStorage.UID, VideoMicroscopicImageStorage);
+            Entries.Add(VideoPhotographicImageStorage.UID, VideoPhotographicImageStorage);
+            Entries.Add(OphthalmicPhotography8BitImageStorage.UID, OphthalmicPhotography8BitImageStorage);
+            Entries.Add(OphthalmicPhotography16BitImageStorage.UID, OphthalmicPhotography16BitImageStorage);
+            Entries.Add(StereometricRelationshipStorage.UID, StereometricRelationshipStorage);
+            Entries.Add(BasicTextSR.UID, BasicTextSR);
+            Entries.Add(EnhancedSR.UID, EnhancedSR);
+            Entries.Add(ComprehensiveSR.UID, ComprehensiveSR);
+            Entries.Add(ProcedureLogStorage.UID, ProcedureLogStorage);
+            Entries.Add(MammographyCADSR.UID, MammographyCADSR);
+            Entries.Add(KeyObjectSelectionDocument.UID, KeyObjectSelectionDocument);
+            Entries.Add(ChestCADSR.UID, ChestCADSR);
+            Entries.Add(XRayRadiationDoseSR.UID, XRayRadiationDoseSR);
+            Entries.Add(EncapsulatedPDFStorage.UID, EncapsulatedPDFStorage);
+            Entries.Add(PositronEmissionTomographyImageStorage.UID, PositronEmissionTomographyImageStorage);
+            Entries.Add(StandalonePETCurveStorage.UID, StandalonePETCurveStorage);
+            Entries.Add(RTImageStorage.UID, RTImageStorage);
+            Entries.Add(RTDoseStorage.UID, RTDoseStorage);
+            Entries.Add(RTStructureSetStorage.UID, RTStructureSetStorage);
+            Entries.Add(RTBeamsTreatmentRecordStorage.UID, RTBeamsTreatmentRecordStorage);
+            Entries.Add(RTPlanStorage.UID, RTPlanStorage);
+            Entries.Add(RTBrachyTreatmentRecordStorage.UID, RTBrachyTreatmentRecordStorage);
+            Entries.Add(RTTreatmentSummaryRecordStorage.UID, RTTreatmentSummaryRecordStorage);
+            Entries.Add(RTIonPlanStorage.UID, RTIonPlanStorage);
+            Entries.Add(RTIonBeamsTreatmentRecordStorage.UID, RTIonBeamsTreatmentRecordStorage);
+            Entries.Add(PatientRootQueryRetrieveInformationModelFIND.UID, PatientRootQueryRetrieveInformationModelFIND);
+            Entries.Add(PatientRootQueryRetrieveInformationModelMOVE.UID, PatientRootQueryRetrieveInformationModelMOVE);
+            Entries.Add(PatientRootQueryRetrieveInformationModelGET.UID, PatientRootQueryRetrieveInformationModelGET);
+            Entries.Add(StudyRootQueryRetrieveInformationModelFIND.UID, StudyRootQueryRetrieveInformationModelFIND);
+            Entries.Add(StudyRootQueryRetrieveInformationModelMOVE.UID, StudyRootQueryRetrieveInformationModelMOVE);
+            Entries.Add(StudyRootQueryRetrieveInformationModelGET.UID, StudyRootQueryRetrieveInformationModelGET);
+            Entries.Add(PatientStudyOnlyQueryRetrieveInformationModelFIND.UID, PatientStudyOnlyQueryRetrieveInformationModelFIND);
+            Entries.Add(PatientStudyOnlyQueryRetrieveInformationModelMOVE.UID, PatientStudyOnlyQueryRetrieveInformationModelMOVE);
+            Entries.Add(PatientStudyOnlyQueryRetrieveInformationModelGET.UID, PatientStudyOnlyQueryRetrieveInformationModelGET);
+            Entries.Add(ModalityWorklistInformationModelFIND.UID, ModalityWorklistInformationModelFIND);
+            Entries.Add(GeneralPurposeWorklistInformationModelFIND.UID, GeneralPurposeWorklistInformationModelFIND);
+            Entries.Add(GeneralPurposeScheduledProcedureStepSOPClass.UID, GeneralPurposeScheduledProcedureStepSOPClass);
+            Entries.Add(GeneralPurposePerformedProcedureStepSOPClass.UID, GeneralPurposePerformedProcedureStepSOPClass);
+            Entries.Add(InstanceAvailabilityNotificationSOPClass.UID, InstanceAvailabilityNotificationSOPClass);
+            Entries.Add(PatientInformationQuery.UID, PatientInformationQuery);
+            Entries.Add(BreastImagingRelevantPatientInformationQuery.UID, BreastImagingRelevantPatientInformationQuery);
+            Entries.Add(CardiacRelevantPatientInformationQuery.UID, CardiacRelevantPatientInformationQuery);
+            Entries.Add(HangingProtocolStorage.UID, HangingProtocolStorage);
+            Entries.Add(HangingProtocolInformationModelFIND.UID, HangingProtocolInformationModelFIND);
+            Entries.Add(HangingProtocolInformationModelMOVE.UID, HangingProtocolInformationModelMOVE);
+            Entries.Add(DetachedPatientManagementMetaSOPClass.UID, DetachedPatientManagementMetaSOPClass);
+            Entries.Add(DetachedResultsManagementMetaSOPClass.UID, DetachedResultsManagementMetaSOPClass);
+            Entries.Add(DetachedStudyManagementMetaSOPClass.UID, DetachedStudyManagementMetaSOPClass);
+            Entries.Add(BasicGrayscalePrintManagement.UID, BasicGrayscalePrintManagement);
+            Entries.Add(ReferencedGrayscalePrintManagementRetired.UID, ReferencedGrayscalePrintManagementRetired);
+            Entries.Add(BasicColorPrintManagement.UID, BasicColorPrintManagement);
+            Entries.Add(ReferencedColorPrintManagementRetired.UID, ReferencedColorPrintManagementRetired);
+            Entries.Add(PullStoredPrintManagement.UID, PullStoredPrintManagement);
+            Entries.Add(GeneralPurposeWorklistManagementMetaSOPClass.UID, GeneralPurposeWorklistManagementMetaSOPClass);
+            Entries.Add(StorageCommitmentPushModelSOPInstance.UID, StorageCommitmentPushModelSOPInstance);
+            Entries.Add(StorageCommitmentPullModelSOPInstance.UID, StorageCommitmentPullModelSOPInstance);
+            Entries.Add(ProceduralEventLoggingSOPInstance.UID, ProceduralEventLoggingSOPInstance);
+            Entries.Add(TalairachBrainAtlasFrameOfReference.UID, TalairachBrainAtlasFrameOfReference);
+            Entries.Add(SPM2T1FrameOfReference.UID, SPM2T1FrameOfReference);
+            Entries.Add(SPM2T2FrameOfReference.UID, SPM2T2FrameOfReference);
+            Entries.Add(SPM2PDFrameOfReference.UID, SPM2PDFrameOfReference);
+            Entries.Add(SPM2EPIFrameOfReference.UID, SPM2EPIFrameOfReference);
+            Entries.Add(SPM2FILT1FrameOfReference.UID, SPM2FILT1FrameOfReference);
+            Entries.Add(SPM2PETFrameOfReference.UID, SPM2PETFrameOfReference);
+            Entries.Add(SPM2TRANSMFrameOfReference.UID, SPM2TRANSMFrameOfReference);
+            Entries.Add(SPM2SPECTFrameOfReference.UID, SPM2SPECTFrameOfReference);
+            Entries.Add(SPM2GRAYFrameOfReference.UID, SPM2GRAYFrameOfReference);
+            Entries.Add(SPM2WHITEFrameOfReference.UID, SPM2WHITEFrameOfReference);
+            Entries.Add(SPM2CSFFrameOfReference.UID, SPM2CSFFrameOfReference);
+            Entries.Add(SPM2BRAINMASKFrameOfReference.UID, SPM2BRAINMASKFrameOfReference);
+            Entries.Add(SPM2AVG305T1FrameOfReference.UID, SPM2AVG305T1FrameOfReference);
+            Entries.Add(SPM2AVG152T1FrameOfReference.UID, SPM2AVG152T1FrameOfReference);
+            Entries.Add(SPM2AVG152T2FrameOfReference.UID, SPM2AVG152T2FrameOfReference);
+            Entries.Add(SPM2AVG152PDFrameOfReference.UID, SPM2AVG152PDFrameOfReference);
+            Entries.Add(SPM2SINGLESUBJT1FrameOfReference.UID, SPM2SINGLESUBJT1FrameOfReference);
+            Entries.Add(ICBM452T1FrameOfReference.UID, ICBM452T1FrameOfReference);
+            Entries.Add(ICBMSingleSubjectMRIFrameOfReference.UID, ICBMSingleSubjectMRIFrameOfReference);
+            Entries.Add(PrinterSOPInstance.UID, PrinterSOPInstance);
+            Entries.Add(PrinterConfigurationRetrievalSOPInstance.UID, PrinterConfigurationRetrievalSOPInstance);
+            Entries.Add(PrintQueueSOPInstance.UID, PrintQueueSOPInstance);
+            Entries.Add(DICOMApplicationContextName.UID, DICOMApplicationContextName);
+            Entries.Add(DICOMControlledTerminologyCodingScheme.UID, DICOMControlledTerminologyCodingScheme);
+            Entries.Add(UniversalCoordinatedTime.UID, UniversalCoordinatedTime);
 
             #endregion
         }
@@ -540,6 +636,7 @@ namespace ClearCanvas.Dicom
         }
 
         #region Dicom UIDs
+
         /// <summary>TransferSyntax: Implicit VR Little Endian</summary>
         public static DicomUid ImplicitVRLittleEndian = new DicomUid("1.2.840.10008.1.2", "Implicit VR Little Endian", UidType.TransferSyntax);
 
@@ -1136,7 +1233,7 @@ namespace ClearCanvas.Dicom
 
         /// <summary>SynchronizationFrameOfReference: Universal Coordinated Time</summary>
         public static DicomUid UniversalCoordinatedTime = new DicomUid("1.2.840.10008.15.1.1", "Universal Coordinated Time", UidType.SynchronizationFrameOfReference);
+
         #endregion
     }
-    
 }

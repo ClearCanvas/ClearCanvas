@@ -157,6 +157,7 @@ namespace ClearCanvas.Common
 		private static volatile ITimeProvider _timeProvider;
 		private static volatile IServiceProvider[] _serviceProviders;
 		private static volatile IDuplexServiceProvider[] _duplexServiceProviders;
+	    private static bool? _isMono;
 
 		#endregion
 
@@ -232,6 +233,17 @@ namespace ClearCanvas.Common
 				return (id == PlatformID.Win32NT || id == PlatformID.Win32Windows || id == PlatformID.Win32S || id == PlatformID.WinCE);
 			}
 		}
+
+	    public static bool IsMono
+	    {
+	        get
+	        {
+	            if (!_isMono.HasValue)
+                    _isMono = Type.GetType("Mono.Runtime") != null;
+                
+                return _isMono.Value;
+	        }    
+	    }
 
 		/// <summary>
 		/// Gets whether the application is executing on a Unix operating systems
