@@ -223,8 +223,6 @@ namespace ClearCanvas.Common.Rest
 			private HttpWebRequest _request;
 			private string _contentString;
 			private Stream _contentStream;
-			private string _contentType;
-			private bool _bufferRequest = true;	// because that is the .net default
 
 			internal Request(RestClient rc, string resource, string args)
 			{
@@ -328,8 +326,9 @@ namespace ClearCanvas.Common.Rest
 					throw new InvalidOperationException("content already specified");
 
 				_contentStream = data;
-				_contentType = contentType;
-				_bufferRequest = buffer;
+				_request.ContentType = contentType;
+				_request.ContentLength = data.Length;
+				_request.AllowWriteStreamBuffering = buffer;
 
 				return this;
 			}
@@ -359,8 +358,9 @@ namespace ClearCanvas.Common.Rest
 				if (data == null)
 					return this;
 				_contentString = data;
-				_contentType = contentType;
-				_bufferRequest = buffer;
+				_request.ContentType = contentType;
+				_request.ContentLength = data.Length;
+				_request.AllowWriteStreamBuffering = buffer;
 
 				return this;
 			}
@@ -380,7 +380,6 @@ namespace ClearCanvas.Common.Rest
 				// initialize the request
 				_request = (HttpWebRequest)WebRequest.Create(url.ToString());
 				_request.Timeout = (int)_rc.Timeout.TotalMilliseconds;
-				_request.AllowWriteStreamBuffering = _bufferRequest;
 
 				if (!string.IsNullOrEmpty(_rc.UserAgent))
 				{
@@ -401,10 +400,6 @@ namespace ClearCanvas.Common.Rest
 			{
 				if (_contentStream != null)
 				{
-					// set content type if specified
-					if(!string.IsNullOrEmpty(_contentType))
-						_request.ContentType = _contentType;
-
 					using (var reqStream = _request.GetRequestStream())
 					{
 						_contentStream.CopyTo(reqStream);
@@ -414,10 +409,6 @@ namespace ClearCanvas.Common.Rest
 
 				if (_contentString != null) // empty string (0 bytes) is valid
 				{
-					// set content type if specified
-					if (!string.IsNullOrEmpty(_contentType))
-						_request.ContentType = _contentType;
-
 					using (var reqStream = _request.GetRequestStream())
 					{
 						using (var writer = new StreamWriter(reqStream))
