@@ -95,6 +95,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SR.resx</DependentUpon>
     </Compile>
+    <Compile Include="SystemIdentityStore.cs" />
+    <Compile Include="SystemInfoService.cs" />
     <Compile Include="VersionUtils.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -234,6 +234,7 @@
     <Compile Include="Setup\SetupCommandLine.cs" />
     <Compile Include="Setup\SetupHelper.cs" />
     <Compile Include="StaticChannelProvider.cs" />
+    <Compile Include="ISystemInfoService.cs" />
     <Compile Include="Tests\AopInterceptorChainTests.cs" />
     <Compile Include="Tests\EntityRefJsmlSerializerHookTests.cs" />
     <Compile Include="Mail\Tests\OutgoingMailMessageTests.cs" />
