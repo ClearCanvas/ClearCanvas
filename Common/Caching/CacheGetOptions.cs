@@ -29,6 +29,10 @@ namespace ClearCanvas.Common.Caching
 	/// </summary>
 	public class CacheGetOptions : CacheOptionsBase
 	{
+		public CacheGetOptions()
+		{
+		}
+
 		public CacheGetOptions(string region)
 			: base(region)
 		{

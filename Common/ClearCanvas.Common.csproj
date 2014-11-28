@@ -91,6 +91,7 @@
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
@@ -119,6 +120,10 @@
     <Compile Include="Authorization\AuthorityTokenAttribute.cs" />
     <Compile Include="Authorization\AuthorityTokenDefinition.cs" />
     <Compile Include="Authorization\IDefineAuthorityGroups.cs" />
+    <Compile Include="Caching\MemoryCacheProvider.cs" />
+    <Compile Include="Caching\Tests\CacheProviderTestsBase.cs" />
+    <Compile Include="Caching\Tests\AspWebCacheProviderTests.cs" />
+    <Compile Include="Caching\Tests\MemoryCacheProviderTests.cs" />
     <Compile Include="ClassNameExtensionFilter.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -353,8 +358,8 @@
     <Compile Include="Caching\CacheProviderInitializationArgs.cs" />
     <Compile Include="Caching\CachePutOptions.cs" />
     <Compile Include="Caching\CacheRemoveOptions.cs" />
-    <Compile Include="Caching\DefaultCacheClient.cs" />
-    <Compile Include="Caching\DefaultCacheProvider.cs" />
+    <Compile Include="Caching\AspWebCacheClient.cs" />
+    <Compile Include="Caching\AspWebCacheProvider.cs" />
     <Compile Include="Caching\ICacheClient.cs" />
     <Compile Include="Caching\ICacheProvider.cs" />
     <Compile Include="Caching\IDefinesCacheKey.cs" />

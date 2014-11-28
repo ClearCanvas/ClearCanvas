@@ -109,6 +109,11 @@ namespace ClearCanvas.Enterprise.Common.Tests
 				return _cache.TryGetValue(key, out value) ? value.Value : null;
 			}
 
+			public object Get(string key)
+			{
+				return Get(key, new CacheGetOptions());
+			}
+
 			public void Put(string key, object value, CachePutOptions options)
 			{
 				_cache[key] = new ValueOptionsPair { Value = value, Options = options };
@@ -117,6 +122,11 @@ namespace ClearCanvas.Enterprise.Common.Tests
 			public void Remove(string key, CacheRemoveOptions options)
 			{
 				_cache.Remove(key);
+			}
+
+			public void Remove(string key)
+			{
+				Remove(key, new CacheRemoveOptions());
 			}
 
 			public bool RegionExists(string region)
