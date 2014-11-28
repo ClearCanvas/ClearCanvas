@@ -37,7 +37,7 @@ namespace ClearCanvas.Enterprise.Common.SystemAccounts
 	/// <summary>
 	/// Utility application for managing system accounts.
 	/// </summary>
-	[ExtensionOf(typeof(ApplicationRootExtensionPoint))]
+	[ExtensionOf(typeof (ApplicationRootExtensionPoint))]
 	public class SystemAccountUtility : IApplicationRoot
 	{
 		#region IApplicationRoot Members
@@ -79,7 +79,7 @@ namespace ClearCanvas.Enterprise.Common.SystemAccounts
 			if (GetExistingAccount(accountName, out accountDetail))
 			{
 				StdOut(string.Format("Account '{0}' exists.", accountName), cmdLine);
-				
+
 				var updateRequest = new UpdateUserRequest(accountDetail);
 
 				bool authGroupChange = false, passwordChange = false;
@@ -87,7 +87,7 @@ namespace ClearCanvas.Enterprise.Common.SystemAccounts
 				if (!string.IsNullOrEmpty(cmdLine.AuthorityGroup))
 				{
 					var authGroup = GetAuthorityGroup(cmdLine.AuthorityGroup);
-					accountDetail.AuthorityGroups = new List<AuthorityGroupSummary> { authGroup };
+					accountDetail.AuthorityGroups = new List<AuthorityGroupSummary> {authGroup};
 					authGroupChange = true;
 					StdOut(string.Format("Authority group will be set to '{0}'.", authGroup.Name), cmdLine);
 				}
@@ -100,8 +100,14 @@ namespace ClearCanvas.Enterprise.Common.SystemAccounts
 					passwordChange = true;
 					StdOut(string.Format("Account password will be set to '{0}'.", updateRequest.Password), cmdLine);
 				}
+				else
+				{
+					StdOut(string.Format("Synchronizing password locally..."), cmdLine);
+					cmdLine.AccountPassword = GeneratePassword(accountName);
+					LocalRegistryManager.SetAccountPassword(accountName, cmdLine.AccountPassword);
+				}
 
-				if(passwordChange || authGroupChange)
+				if (passwordChange || authGroupChange)
 				{
 					StdOut(string.Format("Saving changes to Enterprise Server..."), cmdLine);
 
@@ -124,30 +130,30 @@ namespace ClearCanvas.Enterprise.Common.SystemAccounts
 			else
 			{
 				StdOut(string.Format("Account '{0}' does not exist. It will be created.", accountName), cmdLine);
-				
+
 				if (string.IsNullOrEmpty(cmdLine.AccountPassword))
 				{
 					// generate a password
-					cmdLine.AccountPassword = GeneratePassword();
+					cmdLine.AccountPassword = GeneratePassword(accountName);
 				}
 
 				var authGroup = GetAuthorityGroup(cmdLine.AuthorityGroup ?? BuiltInAuthorityGroups.SystemAccounts.Name);
 				var userDetail = new UserDetail
-				{
-					AccountType = new EnumValueInfo("S", null),
-					UserName = accountName,
-					DisplayName = accountName,
-					Enabled = true,
-					AuthorityGroups = new List<AuthorityGroupSummary> { authGroup }
-				};
+				                 {
+					                 AccountType = new EnumValueInfo("S", null),
+					                 UserName = accountName,
+					                 DisplayName = accountName,
+					                 Enabled = true,
+					                 AuthorityGroups = new List<AuthorityGroupSummary> {authGroup}
+				                 };
 
 				StdOut(string.Format("Creating account '{0}', authority group '{1}'.",
-					accountName, authGroup.Name), cmdLine);
+				                     accountName, authGroup.Name), cmdLine);
 
 				StdOut(string.Format("Saving changes to Enterprise Server..."), cmdLine);
 				Platform.GetService<IUserAdminService>(
-					service => service.AddUser(new AddUserRequest(userDetail) { Password = cmdLine.AccountPassword }));
-				
+					service => service.AddUser(new AddUserRequest(userDetail) {Password = cmdLine.AccountPassword}));
+
 				// save password locally
 				StdOut(string.Format("Saving password locally..."), cmdLine);
 				LocalRegistryManager.SetAccountPassword(accountName, cmdLine.AccountPassword);
@@ -167,7 +173,7 @@ namespace ClearCanvas.Enterprise.Common.SystemAccounts
 				detail = response.UserDetail;
 				return true;
 			}
-			catch(FaultException<RequestValidationException>)
+			catch (FaultException<RequestValidationException>)
 			{
 				detail = null;
 				return false;
@@ -193,14 +199,11 @@ namespace ClearCanvas.Enterprise.Common.SystemAccounts
 			}
 		}
 
-		private static string GeneratePassword()
+		private static string GeneratePassword(string systemAccountName)
 		{
-			var a = Guid.NewGuid().ToString("N");
-			var b = Guid.NewGuid().ToString("N");
-			var c = Guid.NewGuid().ToString("N");
-			var d = Guid.NewGuid().ToString("N");
-
-			return string.Join("", new[] { a, b, c, d });
+			string password = null;
+			Platform.GetService<ISystemInfoService>(svc => { password = svc.GetDerivedSystemSecretKey(new GetDerivedSystemSecretKeyRequest {Input = "SystemAccount|" + systemAccountName.ToLowerInvariant()}).Key; });
+			return password;
 		}
 	}
 }
