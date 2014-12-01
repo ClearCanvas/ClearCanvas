@@ -102,9 +102,22 @@ namespace ClearCanvas.Enterprise.Common.SystemAccounts
 				}
 				else
 				{
-					StdOut(string.Format("Synchronizing password locally..."), cmdLine);
+					// if password was not specified, generate password, and check if reset password flag was set
+					// this distinction exists because in upgrade+distributed scenarios, it is possible that the account exists
+					// but that the password may be explicitly specified by another (earlier) component install
+					// so the installer needs a way to use generated password locally without effecting any changes to enterprise server
 					cmdLine.AccountPassword = GeneratePassword(accountName);
-					LocalRegistryManager.SetAccountPassword(accountName, cmdLine.AccountPassword);
+					if (cmdLine.ResetPassword)
+					{
+						// save generated password to both server and local
+						passwordChange = changePassword = true;
+					}
+					else
+					{
+						// only save generated password locally
+						StdOut(string.Format("Synchronizing password locally..."), cmdLine);
+						LocalRegistryManager.SetAccountPassword(accountName, cmdLine.AccountPassword);
+					}
 				}
 
 				if (passwordChange || authGroupChange)
