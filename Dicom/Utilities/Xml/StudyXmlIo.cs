@@ -94,16 +94,16 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 
 		public static void WriteGzip(StudyXmlMemento theMemento, Stream theStream)
 		{
-			var ms = new MemoryStream();
+			var ms = new LargeMemoryStream();
 			Write(theMemento, ms);
 
-			byte[] buffer = ms.GetBuffer();
+			var compressedZipStream = new GZipStream(theStream, CompressionMode.Compress, true);
+			ms.Seek(0, SeekOrigin.Begin);
+			ms.WriteTo(compressedZipStream);
 
-			var compressedzipStream = new GZipStream(theStream, CompressionMode.Compress, true);
-			compressedzipStream.Write(buffer, 0, buffer.Length);
 			// Close the stream.
-			compressedzipStream.Flush();
-			compressedzipStream.Close();
+			compressedZipStream.Flush();
+			compressedZipStream.Close();
 
 			// Force a flush
 			theStream.Flush();
