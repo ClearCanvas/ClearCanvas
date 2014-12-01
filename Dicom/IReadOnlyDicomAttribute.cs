@@ -4,14 +4,8 @@ using JetBrains.Annotations;
 namespace ClearCanvas.Dicom
 {
 	/// <summary>
-	/// Provides read-only access to a <see cref="DicomAttribute"/> instance.
+	/// Defines the interface to a read-only representation of a DICOM attribute.
 	/// </summary>
-	/// <remarks>
-	/// A <see cref="DicomAttribute"/> instance that is accessed solely via this interface is guaranteed
-	/// to be externally immutable. However, no guarantee can be made as to the immutability of the internal
-	/// state of the object, and therefore synchronization is required if the object is to be safely used
-	/// by multiple threads.
-	/// </remarks>
 	public interface IReadOnlyDicomAttribute
 	{
 		/// <summary>
@@ -39,17 +33,6 @@ namespace ClearCanvas.Dicom
 		/// Gets a value indicating whether the attribute is empty.
 		/// </summary>
 		bool IsEmpty { get; }
-
-		/// <summary>
-		/// Gets the type of the value.
-		/// </summary>
-		/// <returns></returns>
-		Type GetValueType();
-
-		/// <summary>
-		/// The length in bytes if the attribute was placed in a DICOM stream.
-		/// </summary>
-		uint StreamLength { get; }
 
 		/// <summary>
 		/// The number of values assigned to the attribute.
