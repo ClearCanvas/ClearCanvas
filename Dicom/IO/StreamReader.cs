@@ -198,6 +198,16 @@ namespace ClearCanvas.Dicom.IO
 					if ((tagValue >= stopAtTag.TagValue)
 					    && (_sqrs.Count == 0)) // only exit in root message when after stop tag
 					{
+						if (_inGroup2 && tagValue > 0x0002FFFF)
+						{
+							if (_endGroup2 != BytesRead - 4)
+							{
+								Platform.Log(LogLevel.Debug, "File Meta Info Length, {0}, not equal to actual bytes read in file, {1}, overwriting length.",
+								             EndGroupTwo, BytesRead - 4);
+								_endGroup2 = BytesRead - 4;
+							}
+							_inGroup2 = false;
+						}
 						EncounteredStopTag = true;
 						return DicomReadStatus.Success;
 					}
