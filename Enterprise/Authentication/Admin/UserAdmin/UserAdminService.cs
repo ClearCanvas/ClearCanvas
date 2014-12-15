@@ -155,7 +155,7 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 			// for system accounts, update the password if specified
 			if(!string.IsNullOrEmpty(request.Password) && user.AccountType == UserAccountType.S)
 			{
-				PasswordPolicy.CheckPasswordCandidate(request.Password, new AuthenticationSettings());
+				PasswordPolicy.CheckPasswordCandidate(user.AccountType, request.Password, new AuthenticationSettings());
 				user.ChangePassword(request.Password, null);
 			}
 
@@ -294,7 +294,7 @@ namespace ClearCanvas.Enterprise.Authentication.Admin.UserAdmin
 
 				case UserAccountType.S:
 					// for system accounts, use password provided in request, and set to never expire
-					PasswordPolicy.CheckPasswordCandidate(password, settings);
+					PasswordPolicy.CheckPasswordCandidate(UserAccountType.S, password, settings);
 					return Password.CreatePassword(password, null);
 
 				default:
