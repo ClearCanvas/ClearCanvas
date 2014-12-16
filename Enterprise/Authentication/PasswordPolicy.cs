@@ -39,7 +39,7 @@ namespace ClearCanvas.Enterprise.Authentication
 		{
 			if (accountType == UserAccountType.S)
 			{
-				if (passwordCandidate.Length < 8)
+				if (string.IsNullOrEmpty(passwordCandidate) || passwordCandidate.Length < 8)
 					throw new RequestValidationException(SR.SystemAccountValidPasswordMessage);
 
 				return;
