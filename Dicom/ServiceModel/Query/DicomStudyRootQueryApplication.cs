@@ -46,7 +46,7 @@ namespace ClearCanvas.Dicom.ServiceModel.Query
 		{
 			var response = new StudyQueryResponse();
 			var result = Query<StudyRootStudyIdentifier, StudyRootFindScu>(request.Criteria, request, response);
-			response.Results = (List<StudyRootStudyIdentifier>)result;
+			response.Results = (List<StudyRootStudyIdentifier>) result;
 			return response;
 		}
 
@@ -54,7 +54,7 @@ namespace ClearCanvas.Dicom.ServiceModel.Query
 		{
 			var response = new SeriesQueryResponse();
 			var result = Query<SeriesIdentifier, StudyRootFindScu>(request.Criteria, request, response);
-			response.Results = (List<SeriesIdentifier>)result;
+			response.Results = (List<SeriesIdentifier>) result;
 			return response;
 		}
 
@@ -62,7 +62,7 @@ namespace ClearCanvas.Dicom.ServiceModel.Query
 		{
 			var response = new ImageQueryResponse();
 			var result = Query<ImageIdentifier, StudyRootFindScu>(request.Criteria, request, response);
-			response.Results = (List<ImageIdentifier>)result;
+			response.Results = (List<ImageIdentifier>) result;
 			return response;
 		}
 
@@ -110,18 +110,18 @@ namespace ClearCanvas.Dicom.ServiceModel.Query
 				catch (DicomException e)
 				{
 					var fault = new DataValidationFault
-					{
-						Description = "Failed to convert contract object to DicomAttributeCollection."
-					};
+					            {
+						            Description = "Failed to convert contract object to DicomAttributeCollection."
+					            };
 					Platform.Log(LogLevel.Error, e, fault.Description);
 					throw new FaultException<DataValidationFault>(fault, fault.Description);
 				}
 				catch (Exception e)
 				{
 					var fault = new DataValidationFault
-					{
-						Description = "Unexpected exception when converting contract object to DicomAttributeCollection."
-					};
+					            {
+						            Description = "Unexpected exception when converting contract object to DicomAttributeCollection."
+					            };
 					Platform.Log(LogLevel.Error, e, fault.Description);
 					throw new FaultException<DataValidationFault>(fault, fault.Description);
 				}
@@ -138,42 +138,36 @@ namespace ClearCanvas.Dicom.ServiceModel.Query
 					if (scu.Status == ScuOperationStatus.ConnectFailed)
 					{
 						String message = String.Format("Connection failed ({0})",
-													   scu.FailureDescription ?? "no failure description provided");
-						var fault = new QueryFailedFault { Description = message };
-						throw new FaultException<QueryFailedFault>(fault, fault.Description);
+						                               scu.FailureDescription ?? "no failure description provided");
+						HandleError(scu, request, message);
 					}
 					if (scu.Status == ScuOperationStatus.AssociationRejected)
 					{
 						String message = String.Format("Association rejected ({0})",
-													   scu.FailureDescription ?? "no failure description provided");
-						var fault = new QueryFailedFault { Description = message };
-						throw new FaultException<QueryFailedFault>(fault, fault.Description);
+						                               scu.FailureDescription ?? "no failure description provided");
+						HandleError(scu, request, message);
 					}
 					if (scu.Status == ScuOperationStatus.Failed)
 					{
 						String message = String.Format("The query operation failed ({0})",
-													   scu.FailureDescription ?? "no failure description provided");
-						var fault = new QueryFailedFault { Description = message };
-						throw new FaultException<QueryFailedFault>(fault, fault.Description);
+						                               scu.FailureDescription ?? "no failure description provided");
+						HandleError(scu, request, message);
 					}
 					if (scu.Status == ScuOperationStatus.TimeoutExpired)
 					{
 						String message = String.Format("The connection timeout expired ({0})",
-													   scu.FailureDescription ?? "no failure description provided");
-						var fault = new QueryFailedFault { Description = message };
-						throw new FaultException<QueryFailedFault>(fault, fault.Description);
+						                               scu.FailureDescription ?? "no failure description provided");
+						HandleError(scu, request, message);
 					}
 					if (scu.Status == ScuOperationStatus.NetworkError)
 					{
 						String message = String.Format("An unexpected network error has occurred.");
-						var fault = new QueryFailedFault { Description = message };
-						throw new FaultException<QueryFailedFault>(fault, fault.Description);
+						HandleError(scu, request, message);
 					}
 					if (scu.Status == ScuOperationStatus.UnexpectedMessage)
 					{
 						String message = String.Format("An unexpected message was received; aborted association.");
-						var fault = new QueryFailedFault { Description = message };
-						throw new FaultException<QueryFailedFault>(fault, fault.Description);
+						HandleError(scu, request, message);
 					}
 
 					response.MaxResultsReached = scu.Status == ScuOperationStatus.Canceled;
@@ -192,10 +186,10 @@ namespace ClearCanvas.Dicom.ServiceModel.Query
 				catch (Exception e)
 				{
 					var fault = new QueryFailedFault
-					{
-						Description = String.Format("An unexpected error has occurred ({0})",
-													scu.FailureDescription ?? "no failure description provided")
-					};
+					            {
+						            Description = String.Format("An unexpected error has occurred ({0})",
+						                                        scu.FailureDescription ?? "no failure description provided")
+					            };
 					Platform.Log(LogLevel.Error, e, fault.Description);
 					throw new FaultException<QueryFailedFault>(fault, fault.Description);
 				}
@@ -212,6 +206,19 @@ namespace ClearCanvas.Dicom.ServiceModel.Query
 			}
 
 			return results;
+		}
+
+		private static void HandleError(FindScuBase scu, QueryRequest request, string message)
+		{
+			if (request.IgnoreFailureOnPartialResults && scu.Results.Any())
+			{
+				Platform.Log(LogLevel.Info, "Partial results returned with error: {0}", message);
+			}
+			else
+			{
+				var fault = new QueryFailedFault {Description = message};
+				throw new FaultException<QueryFailedFault>(fault, fault.Description);
+			}
 		}
 	}
 }

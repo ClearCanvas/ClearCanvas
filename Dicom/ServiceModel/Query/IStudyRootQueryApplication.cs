@@ -43,6 +43,12 @@ namespace ClearCanvas.Dicom.ServiceModel.Query
 		/// </summary>
 		[DataMember(IsRequired = false)]
 		public int? MaxResults { get; set; }
+
+		/// <summary>
+		/// Gets or sets whether or not failures are ignored if any results were returned.
+		/// </summary>
+		[DataMember(IsRequired = false)]
+		public bool IgnoreFailureOnPartialResults { get; set; }
 	}
 
 	[DataContract(Namespace = QueryNamespace.Value)]
