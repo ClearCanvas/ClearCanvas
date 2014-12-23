@@ -403,6 +403,7 @@ namespace ClearCanvas.Common.Rest
 					using (var reqStream = _request.GetRequestStream())
 					{
 						_contentStream.CopyTo(reqStream);
+						reqStream.Flush();
 					}
 					return;
 				}
