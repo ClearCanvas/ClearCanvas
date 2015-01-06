@@ -301,8 +301,12 @@ namespace ClearCanvas.Dicom.Audit
 			_participantObjectList.Add(key, study);
 		}
 
-		protected void InternalAddActiveParticipant(AuditActiveParticipant participant)
+		protected bool HasParticipantObject(string key)
+		{
+			return _participantObjectList.ContainsKey(key);
+		}
 
+		protected void InternalAddActiveParticipant(AuditActiveParticipant participant)
 		{
 			_participantList.Add(new ActiveParticipantContents(participant));
 		}
