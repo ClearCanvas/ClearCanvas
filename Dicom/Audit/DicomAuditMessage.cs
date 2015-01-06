@@ -36,7 +36,7 @@ namespace ClearCanvas.Dicom.Audit
     public partial class EventID
     {
         public static EventID ApplicationActivity = new EventID("110100", "DCM", "Application Activity", "Application audit event");
-        public static EventID AuditLogUsed = new EventID("110101", "DCM", "	Audit Log Used	", "Audit Log Used audit event");
+        public static EventID AuditLogUsed = new EventID("110101", "DCM", "Audit Log Used", "Audit Log Used audit event");
         public static EventID BeginTransferringDICOMInstances = new EventID("110102", "DCM", "Begin Transferring DICOM Instances", "Begin Storing DICOM Instances audit event");
         public static EventID DICOMInstancesAccessed = new EventID("110103", "DCM", "DICOM Instances Accessed", "DICOM Instances created, read, updated, or deleted audit event");
         public static EventID DICOMInstancesTransferred = new EventID("110104", "DCM", "DICOM Instances Transferred", "Storage of DICOM Instances complete audit event");

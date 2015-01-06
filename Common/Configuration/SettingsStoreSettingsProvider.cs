@@ -239,15 +239,15 @@ namespace ClearCanvas.Common.Configuration
 		private Dictionary<string, string> GetPreviousSettingsValues(SettingsGroupDescriptor group, string user, string settingsKey)
 		{
 			var allGroups = _store.ListSettingsGroups();
-			var lessEqualGroups = CollectionUtils.Select(allGroups, 
+			var lessGroups = CollectionUtils.Select(allGroups, 
 				other => other.AssemblyQualifiedTypeName == group.AssemblyQualifiedTypeName && other.Version < group.Version);
 
 			// sort descending
-			lessEqualGroups.Sort((other1, other2) => other2.Version.CompareTo(other1.Version));
-			if (lessEqualGroups.Count == 0)
+			lessGroups.Sort((other1, other2) => other2.Version.CompareTo(other1.Version));
+			if (lessGroups.Count == 0)
 				return null;
 
-			foreach (var g in lessEqualGroups)
+			foreach (var g in lessGroups)
 			{
 				Dictionary<string, string> userValues = null;
 				if (!String.IsNullOrEmpty(user))
@@ -258,10 +258,10 @@ namespace ClearCanvas.Common.Configuration
 				}
 
 				var values = new Dictionary<string, string>();
-				foreach (var binaryDefault in _store.ListSettingsProperties(group))
+				foreach (var binaryDefault in _store.ListSettingsProperties(g))
 					values[binaryDefault.Name] = binaryDefault.DefaultValue;
 
-				foreach (var userDefault in _store.GetSettingsValues(group, null, settingsKey))
+				foreach (var userDefault in _store.GetSettingsValues(g, null, settingsKey))
 					values[userDefault.Key] = userDefault.Value;
 
 				if (userValues != null)
