@@ -246,22 +246,7 @@ namespace ClearCanvas.Common
 	    }
 
 		/// <summary>
-		/// Gets whether the application is executing on a Mac operating systems
-		/// </summary>
-		/// <remarks>
-		/// This method is thread-safe.
-		/// </remarks>
-		public static bool IsMacPlatform
-		{
-			get
-			{
-				PlatformID id = Environment.OSVersion.Platform;
-				return (id == PlatformID.MacOSX);
-			}
-		}
-
-		/// <summary>
-		/// Gets whether the application is executing on a Unix operating systems
+		/// Gets whether the application is executing on Mac, Linux, or other Unix-like operating systems
 		/// </summary>
 		/// <remarks>
 		/// This method is thread-safe.
@@ -270,8 +255,9 @@ namespace ClearCanvas.Common
 		{
 			get
 			{
+				// under mono, which is currently the only way this code would ever run on mac or linux, macs are reported as unix for compatibility reasons
 				PlatformID id = Environment.OSVersion.Platform;
-				return (id == PlatformID.Unix);
+				return (id == PlatformID.Unix || id == PlatformID.MacOSX);
 			}
 		}
 
