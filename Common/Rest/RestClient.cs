@@ -223,6 +223,7 @@ namespace ClearCanvas.Common.Rest
 			private HttpWebRequest _request;
 			private string _contentString;
 			private Stream _contentStream;
+			private long _streamBytesWritten;
 
 			internal Request(RestClient rc, string resource, string args)
 			{
@@ -247,6 +248,18 @@ namespace ClearCanvas.Common.Rest
 				set { _request.ProtocolVersion = value; }
 				get { return _request.ProtocolVersion; }
 			}
+
+			public long StreamContentLength
+			{
+				get { return _contentStream != null ? _contentStream.Length : 0; }
+			}
+
+			public long StreamBytesWritten
+			{
+				get { return _contentStream != null ? _streamBytesWritten : 0; }
+			}
+
+			public event EventHandler StreamBytesWrittenChanged;
 
 			/// <summary>
 			/// Sends this request using the GET verb and returns the response.
@@ -402,7 +415,17 @@ namespace ClearCanvas.Common.Rest
 				{
 					using (var reqStream = _request.GetRequestStream())
 					{
-						_contentStream.CopyTo(reqStream);
+						//Avoid LOH on Mono, where the threshold is 8000 bytes.
+						var bufferSize = Platform.IsMono ? 7500 : 65535;
+						var buffer = new byte[bufferSize];
+						int bytesRead;
+						while (0 < (bytesRead = _contentStream.Read(buffer, 0, buffer.Length)))
+						{
+							reqStream.Write(buffer, 0, bytesRead);
+							_streamBytesWritten += bytesRead;
+							if (StreamBytesWrittenChanged != null)
+								StreamBytesWrittenChanged(this, EventArgs.Empty);
+						}
 						reqStream.Flush();
 					}
 					return;
