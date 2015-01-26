@@ -249,16 +249,26 @@ namespace ClearCanvas.Common.Rest
 				get { return _request.ProtocolVersion; }
 			}
 
+			/// <summary>
+			/// Gets the total length of the content to be written, when it's a <see cref="Stream"/>.
+			/// </summary>
+			/// <returns>The length of the content to be written, when it's a <see cref="Stream"/>, otherwise zero.</returns>
 			public long StreamContentLength
 			{
 				get { return _contentStream != null ? _contentStream.Length : 0; }
 			}
 
+			/// <summary>
+			/// Gets the number of bytes written to the content <see cref="Stream"/>.
+			/// </summary>
 			public long StreamBytesWritten
 			{
 				get { return _contentStream != null ? _streamBytesWritten : 0; }
 			}
 
+			/// <summary>
+			/// Fires as underlying <see cref="Stream"/> content is written.
+			/// </summary>
 			public event EventHandler StreamBytesWrittenChanged;
 
 			/// <summary>
