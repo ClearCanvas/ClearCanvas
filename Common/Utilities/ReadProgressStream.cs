@@ -11,7 +11,7 @@ namespace ClearCanvas.Common.Utilities
 	/// </remarks>
 	public class ReadProgressStream : Stream
 	{
-		private readonly Stream _realStream;
+		private Stream _realStream;
 
 		public ReadProgressStream(Stream realStream)
 		{
@@ -80,6 +80,23 @@ namespace ClearCanvas.Common.Utilities
 		public override void Write(byte[] buffer, int offset, int count)
 		{
 			throw new NotSupportedException("Cannot write to ReadProgressStream.");
+		}
+
+		public override void Close()
+		{
+			if (_realStream != null)
+				_realStream.Close();
+
+			base.Close();
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if (!disposing) return;
+
+			if (_realStream == null) return;
+			_realStream.Dispose();
+			_realStream = null;
 		}
 
 		protected virtual void OnProgressChanged()

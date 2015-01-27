@@ -304,6 +304,7 @@
     <Compile Include="Utilities\PerformanceReportBroker.cs" />
     <Compile Include="Utilities\CryptoServiceFallbackHelper.cs" />
     <Compile Include="Utilities\MockSettingsStore.cs" />
+    <Compile Include="Utilities\CancellableStream.cs" />
     <Compile Include="Utilities\WriteProgressStream.cs" />
     <Compile Include="Utilities\ReadProgressStream.cs" />
     <Compile Include="Utilities\Tests\ProgressStreamTests.cs" />

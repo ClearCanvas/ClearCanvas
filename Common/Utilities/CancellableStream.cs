@@ -1,48 +1,41 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 
 namespace ClearCanvas.Common.Utilities
 {
 	/// <summary>
-	/// Notifies of progress writing to a stream.
+	/// Allows regular reading to and writing from a <see cref="Stream"/> to be canceled via a <see cref="CancellationToken"/>.
 	/// </summary>
-	public class WriteProgressStream : Stream
+	public class CancellableStream : Stream
 	{
 		private Stream _realStream;
-		private long _bytesWritten;
-		private long _bytesToWrite;
+		private readonly CancellationToken _cancellationToken;
 
-		public WriteProgressStream(Stream realStream, long bytesToWrite)
+		public CancellableStream(Stream realStream, CancellationToken cancellationToken)
 		{
-			Platform.CheckTrue(realStream.CanWrite, "realStream writeable");
-			_bytesToWrite = bytesToWrite;
 			_realStream = realStream;
+			_cancellationToken = cancellationToken;
 		}
-
-		public double ProgressPercent
-		{
-			get { return Math.Min(_bytesWritten/(double) _bytesToWrite*100, 100); }
-		}
-
-		public event EventHandler ProgressChanged;
 
 		public override bool CanRead
 		{
-			get { return false; }
+			get { return _realStream.CanRead; }
 		}
 
 		public override bool CanSeek
 		{
-			get { return false; }
+			get { return _realStream.CanSeek; }
 		}
 
 		public override bool CanWrite
 		{
-			get { return true; }
+			get { return _realStream.CanWrite; }
 		}
 
 		public override void Flush()
 		{
+			_cancellationToken.ThrowIfCancellationRequested();
 			_realStream.Flush();
 		}
 
@@ -54,34 +47,31 @@ namespace ClearCanvas.Common.Utilities
 		public override long Position
 		{
 			get { return _realStream.Position; }
-			set
-			{
-				throw new NotSupportedException("Cannot set position of WriteProgressStream.");
-			}
+			set { _realStream.Position = value; }
 		}
 
 		public override int Read(byte[] buffer, int offset, int count)
 		{
-			throw new NotSupportedException("Cannot read WriteProgressStream.");
+			_cancellationToken.ThrowIfCancellationRequested();
+			return _realStream.Read(buffer, offset, count);
 		}
 
 		public override long Seek(long offset, SeekOrigin origin)
 		{
-			throw new NotSupportedException("Cannot seek WriteProgressStream.");
+			_cancellationToken.ThrowIfCancellationRequested();
+			return _realStream.Seek(offset, origin);
 		}
 
 		public override void SetLength(long value)
 		{
-			throw new NotSupportedException("Cannot set length of WriteProgressStream.");
+			_cancellationToken.ThrowIfCancellationRequested();
+			_realStream.SetLength(value);
 		}
 
 		public override void Write(byte[] buffer, int offset, int count)
 		{
+			_cancellationToken.ThrowIfCancellationRequested();
 			_realStream.Write(buffer, offset, count);
-			_bytesWritten += count;
-			if (_bytesWritten > _bytesToWrite)
-				_bytesToWrite = _bytesWritten;
-			OnProgressChanged();
 		}
 
 		public override void Close()
@@ -99,12 +89,6 @@ namespace ClearCanvas.Common.Utilities
 			if (_realStream == null) return;
 			_realStream.Dispose();
 			_realStream = null;
-		}
-
-		protected virtual void OnProgressChanged()
-		{
-			EventHandler handler = ProgressChanged;
-			if (handler != null) handler(this, EventArgs.Empty);
 		}
 	}
 }
