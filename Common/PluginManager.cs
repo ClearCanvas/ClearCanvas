@@ -233,10 +233,12 @@ namespace ClearCanvas.Common
 				throw new PluginException(SR.ExceptionPluginDirectoryNotFound);
 
 			_plugins.AddRange(_loader.LoadPluginInfo());
-
-			// If no plugins were loaded, nothing else to do
 			if (_plugins.Count == 0)
+			{
+				// If there are no plugins, there's nothing left to do ... but they were still loaded.
+				_pluginsLoaded = true;
 				return;
+			}
 
 			// compile lists of all extension points and extensions
 			var extensions = new List<ExtensionInfo>(_plugins.SelectMany(p => p.Extensions));
