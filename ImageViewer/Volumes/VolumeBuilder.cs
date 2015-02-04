@@ -299,30 +299,30 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 				var progressCallback = new FrameCopyProgressTracker(_frames.Count, _callback);
 				var frameRanges = Enumerable.Range(0, _frames.Count)
-					.AsParallel2()
-					.Select(n =>
-					        	{
-					        		var position = n*volumePaddedFrameSize;
-					        		var sourceFrame = _frames[n].Frame;
+				                            .AsParallel2()
+				                            .Select(n =>
+				                                    {
+					                                    var position = n*volumePaddedFrameSize;
+					                                    var sourceFrame = _frames[n].Frame;
 
-					        		int paddingTopRows = 0, paddingBottomRows = 0;
-					        		if (paddingRows > 0)
-					        		{
-					        			// determine the number of rows to be padded at top and bottom
-					        			var framePadRowsMm = Math.Sin(skewAngleY)*(refFramePos - sourceFrame.ImagePlaneHelper.ImagePositionPatientVector).Magnitude;
-					        			var framePadRows = Math.Min(paddingRows, (int) (Math.Abs(framePadRowsMm/VoxelSpacing.Y) + 0.5f));
+					                                    int paddingTopRows = 0, paddingBottomRows = 0;
+					                                    if (paddingRows > 0)
+					                                    {
+						                                    // determine the number of rows to be padded at top and bottom
+						                                    var framePadRowsMm = Math.Sin(skewAngleY)*(refFramePos - sourceFrame.ImagePlaneHelper.ImagePositionPatientVector).Magnitude;
+						                                    var framePadRows = Math.Min(paddingRows, (int) (Math.Abs(framePadRowsMm/VoxelSpacing.Y) + 0.5f));
 
-					        			// when the skew angle is negative, the above calculation gives the rows to pad at the top of the frame
-					        			paddingTopRows = skewAngleY < 0 ? framePadRows : paddingRows - framePadRows;
-					        			paddingBottomRows = paddingRows - paddingTopRows;
-					        		}
+						                                    // when the skew angle is negative, the above calculation gives the rows to pad at the top of the frame
+						                                    paddingTopRows = skewAngleY < 0 ? framePadRows : paddingRows - framePadRows;
+						                                    paddingBottomRows = paddingRows - paddingTopRows;
+					                                    }
 
-					        		int frameMinPixelValue, frameMaxPixelValue;
-					        		using (var lutFactory = LutFactory.Create()) // lut factory isn't thread safe, so we create one when needed in the worker thread
-					        			FillVolumeFrame(volumeData, position, volumeSize.Width, sourceFrame, pixelPadValue, normalizedSlope, normalizedIntercept, paddingTopRows, paddingBottomRows, lutFactory, out frameMinPixelValue, out frameMaxPixelValue);
-					        		progressCallback.IncrementAndNotify();
-					        		return new {Min = frameMinPixelValue, Max = frameMaxPixelValue};
-					        	}).ToList();
+					                                    int frameMinPixelValue, frameMaxPixelValue;
+					                                    using (var lutFactory = LutFactory.Create()) // lut factory isn't thread safe, so we create one when needed in the worker thread
+						                                    FillVolumeFrame(volumeData, position, volumeSize.Width, sourceFrame, pixelPadValue, normalizedSlope, normalizedIntercept, paddingTopRows, paddingBottomRows, lutFactory, out frameMinPixelValue, out frameMaxPixelValue);
+					                                    progressCallback.IncrementAndNotify();
+					                                    return new {Min = frameMinPixelValue, Max = frameMaxPixelValue};
+				                                    }).ToList();
 
 				minVolumeValue = frameRanges.Select(r => r.Min).Min();
 				maxVolumeValue = frameRanges.Select(r => r.Max).Max();
@@ -501,8 +501,8 @@ namespace ClearCanvas.ImageViewer.Volumes
 				// aggregate all the VOI windows for the source frames by index - i.e. 1st window is aggregate of all 1st windows in the input, 2nd window is aggregate of all 2nd windows, etc.
 				var frameWindows = frames.Select(f => ComputeNormalizedVoiWindows(f, normalizedSlope, normalizedIntercept).ToArray()).ToArray();
 				return Enumerable.Range(0, frameWindows.Select(w => w.Length).Max())
-					.Select(i => frameWindows.Select(f => f.Length > i ? f[i] : null))
-					.Select(w => ComputeAggregateVoiWindow(w.ToList())).ToList();
+				                 .Select(i => frameWindows.Select(f => f.Length > i ? f[i] : null))
+				                 .Select(w => ComputeAggregateVoiWindow(w.Where(v => v != null).ToList())).ToList();
 			}
 
 			private static IEnumerable<VoiWindow> ComputeNormalizedVoiWindows(IImageSopProvider frame, double normalizedSlope, double normalizedIntercept)
