@@ -234,7 +234,6 @@
     <Compile Include="OemConfiguration.cs" />
     <Compile Include="PagingActionModel.cs" />
     <Compile Include="PagingController.cs" />
-    <Compile Include="PhoneHome.cs" />
     <Compile Include="SelectFolderDialogCreationArgs.cs" />
     <Compile Include="GalleryItemEventArgs.cs" />
     <Compile Include="IApplicationView.cs" />
