@@ -62,7 +62,7 @@ namespace ClearCanvas.Desktop.Help
 
 		public void ShowWebsite()
 		{
-			Execute("http://www.clearcanvas.ca", SR.URLNotFound);
+			Execute("http://www.synaptivemedical.com", SR.URLNotFound);
 		}
 
 		public void ShowUsersGuide()
