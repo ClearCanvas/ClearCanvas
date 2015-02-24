@@ -142,11 +142,15 @@ namespace ClearCanvas.ImageViewer.Common
                 return dicomServiceNode;
 
             IDicomServiceNode serviceNode = null;
-            if (!String.IsNullOrEmpty(server.Name))
-                serviceNode = ServerDirectory.ServerDirectory.GetRemoteServerByName(server.Name);
 
-            if (serviceNode == null)
-                serviceNode = ServerDirectory.ServerDirectory.GetRemoteServersByAETitle(server.AETitle).FirstOrDefault();
+	        if (ServerDirectory.ServerDirectory.IsSupported)
+	        {
+		        if (!String.IsNullOrEmpty(server.Name))
+			        serviceNode = ServerDirectory.ServerDirectory.GetRemoteServerByName(server.Name);
+
+		        if (serviceNode == null)
+			        serviceNode = ServerDirectory.ServerDirectory.GetRemoteServersByAETitle(server.AETitle).FirstOrDefault();
+	        }
 
             if (serviceNode == null)
                 return new DicomServiceNode(server);
@@ -181,12 +185,16 @@ namespace ClearCanvas.ImageViewer.Common
             Platform.Log(LogLevel.Debug, "Identifier.RetrieveAE is not set.");
 
             IDicomServiceNode server = null;
-            if (!String.IsNullOrEmpty(identifier.RetrieveAeTitle))
-                server = ServerDirectory.ServerDirectory.GetRemoteServersByAETitle(identifier.RetrieveAeTitle).FirstOrDefault();
 
-            var local = ServerDirectory.ServerDirectory.GetLocalServer();
-            if ((server == null && defaultToLocal) || identifier.RetrieveAeTitle == local.AETitle)
-                server = local;
+	        if (ServerDirectory.ServerDirectory.IsSupported)
+	        {
+		        if (!String.IsNullOrEmpty(identifier.RetrieveAeTitle))
+			        server = ServerDirectory.ServerDirectory.GetRemoteServersByAETitle(identifier.RetrieveAeTitle).FirstOrDefault();
+
+		        var local = ServerDirectory.ServerDirectory.GetLocalServer();
+		        if ((server == null && defaultToLocal) || identifier.RetrieveAeTitle == local.AETitle)
+			        server = local;
+	        }
 
             return server;
         }
