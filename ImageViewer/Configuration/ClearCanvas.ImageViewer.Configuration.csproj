@@ -71,6 +71,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplicationSettingsMigrationRoot.cs" />
     <Compile Include="DicomSendConfigurationComponent.cs" />
     <Compile Include="SharedConfigurationDialog.cs" />
     <Compile Include="SharedConfigurationPageProvider.cs" />

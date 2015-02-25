@@ -57,7 +57,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 	[KeyboardAction("rotatedown", "imageviewer-keyboard/ToolsStandardRotate/RotateDown", "RotateDown", KeyStroke = XKeys.NumPad2)]
 	//
 	[MouseToolButton(XMouseButtons.Left, false)]
-	[ExtensionOf(typeof (ImageViewerToolExtensionPoint))]
+	[ExtensionOf(typeof (ImageViewerToolExtensionPoint), Enabled = false)]
 	public class Rotate3DTool : MouseImageViewerTool
 	{
 		private const string _dropDownMenuActionSite = "rotate3d-dropdown";

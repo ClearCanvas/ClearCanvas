@@ -75,6 +75,11 @@
   <ItemGroup>
     <ConfigFiles Include="$(ProjectDir)\Logging.config" />
   </ItemGroup>
+  
+  <!-- License files -->
+  <ItemGroup>
+    <LicenseFiles Include="$(ProjectDir)\..\..\License.rtf" />
+  </ItemGroup>
 
   <!-- Shared library files, to be placed in common directory -->
   <ItemGroup>
@@ -162,6 +167,9 @@
 
     <!-- Copy shared config files -->
     <Copy SourceFiles="@(ConfigFiles)" DestinationFolder="$(DistributionDirectory)" ContinueOnError="true"/>
+
+    <!-- Copy License.rtf -->
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(LicenseFiles)" DestinationFolder="$(DistributionDirectory)" ContinueOnError="true"/>
 
     <!-- Copy shared libraries -->
     <Copy SourceFiles="@(SharedLibraryFiles)" DestinationFolder="$(CommonDirectory)" />
