@@ -34,6 +34,17 @@ namespace ClearCanvas.Common.Caching
 		/// <summary>
 		/// Constructor
 		/// </summary>
+		/// <param name="expiration"></param>
+		/// <param name="sliding"></param>
+		public CachePutOptions(TimeSpan expiration, bool sliding)
+		{
+			Expiration = expiration;
+			Sliding = sliding;
+		}
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
 		/// <param name="region"></param>
 		/// <param name="expiration"></param>
 		/// <param name="sliding"></param>

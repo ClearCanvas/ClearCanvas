@@ -141,4 +141,7 @@
   <data name="MessageAccountTypeDoesNotSupportAssignPassword" xml:space="preserve">
     <value>This account type does not support assigning a password.</value>
   </data>
+  <data name="SystemAccountValidPasswordMessage" xml:space="preserve">
+    <value>Password must be at least 8 characters long.</value>
+  </data>
 </root>

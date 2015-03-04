@@ -74,12 +74,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		public void Apply(IPresentationImage image)
 		{
 			ISpatialTransform transform = (ISpatialTransform)_operation.GetOriginator(image);
-			// Do the transform
-			if (transform.RotationXY == 0 || transform.RotationXY == 180)
-				transform.FlipX = !transform.FlipX;
-			// If image is rotated 90 or 270, then a vertical flip is really a horizontal flip
-			else
-				transform.FlipY = !transform.FlipY;
+			transform.FlipVertical();
 		}
 	}
 }

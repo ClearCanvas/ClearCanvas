@@ -57,8 +57,8 @@ namespace ClearCanvas.ImageServer.Common
 			if (args.SendTimeoutSeconds > 0)
 				binding.SendTimeout = TimeSpan.FromSeconds(args.SendTimeoutSeconds);
 
-			binding.ReaderQuotas.MaxStringContentLength = args.MaxReceivedMessageSize;
-			binding.ReaderQuotas.MaxArrayLength = args.MaxReceivedMessageSize;
+			binding.ReaderQuotas.MaxStringContentLength = (int)Math.Min(int.MaxValue, args.MaxReceivedMessageSize);
+			binding.ReaderQuotas.MaxArrayLength = (int)Math.Min(int.MaxValue, args.MaxReceivedMessageSize);
 			binding.Security.Mode = settings.SecurityMode;
 			binding.Security.Message.ClientCredentialType = args.Authenticated
 			                                                	? MessageCredentialType.UserName
@@ -90,7 +90,7 @@ namespace ClearCanvas.ImageServer.Common
 			//TODO (Rockstar): remove this after refactoring to do per-sop edits
 			foreach (var endpoint in host.Description.Endpoints)
 				foreach (var operation in endpoint.Contract.Operations)
-					operation.Behaviors.Find<DataContractSerializerOperationBehavior>().MaxItemsInObjectGraph = args.MaxReceivedMessageSize;
+					operation.Behaviors.Find<DataContractSerializerOperationBehavior>().MaxItemsInObjectGraph = (int)Math.Min(int.MaxValue, args.MaxReceivedMessageSize);
 
 			// set up the certificate 
 			if (settings.SecurityMode == SecurityMode.Message
@@ -137,8 +137,8 @@ namespace ClearCanvas.ImageServer.Common
 				binding.SendTimeout = TimeSpan.FromSeconds(args.SendTimeoutSeconds);
 
 			// allow individual string content to be same size as entire message
-			binding.ReaderQuotas.MaxStringContentLength = args.MaxReceivedMessageSize;
-			binding.ReaderQuotas.MaxArrayLength = args.MaxReceivedMessageSize;
+			binding.ReaderQuotas.MaxStringContentLength = (int)Math.Min(int.MaxValue, args.MaxReceivedMessageSize);
+			binding.ReaderQuotas.MaxArrayLength = (int)Math.Min(int.MaxValue, args.MaxReceivedMessageSize);
 
 			//binding.ReceiveTimeout = new TimeSpan(0, 0 , 20);
 			//binding.SendTimeout = new TimeSpan(0, 0, 10);
@@ -150,7 +150,7 @@ namespace ClearCanvas.ImageServer.Common
 
 			//TODO (Rockstar): remove this after refactoring to do per-sop edits
 			foreach (var operation in channelFactory.Endpoint.Contract.Operations)
-				operation.Behaviors.Find<DataContractSerializerOperationBehavior>().MaxItemsInObjectGraph = args.MaxReceivedMessageSize;
+				operation.Behaviors.Find<DataContractSerializerOperationBehavior>().MaxItemsInObjectGraph = (int)Math.Min(int.MaxValue, args.MaxReceivedMessageSize);
 
 			return channelFactory;
 		}

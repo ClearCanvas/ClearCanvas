@@ -49,6 +49,13 @@ namespace ClearCanvas.Common.Configuration
 
 		internal static bool IsUserUpgradeEnabled()
 		{
+            //This will not work on Mono out of the box.
+		    if (Platform.IsMono)
+		    {
+                Platform.Log(LogLevel.Debug, "User settings upgrade will not work on Mono as-is.");
+		        return false;
+		    }
+
 			if (Default.UnitTesting)
 				return true;
 

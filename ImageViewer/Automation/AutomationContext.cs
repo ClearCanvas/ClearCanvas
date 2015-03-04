@@ -22,11 +22,13 @@
 
 #endregion
 
+using System;
 using ClearCanvas.Common;
 
 namespace ClearCanvas.ImageViewer.Automation
 {
     [ExtensionPoint]
+    [Obsolete("Deprecated due to quirks with generic extension points that may cause some extensions to be missed.")]
     public sealed class AutomationExtensionPoint<T> : ExtensionPoint<T>
     {
     }

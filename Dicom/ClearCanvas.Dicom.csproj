@@ -2,15 +2,11 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build" ToolsVersion="4.0">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{AD9ECE2B-8268-4115-8DC8-860FBD011FFF}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ApplicationIcon />
     <AssemblyKeyContainerName />
     <AssemblyName>ClearCanvas.Dicom</AssemblyName>
-    <AssemblyOriginatorKeyFile />
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
@@ -18,7 +14,6 @@
     <OutputType>Library</OutputType>
     <RootNamespace>ClearCanvas.Dicom</RootNamespace>
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
-    <StartupObject />
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation />
@@ -41,22 +36,19 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkProfile />
     <FileAlignment>512</FileAlignment>
+    <UseMSBuildEngine>False</UseMSBuildEngine>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
-    <ConfigurationOverrideFile />
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
     <DefineConstants>TRACE;DEBUG;UNIT_TESTS</DefineConstants>
-    <DocumentationFile>
-    </DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
-    <NoStdLib>false</NoStdLib>
     <NoWarn>1591, 0419, 1574, 1587</NoWarn>
     <Optimize>false</Optimize>
     <RegisterForComInterop>false</RegisterForComInterop>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningLevel>4</WarningLevel>
     <DebugType>full</DebugType>
     <ErrorReport>prompt</ErrorReport>
@@ -66,50 +58,40 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
-    <ConfigurationOverrideFile />
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
     <DefineConstants>TRACE</DefineConstants>
-    <DocumentationFile>
-    </DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
-    <NoStdLib>false</NoStdLib>
     <NoWarn>1591, 0419, 1574, 1587</NoWarn>
     <Optimize>true</Optimize>
     <RegisterForComInterop>false</RegisterForComInterop>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningLevel>4</WarningLevel>
     <DebugType>pdbonly</DebugType>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=2.2.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ReferencedAssemblies\nunit.framework.dll</HintPath>
-    </Reference>
     <Reference Include="sysglobl" />
     <Reference Include="System" />
-    <Reference Include="System.configuration" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="System.Core" />
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Runtime.Serialization, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\WINDOWS\Microsoft.NET\Framework\v3.0\Windows Communication Foundation\System.Runtime.Serialization.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ServiceModel, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\WINDOWS\Microsoft.NET\Framework\v3.0\Windows Communication Foundation\System.ServiceModel.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\ReferencedAssemblies\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Runtime.Serialization">
+      <HintPath>..\..\..\WINDOWS\Microsoft.NET\Framework\v3.0\Windows Communication Foundation\System.Runtime.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel">
+      <HintPath>..\..\..\WINDOWS\Microsoft.NET\Framework\v3.0\Windows Communication Foundation\System.ServiceModel.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup />
@@ -231,6 +213,10 @@
     <Compile Include="Iod\GradientDirection.cs" />
     <Compile Include="Iod\Iods\RawDataIod.cs" />
     <Compile Include="Iod\Iods\ScImageIod.cs" />
+    <Compile Include="Iod\ISeries.cs" />
+    <Compile Include="Iod\ISeriesCollection.cs" />
+    <Compile Include="Iod\ISopInstance.cs" />
+    <Compile Include="Iod\ISopInstanceCollection.cs" />
     <Compile Include="Iod\Macros\CommonCtMrImageDescriptionMacro.cs" />
     <Compile Include="Iod\Macros\ExposureIndexMacro.cs" />
     <Compile Include="Iod\Macros\XRay3DGeneralPerProjectionAcquisitionMacro.cs" />
@@ -292,6 +278,8 @@
     <Compile Include="IO\Tests\ByteBufferTests.cs" />
     <Compile Include="IO\Tests\LegacyByteBuffer.cs" />
     <Compile Include="IO\Tests\TestByteBuffer.cs" />
+    <Compile Include="IReadOnlyDicomAttribute.cs" />
+    <Compile Include="IReadOnlyDicomSequenceItem.cs" />
     <Compile Include="Network\SR.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -304,11 +292,24 @@
     <Compile Include="ServiceModel\Editing\Condition.cs" />
     <Compile Include="ServiceModel\Editing\Edit.cs" />
     <Compile Include="ServiceModel\Editing\Namespace.cs" />
+    <Compile Include="ServiceModel\Query\IStudyRootQueryApplication.cs" />
+    <Compile Include="ServiceModel\Query\IStudyRootRetrieve.cs" />
+    <Compile Include="ServiceModel\Query\DicomStudyRootQueryApplication.cs" />
+    <Compile Include="ServiceModel\SR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
     <Compile Include="ServiceModel\Streaming\DicomImportServiceClient.cs" />
     <Compile Include="ServiceModel\Streaming\HeaderStreamingServiceClient.cs" />
     <Compile Include="ServiceModel\Streaming\IDicomImportService.cs" />
+    <Compile Include="ServiceModel\Verification\FaultContracts.cs" />
+    <Compile Include="ServiceModel\Verification\IVerifyApplication.cs" />
+    <Compile Include="ServiceModel\Verification\VerifyApplication.cs" />
     <Compile Include="Tests\ChangeTransferSyntaxTests.cs" />
     <Compile Include="Tests\DicomUidTests.cs" />
+    <Compile Include="Tests\IconImageSequenceTests.cs" />
+    <Compile Include="Tests\SequenceTests.cs" />
     <Compile Include="Tests\SopClassTests.cs" />
     <Compile Include="Tests\DicomAttributeBinaryDataTests.cs" />
     <Compile Include="Tests\DicomImageTestHelper.cs" />
@@ -383,6 +384,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SR.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServiceModel\SR.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="SR.resx">
       <SubType>Designer</SubType>

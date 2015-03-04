@@ -29,6 +29,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using ClearCanvas.Common.Utilities;
+using JetBrains.Annotations;
 using log4net;
 using log4net.Config;
 
@@ -157,6 +158,7 @@ namespace ClearCanvas.Common
 		private static volatile ITimeProvider _timeProvider;
 		private static volatile IServiceProvider[] _serviceProviders;
 		private static volatile IDuplexServiceProvider[] _duplexServiceProviders;
+	    private static bool? _isMono;
 
 		#endregion
 
@@ -232,6 +234,17 @@ namespace ClearCanvas.Common
 				return (id == PlatformID.Win32NT || id == PlatformID.Win32Windows || id == PlatformID.Win32S || id == PlatformID.WinCE);
 			}
 		}
+
+	    public static bool IsMono
+	    {
+	        get
+	        {
+	            if (!_isMono.HasValue)
+                    _isMono = Type.GetType("Mono.Runtime") != null;
+                
+                return _isMono.Value;
+	        }    
+	    }
 
 		/// <summary>
 		/// Gets whether the application is executing on a Unix operating systems
@@ -512,8 +525,8 @@ namespace ClearCanvas.Common
 
 			var xp = new ApplicationRootExtensionPoint();
 			_applicationRoot = (applicationRootFilter == null) ?
-			                                                   	(IApplicationRoot) xp.CreateExtension() :
-			                                                   	                                        	(IApplicationRoot) xp.CreateExtension(applicationRootFilter);
+				(IApplicationRoot) xp.CreateExtension() :
+				(IApplicationRoot) xp.CreateExtension(applicationRootFilter);
 			_applicationRoot.RunApplication(args);
 		}
 
@@ -759,7 +772,7 @@ namespace ClearCanvas.Common
 		/// <returns>true if the <see cref="LogLevel"/> is enabled, or else false.</returns>
 		public static bool IsLogLevelEnabled(LogLevel category)
 		{
-			return IsLogLevelEnabled(null, category);
+			return IsLogLevelEnabled((string) null, category);
 		}
 
 		/// <summary>
@@ -771,6 +784,11 @@ namespace ClearCanvas.Common
 		public static bool IsLogLevelEnabled(string logName, LogLevel category)
 		{
 			var log = GetLog(logName);
+			return IsLogLevelEnabled(log, category);
+		}
+
+		private static bool IsLogLevelEnabled(ILog log, LogLevel category)
+		{
 			switch (category)
 			{
 				case LogLevel.Debug:
@@ -834,6 +852,7 @@ namespace ClearCanvas.Common
 		/// <param name="category">The log level.</param>
 		/// <param name="message">Format message, as used with <see cref="System.Text.StringBuilder"/>.</param>
 		/// <param name="args">Optional arguments used with <paramref name="message"/>.</param>
+		[StringFormatMethod("message")]
 		public static void Log(LogLevel category, String message, params object[] args)
 		{
 			Log(_log, category, null, message, args);
@@ -847,6 +866,7 @@ namespace ClearCanvas.Common
 		/// <param name="category">The log level.</param>
 		/// <param name="message">Format message, as used with <see cref="System.Text.StringBuilder"/>.</param>
 		/// <param name="args">Optional arguments used with <paramref name="message"/>.</param>
+		[StringFormatMethod("message")]
 		public static void Log(LogLevel category, Exception ex, String message, params object[] args)
 		{
 			Log(_log, category, ex, message, args);
@@ -860,6 +880,7 @@ namespace ClearCanvas.Common
 		/// <param name="category">The log level.</param>
 		/// <param name="message">Format message, as used with <see cref="System.Text.StringBuilder"/>.</param>
 		/// <param name="args">Optional arguments used with <paramref name="message"/>.</param>
+		[StringFormatMethod("message")]
 		public static void Log(string logName, LogLevel category, String message, params object[] args)
 		{
 			Log(logName, category, null, message, args);
@@ -874,6 +895,7 @@ namespace ClearCanvas.Common
 		/// <param name="category">The log level.</param>
 		/// <param name="message">Format message, as used with <see cref="System.Text.StringBuilder"/>.</param>
 		/// <param name="args">Optional arguments used with <paramref name="message"/>.</param>
+		[StringFormatMethod("message")]
 		public static void Log(string logName, LogLevel category, Exception ex, String message, params object[] args)
 		{
 			Log(GetLog(logName), category, ex, message, args);
@@ -881,7 +903,7 @@ namespace ClearCanvas.Common
 
 		private static void Log(ILog log, LogLevel category, Exception ex, String message, object[] args)
 		{
-			if (IsLogLevelEnabled(category))
+			if (IsLogLevelEnabled(log, category))
 				Log(log, category, ex, GetLogMessage(ex != null, message, args));
 		}
 
@@ -1029,17 +1051,16 @@ namespace ClearCanvas.Common
 		/// <summary>
 		/// Checks if a string is empty.
 		/// </summary>
-		/// <param name="variable">The string to check.</param>
+		/// <param name="value">The string to check.</param>
 		/// <param name="variableName">The variable name of the string to checked.</param>
-		/// <exception cref="ArgumentNullException"><paramref name="variable"/> or or <paramref name="variableName"/>
+		/// <exception cref="ArgumentNullException"><paramref name="value"/> or or <paramref name="variableName"/>
 		/// is <b>null</b>.</exception>
-		/// <exception cref="ArgumentException"><paramref name="variable"/> is zero length.</exception>
-		public static void CheckForEmptyString(string variable, string variableName)
+		/// <exception cref="ArgumentException"><paramref name="value"/> is zero length.</exception>
+		public static void CheckForEmptyString(string value, [InvokerParameterName] string variableName)
 		{
-			CheckForNullReference(variable, variableName);
+			CheckForNullReference(value, variableName);
 			CheckForNullReference(variableName, "variableName");
-
-			if (variable.Length == 0)
+			if (value.Length == 0)
 				throw new ArgumentException(String.Format(SR.ExceptionEmptyString, variableName));
 		}
 
@@ -1049,10 +1070,10 @@ namespace ClearCanvas.Common
 		/// <param name="variable">The object reference to check.</param>
 		/// <param name="variableName">The variable name of the object reference to check.</param>
 		/// <remarks>Use for checking if an input argument is <b>null</b>.  To check if a member variable
-		/// is <b>null</b> (i.e., to see if an object is in a valid state), use <b>CheckMemberIsSet</b> instead.</remarks>
+		/// is <b>null</b> (i.e., to see if an object is in a valid state), use <see cref="CheckMemberIsSet(object,string)"/> instead.</remarks>
 		/// <exception cref="ArgumentNullException"><paramref name="variable"/> or <paramref name="variableName"/>
 		/// is <b>null</b>.</exception>
-		public static void CheckForNullReference(object variable, string variableName)
+		public static void CheckForNullReference(object variable, [InvokerParameterName] string variableName)
 		{
 			if (variableName == null)
 				throw new ArgumentNullException("variableName");
@@ -1074,7 +1095,7 @@ namespace ClearCanvas.Common
 			CheckForNullReference(variable, "variable");
 			CheckForNullReference(type, "type");
 
-			if (!type.IsAssignableFrom(variable.GetType()))
+			if (!type.IsInstanceOfType(variable))
 				throw new ArgumentException(String.Format(SR.ExceptionExpectedType, type.FullName));
 		}
 
@@ -1127,7 +1148,7 @@ namespace ClearCanvas.Common
 		/// <param name="variableName">The variable name of the value to check.</param>
 		/// <exception cref="ArgumentNullException"><paramref name="variableName"/> is <b>null</b>.</exception>
 		/// <exception cref="ArgumentException"><paramref name="n"/> &lt;= 0.</exception>
-		public static void CheckPositive(int n, string variableName)
+		public static void CheckPositive(int n, [InvokerParameterName] string variableName)
 		{
 			CheckForNullReference(variableName, "variableName");
 
@@ -1146,7 +1167,7 @@ namespace ClearCanvas.Common
 		{
 			CheckForNullReference(conditionName, "conditionName");
 
-			if (testTrueCondition != true)
+			if (!testTrueCondition)
 				throw new ArgumentException(String.Format(SR.ExceptionConditionIsNotMet, conditionName));
 		}
 
@@ -1161,7 +1182,7 @@ namespace ClearCanvas.Common
 		{
 			CheckForNullReference(conditionName, "conditionName");
 
-			if (testFalseCondition != false)
+			if (testFalseCondition)
 				throw new ArgumentException(String.Format(SR.ExceptionConditionIsNotMet, conditionName));
 		}
 
@@ -1172,7 +1193,7 @@ namespace ClearCanvas.Common
 		/// <param name="variableName">The variable name of the value to check.</param>
 		/// <exception cref="ArgumentNullException"><paramref name="variableName"/> is <b>null</b>.</exception>
 		/// <exception cref="ArgumentException"><paramref name="x"/> &lt;= 0.</exception>
-		public static void CheckPositive(float x, string variableName)
+		public static void CheckPositive(float x, [InvokerParameterName] string variableName)
 		{
 			CheckForNullReference(variableName, "variableName");
 
@@ -1187,7 +1208,7 @@ namespace ClearCanvas.Common
 		/// <param name="variableName">The variable name of the value to check.</param>
 		/// <exception cref="ArgumentNullException"><paramref name="variableName"/> is <b>null</b>.</exception>
 		/// <exception cref="ArgumentException"><paramref name="x"/> &lt;= 0.</exception>
-		public static void CheckPositive(double x, string variableName)
+		public static void CheckPositive(double x, [InvokerParameterName] string variableName)
 		{
 			CheckForNullReference(variableName, "variableName");
 
@@ -1202,7 +1223,7 @@ namespace ClearCanvas.Common
 		/// <param name="variableName">The variable name of the value to check.</param>
 		/// <exception cref="ArgumentNullException"><paramref name="variableName"/> is <b>null</b>.</exception>
 		/// <exception cref="ArgumentException"><paramref name="n"/> &lt; 0.</exception>
-		public static void CheckNonNegative(int n, string variableName)
+		public static void CheckNonNegative(int n, [InvokerParameterName] string variableName)
 		{
 			CheckForNullReference(variableName, "variableName");
 
@@ -1221,7 +1242,7 @@ namespace ClearCanvas.Common
 		/// <exception cref="ArgumentNullException"><paramref name="variableName"/> is <b>null</b>.</exception>
 		/// <exception cref="ArgumentOutOfRangeException"><paramref name="argumentValue"/> is not within the
 		/// specified range.</exception>
-		public static void CheckArgumentRange(int argumentValue, int min, int max, string variableName)
+		public static void CheckArgumentRange(int argumentValue, int min, int max, [InvokerParameterName] string variableName)
 		{
 			CheckForNullReference(variableName, "variableName");
 
@@ -1258,7 +1279,7 @@ namespace ClearCanvas.Common
 		/// have been set, i.e., are not null.</remarks>
 		/// <exception cref="ArgumentNullException"><paramref name="variableName"/> is <b>null</b>.</exception>
 		/// <exception cref="System.InvalidOperationException"><paramref name="variable"/> is <b>null</b>.</exception>
-		public static void CheckMemberIsSet(object variable, string variableName)
+		public static void CheckMemberIsSet(object variable, [InvokerParameterName] string variableName)
 		{
 			CheckForNullReference(variableName, "variableName");
 
@@ -1278,7 +1299,7 @@ namespace ClearCanvas.Common
 		/// have been set, i.e., are not null.</remarks>
 		/// <exception cref="ArgumentNullException"><paramref name="variableName"/> is <b>null</b>.</exception>
 		/// <exception cref="System.InvalidOperationException"><paramref name="variable"/> is <b>null</b>.</exception>
-		public static void CheckMemberIsSet(object variable, string variableName, string detailedMessage)
+		public static void CheckMemberIsSet(object variable, [InvokerParameterName] string variableName, string detailedMessage)
 		{
 			CheckForNullReference(variableName, "variableName");
 			CheckForNullReference(detailedMessage, "detailedMessage");

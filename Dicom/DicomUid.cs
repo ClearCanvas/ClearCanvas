@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.NetworkInformation;
 using System.Text;
+using JetBrains.Annotations;
 
 namespace ClearCanvas.Dicom
 {
@@ -35,6 +36,8 @@ namespace ClearCanvas.Dicom
 	/// </summary>
 	public enum UidType
 	{
+		// ReSharper disable InconsistentNaming
+
 		TransferSyntax,
 		SOPClass,
 		MetaSOPClass,
@@ -43,6 +46,8 @@ namespace ClearCanvas.Dicom
 		CodingScheme,
 		SynchronizationFrameOfReference,
 		Unknown
+
+		// ReSharper restore InconsistentNaming
 	}
 
 	/// <summary>
@@ -149,7 +154,7 @@ namespace ClearCanvas.Dicom
 		/* members for UID Generation */
 		private static String _lastTimestamp;
 		private static String _baseUid = null;
-		private static Object _lock = new object();
+		private static readonly Object _lock = new object();
 		private static short _count = 0;
 
 		/// <summary>
@@ -216,6 +221,7 @@ namespace ClearCanvas.Dicom
 		/// </para>
 		/// </remarks>
 		/// <returns></returns>
+		[UsedImplicitly]
 		private static DicomUid ObsoleteGenerateUid()
 		{
 			lock (_lock)
@@ -324,89 +330,135 @@ namespace ClearCanvas.Dicom
 		}
 #endif
 
+		/// <summary>
+		/// Converts the 128-bits of a GUID into a byte stream of 4x 32-bit words, respecting the system endianess so that
+		/// the MSB of the GUID is the MSB of the first word, and LSB of the GUID is the LSB of the last word.
+		/// </summary>
+		private static byte[] GuidToSystemEndianBytes(Guid guid)
+		{
+			var bytes = guid.ToByteArray();
+
+			// our conversion algorithm uses 4x 32-bit unsigned ints in most-to-least significant word order
+			//   (4 system endian) (4 system endian) (4 system endian) (4 system endian)
+			// but .NET GUIDs are broken up into parts and separately encoded with first 3 in system endian and last 2 in big endian
+			//   (4 system endian)-(2 system endian)-(2 system endian)-(2 big endian)-(6 big endian)
+			//
+			// if system is little endian, we byte-swap here to build the 4 little endian words in the correct order
+			//
+			// if system is big endian, the bytes are already big endian and most-to-least significant word order
+			// so no swapping is necessary (and all the calculations will be done in big endian anyway)
+			if (BitConverter.IsLittleEndian)
+			{
+				var t = bytes[4];
+				bytes[4] = bytes[6];
+				bytes[6] = t;
+
+				t = bytes[5];
+				bytes[5] = bytes[7];
+				bytes[7] = t;
+
+				t = bytes[8];
+				bytes[8] = bytes[11];
+				bytes[11] = t;
+
+				t = bytes[9];
+				bytes[9] = bytes[10];
+				bytes[10] = t;
+
+				t = bytes[12];
+				bytes[12] = bytes[15];
+				bytes[15] = t;
+
+				t = bytes[13];
+				bytes[13] = bytes[14];
+				bytes[14] = t;
+			}
+
+			return bytes;
+		}
+
+		/// <summary>
+		/// Formats a GUID as a big decimal string of digits.
+		/// </summary>
 		private static unsafe string FormatGuidAsString(Guid guid)
 		{
-			const int maxDigits = 39;
+			// the conversion is based on the pen-and-paper algorithm for converting between bases:
+			// 1. divide input by base, remainder is least significant output digit.
+			// 2. divide quotient by base, remainder is next least significant output digit.
+			// 3. repeat until quotient is zero.
+			// 
+			// however, we are unable to write normal arirthmetic operations here because the operands are 128-bits, and we can do at best 64-bits!
+			// the solution is to do "long division", i.e. division in smaller, manageable units, and carry over the remainder to lower places
+			// we choose to break the number into 32-bits at a time, so that we can use 64-bit arirthmetic to accomodate each part plus the carry over
+			// put another way, we are "rewriting" the 128-bit number as a 4-digit base 2^32 number
+			//
+			// thus, our long division algorithm now looks like this:
+			// A. divide the most significant word by base, quotient is most significant word of overall quotient
+			// B. divide the number (remainder * word base + next most significant word) by base, quotient is next most significant word of overall quotient
+			// C. repeat until least significant word, where the remainder is simply the overall remainder
+			//
+			// the resulting algorithm is perhaps more convoluted than if we were to divide one byte at a time, but this does make it more efficient since
+			// we are leveraging the CPU's native 32/64-bit binary base for arithmetic
+			//
+			// NOTE: The simpler algorithm for converting between bases is to start from the most significant digit, multiply by base, add next most
+			// significant digit, multiply all that by base, and so on until you finish the sequence of digits. This does not work for us, because the
+			// result of each stage is exponentially increasing, and you will quickly exceed the capabilities of native CPU arithmetic.
 
-			var bytes = guid.ToByteArray();
+			// convert the 128-bits of the GUID to 4x 32-bit unsigned ints
+			var bytes = GuidToSystemEndianBytes(guid);
+
+			// allocate space for the string - we know it's at most 39 decimal digits
+			const int maxDigits = 39;
 			var chars = new char[maxDigits];
 
-			fixed (byte* pBytes = bytes)
 			fixed (char* pChars = chars)
+			fixed (byte* pBytes = bytes)
 			{
-				// our conversion algorithm uses 4x 32-bit unsigned ints in most-to-least significant word order
-				// but .NET GUIDs are broken up into parts and separately encoded with first 3 in system endian and last 2 in big endian
-				//   (4 system endian)-(2 system endian)-(2 system endian)-(2 big endian)-(6 big endian)
-				//
-				// if system is little endian, we byte-swap here to build the 4 little endian words in the correct order
-				//
-				// if system is big endian, the bytes are already big endian and most-to-least significant word order
-				// so no swapping is necessary (and all the calculations will be done in big endian anyway)
-				if (BitConverter.IsLittleEndian)
-				{
-					var t = pBytes[4];
-					pBytes[4] = pBytes[6];
-					pBytes[6] = t;
-
-					t = pBytes[5];
-					pBytes[5] = pBytes[7];
-					pBytes[7] = t;
-
-					t = pBytes[8];
-					pBytes[8] = pBytes[11];
-					pBytes[11] = t;
-
-					t = pBytes[9];
-					pBytes[9] = pBytes[10];
-					pBytes[10] = t;
-
-					t = pBytes[12];
-					pBytes[12] = pBytes[15];
-					pBytes[15] = t;
-
-					t = pBytes[13];
-					pBytes[13] = pBytes[14];
-					pBytes[14] = t;
-				}
-
-				// the conversion is based on the pen-and-paper algorithm for converting between bases:
-				// 1. divide input by base, remainder is least significant output digit.
-				// 2. divide quotient by base, remainder is next least significant output digit.
-				// 3. repeat quotient is zero.
-				// 
-				// however, we represent the input as 4 separate words, so we have to do "long division" here
-				// A. divide the most significant word by base, quotient is most significant word of overall quotient
-				// B. divide the number (remainder * word base + next most significant word) by base, quotient is next most significant word of overall quotient
-				// C. repeat until least significant word, where the remainder is simply the overall remainder
+				// algorithm produces least significant digit first, so we set digits from the end of the string, and keep track of how many digits
 				var countDigits = 0;
 				var pC = &pChars[maxDigits - 1];
+
+				// casts the bytes to a uint pointer, since we've rearranged the GUID as such
 				var pB = (uint*) pBytes;
 				do
 				{
+					// take the first word, divide by 10, and keep the quotient for the next round of calculations
 					ulong r = pB[0];
-
 					ulong q = r/10;
-					r = ((r - q*10) << 32) + pB[1];
 					pB[0] = (uint) q;
 
+					// the remainder (i.e. r - q*10) is prepended to the second word as the most significant digit
+					// and then divide by 10, and keep the quotient for the next round of calculations
+					r = ((r - q*10) << 32) + pB[1];
 					q = r/10;
-					r = ((r - q*10) << 32) + pB[2];
 					pB[1] = (uint) q;
 
+					// the remainder is prepended to the third word as the most significant digit
+					// and then divide by 10, and keep the quotient for the next round of calculations
+					r = ((r - q*10) << 32) + pB[2];
 					q = r/10;
-					r = ((r - q*10) << 32) + pB[3];
 					pB[2] = (uint) q;
 
+					// the remainder is prepended to the fourth word as the most significant digit
+					// and then divide by 10, and keep the quotient for the next round of calculations
+					r = ((r - q*10) << 32) + pB[3];
 					q = r/10;
-					r = r - q*10;
 					pB[3] = (uint) q;
 
+					// the remainder is the next decimal digit in the result
+					r = r - q*10;
+
 					// the digits are yielded from least to most significant, so we fill the char array from the end
-					*pC-- = (char) ('0' + r);
+					*pC-- = (char) ('0' + r); // '0'+r being a way of converting a number between 0 and 9 to the equivalent character '0' to '9'
+
+					// and keep track of how many digits that is
 					++countDigits;
+
+					// when the dividend for the next round of calculations is 0 (i.e. all words are 0), we are done
 				} while (pB[0] != 0 || pB[1] != 0 || pB[2] != 0 || pB[3] != 0);
 
-				// return a string from pointer and offset based on number of digits we actually have
+				// now return a string based on the pointer and offset based on number of digits we actually produced
+				// note that the loop always produces at least one digit, even if that is '0'
 				return new string(pChars, maxDigits - countDigits, countDigits);
 			}
 		}
@@ -633,6 +685,8 @@ namespace ClearCanvas.Dicom
 		}
 
 		#region Dicom UIDs
+
+		// ReSharper disable InconsistentNaming
 
 		/// <summary>TransferSyntax: Implicit VR Little Endian</summary>
 		public static DicomUid ImplicitVRLittleEndian = new DicomUid("1.2.840.10008.1.2", "Implicit VR Little Endian", UidType.TransferSyntax);
@@ -1230,6 +1284,8 @@ namespace ClearCanvas.Dicom
 
 		/// <summary>SynchronizationFrameOfReference: Universal Coordinated Time</summary>
 		public static DicomUid UniversalCoordinatedTime = new DicomUid("1.2.840.10008.15.1.1", "Universal Coordinated Time", UidType.SynchronizationFrameOfReference);
+
+		// ReSharper restore InconsistentNaming
 
 		#endregion
 	}

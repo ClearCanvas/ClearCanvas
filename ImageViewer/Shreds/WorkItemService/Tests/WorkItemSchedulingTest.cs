@@ -336,7 +336,7 @@ namespace ClearCanvas.ImageViewer.Shreds.WorkItemService.Tests
 
 			Platform.SetExtensionFactory(new UnitTestExtensionFactory
 			                             	{
-			                             		{typeof (CacheProviderExtensionPoint), typeof (DefaultCacheProvider)},
+			                             		{typeof (CacheProviderExtensionPoint), typeof (MemoryCacheProvider)},
 			                             		{typeof (ServiceProviderExtensionPoint), typeof (TestSystemConfigurationServiceProvider)},
 			                             		{typeof (ServiceProviderExtensionPoint), typeof (StudyStoreTestServiceProvider)}
 			                             	});

@@ -23,7 +23,7 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Common.Caching
@@ -44,7 +44,7 @@ namespace ClearCanvas.Common.Caching
 		/// <summary>
 		/// Maintains the singleton instance of each class of provider.
 		/// </summary>
-		private static readonly Dictionary<Type, ICacheProvider> _providers = new Dictionary<Type, ICacheProvider>();
+		private static readonly ConcurrentDictionary<Type, ICacheProvider> _providers = new ConcurrentDictionary<Type, ICacheProvider>();
 
 		/// <summary>
 		/// Gets a value indicating if the cache is supported in this environment.
@@ -102,26 +102,13 @@ namespace ClearCanvas.Common.Caching
 
 			var providerClass = extension.ExtensionClass.Resolve();
 
-			// check if we already have an initialized instance of this provider class.
-			ICacheProvider provider;
-			if (!_providers.TryGetValue(providerClass, out provider))
+			return _providers.GetOrAdd(providerClass, k =>
 			{
-				// if not, create one
-				lock (_providers)
-				{
-					// ensure that another thread hasn't beat us to it
-					if (!_providers.TryGetValue(providerClass, out provider))
-					{
-						provider = (ICacheProvider)point.CreateExtension(
-							new ClassNameExtensionFilter(providerClass.FullName));
-
-						// initialize this provider and store it
-						provider.Initialize(new CacheProviderInitializationArgs());
-						_providers.Add(providerClass, provider);
-					}
-				}
-			}
-			return provider;
+				// initialize this provider and store it
+				var provider = (ICacheProvider) point.CreateExtension(new ClassNameExtensionFilter(providerClass.FullName));
+				provider.Initialize(new CacheProviderInitializationArgs());
+				return provider;
+			});
 		}
 	}
 }

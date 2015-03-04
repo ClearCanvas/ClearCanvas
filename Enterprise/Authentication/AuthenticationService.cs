@@ -76,7 +76,7 @@ namespace ClearCanvas.Enterprise.Authentication
 			}
 
 			// check new password meets policy
-			PasswordPolicy.CheckPasswordCandidate(request.NewPassword, this.Settings);
+			PasswordPolicy.CheckPasswordCandidate(user.AccountType, request.NewPassword, this.Settings);
 
 			var expiryTime = Platform.Time.AddDays(this.Settings.PasswordExpiryDays);
 

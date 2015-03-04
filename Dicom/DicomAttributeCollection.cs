@@ -1235,6 +1235,10 @@ namespace ClearCanvas.Dicom
             if (sb == null) throw new ArgumentNullException("sb");
             foreach (DicomAttribute item in this)
             {
+				// skip entries that were inserted into collection but are not "present"
+				if (item.IsEmpty)
+					continue;
+
                 item.Dump(sb, prefix, options);
                 sb.AppendLine();
             }

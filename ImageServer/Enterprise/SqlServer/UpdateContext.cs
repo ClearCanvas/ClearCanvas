@@ -23,10 +23,12 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
+using ClearCanvas.Enterprise.Common;
 using ClearCanvas.Enterprise.Core;
 
 namespace ClearCanvas.ImageServer.Enterprise.SqlServer
@@ -103,6 +105,15 @@ namespace ClearCanvas.ImageServer.Enterprise.SqlServer
             }
         }
 
+		/// <summary>
+		/// Gets the set of entities that are affected by this update context, along with the type of change for each entity.
+		/// </summary>
+		/// <remarks>Not supported by this implementation.</remarks>
+		IDictionary<object, EntityChangeType> IUpdateContext.GetAffectedEntities()
+		{
+			throw new NotSupportedException();
+		}
+		
     	public event EventHandler PreCommit;
 		
     	public event EventHandler PostCommit;

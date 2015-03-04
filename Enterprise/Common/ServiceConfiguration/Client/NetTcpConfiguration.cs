@@ -41,23 +41,37 @@ namespace ClearCanvas.Enterprise.Common.ServiceConfiguration.Client
 		/// <returns></returns>
 		public ChannelFactory ConfigureChannelFactory(ServiceChannelConfigurationArgs args)
 		{
-			var binding = new NetTcpBinding();
-			binding.Security.Mode = args.AuthenticationRequired ? SecurityMode.TransportWithMessageCredential : SecurityMode.Transport;
-			binding.Security.Message.ClientCredentialType =
-				args.AuthenticationRequired ? MessageCredentialType.UserName : MessageCredentialType.None;
-			binding.TransferMode = args.TransferMode;
-			
-			// turn off transport security altogether
-			binding.Security.Transport.ClientCredentialType = TcpClientCredentialType.None;
+			var binding = new NetTcpBinding
+				{
+					TransferMode = args.TransferMode,
+					MaxReceivedMessageSize = args.TransferMode == TransferMode.Buffered
+												 ? Math.Min(int.MaxValue, args.MaxReceivedMessageSize)
+												 : args.MaxReceivedMessageSize,
+					// allow individual string content to be same size as entire message
+					ReaderQuotas =
+						{
+							MaxStringContentLength = (int)Math.Min(int.MaxValue, args.MaxReceivedMessageSize),
+							MaxArrayLength = (int)Math.Min(int.MaxValue, args.MaxReceivedMessageSize)
+						},
+					Security =
+					{
+						Mode = args.AuthenticationRequired ? SecurityMode.TransportWithMessageCredential : SecurityMode.Transport,
+						Message =
+						{
+							ClientCredentialType =
+								args.AuthenticationRequired ? MessageCredentialType.UserName : MessageCredentialType.None
+						},
+
+						// turn off transport security altogether
+						Transport =
+							{
+								ClientCredentialType = TcpClientCredentialType.None
+							}
+					}
+				};
 
 			if (args.SendTimeoutSeconds > 0)
 				binding.SendTimeout = TimeSpan.FromSeconds(args.SendTimeoutSeconds);
-
-			binding.MaxReceivedMessageSize = args.MaxReceivedMessageSize;
-
-			// allow individual string content to be same size as entire message
-			binding.ReaderQuotas.MaxStringContentLength = args.MaxReceivedMessageSize;
-			binding.ReaderQuotas.MaxArrayLength = args.MaxReceivedMessageSize;
 
 			var channelFactory = (ChannelFactory)Activator.CreateInstance(args.ChannelFactoryClass, binding, new EndpointAddress(args.ServiceUri));
 			channelFactory.Credentials.ServiceCertificate.Authentication.CertificateValidationMode = args.CertificateValidationMode;

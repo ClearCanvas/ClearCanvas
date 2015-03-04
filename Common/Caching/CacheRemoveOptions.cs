@@ -32,6 +32,13 @@ namespace ClearCanvas.Common.Caching
 		/// <summary>
 		/// Constructor.
 		/// </summary>
+		public CacheRemoveOptions()
+		{
+		}
+
+		/// <summary>
+		/// Constructor.
+		/// </summary>
 		/// <param name="region"></param>
 		public CacheRemoveOptions(string region)
 			: base(region)

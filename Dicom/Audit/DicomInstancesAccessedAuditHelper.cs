@@ -52,8 +52,8 @@ namespace ClearCanvas.Dicom.Audit
 		                                               EventDateTime = Platform.Time.ToUniversalTime(),
 		                                               EventOutcomeIndicator = outcome
 		                                           };
-
-		    InternalAddAuditSource(auditSource);
+			InternalAddAuditSource(auditSource);
+			AddUser(new AuditProcessActiveParticipant());
 		}
 
         /// <summary>
@@ -72,8 +72,8 @@ namespace ClearCanvas.Dicom.Audit
                                                        EventDateTime = Platform.Time.ToUniversalTime(),
                                                        EventOutcomeIndicator = outcome
                                                    };
-
-            InternalAddAuditSource(auditSource);
+			InternalAddAuditSource(auditSource);
+			AddUser(new AuditProcessActiveParticipant());
         }
 
 		/// <summary>
@@ -112,6 +112,15 @@ namespace ClearCanvas.Dicom.Audit
 		public void AddStorageInstance(StorageInstance instance)
 		{
 			InternalAddStorageInstance(instance);
+		}
+
+		/// <summary>
+		/// Add details of a general purpose participant object.
+		/// </summary>
+		/// <param name="o"></param>
+		public void AddGeneralParticipantObject(AuditParticipantObject o)
+		{
+			InternalAddParticipantObject(o.ParticipantObjectId, o);
 		}
 	}
 }

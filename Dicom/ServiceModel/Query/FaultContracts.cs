@@ -58,6 +58,26 @@ namespace ClearCanvas.Dicom.ServiceModel.Query
 	}
 
 	/// <summary>
+	/// Data contract for 'retrieve failed' faults.
+	/// </summary>
+	[DataContract(Namespace = QueryNamespace.Value)]
+	public class RetrieveFailedFault
+	{
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		public RetrieveFailedFault()
+		{
+		}
+
+		/// <summary>
+		/// A textual description of the retrieve failure.
+		/// </summary>
+		[DataMember(IsRequired = true)]
+		public string Description;
+	}
+
+	/// <summary>
 	/// Data contract for data validation faults; when the data in the request is poorly formatted or incorrect.
 	/// </summary>
 	[DataContract(Namespace = QueryNamespace.Value)]

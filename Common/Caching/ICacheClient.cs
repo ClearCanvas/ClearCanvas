@@ -23,20 +23,21 @@
 #endregion
 
 using System;
+using JetBrains.Annotations;
 
 namespace ClearCanvas.Common.Caching
 {
-    /// <summary>
-    /// Defines an interface to an object that acts as a client of a cache.
-    /// </summary>
+	/// <summary>
+	/// Defines an interface to an object that acts as a client of a cache.
+	/// </summary>
 	public interface ICacheClient : IDisposable
 	{
-        /// <summary>
-        /// Gets the ID of the logical cache that this client is connected to.
-        /// </summary>
-        string CacheID { get; }
+		/// <summary>
+		/// Gets the ID of the logical cache that this client is connected to.
+		/// </summary>
+		string CacheID { get; }
 
-        /// <summary>
+		/// <summary>
 		/// Gets the object at the specified key from the cache, or null if the key does not exist.
 		/// </summary>
 		/// <param name="key"></param>
@@ -44,34 +45,48 @@ namespace ClearCanvas.Common.Caching
 		/// <returns></returns>
 		object Get(string key, CacheGetOptions options);
 
-        /// <summary>
-        /// Puts the specified object into the cache at the specified key,
-        /// using the specified options.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <param name="options"></param>
-        void Put(string key, object value, CachePutOptions options);
+		/// <summary>
+		/// Gets the object at the specified key from the cache, or null if the key does not exist.
+		/// </summary>
+		/// <param name="key"></param>
+		/// <returns></returns>
+		object Get(string key);
+
+		/// <summary>
+		/// Puts the specified object into the cache at the specified key,
+		/// using the specified options.
+		/// </summary>
+		/// <param name="key"></param>
+		/// <param name="value"></param>
+		/// <param name="options"></param>
+		void Put(string key, object value, CachePutOptions options);
 
 		/// <summary>
 		/// Removes the specified item from the cache, or does nothing if the item does not
-        /// exist.
+		/// exist.
 		/// </summary>
 		/// <param name="key">The Key of the Item in the Cache to remove.</param>
 		/// <param name="options"></param>
 		void Remove(string key, CacheRemoveOptions options);
 
-        /// <summary>
-        /// Gets a value indicating whether the specified region exists.
-        /// </summary>
-        /// <param name="region"></param>
-        /// <returns></returns>
-        bool RegionExists(string region);
+		/// <summary>
+		/// Removes the specified item from the cache, or does nothing if the item does not
+		/// exist.
+		/// </summary>
+		/// <param name="key">The Key of the Item in the Cache to remove.</param>
+		void Remove(string key);
 
-        /// <summary>
-        /// Clears the entire cache region.
-        /// </summary>
-        void ClearRegion(string region);
+		/// <summary>
+		/// Gets a value indicating whether the specified region exists.
+		/// </summary>
+		/// <param name="region"></param>
+		/// <returns></returns>
+		bool RegionExists(string region);
+
+		/// <summary>
+		/// Clears the specified cache region, which may be null to clear the default region.
+		/// </summary>
+		void ClearRegion([CanBeNull]string region);
 
 		/// <summary>
 		/// Clears the entire logical cache (as identified by <see cref="CacheID"/>.

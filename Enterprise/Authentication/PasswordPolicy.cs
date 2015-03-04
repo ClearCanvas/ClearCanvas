@@ -32,10 +32,19 @@ namespace ClearCanvas.Enterprise.Authentication
 		/// <summary>
 		/// Checks that a candidate password meets the enterprise-wide password policy.
 		/// </summary>
+		/// <param name="accountType"></param>
 		/// <param name="passwordCandidate"></param>
 		/// <param name="settings"></param>
-		public static void CheckPasswordCandidate(string passwordCandidate, AuthenticationSettings settings)
+		public static void CheckPasswordCandidate(UserAccountType accountType, string passwordCandidate, AuthenticationSettings settings)
 		{
+			if (accountType == UserAccountType.S)
+			{
+				if (string.IsNullOrEmpty(passwordCandidate) || passwordCandidate.Length < 8)
+					throw new RequestValidationException(SR.SystemAccountValidPasswordMessage);
+
+				return;
+			}
+
 			// password cannot be empty
 			if (string.IsNullOrEmpty(passwordCandidate))
 				throw new RequestValidationException(settings.ValidPasswordMessage);

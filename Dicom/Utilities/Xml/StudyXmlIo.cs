@@ -94,16 +94,14 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 
 		public static void WriteGzip(StudyXmlMemento theMemento, Stream theStream)
 		{
-			var ms = new MemoryStream();
-			Write(theMemento, ms);
+			using (var compressedZipStream = new GZipStream(theStream, CompressionMode.Compress, true))
+			{
+				Write(theMemento, compressedZipStream);
 
-			byte[] buffer = ms.GetBuffer();
-
-			var compressedzipStream = new GZipStream(theStream, CompressionMode.Compress, true);
-			compressedzipStream.Write(buffer, 0, buffer.Length);
-			// Close the stream.
-			compressedzipStream.Flush();
-			compressedzipStream.Close();
+				// Close the stream.
+				compressedZipStream.Flush();
+				compressedZipStream.Close();
+			}
 
 			// Force a flush
 			theStream.Flush();
@@ -116,13 +114,15 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 
 			Write(theMemento, ms);
 
-			var compressedzipStream = new GZipStream(theGzipStream, CompressionMode.Compress, true);
-			ms.Seek(0,SeekOrigin.Begin);
-			ms.WriteTo(compressedzipStream);
+			using (var compressedZipStream = new GZipStream(theGzipStream, CompressionMode.Compress, true))
+			{
+				ms.Seek(0, SeekOrigin.Begin);
+				ms.WriteTo(compressedZipStream);
 
-			// Close the stream.
-			compressedzipStream.Flush();
-			compressedzipStream.Close();
+				// Close the stream.
+				compressedZipStream.Flush();
+				compressedZipStream.Close();
+			}
 
 			ms.Seek(0, SeekOrigin.Begin); 
 			ms.WriteTo(theXmlStream);
@@ -134,12 +134,13 @@ namespace ClearCanvas.Dicom.Utilities.Xml
 
 		public static void ReadGzip(StudyXmlMemento theMemento, Stream theStream)
 		{
-			var zipStream = new GZipStream(theStream, CompressionMode.Decompress);
+			using (var zipStream = new GZipStream(theStream, CompressionMode.Decompress))
+			{
+				if (theMemento.Document == null)
+					theMemento.Document = new XmlDocument();
 
-			if (theMemento.Document == null)
-				theMemento.Document = new XmlDocument();
-
-			theMemento.Document.Load(zipStream);
+				theMemento.Document.Load(zipStream);
+			}
 		}
 
 		public static void Read(StudyXmlMemento theMemento, Stream theStream)

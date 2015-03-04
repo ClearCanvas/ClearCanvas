@@ -25,6 +25,9 @@
 #if UNIT_TESTS
 
 using System;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
 using NUnit.Framework;
 
 namespace ClearCanvas.Dicom.Tests

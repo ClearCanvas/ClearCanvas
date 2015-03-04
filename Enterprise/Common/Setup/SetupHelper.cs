@@ -194,7 +194,7 @@ namespace ClearCanvas.Enterprise.Common.Setup
 			var settings = store.GetSettingsValues(group, null, null);
 			if (!settings.ContainsKey(request.Property))
 			{
-				Platform.Log(LogLevel.Info, "Cannot find settings property: {0}/{1}/{2}", request.Group, request.Version, request.Group);
+				Platform.Log(LogLevel.Info, "Cannot find settings property: {0}/{1}/{2}", request.Group, request.Version, request.Property);
 				return;
 			}
 

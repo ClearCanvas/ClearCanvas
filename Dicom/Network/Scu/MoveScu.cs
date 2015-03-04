@@ -143,6 +143,15 @@ namespace ClearCanvas.Dicom.Network.Scu
         	set { _destinationAe = value; }
         }
 
+		/// <summary>
+		/// Gets or sets the MoveMessageId used for the C-MOVE-RQ
+		/// </summary>
+	    public ushort MoveMessageId
+	    {
+			get { return _moveMessageId; }
+			set { _moveMessageId = value; }
+	    }
+
     	public QueryRetrieveLevel CurrentLevel
     	{
     		get
@@ -322,8 +331,11 @@ namespace ClearCanvas.Dicom.Network.Scu
                 if (dicomAttribute.Values != null)
                     dicomAttribute2.Values = dicomAttribute.Values;
             }
-            _moveMessageId = client.NextMessageID();
-            client.SendCMoveRequest(pcid, _moveMessageId, _destinationAe, dicomMessage);
+
+			if (_moveMessageId == 0)
+				_moveMessageId = client.NextMessageID();
+
+			client.SendCMoveRequest(pcid, _moveMessageId, _destinationAe, dicomMessage);
         }
 
         /// <summary>

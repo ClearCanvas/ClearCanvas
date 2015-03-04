@@ -30,10 +30,10 @@ using System.Web.Caching;
 namespace ClearCanvas.Common.Caching
 {
 	/// <summary>
-	/// Default implementation of <see cref="ICacheProvider"/>, provides a local in-process cache.
+	/// Implementation of <see cref="ICacheProvider"/> that provides a local in-process cache based on the ASP.NET web cache.
 	/// </summary>
-	[ExtensionOf(typeof(CacheProviderExtensionPoint))]
-	public class DefaultCacheProvider : ICacheProvider
+	[ExtensionOf(typeof(CacheProviderExtensionPoint), Enabled = false)]
+	public class AspWebCacheProvider : ICacheProvider
 	{
 		private System.Web.Caching.Cache _cache;
 
@@ -59,10 +59,13 @@ namespace ClearCanvas.Common.Caching
 		/// <returns></returns>
 		public ICacheClient CreateClient(string cacheId)
 		{
+			Platform.CheckForNullReference(cacheId, "cacheId");
+			Platform.CheckForEmptyString(cacheId, "cacheId");
+
 			// ensure cache exists
 			CreateCache(cacheId);
 
-			return new DefaultCacheClient(this, cacheId);
+			return new AspWebCacheClient(this, cacheId);
 		}
 
 		#endregion

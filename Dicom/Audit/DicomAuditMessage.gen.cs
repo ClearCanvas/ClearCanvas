@@ -1247,7 +1247,7 @@ namespace ClearCanvas.Dicom.Audit
 
         private ParticipantObjectDescriptionTypeAccession[] accessionField;
 
-        private ParticipantObjectDescriptionTypeSOPClass sOPClassField;
+        private ParticipantObjectDescriptionTypeSOPClass[] sOPClassField;
 
         private StudyIDs[] participantObjectContainsStudyField;
 
@@ -1360,7 +1360,7 @@ namespace ClearCanvas.Dicom.Audit
         }
 
         /// <remarks/>
-        public ParticipantObjectDescriptionTypeSOPClass SOPClass
+        public ParticipantObjectDescriptionTypeSOPClass[] SOPClass
         {
             get
             {

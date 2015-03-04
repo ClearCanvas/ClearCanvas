@@ -42,14 +42,17 @@ namespace ClearCanvas.Dicom.Audit
 		public DicomStudyDeletedAuditHelper(DicomAuditSource auditSource, EventIdentificationContentsEventOutcomeIndicator outcome)
 			: base("DicomStudyDeleted")
 		{
-			AuditMessage.EventIdentification = new EventIdentificationContents();
-			AuditMessage.EventIdentification.EventID = EventID.DICOMStudyDeleted;
-			AuditMessage.EventIdentification.EventActionCode = EventIdentificationContentsEventActionCode.D;
-			AuditMessage.EventIdentification.EventActionCodeSpecified = true;
-			AuditMessage.EventIdentification.EventDateTime = Platform.Time.ToUniversalTime();
-			AuditMessage.EventIdentification.EventOutcomeIndicator = outcome;
+			AuditMessage.EventIdentification = new EventIdentificationContents
+				{
+					EventID = EventID.DICOMStudyDeleted,
+					EventActionCode = EventIdentificationContentsEventActionCode.D,
+					EventActionCodeSpecified = true,
+					EventDateTime = Platform.Time.ToUniversalTime(),
+					EventOutcomeIndicator = outcome
+				};
 
 			InternalAddAuditSource(auditSource);
+			AddUserParticipant(new AuditProcessActiveParticipant());
 		}
 
 		/// <summary>
@@ -67,7 +70,7 @@ namespace ClearCanvas.Dicom.Audit
 		/// <summary>
 		/// Add details of a Patient.
 		/// </summary>
-		/// <param name="study"></param>
+		/// <param name="patient"></param>
 		public void AddPatientParticipantObject(AuditPatientParticipantObject patient)
 		{
 			InternalAddParticipantObject(patient.PatientId + patient.PatientsName, patient);
@@ -80,6 +83,15 @@ namespace ClearCanvas.Dicom.Audit
 		public void AddStudyParticipantObject(AuditStudyParticipantObject study)
 		{
 			InternalAddParticipantObject(study.StudyInstanceUid, study);
+		}
+
+		/// <summary>
+		/// Add details of a general purpose participant object.
+		/// </summary>
+		/// <param name="o"></param>
+		public void AddGeneralParticipantObject(AuditParticipantObject o)
+		{
+			InternalAddParticipantObject(o.ParticipantObjectId, o);
 		}
 
 		/// <summary>

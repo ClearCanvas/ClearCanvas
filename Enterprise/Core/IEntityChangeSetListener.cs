@@ -22,17 +22,24 @@
 
 #endregion
 
+using System;
 using ClearCanvas.Enterprise.Common;
 
 namespace ClearCanvas.Enterprise.Core
 {
 	public class EntityChangeSetPreCommitArgs
 	{
-		public EntityChangeSetPreCommitArgs(EntityChangeSet changeSet, IPersistenceContext context)
+		public EntityChangeSetPreCommitArgs(string changeSetId, EntityChangeSet changeSet, IPersistenceContext context)
 		{
+			ChangeSetId = changeSetId;
 			ChangeSet = changeSet;
 			PersistenceContext = context;
 		}
+
+		/// <summary>
+		/// Gets the identifier of this change set.
+		/// </summary>
+		public string ChangeSetId { get; private set; }
 
 		/// <summary>
 		/// Gets the change-set that is about to be committed.
@@ -48,10 +55,16 @@ namespace ClearCanvas.Enterprise.Core
 
 	public class EntityChangeSetPostCommitArgs
 	{
-		public EntityChangeSetPostCommitArgs(EntityChangeSet changeSet)
+		public EntityChangeSetPostCommitArgs(string changeSetId, EntityChangeSet changeSet)
 		{
+			ChangeSetId = changeSetId;
 			ChangeSet = changeSet;
 		}
+
+		/// <summary>
+		/// Gets the identifier of this change set.
+		/// </summary>
+		public string ChangeSetId { get; private set; }
 
 		/// <summary>
 		/// Gets the change-set that was committed.
