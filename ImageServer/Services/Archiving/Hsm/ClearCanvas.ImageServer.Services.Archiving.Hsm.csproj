@@ -62,7 +62,6 @@
   <ItemGroup>
     <Compile Include="ApplyRulesCommand.cs" />
     <Compile Include="ArchiveProcessorContext.cs" />
-    <Compile Include="CreateStudyZipCommand.cs" />
     <Compile Include="ExtractZipCommand.cs" />
     <Compile Include="ExtractZipFileAndReplaceCommand.cs" />
     <Compile Include="HsmArchive.cs" />

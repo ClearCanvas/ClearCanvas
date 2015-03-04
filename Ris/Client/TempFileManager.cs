@@ -23,13 +23,12 @@
 #endregion
 
 using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading;
 using ClearCanvas.Common;
 using ClearCanvas.Enterprise.Common;
-using Path = System.IO.Path;
-using Timer = System.Threading.Timer;
 
 namespace ClearCanvas.Ris.Client
 {
@@ -48,7 +47,7 @@ namespace ClearCanvas.Ris.Client
 		/// <summary>
 		/// Represents an entry in the map.
 		/// </summary>
-		class Entry
+		private class Entry
 		{
 			private readonly TimeSpan _timeToLive;
 			private readonly string _file;
@@ -58,7 +57,7 @@ namespace ClearCanvas.Ris.Client
 			{
 				_file = file;
 				_timeToLive = ttl;
-				Renew();	// initialize expiry time
+				Renew(); // initialize expiry time
 			}
 
 			public string File
@@ -86,7 +85,6 @@ namespace ClearCanvas.Ris.Client
 		private readonly Dictionary<object, Entry> _entryMap = new Dictionary<object, Entry>();
 		private readonly Timer _timer;
 		private readonly object _syncObj = new object();
-
 
 		/// <summary>
 		/// Gets the singleton instance of this class.
@@ -121,9 +119,38 @@ namespace ClearCanvas.Ris.Client
 		public string CreateFile(object key, string fileExtension, byte[] data, TimeSpan timeToLive)
 		{
 			var file = CreateTempFile(key, fileExtension, timeToLive);
-	
+
 			// write data to the temp file
 			File.WriteAllBytes(file, data);
+
+			return file;
+		}
+
+		/// <summary>
+		/// Creates a temporary file associated with the specified key, and using the specified callback to write data to the file.
+		/// </summary>
+		/// <param name="key"></param>
+		/// <param name="fileExtension"></param>
+		/// <param name="dataWriterCallback">Callback to write data to file (parameter is filename of file)</param>
+		/// <param name="timeToLive"></param>
+		/// <returns>The path of the file.</returns>
+		public string CreateFile(object key, string fileExtension, Action<string> dataWriterCallback, TimeSpan timeToLive)
+		{
+			var file = CreateTempFile(key, fileExtension, timeToLive);
+
+			// write data to the temp file using the callback
+			if (dataWriterCallback != null)
+			{
+				try
+				{
+					dataWriterCallback(file);
+				}
+				catch (Exception)
+				{
+					TryDeleteEntry(key);
+					throw;
+				}
+			}
 
 			return file;
 		}
@@ -164,10 +191,10 @@ namespace ClearCanvas.Ris.Client
 			// (it isn't nice to have this dependency here, but seems to be no other easy way to do this)
 			Desktop.Application.Quitting +=
 				(sender, args) =>
-					{
-						_timer.Dispose();
-						Clean(obj => true);
-					};
+				{
+					_timer.Dispose();
+					Clean(obj => true);
+				};
 		}
 
 		private string CreateTempFile(object key, string fileExtension, TimeSpan timeToLive)
@@ -211,7 +238,7 @@ namespace ClearCanvas.Ris.Client
 			var deletions = new List<KeyValuePair<object, Entry>>();
 			foreach (var entry in deletionCandidates)
 			{
-				if(TryDeleteFile(entry.Value.File))
+				if (TryDeleteFile(entry.Value.File))
 				{
 					deletions.Add(entry);
 					Platform.Log(LogLevel.Debug, "TempFileManager: deleted file {0}", entry.Value.File);
@@ -228,12 +255,29 @@ namespace ClearCanvas.Ris.Client
 			}
 		}
 
+		private bool TryDeleteEntry(object key)
+		{
+			Entry entry;
+			lock (_syncObj)
+			{
+				if (_entryMap.TryGetValue(key, out entry))
+					_entryMap.Remove(key);
+			}
+
+			if (entry != null && TryDeleteFile(entry.File))
+			{
+				Platform.Log(LogLevel.Debug, "TempFileManager: deleted file {0}", entry.File);
+				return true;
+			}
+			return false;
+		}
+
 		private bool TryDeleteFile(string file)
 		{
 			try
 			{
 				// this is a nop if the file does not exist
-				File.Delete(file);	
+				File.Delete(file);
 
 				// return true if the file no longer exists
 				return !File.Exists(file);
@@ -246,6 +290,5 @@ namespace ClearCanvas.Ris.Client
 				return false;
 			}
 		}
-
 	}
 }

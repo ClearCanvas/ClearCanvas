@@ -25,6 +25,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Web;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom.Utilities;
 using ClearCanvas.ImageServer.Common.Utilities;
@@ -75,8 +76,8 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 
 		public IEnumerable Select(int startRowIndex, int maxRows)
 		{
-			
-			IStudyDeleteRecordEntityBroker broker = HttpContextData.Current.ReadContext.GetBroker<IStudyDeleteRecordEntityBroker>();
+
+			IStudyDeleteRecordEntityBroker broker = HttpContext.Current.GetSharedPersistentContext().GetBroker<IStudyDeleteRecordEntityBroker>();
 			StudyDeleteRecordSelectCriteria criteria = GetSelectCriteria();
 			criteria.Timestamp.SortDesc(0);
 			IList<StudyDeleteRecord> list = broker.Find(criteria, startRowIndex, maxRows);
@@ -106,7 +107,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data.DataSource
 		{
 			StudyDeleteRecordSelectCriteria criteria = GetSelectCriteria();
 
-            IStudyDeleteRecordEntityBroker broker = HttpContextData.Current.ReadContext.GetBroker<IStudyDeleteRecordEntityBroker>();
+            IStudyDeleteRecordEntityBroker broker =HttpContext.Current.GetSharedPersistentContext().GetBroker<IStudyDeleteRecordEntityBroker>();
 		    return broker.Count(criteria);
 		}
 	}

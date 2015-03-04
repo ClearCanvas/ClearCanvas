@@ -23,6 +23,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace ClearCanvas.Desktop.Validation
@@ -47,25 +48,15 @@ namespace ClearCanvas.Desktop.Validation
             return new ValidationResult(messages.Count == 0, messages.ToArray());
         }
 
-        private bool _success;
-        private string[] _messages;
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="success">Indicates whether the validation succeeded.</param>
-        /// <param name="message">When validation fails, a message indicating why the validation failed.</param>
-        public ValidationResult(bool success, string message)
-            : this(success, new string[] { message })
-        {
-        }
+		private readonly bool _success;
+		private readonly string[] _messages;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="success">Indicates whether the validation succeeded.</param>
         /// <param name="messages">When validation fails, a set of messages indicating why the validation failed.</param>
-        public ValidationResult(bool success, params string[] messages)
+		public ValidationResult(bool success, [param : Localizable(true)] params string[] messages)
         {
             _success = success;
             _messages = messages ?? new string[0];

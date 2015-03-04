@@ -1033,4 +1033,10 @@
   <data name="Dicom_ContrastBolus_Agent_Label" xml:space="preserve">
     <value>Contrast/Bolus</value>
   </data>
+  <data name="Dicom_Patient_OtherPatientIds_DisplayName" xml:space="preserve">
+    <value>Other Patient IDs</value>
+  </data>
+  <data name="Dicom_Patient_OtherPatientIds_Label" xml:space="preserve">
+    <value>Ot. Pat. IDs</value>
+  </data>
 </root>

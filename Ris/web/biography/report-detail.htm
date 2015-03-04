@@ -9,6 +9,7 @@
 		<script type="text/javascript" src="../js/jsml.js"></script>
 		<script type="text/javascript" src="../js/ui.js"></script>
 		<script type="text/javascript" src="../js/ris.js"></script>
+		<script type="text/javascript" src="../js/SR.js"></script>
 		<script type="text/javascript" src="../js/preview.js"></script>
 		<script type="text/javascript" src="../js/layout.js"></script>
 		<script type="text/javascript" src="../js/tabs.js"></script>
@@ -21,22 +22,14 @@
 				if(!Ris)
 					return;
 
-				try
+				var reportRef = Ris.getHealthcareContext();
+				if (reportRef == null)
 				{
-					var reportRef = Ris.getHealthcareContext();
-					if (reportRef == null)
-					{
-						Field.setValue($("myForm"), "");
-						return;
-					}
+					Field.setValue($("myForm"), "");
+					return;
+				}
 
-					Ris.getPatientDataService().getDataAsync(CreateRequest(reportRef), OnPatientDataLoaded);
-				}
-				catch(e)
-				{
-					var message = "Failed to load preview page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
-					Field.setValue($("myForm"), message);
-				}
+				Ris.getPatientDataService().getDataAsync(CreateRequest(reportRef), OnPatientDataLoaded);
 			}
 
 			function CreateRequest(reportRef)

@@ -646,4 +646,13 @@
   <data name="PatientSummary_QCReport" xml:space="preserve">
     <value>QC Status:</value>
   </data>
+  <data name="DeleteOrderConfirmDialog_OrderListingLabel" xml:space="preserve">
+    <value>The following order/orders will be deleted:</value>
+  </data>
+  <data name="FinalTransferSyntax" xml:space="preserve">
+    <value>Final Transfer Syntax</value>
+  </data>
+  <data name="OriginalTransferSyntax" xml:space="preserve">
+    <value>Original Transfer Syntax</value>
+  </data>
 </root>

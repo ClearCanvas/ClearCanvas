@@ -50,7 +50,9 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.AutoRoute
         // cache the list of device that has exceeded the limit
         // to prevent repeat db hits when a server processes 
         // multiple study move entries to the same device
-        private static readonly ServerCache<ServerEntityKey, Device> _tempBlackoutDevices = new ServerCache<ServerEntityKey, Device>(TimeSpan.FromSeconds(TEMP_BLACKOUT_DURATION), TimeSpan.FromSeconds(TEMP_BLACKOUT_DURATION));
+		private static readonly ServerCache<ServerEntityKey, Device> _tempBlackoutDevices =
+			new ServerCache<ServerEntityKey, Device>(TimeSpan.FromSeconds(TEMP_BLACKOUT_DURATION),
+			                                         TimeSpan.FromSeconds(TEMP_BLACKOUT_DURATION));
 
         #region Private Members
         private readonly object _syncLock = new object();
@@ -71,7 +73,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.AutoRoute
             string studyPath = StorageLocation.GetStudyPath();
             StudyXml studyXml = LoadStudyXml(StorageLocation);
 
-            Dictionary<string, StorageInstance> list = new Dictionary<string, StorageInstance>();
+			var list = new Dictionary<string, StorageInstance>();
             foreach(WorkQueueUid uid in WorkQueueUidList)
             {
                 if (list.ContainsKey(uid.SopInstanceUid))
@@ -84,7 +86,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.AutoRoute
             
                 string seriesPath = Path.Combine(studyPath, uid.SeriesInstanceUid);
                 string instancePath = Path.Combine(seriesPath, uid.SopInstanceUid + ServerPlatform.DicomFileExtension);
-                StorageInstance instance = new StorageInstance(instancePath)
+				var instance = new StorageInstance(instancePath)
                                            	{
                                            		SopClass = instanceXml.SopClass,
                                            		TransferSyntax = instanceXml.TransferSyntax,
@@ -127,12 +129,15 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.AutoRoute
             if (instance.SendStatus.Status == DicomState.Failure)
             {
                 WorkQueueItem.FailureDescription = instance.SendStatus.Description;
+				if (foundUids != null)
+				{
                 foreach(WorkQueueUid uid in foundUids)
                 {
                     uid.FailureCount++;
                     UpdateWorkQueueUid(uid);
                 }
             }
+			}
             else if (foundUids!=null)
             {
                 foreach (WorkQueueUid uid in foundUids)
@@ -160,7 +165,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.AutoRoute
                 {
                     if (_device==null)
                     {
-						using (ServerExecutionContext context = new ServerExecutionContext())
+						using (var context = new ServerExecutionContext())
 							_device = Device.Load(context.ReadContext, WorkQueueItem.DeviceKey);
                     }
                 }
@@ -231,7 +236,8 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.AutoRoute
 
             if (device.Dhcp && device.IpAddress.Length == 0)
             {
-                item.FailureDescription = String.Format("Auto-route destination is a DHCP device with no known IP address: \"{0}\"", device.AeTitle);
+				item.FailureDescription = String.Format(
+					"Auto-route destination is a DHCP device with no known IP address: \"{0}\"", device.AeTitle);
                 Platform.Log(LogLevel.Error,
                              item.FailureDescription);
 
@@ -242,9 +248,9 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.AutoRoute
             
             // Now setup the StorageSCU component
             int sendCounter = 0;
-			using (ImageServerStorageScu scu = new ImageServerStorageScu(ServerPartition, device))
+			using (var scu = new ImageServerStorageScu(ServerPartition, device))
 			{
-				using (ServerExecutionContext context = new ServerExecutionContext())
+				using (var context = new ServerExecutionContext())
 					// set the preferred syntax lists
 					scu.LoadPreferredSyntaxes(context.ReadContext);
 
@@ -354,17 +360,8 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.AutoRoute
 
                     if (currentMoves!=null && currentMoves.Count > device.ThrottleMaxConnections)
                     {
-                        // sort the list to see where this entry is
-                        // and postpone it if its position is greater than the ThrottleMaxConnections 
-                        currentMoves.Sort(delegate(Model.WorkQueue item1, Model.WorkQueue item2)
-                                              {
-                                                  return item1.ScheduledTime.CompareTo(item2.ScheduledTime);
-                                              });
-                        int index = currentMoves.FindIndex(delegate(Model.WorkQueue item) { return item.Key.Equals(WorkQueueItem.Key); });
-
-                        if (index >= device.ThrottleMaxConnections)
-                        {
-                            Platform.Log(LogLevel.Warn, "Connection limit on device {0} has been reached. Max = {1}.", device.AeTitle, device.ThrottleMaxConnections);
+						Platform.Log(LogLevel.Warn, "Connection limit on device {0} has been reached. Max = {1}.",
+						             device.AeTitle, device.ThrottleMaxConnections);
                             
                             // blackout for 5 seconds
                             _tempBlackoutDevices.Add(device.Key, device);
@@ -372,8 +369,6 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.AutoRoute
                         }
                     }
                 }
-
-            }
 
             return busy;
         }

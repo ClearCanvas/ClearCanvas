@@ -43,6 +43,9 @@ namespace ClearCanvas.ImageServer.Services.Streaming.ImageStreaming.Handlers
     	// cache the extension for performance purpose
         static readonly Dictionary<string, Type> _processorMap = new Dictionary<string, Type>();
 
+        private static bool _enableCache = ImageStreamingServerSettings.Default.EnableCache;
+        private static TimeSpan _cacheRetentionTime = ImageStreamingServerSettings.Default.CacheRetentionWindow;
+
 		static ImageStreamingHandler()
 		{
 			// Build the mime-type mapping
@@ -80,8 +83,8 @@ namespace ClearCanvas.ImageServer.Services.Streaming.ImageStreaming.Handlers
 
             string sessionId = context.HttpContext.Request.RemoteEndPoint.Address.ToString();
             StudyStorageLoader storageLoader = new StudyStorageLoader(sessionId);
-            storageLoader.CacheEnabled = ImageStreamingServerSettings.Default.EnableCache;
-            storageLoader.CacheRetentionTime = ImageStreamingServerSettings.Default.CacheRetentionWindow;
+            storageLoader.CacheEnabled = _enableCache;
+            storageLoader.CacheRetentionTime = _cacheRetentionTime;
             streamingContext.StorageLocation = storageLoader.Find(streamingContext.StudyInstanceUid, partition);
             
             // convert the dicom image into the appropriate mime type

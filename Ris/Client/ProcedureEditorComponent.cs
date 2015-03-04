@@ -95,8 +95,11 @@ namespace ClearCanvas.Ris.Client
 			this.Validation.Add(new ValidationRule("SelectedModality",
 				delegate
 				{
+					if (this.SelectedModality == null)
+						return new ValidationResult(false, SR.MessageValueRequired);
+
 					return new ValidationResult(IsModalityValidForFacility(this.SelectedModality, this.SelectedFacility),
-						"This modality is not valid for this performing facility.");
+						SR.MessageModalityNotValidForPerformingFacility);
 				}));
 
 			base.Start();

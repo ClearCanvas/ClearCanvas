@@ -57,6 +57,11 @@ namespace ClearCanvas.Server.ShredHost
             	var shredIsolation = shredType.GetCustomAttributes(typeof (ShredIsolationAttribute), true).OfType<ShredIsolationAttribute>().FirstOrDefault();
             	var shredIsolationLevel = shredIsolation == null ? ShredIsolationLevel.OwnAppDomain : shredIsolation.Level;
 
+				if (shredIsolationLevel != ShredIsolationLevel.None)
+				{
+					Platform.Log(LogLevel.Info, "Shred {0} is running in a seperate app domain", shredType.Name);
+				}
+
 				var assemblyPath = new Uri(shredType.Assembly.CodeBase);
 				var startupInfo = new ShredStartupInfo(assemblyPath, ((IShred)shredObject).GetDisplayName(), shredType.FullName, shredIsolationLevel);
                 shredInfoList.Add(startupInfo);

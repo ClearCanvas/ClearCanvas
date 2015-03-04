@@ -7,6 +7,7 @@
 		<script type="text/javascript" src="../js/jsml.js"></script>
 		<script type="text/javascript" src="../js/ui.js"></script>
 		<script type="text/javascript" src="../js/ris.js"></script>
+		<script type="text/javascript" src="../js/SR.js"></script>
 		<script type="text/javascript" src="../js/preview.js"></script>
 		<script type="text/javascript" src="../js/layout.js"></script>
 		<script type="text/javascript" >
@@ -16,23 +17,44 @@
 			{
 				if(!Ris)
 					return;
+					
+				Label.setValues({
+					labelName: SR.PatientDemographics.Name,
+					labelMrn: SR.PatientDemographics.Mrn,
+					labelDateOfBirth: SR.PatientDemographics.DateOfBirth,
+					labelAge: SR.PatientDemographics.Age,
+					labelSex: SR.PatientDemographics.Sex,
+					labelHealthcard: SR.PatientDemographics.Healthcard,
+					labelBillingInformation: SR.PatientDemographics.BillingInformation,
+					labelHomePhone: SR.PatientDemographics.HomePhone,
+					labelHomeAddress: SR.PatientDemographics.HomeAddress,
+					labelAlerts: SR.PatientDemographics.Alerts,
+					labelLanguage: SR.PatientDemographics.Language,
+					labelReligion: SR.PatientDemographics.Religion,
+					labelAddressType: SR.PatientDemographics.AddressType,
+					labelAddress: SR.PatientDemographics.Address,
+					labelAddressExpiryDate: SR.PatientDemographics.ExpiryDate,
+					labelPhoneType: SR.PatientDemographics.PhoneType,
+					labelPhoneNumber: SR.PatientDemographics.PhoneNumber,
+					labelPhoneExpiryDate: SR.PatientDemographics.ExpiryDate,
+					labelEmailAddress: SR.PatientDemographics.EmailAddress,
+					labelEmailExpiryDate: SR.PatientDemographics.ExpiryDate,
+					labelContactType: SR.PatientDemographics.ContactType,
+					labelContactRelationship: SR.PatientDemographics.ContactRelationship,
+					labelContactName: SR.PatientDemographics.ContactName,
+					labelContactHomePhone: SR.PatientDemographics.ContactHomePhone,
+					labelContactWorkPhone: SR.PatientDemographics.ContactWorkPhone,
+					labelContactAddress: SR.PatientDemographics.ContactAddress
+				});
 
-				try
+				var context = Ris.getHealthcareContext();
+				if (context == null)
 				{
-					var context = Ris.getHealthcareContext();
-					if (context == null)
-					{
-						Field.setValue($("myForm"), "");
-						return;
-					}
+					Field.setValue($("myForm"), "");
+					return;
+				}
 
-					Ris.getPatientDataService().getDataAsync(CreateRequest(context), OnPatientDataLoaded);
-				}
-				catch(e)
-				{
-					var message = "Failed to load preview page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
-					Field.setValue($("myForm"), message);
-				}
+				Ris.getPatientDataService().getDataAsync(CreateRequest(context), OnPatientDataLoaded);
 			}
 
 			function CreateRequest(context)
@@ -71,24 +93,24 @@
 					Field.setValue($("billingInformation"), patientProfile.BillingInformation);
 					Field.setValue($("currentHomePhone"), Ris.formatTelephone(patientProfile.CurrentHomePhone));
 					Field.setValue($("currentHomeAddress"), Ris.formatAddress(patientProfile.CurrentHomeAddress));
-					Preview.SectionContainer.create($("PrimaryDemographicsSection"), "Primary Demographics");
+					Preview.SectionContainer.create($("PrimaryDemographicsSection"), SR.PatientDemographics.PrimaryDemographics);
 
-					Preview.SectionContainer.create($("CultureSection"), "Culture");
+					Preview.SectionContainer.create($("CultureSection"), SR.PatientDemographics.Culture);
 					if(patientProfile.PrimaryLanguage)
 						Field.setValue($("primaryLanguage"), patientProfile.PrimaryLanguage.Value);
 					if(patientProfile.Religion)
 						Field.setValue($("religion"), patientProfile.Religion.Value);
 
-					Preview.SectionContainer.create($("AddressesSection"), "Addresses");
+					Preview.SectionContainer.create($("AddressesSection"), SR.PatientDemographics.Addresses);
 					initAddressTable($("addressTable"), patientProfile.Addresses); 
 
-					Preview.SectionContainer.create($("PhoneNumbersSection"), "Phone Numbers");
+					Preview.SectionContainer.create($("PhoneNumbersSection"), SR.PatientDemographics.PhoneNumbers);
 					initPhoneTable($("phoneTable"), patientProfile.TelephoneNumbers); 
 
-					Preview.SectionContainer.create($("EmailAddressesSection"), "Email Addresses");
+					Preview.SectionContainer.create($("EmailAddressesSection"), SR.PatientDemographics.EmailAddresses);
 					initEmailTable($("emailTable"), patientProfile.EmailAddresses); 
 
-					Preview.SectionContainer.create($("ContactsSection"), "Contacts");
+					Preview.SectionContainer.create($("ContactsSection"), SR.PatientDemographics.Contacts);
 					initContactTable($("contactTable"), patientProfile.ContactPersons);
 				}
 
@@ -102,15 +124,15 @@
 			{
 				htmlTable = Table.createTable(htmlTable, { editInPlace: false, flow: false },
 					[
-						{	label: "Type",
+						{	label: SR.PatientDemographics.AddressType,
 							cellType: "text",
 							getValue: function(item) { return item.Type.Value; }
 						},
-						{	label: "Address",
+						{	label: SR.PatientDemographics.Address,
 							cellType: "text",
 							getValue: function(item) { return Ris.formatAddress(item); }
 						},
-						{	label: "Expiry Date",
+						{	label: SR.PatientDemographics.ExpiryDate,
 							cellType: "text",
 							getValue: function(item) { return Ris.formatDate(item.ValidRangeUntil); }
 						}
@@ -124,15 +146,15 @@
 			{
 				htmlTable = Table.createTable(htmlTable, { editInPlace: false, flow: false },
 					[
-						{	label: "Type",
+						{	label: SR.PatientDemographics.PhoneType,
 							cellType: "text",
 							getValue: function(item) { return item.Type.Value; }
 						},
-						{	label: "Address",
+						{	label: SR.PatientDemographics.PhoneNumber,
 							cellType: "text",
 							getValue: function(item) { return Ris.formatTelephone(item); }
 						},
-						{	label: "Expiry Date",
+						{	label: SR.PatientDemographics.ExpiryDate,
 							cellType: "text",
 							getValue: function(item) { return Ris.formatDate(item.ValidRangeUntil); }
 						}
@@ -146,11 +168,11 @@
 			{
 				htmlTable = Table.createTable(htmlTable, { editInPlace: false, flow: false },
 					[
-						{	label: "Address",
+						{	label: SR.PatientDemographics.EmailAddress,
 							cellType: "text",
 							getValue: function(item) { return item.Address; }
 						},
-						{	label: "Expiry Date",
+						{	label: SR.PatientDemographics.ExpiryDate,
 							cellType: "text",
 							getValue: function(item) { return Ris.formatDate(item.ValidRangeUntil); }
 						}
@@ -164,27 +186,27 @@
 			{
 				htmlTable = Table.createTable(htmlTable, { editInPlace: false, flow: false },
 					[
-						{	label: "Type",
+						{	label: SR.PatientDemographics.ContactType,
 							cellType: "text",
 							getValue: function(item) { return item.Type.Value; }
 						},
-						{	label: "Relationship",
+						{	label: SR.PatientDemographics.ContactRelationship,
 							cellType: "text",
 							getValue: function(item) { return item.Relationship.Value; }
 						},
-						{	label: "Name",
+						{	label: SR.PatientDemographics.ContactName,
 							cellType: "text",
 							getValue: function(item) { return item.Name; }
 						},
-						{	label: "Home #",
+						{	label: SR.PatientDemographics.ContactHomePhone,
 							cellType: "text",
 							getValue: function(item) { return Ris.formatStringTelephone(item.HomePhoneNumber); }
 						},
-						{	label: "Work #",
+						{	label: SR.PatientDemographics.ContactWorkPhone,
 							cellType: "text",
 							getValue: function(item) { return Ris.formatStringTelephone(item.BusinessPhoneNumber); }
 						},
-						{	label: "Address",
+						{	label: SR.PatientDemographics.ContactAddress,
 							cellType: "text",
 							getValue: function(item) { return item.Address; }
 						}
@@ -201,48 +223,48 @@
 				<div id="PrimaryDemographicsSection">
 					<table style="{margin-bottom:2em}">
 						<tr>
-							<td class="propertyname">Name</td>
+							<td class="propertyname" id="labelName">Name</td>
 							<td colspan="3"><div id="name"/></td>
 						</tr>
 						<tr>
-							<td class="propertyname">Mrn</td>
+							<td class="propertyname" id="labelMrn">MRN</td>
 							<td colspan="3"><div id="mrn"/></td>
 						</tr>
 						<tr>
 							<td>&nbsp;</td>
 						</tr>
 						<tr>
-							<td width="120" class="propertyname">Date of Birth</td>
+							<td width="120" class="propertyname" id="labelDateOfBirth">Date of Birth</td>
 							<td width="200"><div id="dateOfBirth"/></td>
-							<td width="63" class="propertyname">Age</td>
+							<td width="63" class="propertyname" id="labelAge">Age</td>
 							<td width="229"><div id="age"/></td>
 						</tr>
 						<tr>
-							<td width="63" class="propertyname">Sex</td>
+							<td width="63" class="propertyname" id="labelSex">Sex</td>
 							<td width="229"><div id="sex"/></td>
-							<td class="propertyname">Healthcard # </td>
+							<td class="propertyname" id="labelHealthcard">Healthcard # </td>
 							<td><div id="healthcard"/></td>
 						</tr>
 						<tr>
-							<td width="63" class="propertyname">Billing Information</td>
+							<td width="63" class="propertyname" id="labelBillingInformation">Billing Information</td>
 							<td><div id="billingInformation"/></td>
 						</tr>
 						<tr>
 							<td>&nbsp;</td>
 						</tr>
 						<tr>
-							<td class="propertyname">Home Phone</td>
+							<td class="propertyname" id="labelHomePhone">Home Phone</td>
 							<td colspan="3"><div id="currentHomePhone"/></td>
 						</tr>
 						<tr>
-							<td class="propertyname">Home Address</td>
+							<td class="propertyname" id="labelHomeAddress">Home Address</td>
 							<td colspan="3"><div id="currentHomeAddress"/></td>
 						</tr>
 						<tr>
 							<td>&nbsp;</td>
 						</tr>
 						<tr>
-							<td class="propertyname">Alerts</td>
+							<td class="propertyname" id="labelAlerts">Alerts</td>
 							<td rowspan="3"><div id="alerts"/></td>
 						</tr>
 					</table>
@@ -250,11 +272,11 @@
 				<div id="CultureSection">
 					<table style="{margin-bottom:2em}" >
 						<tr>
-							<td width="120" class="propertyname">Language</td>
+							<td width="120" class="propertyname" id="labelLanguage">Language</td>
 							<td><div id="primaryLanguage"/></td>
 						</tr>
 						<tr>
-							<td width="120" class="propertyname">Religion</td>
+							<td width="120" class="propertyname" id="labelReligion">Religion</td>
 							<td><div id="religion"/></td>
 						</tr>
 					</table>
@@ -264,38 +286,38 @@
 				<div id="AddressesSection">
 					<table style="{margin-bottom:2em}"  id="addressTable">
 						<tr class="tableheading">
-							<td width="75">Type</td>
-							<td>Address</td>
-							<td width="120">Expiry Date</td>
+							<td width="75" id="labelAddressType">Type</td>
+							<td id="labelAddress">Address</td>
+							<td width="120" id="labelAddressExpiryDate">Expiry Date</td>
 						</tr>
 					</table>
 				</div>
 				<div id="PhoneNumbersSection">
 					<table style="{margin-bottom:2em}" id="phoneTable">
 						<tr class="tableheading">
-							<td width="75">Type</td>
-							<td>Phone Number</td>
-							<td width="120">Expiry Date</td>
+							<td width="75" id="labelPhoneType">Type</td>
+							<td id="labelPhoneNumber">Phone Number</td>
+							<td width="120" id="labelPhoneExpiryDate">Expiry Date</td>
 						</tr>
 					</table>
 				</div>
 				<div id="EmailAddressesSection">
 					<table style="{margin-bottom:2em}" id="emailTable">
 						<tr class="tableheading">
-							<td>Address</td>
-							<td width="120">Expiry Date</td>
+							<td id="labelEmailAddress">Address</td>
+							<td width="120" id="labelEmailExpiryDate">Expiry Date</td>
 						</tr>
 					</table>
 				</div>
 				<div id="ContactsSection">
 					<table style="{margin-bottom:2em}" id="contactTable">
 						<tr class="tableheading">
-							<td>Type</td>
-							<td>Relationship</td>
-							<td>Name</td>
-							<td>Home #</td>
-							<td>Work #</td>
-							<td>Address</td>
+							<td id="labelContactType">Type</td>
+							<td id="labelContactRelationship">Relationship</td>
+							<td id="labelContactName">Name</td>
+							<td id="labelContactHomePhone">Home #</td>
+							<td id="labelContactWorkPhone">Work #</td>
+							<td id="labelContactAddress">Address</td>
 						</tr>
 					</table>
 				</div>

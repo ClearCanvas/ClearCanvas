@@ -73,7 +73,13 @@ namespace ClearCanvas.ImageViewer.Volumes
 	internal sealed class VolumeHeaderData : IVolumeDataSet
 	{
 		private readonly object _syncRoot = new object();
-		private readonly DicomAttributeCollection _collection = new DicomAttributeCollection();
+
+	    private readonly DicomAttributeCollection _collection = new DicomAttributeCollection()
+	    {
+	        ValidateVrLengths = false,
+	        ValidateVrValues = false
+	    };
+
 		private readonly Matrix3D _volumeOrientationPatient;
 
 		public VolumeHeaderData(IList<IDicomAttributeProvider> sourceSops,
@@ -226,7 +232,7 @@ namespace ClearCanvas.ImageViewer.Volumes
 
 		public DicomAttributeCollection Copy()
 		{
-			var collection = new DicomAttributeCollection();
+		    var collection = new DicomAttributeCollection() {ValidateVrLengths = false, ValidateVrValues = false};
 			CopyTo(collection);
 			return collection;
 		}

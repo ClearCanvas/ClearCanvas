@@ -146,9 +146,9 @@ namespace ClearCanvas.Ris.Client.Admin
             _applicationComponentClass = applicationComponentClass;
 
             _rules = new Table<Rule>();
-            _rules.Columns.Add(new TableColumn<Rule, string>("Name", p => p.Name));
-            _rules.Columns.Add(new TableColumn<Rule, string>("Bound Property", p => p.BoundProperty));
-            _rules.Columns.Add(new TableColumn<Rule, string>("Test Result", p => p.Status));
+            _rules.Columns.Add(new TableColumn<Rule, string>(SR.ColumnName, p => p.Name));
+            _rules.Columns.Add(new TableColumn<Rule, string>(SR.ColumnBoundProperty, p => p.BoundProperty));
+            _rules.Columns.Add(new TableColumn<Rule, string>(SR.ColumnTestResult, p => p.Status));
         }
 
         public ValidationEditorComponent(ApplicationComponent component)
@@ -347,13 +347,13 @@ namespace ClearCanvas.Ris.Client.Admin
             {
                 if(!CollectionUtils.Contains(_componentProperties, p => p.Name == rule.BoundProperty))
                 {
-                    this.Host.ShowMessageBox(string.Format("Rule {0} is not bound to a valid property.", rule.Name), MessageBoxActions.Ok);
+                    this.Host.ShowMessageBox(string.Format(SR.FormatMessageRuleNotBoundToValidProperty, rule.Name), MessageBoxActions.Ok);
                     return false;
                 }
 
                 if (rule.ParseError)
                 {
-                    this.Host.ShowMessageBox("One or more rules have syntax errors which must be corrected first.", MessageBoxActions.Ok);
+                    this.Host.ShowMessageBox(SR.MessageSyntaxErrorInOneOrMoreRules, MessageBoxActions.Ok);
                     return false;
                 }
 
@@ -364,7 +364,7 @@ namespace ClearCanvas.Ris.Client.Admin
                 }
                 catch (Exception e)
                 {
-                    ExceptionHandler.Report(e, string.Format("Error parsing rule {0}", rule.Name), this.Host.DesktopWindow);
+                    ExceptionHandler.Report(e, string.Format(SR.FormatMessageErrorParsingRule, rule.Name), this.Host.DesktopWindow);
                     _selectedRule = rule;
                     NotifyPropertyChanged("SelectedRule");
 

@@ -35,7 +35,8 @@ namespace ClearCanvas.ImageViewer.Rendering
 {
 	internal unsafe class ImageRenderer
 	{
-		[ThreadStatic] private static int[] _finalLutBuffer;
+		[ThreadStatic]
+		private static int[] _finalLutBuffer;
 
 		public static void Render(
 			ImageGraphic imageGraphic,
@@ -50,28 +51,31 @@ namespace ClearCanvas.ImageViewer.Rendering
 			if (imageGraphic.SizeInBytes != imageGraphic.PixelData.Raw.Length)
 				throw new InvalidOperationException(String.Format(SR.ExceptionIncorrectPixelDataSize, imageGraphic.SizeInBytes, imageGraphic.PixelData.Raw.Length));
 
+#if DEBUG
 			CodeClock clock = new CodeClock();
 			clock.Start();
-
+#endif
 			RectangleF srcViewableRectangle;
 			Rectangle dstViewableRectangle;
 
 			CalculateVisibleRectangles(imageGraphic, clientRectangle, out dstViewableRectangle, out srcViewableRectangle);
 
-			if (imageGraphic is GrayscaleImageGraphic)
+		    var grayGraphic = imageGraphic as GrayscaleImageGraphic;
+		    ColorImageGraphic colorGraphic;
+            if (grayGraphic != null)
 			{
 				RenderGrayscale(
-					imageGraphic as GrayscaleImageGraphic,
+                    grayGraphic,
 					srcViewableRectangle,
 					dstViewableRectangle,
 					pDstPixelData,
 					dstWidth,
 					dstBytesPerPixel);
 			}
-			else if (imageGraphic is ColorImageGraphic)
+            else if (null != (colorGraphic = imageGraphic as ColorImageGraphic))
 			{
 				RenderColor(
-					imageGraphic as ColorImageGraphic,
+                    colorGraphic,
 					srcViewableRectangle,
 					dstViewableRectangle,
 					pDstPixelData,
@@ -82,14 +86,15 @@ namespace ClearCanvas.ImageViewer.Rendering
 			{
 				throw new Exception("Unknown ImageGraphic.");
 			}
-
+#if DEBUG
 			clock.Stop();
 			PerformanceReportBroker.PublishReport("ImageRenderer", "Render", clock.Seconds);
+#endif
 		}
 
 		private static void RenderGrayscale(
-			GrayscaleImageGraphic image, 
-			RectangleF srcViewableRectangle, 
+			GrayscaleImageGraphic image,
+			RectangleF srcViewableRectangle,
 			Rectangle dstViewableRectangle,
 			IntPtr pDstPixelData,
 			int dstWidth,
@@ -99,8 +104,8 @@ namespace ClearCanvas.ImageViewer.Rendering
 			{
 				if (image.InterpolationMode == InterpolationMode.Bilinear)
 				{
-                    //TODO: if we actually supported >8 bit displays, the LUT part would work ...
-				    var outputLut = image.GetOutputLut(0, byte.MaxValue);
+					//TODO: if we actually supported >8 bit displays, the LUT part would work ...
+					var outputLut = image.GetOutputLut(0, byte.MaxValue);
 					int[] finalLutBuffer = ConstructFinalLut(outputLut, image.ColorMap, image.Invert);
 
 					fixed (int* pFinalLutData = finalLutBuffer)
@@ -232,9 +237,10 @@ namespace ClearCanvas.ImageViewer.Rendering
 
 		private static int[] ConstructFinalLut(IComposedLut outputLut, IColorMap colorMap, bool invert)
 		{
+#if DEBUG
 			CodeClock clock = new CodeClock();
 			clock.Start();
-
+#endif
 			colorMap.MinInputValue = outputLut.MinOutputValue;
 			colorMap.MaxInputValue = outputLut.MaxOutputValue;
 
@@ -247,40 +253,39 @@ namespace ClearCanvas.ImageViewer.Rendering
 			int numberOfEntries = _finalLutBuffer.Length;
 
 			fixed (int* pOutputLutData = outputLutData)
+			fixed (int* pColorMapData = colorMapData)
+			fixed (int* pFinalLutData = _finalLutBuffer)
 			{
-				fixed (int* pColorMapData = colorMapData)
-				{
-					fixed (int* pFinalLutData = _finalLutBuffer)
-					{
-						int* pFinalLut = pFinalLutData;
+				int* pOutputLut = pOutputLutData;
+				int* pFinalLut = pFinalLutData;
 
-						if (!invert)
-						{
-							int firstColorMappedPixelValue = colorMap.FirstMappedPixelValue;
-							for (int i = 0; i < numberOfEntries; ++i)
-								*(pFinalLut++) = pColorMapData[*(pOutputLutData + i) - firstColorMappedPixelValue];
-						}
-						else
-						{
-							int lastColorMappedPixelValue = colorMap.FirstMappedPixelValue + colorMap.Data.Length - 1;
-							for (int i = 0; i < numberOfEntries; ++i)
-								*(pFinalLut++) = pColorMapData[lastColorMappedPixelValue - *(pOutputLutData + i)];
-						}
-					}
+				if (!invert)
+				{
+					int firstColorMappedPixelValue = colorMap.FirstMappedPixelValue;
+					for (int i = 0; i < numberOfEntries; ++i)
+						*pFinalLut++ = pColorMapData[*pOutputLut++ - firstColorMappedPixelValue];
+				}
+				else
+				{
+					int lastColorMappedPixelValue = colorMap.FirstMappedPixelValue + colorMapData.Length - 1;
+					for (int i = 0; i < numberOfEntries; ++i)
+						*pFinalLut++ = pColorMapData[lastColorMappedPixelValue - *pOutputLut++];
 				}
 			}
 
+#if DEBUG
 			clock.Stop();
 			PerformanceReportBroker.PublishReport("ImageRenderer", "ConstructFinalLut", clock.Seconds);
-
+#endif
 			return _finalLutBuffer;
 		}
 
 		private static int[] ConstructFinalLut(IComposedLut outputLut, bool invert)
 		{
+#if DEBUG
 			CodeClock clock = new CodeClock();
 			clock.Start();
-
+#endif
 			int[] outputLutData = outputLut.Data;
 
 			if (_finalLutBuffer == null || _finalLutBuffer.Length != outputLutData.Length)
@@ -289,29 +294,29 @@ namespace ClearCanvas.ImageViewer.Rendering
 			int numberOfEntries = _finalLutBuffer.Length;
 
 			fixed (int* pOutputLutData = outputLutData)
+			fixed (int* pFinalLutData = _finalLutBuffer)
 			{
-				fixed (int* pFinalLutData = _finalLutBuffer)
-				{
-					int* pFinalLut = pFinalLutData;
+				int* pOutputLut = pOutputLutData;
+				int* pFinalLut = pFinalLutData;
 
-					if (!invert)
-					{
-						int firstColorMappedPixelValue = outputLut.MinOutputValue;
-						for (int i = 0; i < numberOfEntries; ++i)
-							*(pFinalLut++) = *(pOutputLutData + i) - firstColorMappedPixelValue;
-					}
-					else
-					{
-						int lastColorMappedPixelValue = outputLut.MaxOutputValue;
-						for (int i = 0; i < numberOfEntries; ++i)
-							*(pFinalLut++) = lastColorMappedPixelValue - *(pOutputLutData + i);
-					}
+				if (!invert)
+				{
+					int firstColorMappedPixelValue = outputLut.MinOutputValue;
+					for (int i = 0; i < numberOfEntries; ++i)
+						*pFinalLut++ = *pOutputLut++ - firstColorMappedPixelValue;
+				}
+				else
+				{
+					int lastColorMappedPixelValue = outputLut.MaxOutputValue;
+					for (int i = 0; i < numberOfEntries; ++i)
+						*pFinalLut++ = lastColorMappedPixelValue - *pOutputLut++;
 				}
 			}
 
+#if DEBUG
 			clock.Stop();
 			PerformanceReportBroker.PublishReport("ImageRenderer", "ConstructFinalLut", clock.Seconds);
-
+#endif
 			return _finalLutBuffer;
 		}
 	}

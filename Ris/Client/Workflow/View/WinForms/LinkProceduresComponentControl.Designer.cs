@@ -28,81 +28,71 @@ namespace ClearCanvas.Ris.Client.Workflow.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			this.components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LinkProceduresComponentControl));
 			this._worklistItemTableView = new ClearCanvas.Desktop.View.WinForms.TableView();
 			this._okButton = new System.Windows.Forms.Button();
 			this._instructionsLabel = new System.Windows.Forms.Label();
 			this._heading = new System.Windows.Forms.Label();
 			this._sourceWorklistItem = new ClearCanvas.Desktop.View.WinForms.TableView();
+			this._makePrimaryButton = new System.Windows.Forms.Button();
+			this._toolTip = new System.Windows.Forms.ToolTip(this.components);
 			this.SuspendLayout();
 			// 
 			// _worklistItemTableView
 			// 
-			this._worklistItemTableView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this._worklistItemTableView.Location = new System.Drawing.Point(13, 133);
+			resources.ApplyResources(this._worklistItemTableView, "_worklistItemTableView");
 			this._worklistItemTableView.Name = "_worklistItemTableView";
 			this._worklistItemTableView.ReadOnly = false;
 			this._worklistItemTableView.ShowToolbar = false;
-			this._worklistItemTableView.Size = new System.Drawing.Size(725, 315);
-			this._worklistItemTableView.TabIndex = 1;
 			this._worklistItemTableView.TabStop = false;
 			// 
 			// _okButton
 			// 
-			this._okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this._okButton.Location = new System.Drawing.Point(662, 465);
+			resources.ApplyResources(this._okButton, "_okButton");
 			this._okButton.Name = "_okButton";
-			this._okButton.Size = new System.Drawing.Size(75, 23);
-			this._okButton.TabIndex = 2;
-			this._okButton.Text = "OK";
 			this._okButton.UseVisualStyleBackColor = true;
 			this._okButton.Click += new System.EventHandler(this._okButton_Click);
 			// 
 			// _instructionsLabel
 			// 
-			this._instructionsLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)));
-			this._instructionsLabel.AutoSize = true;
-			this._instructionsLabel.Location = new System.Drawing.Point(10, 116);
+			resources.ApplyResources(this._instructionsLabel, "_instructionsLabel");
 			this._instructionsLabel.Name = "_instructionsLabel";
-			this._instructionsLabel.Size = new System.Drawing.Size(324, 13);
-			this._instructionsLabel.TabIndex = 0;
-			this._instructionsLabel.Text = "Check any additional procedures that should be linked to this report";
 			// 
 			// _heading
 			// 
-			this._heading.AutoSize = true;
-			this._heading.Location = new System.Drawing.Point(10, 9);
+			resources.ApplyResources(this._heading, "_heading");
 			this._heading.Name = "_heading";
-			this._heading.Size = new System.Drawing.Size(56, 13);
-			this._heading.TabIndex = 3;
-			this._heading.Text = "Reporting:";
 			// 
 			// _sourceWorklistItem
 			// 
-			this._sourceWorklistItem.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this._sourceWorklistItem.Location = new System.Drawing.Point(13, 26);
+			resources.ApplyResources(this._sourceWorklistItem, "_sourceWorklistItem");
 			this._sourceWorklistItem.Name = "_sourceWorklistItem";
 			this._sourceWorklistItem.ReadOnly = false;
 			this._sourceWorklistItem.ShowToolbar = false;
-			this._sourceWorklistItem.Size = new System.Drawing.Size(725, 71);
-			this._sourceWorklistItem.TabIndex = 4;
 			this._sourceWorklistItem.TabStop = false;
+			// 
+			// _makePrimaryButton
+			// 
+			resources.ApplyResources(this._makePrimaryButton, "_makePrimaryButton");
+			this._makePrimaryButton.Image = global::ClearCanvas.Ris.Client.Workflow.View.WinForms.SR.SwapSmall;
+			this._makePrimaryButton.Name = "_makePrimaryButton";
+			this._toolTip.SetToolTip(this._makePrimaryButton, resources.GetString("_makePrimaryButton.ToolTip"));
+			this._makePrimaryButton.UseVisualStyleBackColor = true;
+			this._makePrimaryButton.Click += new System.EventHandler(this._makePrimaryButton_Click);
 			// 
 			// LinkProceduresComponentControl
 			// 
 			this.AcceptButton = this._okButton;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.Controls.Add(this._makePrimaryButton);
 			this.Controls.Add(this._sourceWorklistItem);
 			this.Controls.Add(this._heading);
 			this.Controls.Add(this._instructionsLabel);
 			this.Controls.Add(this._okButton);
 			this.Controls.Add(this._worklistItemTableView);
 			this.Name = "LinkProceduresComponentControl";
-			this.Size = new System.Drawing.Size(754, 501);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -115,5 +105,7 @@ namespace ClearCanvas.Ris.Client.Workflow.View.WinForms
         private System.Windows.Forms.Label _instructionsLabel;
 		private System.Windows.Forms.Label _heading;
 		private ClearCanvas.Desktop.View.WinForms.TableView _sourceWorklistItem;
+		private System.Windows.Forms.Button _makePrimaryButton;
+		private System.Windows.Forms.ToolTip _toolTip;
     }
 }

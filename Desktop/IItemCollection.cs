@@ -124,6 +124,16 @@ namespace ClearCanvas.Desktop
 		/// Occurs when a transaction has completed.
 		/// </summary>
 		event EventHandler TransactionCompleted;
+
+		/// <summary>
+		/// Adds multiple items to the collection. Returns true if one or more items are successfully added.
+		/// </summary>
+		bool AddRange(IEnumerable items);
+
+		/// <summary>
+		/// Removes multiple items from the collection. Returns true if one or more items are successfully removed.
+		/// </summary>
+		bool RemoveRange(IEnumerable items);
     }
 
     /// <summary>
@@ -137,5 +147,14 @@ namespace ClearCanvas.Desktop
 	/// <typeparam name="TItem">The item type.</typeparam>
     public interface IItemCollection<TItem> : IItemCollection, IList<TItem>
     {
+		/// <summary>
+		/// Adds multiple items to the collection.
+		/// </summary>
+		void AddRange(IEnumerable<TItem> items);
+
+		/// <summary>
+		/// Removes multiple items from the collection. Returns true if one or more items are successfully removed.
+		/// </summary>
+		bool RemoveRange(IEnumerable<TItem> items);
     }
 }

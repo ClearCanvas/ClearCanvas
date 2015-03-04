@@ -105,6 +105,10 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			if (e.PropertyName == "DepartmentChoicesChanged")
 			{
 				_performingDepartment.DataSource = _component.DepartmentChoices;
+			} 
+			else if (e.PropertyName == "ModalityChoicesChanged")
+			{
+				_modality.DataSource = _component.ModalityChoices;
 			}
 		}
 

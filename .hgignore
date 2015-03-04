@@ -40,6 +40,7 @@ _[Uu]pgradeReport_Files*/
 ASPNETDB.MDF
 aspnetdb_log.ldf
 *.SR.resources
+Ris/web/js/resources/resources.*.js
 ClearCanvas.Common.xml
 ClearCanvas.Desktop.xml
 ImageViewer/ClearCanvas.ImageViewer.xml
@@ -47,6 +48,7 @@ ImageViewer/ClearCanvas.ImageViewer.xml
 # VC++ Intellisense db files
 Dicom/ClearCanvas.Dicom.sdf
 ImageViewer/Core/Functions/ViewerCoreFunctions.sdf
+ImageViewer/Core/Functions/ViewerCoreFunctions.opensdf
 
 # Viewer local datastore files
 dicom_datastore/*.sdf

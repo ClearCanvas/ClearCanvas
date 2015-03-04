@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AccessionNumber" xml:space="preserve">
     <value>Accession #:</value>
@@ -141,11 +141,23 @@
   <data name="AdminDeletedStudies_ReasonForDeletion" xml:space="preserve">
     <value>Reason For Deletion:</value>
   </data>
+  <data name="Bed" xml:space="preserve">
+    <value>Bed:</value>
+  </data>
   <data name="Breed" xml:space="preserve">
     <value>Breed:</value>
   </data>
+  <data name="EnteredBy" xml:space="preserve">
+    <value>Order Entered By:</value>
+  </data>
+  <data name="InsertTime" xml:space="preserve">
+    <value>Inserted Time:</value>
+  </data>
   <data name="Instances" xml:space="preserve">
     <value>Instances:</value>
+  </data>
+  <data name="IssuerOfPatientId" xml:space="preserve">
+    <value>Issuer of Patient Id:</value>
   </data>
   <data name="Modalities" xml:space="preserve">
     <value>Modalities:</value>
@@ -153,8 +165,14 @@
   <data name="Modality" xml:space="preserve">
     <value>Modality:</value>
   </data>
+  <data name="OrderStatus" xml:space="preserve">
+    <value>Order Status:</value>
+  </data>
   <data name="Partition" xml:space="preserve">
     <value>Partition:</value>
+  </data>
+  <data name="PatientClass" xml:space="preserve">
+    <value>Patient Class:</value>
   </data>
   <data name="PatientID" xml:space="preserve">
     <value>Patient ID:</value>
@@ -165,8 +183,20 @@
   <data name="PerformedOn" xml:space="preserve">
     <value>Performed On:</value>
   </data>
+  <data name="PointOfCare" xml:space="preserve">
+    <value>Point of care:</value>
+  </data>
+  <data name="Priority" xml:space="preserve">
+    <value>Priority:</value>
+  </data>
+  <data name="ReasonForStudy" xml:space="preserve">
+    <value>Reason for Study:</value>
+  </data>
   <data name="ReferringPhysician" xml:space="preserve">
     <value>Ref. Physician:</value>
+  </data>
+  <data name="RequestedProcedure" xml:space="preserve">
+    <value>Requested Procedure:</value>
   </data>
   <data name="ResponsibleOrganization" xml:space="preserve">
     <value>Responsible Organization:</value>
@@ -176,6 +206,12 @@
   </data>
   <data name="ResponsiblePersonRole" xml:space="preserve">
     <value>Responsible Person Role:</value>
+  </data>
+  <data name="Room" xml:space="preserve">
+    <value>Room:</value>
+  </data>
+  <data name="ScheduledTime" xml:space="preserve">
+    <value>Scheduled Time:</value>
   </data>
   <data name="SeriesCount" xml:space="preserve">
     <value>Series:</value>
@@ -245,6 +281,9 @@
   </data>
   <data name="TransferSyntax" xml:space="preserve">
     <value>Transfer Syntax:</value>
+  </data>
+  <data name="UpdatedTime" xml:space="preserve">
+    <value>Updated Time:</value>
   </data>
   <data name="WorkQueue_AutoRoute_Destination" xml:space="preserve">
     <value>Destination:</value>

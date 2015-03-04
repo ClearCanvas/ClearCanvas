@@ -27,7 +27,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Xml;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
@@ -222,7 +221,7 @@ namespace ClearCanvas.ImageServer.Core.Edit
                 if (originalDicomAttributeProvider.TryGetAttribute(tag, out attribute))
                     originalValue = attribute.ToString();
                 
-                SetTagCommand cmd = new SetTagCommand(tag.TagValue, originalValue, value != null ? value.ToString() : null);
+                var cmd = new SetTagCommand(tag.TagValue, originalValue, value != null ? value.ToString() : null);
                 commandList.Add(cmd);
             }
             return commandList;
@@ -235,9 +234,9 @@ namespace ClearCanvas.ImageServer.Core.Edit
 			string studyXmlPath = Path.Combine(storageLocation.GetStudyPath(), storageLocation.StudyInstanceUid + ".xml");
 			using (Stream stream = FileStreamOpener.OpenForRead(studyXmlPath, FileMode.Open))
 			{
-				XmlDocument doc = new XmlDocument();
-				StudyXmlIo.Read(doc, stream);
-				studyXml.SetMemento(doc);
+				var theMemento = new StudyXmlMemento();
+				StudyXmlIo.Read(theMemento, stream);
+				studyXml.SetMemento(theMemento);
 				stream.Close();
 			}
 			return studyXml;

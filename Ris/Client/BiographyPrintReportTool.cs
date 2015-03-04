@@ -31,7 +31,7 @@ using ClearCanvas.Desktop.Tools;
 
 namespace ClearCanvas.Ris.Client
 {
-	[ButtonAction("apply", "biography-reports-toolbar/Print'/Fax Report", "Apply")]
+	[ButtonAction("apply", "biography-reports-toolbar/MenuPrintFaxReport", "Apply")]
 	[IconSet("apply", "Icons.PrintSmall.png", "Icons.PrintMedium.png", "Icons.PrintLarge.png")]
 	[EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
 	[ExtensionOf(typeof(BiographyOrderReportsToolExtensionPoint))]
@@ -51,8 +51,7 @@ namespace ClearCanvas.Ris.Client
 		{
 			try
 			{
-				//todo: loc
-				var title = string.Format("Print Report {0}", Formatting.AccessionFormat.Format(this.Context.AccessionNumber));
+				var title = string.Format(SR.FormatPrintReport, Formatting.AccessionFormat.Format(this.Context.AccessionNumber));
 
 				var component = new PrintReportComponent(this.Context.OrderRef, this.Context.ReportRef);
 				ApplicationComponent.LaunchAsDialog(

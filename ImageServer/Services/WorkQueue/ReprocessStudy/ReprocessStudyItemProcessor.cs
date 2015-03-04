@@ -27,7 +27,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Xml;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
@@ -214,16 +213,6 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReprocessStudy
             Platform.CheckForNullReference(item, "item");
             Platform.CheckForNullReference(item.StudyStorageKey, "item.StudyStorageKey");
 
-            var context = new StudyProcessorContext(StorageLocation, WorkQueueItem);
-            
-            // TODO: Should we enforce the patient's name rule?
-            // If we do, the Study record will have the new patient's name 
-            // but how should we handle the name in the Patient record?
-            const bool enforceNameRules = false;
-            var processor = new SopInstanceProcessor(context) { EnforceNameRules = enforceNameRules};
-
-            var seriesMap = new Dictionary<string, List<string>>();
-
             bool successful = true;
             string failureDescription = null;
             
@@ -316,6 +305,17 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReprocessStudy
                              Study.AccessionNumber, ServerPartition.Description);
                 
             }
+
+			// As per #12583, Creation of the SopInstanceProcessor should occur after the CleanupDatabase() call.
+			var context = new StudyProcessorContext(StorageLocation, WorkQueueItem);
+
+			// TODO: Should we enforce the patient's name rule?
+			// If we do, the Study record will have the new patient's name 
+			// but how should we handle the name in the Patient record?
+			const bool enforceNameRules = false;
+			var processor = new SopInstanceProcessor(context) { EnforceNameRules = enforceNameRules };
+
+			var seriesMap = new Dictionary<string, List<string>>();
 
             StudyXml studyXml = LoadStudyXml();
 
@@ -472,6 +472,10 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReprocessStudy
                     }
                     else
                     {
+						// Reload the record from the database because referenced entities have been modified since the beginning.
+						// Need to reload because we are passing the location to the rule engine.
+						StorageLocation = CollectionUtils.FirstElement<StudyStorageLocation>(StudyStorageLocation.FindStorageLocations(item.ServerPartitionKey, StorageLocation.StudyInstanceUid), null);
+
                         LogHistory();
 
                         // Run Study / Series Rules Engine.
@@ -682,11 +686,11 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.ReprocessStudy
 
         private void SaveStudyXml(StudyXml studyXml)
         {
-            XmlDocument doc = studyXml.GetMemento(new StudyXmlOutputSettings());
+            var theMemento = studyXml.GetMemento(new StudyXmlOutputSettings());
             using (FileStream xmlStream = FileStreamOpener.OpenForSoleUpdate(StorageLocation.GetStudyXmlPath(), FileMode.Create),
                                       gzipStream = FileStreamOpener.OpenForSoleUpdate(StorageLocation.GetCompressedStudyXmlPath(), FileMode.Create))
             {
-                StudyXmlIo.WriteXmlAndGzip(doc, xmlStream, gzipStream);
+                StudyXmlIo.WriteXmlAndGzip(theMemento, xmlStream, gzipStream);
                 xmlStream.Close();
                 gzipStream.Close();
             }

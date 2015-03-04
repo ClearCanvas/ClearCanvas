@@ -59,7 +59,7 @@ namespace ClearCanvas.ImageViewer.Utilities.StudyFilters.View.WinForms
 			dialog.Title = args.Title;
 
 			dialog.Filter = StringUtilities.Combine(args.Filters, "|",
-			                                        delegate(FileExtensionFilter f) { return f.Description + "|" + f.Filter; });
+			                                        f => f.Description + "|" + f.Filter);
 		}
 	}
 }

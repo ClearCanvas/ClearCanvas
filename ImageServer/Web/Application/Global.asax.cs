@@ -24,6 +24,7 @@
 
 using System;
 using System.Configuration;
+using System.Web.SessionState;
 using ClearCanvas.Common;
 using ClearCanvas.ImageServer.Web.Common.Security;
 using ClearCanvas.ImageServer.Web.Common;
@@ -37,6 +38,8 @@ namespace ClearCanvas.ImageServer.Web.Application
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
             start = DateTime.Now;
+            if (Context.Request.Path.Contains("ApplicationService.svc"))
+                Context.SetSessionStateBehavior(SessionStateBehavior.Disabled);
         }
 
         protected void Application_EndRequest(object sender, EventArgs e)

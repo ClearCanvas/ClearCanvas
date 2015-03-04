@@ -42,18 +42,17 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkProfile />
+    <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile />
     <DefineConstants>DEBUG;TRACE;UNIT_TESTS</DefineConstants>
     <DocumentationFile>
     </DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
-    <FileAlignment>4096</FileAlignment>
     <NoStdLib>false</NoStdLib>
     <NoWarn>
     </NoWarn>
@@ -71,13 +70,11 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile />
     <DefineConstants>TRACE</DefineConstants>
     <DocumentationFile>ClearCanvas.Common.xml</DocumentationFile>
     <DebugSymbols>false</DebugSymbols>
-    <FileAlignment>4096</FileAlignment>
     <NoStdLib>false</NoStdLib>
     <NoWarn>
     </NoWarn>
@@ -96,9 +93,7 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\UNIT_TESTS_USAGE_TRACKING\</OutputPath>
     <DefineConstants>TRACE;DEBUG;UNIT_TESTS, UNIT_TESTS_USAGE_TRACKING</DefineConstants>
-    <BaseAddress>285212672</BaseAddress>
     <DocumentationFile>ClearCanvas.Common.xml</DocumentationFile>
-    <FileAlignment>4096</FileAlignment>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
@@ -173,6 +168,7 @@
     <Compile Include="PluginInfoCache.cs" />
     <Compile Include="PluginLoader.cs" />
     <Compile Include="Rest\RestClient.cs" />
+    <Compile Include="Serialization\PolymorphicDataContractResolver.cs" />
     <Compile Include="Shreds\ShredIsolationAttribute.cs" />
     <Compile Include="Specifications\CaseSpecification.cs" />
     <Compile Include="Specifications\ContainsSpecification.cs" />
@@ -319,6 +315,7 @@
     <Compile Include="Utilities\ItemEventArgs.cs" />
     <Compile Include="Utilities\PerformanceReportBroker.cs" />
     <Compile Include="Utilities\CryptoServiceFallbackHelper.cs" />
+    <Compile Include="Utilities\MockSettingsStore.cs" />
     <Compile Include="Utilities\UrlQueryString.cs" />
     <Compile Include="Utilities\ReadOnlyDictionary.cs" />
     <Compile Include="Utilities\SynchronizedEventHelper.cs" />

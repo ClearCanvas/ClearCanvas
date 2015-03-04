@@ -26,7 +26,6 @@ using System;
 using System.IO.Compression;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
-using System.Xml;
 using ClearCanvas.Dicom.Utilities.Xml;
 
 namespace ClearCanvas.Dicom.ServiceModel.Streaming
@@ -103,19 +102,19 @@ namespace ClearCanvas.Dicom.ServiceModel.Streaming
         /// <returns></returns>
         public StudyXml GetStudyXml(string callingAETitle, HeaderStreamingParameters parameters)
         {
-            XmlDocument doc;
+            StudyXmlMemento theMemento;
             using (var stream = GetStudyHeader(callingAETitle, parameters))
             {
                 using (var gzStream = new GZipStream(stream, CompressionMode.Decompress))
                 {
-                    doc = new XmlDocument();
-                    doc.Load(gzStream);
+					theMemento = new StudyXmlMemento();
+					StudyXmlIo.Read(theMemento, gzStream);
                     gzStream.Close();
                 }
             }
 
             var studyXml = new StudyXml();
-            studyXml.SetMemento(doc);
+            studyXml.SetMemento(theMemento);
             return studyXml;
         }
     }

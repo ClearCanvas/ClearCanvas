@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Web;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Enterprise.Common.Admin.AuthorityGroupAdmin;
 using ClearCanvas.Enterprise.Core;
@@ -242,7 +243,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
                 {
                     DataAccessGroupSelectCriteria select = new DataAccessGroupSelectCriteria();
                     select.AuthorityGroupOID.EqualTo(new ServerEntityKey("AuthorityGroupOID", new Guid(group.AuthorityGroupRef.ToString(false, false))));
-                    IDataAccessGroupEntityBroker broker = HttpContextData.Current.ReadContext.GetBroker<IDataAccessGroupEntityBroker>();
+                    IDataAccessGroupEntityBroker broker = HttpContext.Current.GetSharedPersistentContext().GetBroker<IDataAccessGroupEntityBroker>();
                     DataAccessGroup accessGroup = broker.FindOne(select);
                     if (accessGroup != null)
                     {
@@ -266,7 +267,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
 
             StudyDataAccessSelectCriteria select = new StudyDataAccessSelectCriteria();
             select.StudyStorageKey.EqualTo(studyStorageKey);
-            IStudyDataAccessEntityBroker broker = HttpContextData.Current.ReadContext.GetBroker<IStudyDataAccessEntityBroker>();
+            IStudyDataAccessEntityBroker broker = HttpContext.Current.GetSharedPersistentContext().GetBroker<IStudyDataAccessEntityBroker>();
 
             broker.Find(select, delegate(StudyDataAccess dataAccess)
             {
@@ -284,7 +285,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
         {
             DataAccessGroupSelectCriteria select = new DataAccessGroupSelectCriteria();
             select.AuthorityGroupOID.EqualTo(new ServerEntityKey("AuthorityGroupOID", new Guid(oid)));
-            IDataAccessGroupEntityBroker broker = HttpContextData.Current.ReadContext.GetBroker<IDataAccessGroupEntityBroker>();
+            IDataAccessGroupEntityBroker broker = HttpContext.Current.GetSharedPersistentContext().GetBroker<IDataAccessGroupEntityBroker>();
             return broker.FindOne(select);
         }
 

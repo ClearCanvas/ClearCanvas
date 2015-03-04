@@ -43,6 +43,7 @@ namespace ClearCanvas.ImageViewer.Externals.View.WinForms.General
 
 			_helpMessage = component.ArgumentFieldsHelpText;
 			_lnkHelpFields.Visible = !string.IsNullOrEmpty(_helpMessage);
+			_dlgCommand.Filter = string.Format("{0}|*.exe|{1}|*.*", SR.LabelExeFilesFilter, SR.LabelAllFilesFilter);
 
 			_txtName.DataBindings.Add("Text", component, "Label", false, DataSourceUpdateMode.OnPropertyChanged);
 			_txtCommand.DataBindings.Add("Text", component, "Command", false, DataSourceUpdateMode.OnPropertyChanged);

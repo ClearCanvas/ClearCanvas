@@ -42,7 +42,7 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 		public FusionSopDataSource(ISopDataSource realSopDataSource, PETFusionType type, IEnumerable<IDicomAttributeProvider> overlayFrames)
 		{
 			_realSopDataSource = realSopDataSource;
-			_fusionHeaders = new DicomAttributeCollection();
+		    _fusionHeaders = new DicomAttributeCollection() {ValidateVrLengths = false, ValidateVrValues = false};
 
 			var scEquipment = new ScEquipmentModuleIod(_fusionHeaders);
 			scEquipment.ConversionType = @"WSD";

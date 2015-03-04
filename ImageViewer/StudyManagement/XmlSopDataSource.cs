@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using ClearCanvas.Dicom;
@@ -38,10 +39,10 @@ namespace ClearCanvas.ImageViewer.StudyManagement
     public abstract class XmlSopDataSource : DicomMessageSopDataSource
     {
 		private readonly Dictionary<uint, bool> _sequenceHasExcludedTags = new Dictionary<uint, bool>();
-    	private volatile bool _fullHeaderLoaded;
+        internal volatile bool _fullHeaderLoaded;
 
 		protected XmlSopDataSource(InstanceXml instanceXml)
-			: base(new DicomFile("", new DicomAttributeCollection(), instanceXml.Collection))
+			: base(new DicomFile("", new DicomAttributeCollection{ValidateVrLengths = false, ValidateVrValues = false}, instanceXml.Collection))
         {
 			//These don't get set properly for instance xml.
 			var sourceFile = (DicomFile)SourceMessage;
@@ -68,8 +69,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement
             {
                 lock (SyncLock)
                 {
-                    if (NeedFullHeader(tag.TagValue))
-						LoadFullHeader();
+                    DicomAttribute attribute;
+                    if (TryGetXmlAttribute(tag.TagValue, out attribute))
+                        return attribute;
 
                     return base[tag];
                 }
@@ -82,8 +84,9 @@ namespace ClearCanvas.ImageViewer.StudyManagement
             {
                 lock (SyncLock)
                 {
-                    if (NeedFullHeader(tag))
-						LoadFullHeader();
+                    DicomAttribute attribute;
+                    if (TryGetXmlAttribute(tag, out attribute))
+                        return attribute;
 
                     return base[tag];
                 }
@@ -94,10 +97,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
         {
             lock (SyncLock)
             {
-                if (NeedFullHeader(tag.TagValue))
-					LoadFullHeader();
-
-                return base.TryGetAttribute(tag, out attribute);
+                return TryGetXmlAttribute(tag.TagValue, out attribute) || base.TryGetAttribute(tag, out attribute);
             }
         }
 
@@ -105,36 +105,49 @@ namespace ClearCanvas.ImageViewer.StudyManagement
         {
             lock (SyncLock)
             {
-                if (NeedFullHeader(tag))
-					LoadFullHeader();
-
-                return base.TryGetAttribute(tag, out attribute);
+                return TryGetXmlAttribute(tag, out attribute) || base.TryGetAttribute(tag, out attribute);
             }
         }
 
-		/// <summary>
-		/// Gets whether or not the full header is needed in order to retrieve the <see cref="DicomAttribute"/> for
-		/// the given tag, as opposed to the <see cref="InstanceXml">xml</see>,  which may be partial.
-		/// </summary>
-		/// <returns>Whether or not the full header should be loaded via <see cref="LoadFullHeader"/>.</returns>
-		protected virtual bool NeedFullHeader(uint tag)
+        private bool TryGetXmlAttribute(uint tag, out DicomAttribute attribute)
 		{
 			if (_fullHeaderLoaded)
+            {
+                attribute = null;
 				return false;
+            }
 
-			var xmlDataSet = (InstanceXmlDicomAttributeCollection) SourceMessage.DataSet;
+            var needFullHeader = false;
+            var dataset = SourceMessage.DataSet;
+            if (dataset.TryGetAttribute(tag, out attribute))
+            {
+                //If it's a sequence, it can have excluded tags in it.
+                if (IsSequenceWithExcludedTags(attribute))
+                    needFullHeader = true;
+                else
+                    return true; //We have all we need.
+            }
 
-			// if it's a private tag and not already in the collection, we MUST retrieve full header
+            if (!needFullHeader)
+            {
+                // if it's a private tag and not already in the collection (which has been checked already), we MUST retrieve full header
 			// early releases of the study XML functionality excluded private tags but also did not report their exclusion
-			if (DicomTag.IsPrivateTag(tag) && !xmlDataSet.Contains(tag))
-				return true;
+                if (DicomTag.IsPrivateTag(tag) || ((InstanceXmlDicomAttributeCollection)dataset).IsTagExcluded(tag))
+                    needFullHeader = true;
+            }
 
-			if (xmlDataSet.IsTagExcluded(tag))
-				return true;
+            if (needFullHeader)
+                LoadFullHeader();
 
-			DicomAttribute attribute = base[tag];
-			if (attribute is DicomAttributeSQ)
+            return false;
+        }
+
+        private bool IsSequenceWithExcludedTags(DicomAttribute attribute)
 			{
+            if (!(attribute is DicomAttributeSQ)) 
+                return false;
+
+            var tag = attribute.Tag.TagValue;
 				// cache the results for the recursive SQ item excluded tags check - it adds up if you've got a multiframe image and functional group sequences get accessed repeatedly
 				bool sequenceHasExcludedTags;
 				if (!_sequenceHasExcludedTags.TryGetValue(tag, out sequenceHasExcludedTags))
@@ -143,11 +156,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 					_sequenceHasExcludedTags[tag] = sequenceHasExcludedTags = (items != null && items.OfType<InstanceXmlDicomSequenceItem>().Any(item => item.HasExcludedTags(true)));
 				}
 
-				if (sequenceHasExcludedTags)
-					return true;
-			}
-
-			return false;
+            return sequenceHasExcludedTags;
 		}
 
         protected void LoadFullHeader()

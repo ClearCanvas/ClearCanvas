@@ -29,6 +29,7 @@ using ClearCanvas.Common.Shreds;
 namespace ClearCanvas.ImageServer.Services.Archiving.Shreds
 {
 	[ExtensionOf(typeof(ShredExtensionPoint))]
+	[ShredIsolation(Level = ShredIsolationLevel.None)]
 	public class ArchivingShredExtension : Shred
 	{
 		#region Private Members

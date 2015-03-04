@@ -24,6 +24,7 @@
 
 using System.Collections.Generic;
 using ClearCanvas.Common;
+using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Ris.Client.Workflow.Extended
 {
@@ -50,7 +51,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Extended
 
 			public Desktop.Path Path
 			{
-				get { return new Desktop.Path("Additional Info"); }
+				get { return new Desktop.Path("TitleAdditionalInfo", new ResourceResolver(GetType().Assembly)); }
 			}
 
 			public Desktop.IApplicationComponent GetComponent()
@@ -98,7 +99,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Extended
 
 			public Desktop.Path Path
 			{
-				get { return new Desktop.Path("Additional Info"); }
+				get { return new Desktop.Path("TitleAdditionalInfo", new ResourceResolver(GetType().Assembly)); }
 			}
 
 			public Desktop.IApplicationComponent GetComponent()
@@ -141,7 +142,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Extended
 
 			public Desktop.Path Path
 			{
-				get { return new Desktop.Path("Additional Info"); }
+				get { return new Desktop.Path("TitleAdditionalInfo", new ResourceResolver(GetType().Assembly)); }
 			}
 
 			public Desktop.IApplicationComponent GetComponent()
@@ -187,7 +188,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Extended
 
 			public Desktop.Path Path
 			{
-				get { return new Desktop.Path("Additional Info"); }
+				get { return new Desktop.Path("TitleAdditionalInfo", new ResourceResolver(GetType().Assembly)); }
 			}
 
 			public Desktop.IApplicationComponent GetComponent()
@@ -234,7 +235,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Extended
 
 			public Desktop.Path Path
 			{
-				get { return new Desktop.Path("Additional Info"); }
+				get { return new Desktop.Path("TitleAdditionalInfo", new ResourceResolver(GetType().Assembly)); }
 			}
 
 			public Desktop.IApplicationComponent GetComponent()

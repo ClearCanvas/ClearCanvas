@@ -126,6 +126,12 @@
   <data name="AlertShredHostServiceStopped" xml:space="preserve">
     <value>Image Server Shred Host Service has stopped</value>
   </data>
+  <data name="ManifestComponentName" xml:space="preserve">
+    <value>Manifest Verification</value>
+  </data>
+  <data name="NonStandardInstallation" xml:space="preserve">
+    <value>The {0} installation has been modified.</value>
+  </data>
   <data name="RemoteImageServerServicesServer" xml:space="preserve">
     <value>Remote ImageServer Services Server</value>
     <comment>Server Shred that provides ImageServer-specific services</comment>

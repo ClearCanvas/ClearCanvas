@@ -22,6 +22,7 @@
 
 #endregion
 
+using System.Linq;
 using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.ImageViewer.Annotations
@@ -29,15 +30,15 @@ namespace ClearCanvas.ImageViewer.Annotations
 	/// <summary>
 	/// An observable container for <see cref="AnnotationBox"/>es.
 	/// </summary>
-	[Cloneable(true)]
+	[Cloneable(false)]
 	public class AnnotationBoxList : ObservableList<AnnotationBox>
 	{
 		internal AnnotationBoxList()
 		{
 		}
 
-		[CloneInitialize]
-		private void Initialize(AnnotationBoxList source, ICloningContext context)
+        private AnnotationBoxList(AnnotationBoxList source, ICloningContext context)
+            : base(source.Count)
 		{
 			foreach (AnnotationBox box in source)
 				this.Add(box.Clone());
@@ -49,8 +50,7 @@ namespace ClearCanvas.ImageViewer.Annotations
 		/// <returns>A deep clone of this <see cref="AnnotationBoxList"/>.</returns>
 		public AnnotationBoxList Clone()
 		{
-			AnnotationBoxList clone = new AnnotationBoxList();
-			clone.Initialize(this, null);
+			var clone = new AnnotationBoxList(this, null);
 			return clone;
 		}
 	}

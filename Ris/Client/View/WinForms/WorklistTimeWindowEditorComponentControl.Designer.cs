@@ -59,6 +59,7 @@ namespace ClearCanvas.Ris.Client.View.WinForms
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WorklistTimeWindowEditorComponentControl));
 			this._slidingScale = new ClearCanvas.Desktop.View.WinForms.ComboBoxField();
 			this._fromCheckBox = new System.Windows.Forms.CheckBox();
 			this._toCheckBox = new System.Windows.Forms.CheckBox();
@@ -77,78 +78,50 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			this._slidingScale.DataSource = null;
 			this._slidingScale.DisplayMember = "";
 			this._slidingScale.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this._slidingScale.LabelText = "Scale";
-			this._slidingScale.Location = new System.Drawing.Point(105, 68);
-			this._slidingScale.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._slidingScale, "_slidingScale");
 			this._slidingScale.Name = "_slidingScale";
-			this._slidingScale.Size = new System.Drawing.Size(91, 45);
-			this._slidingScale.TabIndex = 4;
 			this._slidingScale.Value = null;
 			// 
 			// _fromCheckBox
 			// 
-			this._fromCheckBox.AutoSize = true;
-			this._fromCheckBox.Location = new System.Drawing.Point(108, 32);
+			resources.ApplyResources(this._fromCheckBox, "_fromCheckBox");
 			this._fromCheckBox.Name = "_fromCheckBox";
-			this._fromCheckBox.Size = new System.Drawing.Size(49, 17);
-			this._fromCheckBox.TabIndex = 2;
-			this._fromCheckBox.Text = "From";
 			this._fromCheckBox.UseVisualStyleBackColor = true;
 			// 
 			// _toCheckBox
 			// 
-			this._toCheckBox.AutoSize = true;
-			this._toCheckBox.Location = new System.Drawing.Point(288, 32);
+			resources.ApplyResources(this._toCheckBox, "_toCheckBox");
 			this._toCheckBox.Name = "_toCheckBox";
-			this._toCheckBox.Size = new System.Drawing.Size(39, 17);
-			this._toCheckBox.TabIndex = 3;
-			this._toCheckBox.Text = "To";
 			this._toCheckBox.UseVisualStyleBackColor = true;
 			// 
 			// _toFixed
 			// 
-			this._toFixed.LabelText = "To";
-			this._toFixed.Location = new System.Drawing.Point(285, 175);
-			this._toFixed.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._toFixed, "_toFixed");
 			this._toFixed.Maximum = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
 			this._toFixed.Minimum = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
 			this._toFixed.Name = "_toFixed";
-			this._toFixed.Size = new System.Drawing.Size(150, 41);
-			this._toFixed.TabIndex = 8;
 			this._toFixed.Value = new System.DateTime(2008, 3, 14, 10, 35, 2, 968);
 			// 
 			// _fromFixed
 			// 
-			this._fromFixed.LabelText = "From";
-			this._fromFixed.Location = new System.Drawing.Point(105, 175);
-			this._fromFixed.Margin = new System.Windows.Forms.Padding(2);
+			resources.ApplyResources(this._fromFixed, "_fromFixed");
 			this._fromFixed.Maximum = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
 			this._fromFixed.Minimum = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
 			this._fromFixed.Name = "_fromFixed";
-			this._fromFixed.Size = new System.Drawing.Size(150, 41);
-			this._fromFixed.TabIndex = 7;
 			this._fromFixed.Value = new System.DateTime(2008, 3, 14, 10, 35, 2, 968);
 			// 
 			// _fixedWindowRadioButton
 			// 
-			this._fixedWindowRadioButton.AutoSize = true;
-			this._fixedWindowRadioButton.Location = new System.Drawing.Point(23, 175);
+			resources.ApplyResources(this._fixedWindowRadioButton, "_fixedWindowRadioButton");
 			this._fixedWindowRadioButton.Name = "_fixedWindowRadioButton";
-			this._fixedWindowRadioButton.Size = new System.Drawing.Size(50, 17);
-			this._fixedWindowRadioButton.TabIndex = 1;
 			this._fixedWindowRadioButton.TabStop = true;
-			this._fixedWindowRadioButton.Text = "Fixed";
 			this._fixedWindowRadioButton.UseVisualStyleBackColor = true;
 			// 
 			// _slidingWindowRadioButton
 			// 
-			this._slidingWindowRadioButton.AutoSize = true;
-			this._slidingWindowRadioButton.Location = new System.Drawing.Point(23, 75);
+			resources.ApplyResources(this._slidingWindowRadioButton, "_slidingWindowRadioButton");
 			this._slidingWindowRadioButton.Name = "_slidingWindowRadioButton";
-			this._slidingWindowRadioButton.Size = new System.Drawing.Size(56, 17);
-			this._slidingWindowRadioButton.TabIndex = 0;
 			this._slidingWindowRadioButton.TabStop = true;
-			this._slidingWindowRadioButton.Text = "Sliding";
 			this._slidingWindowRadioButton.UseVisualStyleBackColor = true;
 			// 
 			// _groupBox
@@ -162,37 +135,58 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			this._groupBox.Controls.Add(this._fromFixed);
 			this._groupBox.Controls.Add(this._fixedWindowRadioButton);
 			this._groupBox.Controls.Add(this._slidingWindowRadioButton);
-			this._groupBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._groupBox.Location = new System.Drawing.Point(0, 0);
+			resources.ApplyResources(this._groupBox, "_groupBox");
 			this._groupBox.Name = "_groupBox";
-			this._groupBox.Size = new System.Drawing.Size(455, 246);
-			this._groupBox.TabIndex = 0;
 			this._groupBox.TabStop = false;
-			this._groupBox.Text = "Time Window";
 			// 
 			// _toSliding
 			// 
 			this._toSliding.Format = null;
-			this._toSliding.Location = new System.Drawing.Point(288, 118);
+			resources.ApplyResources(this._toSliding, "_toSliding");
+			this._toSliding.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+			this._toSliding.Minimum = new decimal(new int[] {
+            -2147483648,
+            0,
+            0,
+            -2147483648});
 			this._toSliding.Name = "_toSliding";
-			this._toSliding.Size = new System.Drawing.Size(120, 20);
-			this._toSliding.TabIndex = 6;
+			this._toSliding.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			// 
 			// _fromSliding
 			// 
 			this._fromSliding.Format = null;
-			this._fromSliding.Location = new System.Drawing.Point(108, 118);
+			resources.ApplyResources(this._fromSliding, "_fromSliding");
+			this._fromSliding.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+			this._fromSliding.Minimum = new decimal(new int[] {
+            -2147483648,
+            0,
+            0,
+            -2147483648});
 			this._fromSliding.Name = "_fromSliding";
-			this._fromSliding.Size = new System.Drawing.Size(120, 20);
-			this._fromSliding.TabIndex = 5;
+			this._fromSliding.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			// 
 			// WorklistTimeWindowEditorComponentControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this._groupBox);
 			this.Name = "WorklistTimeWindowEditorComponentControl";
-			this.Size = new System.Drawing.Size(455, 246);
 			this._groupBox.ResumeLayout(false);
 			this._groupBox.PerformLayout();
 			this.ResumeLayout(false);

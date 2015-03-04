@@ -27,7 +27,6 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Threading;
 using System.IO;
-using System.Xml;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Serialization;
 using ClearCanvas.Common.Statistics;
@@ -573,15 +572,16 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue
 						DateTime scheduledTime = now.AddSeconds(WorkQueueProperties.ProcessDelaySeconds);
 
 
-						if (scheduledTime > item.ExpirationTime)
-							scheduledTime = item.ExpirationTime;
-
+						if (item.ExpirationTime.HasValue && scheduledTime > item.ExpirationTime)
+							scheduledTime = item.ExpirationTime.Value;
+						
                         if (status == WorkQueueProcessorStatus.CompleteDelayDelete)
                         {
                             parms.WorkQueueStatusEnum = WorkQueueStatusEnum.Idle;
                             parms.FailureCount = item.FailureCount;
                             parms.FailureDescription = "";
-                            parms.ScheduledTime = parms.ExpirationTime = Platform.Time.AddSeconds(WorkQueueProperties.DeleteDelaySeconds);
+                            parms.ScheduledTime = Platform.Time.AddSeconds(WorkQueueProperties.DeleteDelaySeconds);
+							parms.ExpirationTime = Platform.Time.AddSeconds(WorkQueueProperties.DeleteDelaySeconds);
                             if (resetQueueStudyState == WorkQueueProcessorDatabaseUpdate.ResetQueueState)
                                 parms.QueueStudyStateEnum = QueueStudyStateEnum.Idle;
                         }
@@ -601,8 +601,8 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue
 						      || status == WorkQueueProcessorStatus.IdleNoDelete)
 						{
 							scheduledTime = now.AddSeconds(WorkQueueProperties.DeleteDelaySeconds);
-							if (scheduledTime > item.ExpirationTime)
-								scheduledTime = item.ExpirationTime;
+							if (item.ExpirationTime.HasValue && scheduledTime > item.ExpirationTime)
+								scheduledTime = item.ExpirationTime.Value;
 
 							parms.WorkQueueStatusEnum = WorkQueueStatusEnum.Idle;
 							parms.ScheduledTime = scheduledTime;
@@ -1106,7 +1106,7 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue
         /// <returns>The <see cref="StudyXml"/> instance for <paramref name="location"/></returns>
         protected virtual StudyXml LoadStudyXml(StudyStorageLocation location)
         {
-            StudyXml theXml = new StudyXml();
+            var theXml = new StudyXml();
 
             StudyXmlLoadTime.Add(
                 delegate
@@ -1116,11 +1116,11 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue
                         {
                             using (Stream fileStream = FileStreamOpener.OpenForRead(streamFile, FileMode.Open))
                             {
-                                XmlDocument theDoc = new XmlDocument();
+                                var theMemento = new StudyXmlMemento();
 
-                                StudyXmlIo.Read(theDoc, fileStream);
+                                StudyXmlIo.Read(theMemento, fileStream);
 
-                                theXml.SetMemento(theDoc);
+                                theXml.SetMemento(theMemento);
 
                                 fileStream.Close();
                             }

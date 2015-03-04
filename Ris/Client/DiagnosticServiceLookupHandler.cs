@@ -85,7 +85,7 @@ namespace ClearCanvas.Ris.Client
 				}
 
 				ApplicationComponentExitCode exitCode = ApplicationComponent.LaunchAsDialog(
-					_desktopWindow, summaryComponent, "Imaging Services");
+					_desktopWindow, summaryComponent, SR.TitleImagingServices);
 
 				if (exitCode == ApplicationComponentExitCode.Accepted)
 				{

@@ -36,7 +36,7 @@ using ClearCanvas.Ris.Application.Common.Admin.DepartmentAdmin;
 
 namespace ClearCanvas.Ris.Client.Admin
 {
-	[MenuAction("launch", "global-menus/Admin/Departments", "Launch")]
+	[MenuAction("launch", "global-menus/MenuAdmin/MenuDepartments", "Launch")]
 	[ActionPermission("launch", ClearCanvas.Ris.Application.Common.AuthorityTokens.Admin.Data.Department)]
 	[ExtensionOf(typeof(DesktopToolExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]
 	public class DepartmentAdminTool : Tool<IDesktopToolContext>
@@ -54,7 +54,7 @@ namespace ClearCanvas.Ris.Client.Admin
 					_workspace = ApplicationComponent.LaunchAsWorkspace(
 						this.Context.DesktopWindow,
 						component,
-						"Departments");
+						SR.TitleDepartments);
 					_workspace.Closed += delegate { _workspace = null; };
 
 				}
@@ -153,7 +153,7 @@ namespace ClearCanvas.Ris.Client.Admin
 
 			var editor = new DepartmentEditorComponent(item.DepartmentRef);
 			var exitCode = LaunchAsDialog(
-				this.Host.DesktopWindow, editor, SR.TitleUpdateDepartment + " - " + "(" + item.Id + ") " + item.Name);
+				this.Host.DesktopWindow, editor, string.Format(SR.FormatTitleCodeSubtitle, SR.TitleUpdateDepartment, item.Id, item.Name));
 			if (exitCode == ApplicationComponentExitCode.Accepted)
 			{
 				editedItems.Add(editor.DepartmentSummary);

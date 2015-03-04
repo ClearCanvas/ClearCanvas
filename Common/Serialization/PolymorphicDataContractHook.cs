@@ -24,7 +24,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Common.Serialization
@@ -32,7 +31,9 @@ namespace ClearCanvas.Common.Serialization
 	public class PolymorphicDataContractHook<T> : IJsmlSerializerHook
 		where T : PolymorphicDataContractAttribute
 	{
+// ReSharper disable StaticFieldInGenericType
 		private static readonly Dictionary<string, Type> _contractMap = PolymorphicDataContractAttribute.GetContractMap(typeof(T));
+// ReSharper restore StaticFieldInGenericType
 
 		public static void RegisterKnownType(Type type)
 		{

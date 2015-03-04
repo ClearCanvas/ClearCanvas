@@ -22,6 +22,7 @@
 
 #endregion
 
+using System.ComponentModel;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 

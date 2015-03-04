@@ -59,7 +59,7 @@ namespace ClearCanvas.Ris.Client.Admin.View.WinForms
         private void _browseButton_Click(object sender, EventArgs e)
         {
             openFileDialog1.InitialDirectory = ".";
-            openFileDialog1.Filter = "csv files (*.csv)|*.csv|All files (*.*)|*.*";
+            openFileDialog1.Filter = string.Format("{0}|*.csv|{1}|*.*", SR.LabelCsvFileFilter, SR.LabelAllFilesFilter);
             openFileDialog1.FilterIndex = 1;
             openFileDialog1.RestoreDirectory = true;
             openFileDialog1.FileName = "";

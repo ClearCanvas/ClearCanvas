@@ -32,7 +32,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Folders
 	{
 		[ExtensionOf(typeof(RegistrationWorkflowFolderExtensionPoint))]
 		[FolderForWorklistClass(WorklistClassNames.RegistrationScheduledWorklist)]
-		[FolderPath("Scheduled", true)]
+		[FolderPath("FolderScheduled", true)]
 		[FolderDescription("RegistrationScheduledFolderDescription")]
 		public class ScheduledFolder : RegistrationWorkflowFolder
 		{
@@ -40,7 +40,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Folders
 
 		[ExtensionOf(typeof(RegistrationWorkflowFolderExtensionPoint))]
 		[FolderForWorklistClass(WorklistClassNames.RegistrationCheckedInWorklist)]
-		[FolderPath("Checked In")]
+		[FolderPath("FolderCheckedIn")]
 		[FolderDescription("RegistrationCheckedInFolderDescription")]
 		public class CheckedInFolder : RegistrationWorkflowFolder
 		{
@@ -48,7 +48,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Folders
 
 		[ExtensionOf(typeof(RegistrationWorkflowFolderExtensionPoint))]
 		[FolderForWorklistClass(WorklistClassNames.RegistrationInProgressWorklist)]
-		[FolderPath("In Progress")]
+		[FolderPath("FolderInProgress")]
 		[FolderDescription("RegistrationInProgressFolderDescription")]
 		public class InProgressFolder : RegistrationWorkflowFolder
 		{
@@ -56,7 +56,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Folders
 
 		[ExtensionOf(typeof(RegistrationWorkflowFolderExtensionPoint))]
 		[FolderForWorklistClass(WorklistClassNames.RegistrationPerformedWorklist)]
-		[FolderPath("Performed")]
+		[FolderPath("FolderPerformed")]
 		[FolderDescription("RegistrationPerformedFolderDescription")]
 		public class PerformedFolder : RegistrationWorkflowFolder
 		{
@@ -64,14 +64,14 @@ namespace ClearCanvas.Ris.Client.Workflow.Folders
 
 		[ExtensionOf(typeof(RegistrationWorkflowFolderExtensionPoint))]
 		[FolderForWorklistClass(WorklistClassNames.RegistrationCancelledWorklist)]
-		[FolderPath("Cancelled")]
+		[FolderPath("FolderCanceled")]
 		[FolderDescription("RegistrationCancelledFolderDescription")]
 		public class CancelledFolder : RegistrationWorkflowFolder
 		{
 		}
 
 
-		[FolderPath("Search Results")]
+		[FolderPath("FolderSearchResults")]
 		public class RegistrationSearchFolder : WorklistSearchResultsFolder<RegistrationWorklistItemSummary, IRegistrationWorkflowService>
 		{
 			public RegistrationSearchFolder()

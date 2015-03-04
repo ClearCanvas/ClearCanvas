@@ -87,10 +87,7 @@ namespace ClearCanvas.ImageServer.Core.Reconcile
         #region Public Methods
         public void Dispose()
         {
-            if (File.Exists(_backupPath))
-            {
-                File.Delete(_backupPath);
-            }
+            FileUtils.Delete(_backupPath);
         } 
         #endregion
     }

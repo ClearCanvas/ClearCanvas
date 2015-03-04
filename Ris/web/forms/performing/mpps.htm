@@ -7,27 +7,20 @@
 		<script type="text/javascript" src="../../js/jsml.js"></script>
 		<script type="text/javascript" src="../../js/ui.js"></script>
 		<script type="text/javascript" src="../../js/ris.js"></script>
+		<script type="text/javascript" src="../../js/SR.js"></script>
 		<script type="text/javascript" src="../../js/layout.js"></script>
 		<script type="text/javascript" >
 		function onBodyLoad()
 		{
-				try
-				{
-					if(!Ris)
-						return;
+			if(!Ris)
+				return;
 
-					var data = JSML.parse(Ris.getTag("Documentation")) || {};
+			var data = JSML.parse(Ris.getTag("Documentation")) || {};
 
-					var mpps = Ris.getHealthcareContext().ModalityPerformedProcedureStep;
+			var mpps = Ris.getHealthcareContext().ModalityPerformedProcedureStep;
 
-					// redirect to appropriate page
-					window.location = mpps ? selectPage(mpps) : "about:blank";
-				}
-				catch(e)
-				{
-					var message = "Failed to load details page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
-					Field.setValue($("errorMsg"), message);
-				}
+			// redirect to appropriate page
+			window.location = mpps ? selectPage(mpps) : "about:blank";
 		}
 		
 		/*

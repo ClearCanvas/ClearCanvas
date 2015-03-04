@@ -112,37 +112,106 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="_suggestBox.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left, Right</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="_suggestBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="_suggestBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>202, 21</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="_suggestBox.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;_suggestBox.Name" xml:space="preserve">
+    <value>_suggestBox</value>
+  </data>
+  <data name="&gt;&gt;_suggestBox.Type" xml:space="preserve">
+    <value>ClearCanvas.Desktop.View.WinForms.SuggestComboBox, ClearCanvas.Desktop.View.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;_suggestBox.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_suggestBox.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="_findButton.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Right</value>
+  </data>
   <data name="_findButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         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
-        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
+        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
+        AAAAAElFTkSuQmCC
 </value>
+  </data>
+  <data name="_findButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>205, -1</value>
+  </data>
+  <data name="_findButton.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 2, 2, 2</value>
+  </data>
+  <data name="_findButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>25, 24</value>
+  </data>
+  <data name="_findButton.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;_findButton.Name" xml:space="preserve">
+    <value>_findButton</value>
+  </data>
+  <data name="&gt;&gt;_findButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;_findButton.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;_findButton.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
+    <value>231, 23</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>LookupHandlerCellEditorControl</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.UserControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

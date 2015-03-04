@@ -179,7 +179,7 @@ namespace ClearCanvas.Ris.Client
 			}
 			catch (Exception e)
 			{
-				Desktop.Application.ShowMessageBox("Unable to connect to RIS server.  The workstation may be configured incorrectly, or the server may be unreachable.", MessageBoxActions.Ok);
+				Desktop.Application.ShowMessageBox(SR.MessageRisServerUnreachable, MessageBoxActions.Ok);
 				Platform.Log(LogLevel.Error, e);
 				return LoginResult.None;
 			}

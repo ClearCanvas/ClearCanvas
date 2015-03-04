@@ -34,8 +34,11 @@ using ClearCanvas.Dicom.Utilities.Command;
 using ClearCanvas.Dicom.Utilities.Xml;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
+using ClearCanvas.ImageServer.Common.StudyHistory;
 using ClearCanvas.ImageServer.Core.Command;
+using ClearCanvas.ImageServer.Core.Data;
 using ClearCanvas.ImageServer.Core.Events;
+using ClearCanvas.ImageServer.Core.Helpers;
 using ClearCanvas.ImageServer.Core.Validation;
 using ClearCanvas.ImageServer.Enterprise.Command;
 using ClearCanvas.ImageServer.Model;
@@ -76,7 +79,9 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.CompressStudy
         }
 
         #region Private Methods
-        private bool ProcessWorkQueueUid(Model.WorkQueue item, WorkQueueUid sop, StudyXml studyXml, IDicomCodecFactory theCodecFactory)
+
+		private bool ProcessWorkQueueUid(Model.WorkQueue item, WorkQueueUid sop, StudyXml studyXml,
+		                                 IDicomCodecFactory theCodecFactory)
         {
             Platform.CheckForNullReference(item, "item");
             Platform.CheckForNullReference(sop, "sop");
@@ -87,7 +92,8 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.CompressStudy
                 // Uid was inserted but not in the study xml.
                 // Auto-recovery might have detect problem with that file and remove it from the study.
                 // Assume the study xml has been corrected and ignore the uid.
-                Platform.Log(LogLevel.Warn, "Skipping SOP {0} in series {1}. It is no longer part of the study.", sop.SopInstanceUid, sop.SeriesInstanceUid);
+				Platform.Log(LogLevel.Warn, "Skipping SOP {0} in series {1}. It is no longer part of the study.", sop.SopInstanceUid,
+				             sop.SeriesInstanceUid);
 
                 // Delete it out of the queue
                 DeleteWorkQueueUid(sop);
@@ -114,7 +120,8 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.CompressStudy
             {
                 if (e.InnerException != null && e.InnerException is DicomCodecUnsupportedSopException)
                 {
-                    Platform.Log(LogLevel.Warn, e, "Instance not supported for compressor: {0}.  Deleting WorkQueue entry for SOP {1}", e.Message, sop.SopInstanceUid);
+					Platform.Log(LogLevel.Warn, e, "Instance not supported for compressor: {0}.  Deleting WorkQueue entry for SOP {1}",
+					             e.Message, sop.SopInstanceUid);
 
                     item.FailureDescription = e.InnerException != null ? e.InnerException.Message : e.Message;
 
@@ -123,7 +130,8 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.CompressStudy
 
                     return false;
                 }
-                Platform.Log(LogLevel.Error, e, "Unexpected exception when compressing file: {0} SOP Instance: {1}", path, sop.SopInstanceUid);
+				Platform.Log(LogLevel.Error, e, "Unexpected exception when compressing file: {0} SOP Instance: {1}", path,
+				             sop.SopInstanceUid);
                 item.FailureDescription = e.InnerException != null ? e.InnerException.Message : e.Message;
 
                 sop.FailureCount++;
@@ -136,7 +144,9 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.CompressStudy
 
         private void ReinsertFilesystemQueue(TimeSpan delay)
         {
-            using (IUpdateContext updateContext = PersistentStoreRegistry.GetDefaultStore().OpenUpdateContext(UpdateContextSyncMode.Flush))
+			using (
+				IUpdateContext updateContext =
+					PersistentStoreRegistry.GetDefaultStore().OpenUpdateContext(UpdateContextSyncMode.Flush))
             {
                 IWorkQueueUidEntityBroker broker = updateContext.GetBroker<IWorkQueueUidEntityBroker>();
                 WorkQueueUidSelectCriteria workQueueUidCriteria = new WorkQueueUidSelectCriteria();
@@ -201,7 +211,8 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.CompressStudy
 				return successfulProcessCount > 0 && totalCount == successfulProcessCount;
 		}
 
-		protected void ProcessFile(Model.WorkQueue item, WorkQueueUid sop, string path, StudyXml studyXml, IDicomCodecFactory theCodecFactory)
+		protected void ProcessFile(Model.WorkQueue item, WorkQueueUid sop, string path, StudyXml studyXml,
+		                           IDicomCodecFactory theCodecFactory)
 		{
 			DicomFile file = null;
 
@@ -238,7 +249,8 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.CompressStudy
 						// Do the actual processing
 						if (!processor.Execute())
 						{
-							Platform.Log(LogLevel.Warn, "Failure deleteing WorkQueueUid: {0} for SOP: {1}", processor.Description, file.MediaStorageSopInstanceUid);
+							Platform.Log(LogLevel.Warn, "Failure deleteing WorkQueueUid: {0} for SOP: {1}", processor.Description,
+							             file.MediaStorageSopInstanceUid);
 							Platform.Log(LogLevel.Warn, "Compression file that failed: {0}", file.Filename);
 						}
 						else
@@ -252,7 +264,8 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.CompressStudy
                         IDicomCodec codec = theCodecFactory.GetDicomCodec();
 
                         // Create a context for applying actions from the rules engine
-                        var context = new ServerActionContext(file, StorageLocation.FilesystemKey, ServerPartition, item.StudyStorageKey, processor);
+						var context = new ServerActionContext(file, StorageLocation.FilesystemKey, ServerPartition, item.StudyStorageKey,
+						                                      processor);
                         
                         var parms = theCodecFactory.GetCodecParameters(item.Data);
                         var compressCommand =
@@ -273,24 +286,53 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.CompressStudy
                         // Do the actual processing
                         if (!processor.Execute())
                         {
-							EventManager.FireEvent(this, new FailedUpdateSopEventArgs { File = file, ServerPartitionEntry = context.ServerPartition, WorkQueueUidEntry = sop, WorkQueueEntry = WorkQueueItem, FileLength = (ulong)insertStudyXmlCommand.FileSize, FailureMessage = processor.FailureReason});
+							EventManager.FireEvent(this,
+							                       new FailedUpdateSopEventArgs
+								                       {
+									                       File = file,
+									                       ServerPartitionEntry = context.ServerPartition,
+									                       WorkQueueUidEntry = sop,
+									                       WorkQueueEntry = WorkQueueItem,
+									                       FileLength = (ulong) insertStudyXmlCommand.FileSize,
+									                       FailureMessage = processor.FailureReason
+								                       });
 							
 							_instanceStats.CompressTime.Add(compressCommand.CompressTime);
-                            Platform.Log(LogLevel.Error, "Failure compressing command {0} for SOP: {1}", processor.Description, file.MediaStorageSopInstanceUid);
+							Platform.Log(LogLevel.Error, "Failure compressing command {0} for SOP: {1}", processor.Description,
+							             file.MediaStorageSopInstanceUid);
                             Platform.Log(LogLevel.Error, "Compression file that failed: {0}", file.Filename);
-                            throw new ApplicationException("Unexpected failure (" + processor.FailureReason + ") executing command for SOP: " + file.MediaStorageSopInstanceUid,processor.FailureException);
+							throw new ApplicationException(
+								"Unexpected failure (" + processor.FailureReason + ") executing command for SOP: " +
+								file.MediaStorageSopInstanceUid, processor.FailureException);
                         }
                     	_instanceStats.CompressTime.Add(compressCommand.CompressTime);
                     	Platform.Log(ServerPlatform.InstanceLogLevel, "Compress SOP: {0} for Patient {1}", file.MediaStorageSopInstanceUid,
                     	             patientsName);
 
-						EventManager.FireEvent(this, new UpdateSopEventArgs { File = file, ServerPartitionEntry = context.ServerPartition, WorkQueueUidEntry = sop, WorkQueueEntry = WorkQueueItem, FileLength = (ulong)insertStudyXmlCommand.FileSize });
+						EventManager.FireEvent(this,
+						                       new UpdateSopEventArgs
+							                       {
+								                       File = file,
+								                       ServerPartitionEntry = context.ServerPartition,
+								                       WorkQueueUidEntry = sop,
+								                       WorkQueueEntry = WorkQueueItem,
+								                       FileLength = (ulong) insertStudyXmlCommand.FileSize
+							                       });
                     }
                     
                 }
                 catch (Exception e)
                 {
-					EventManager.FireEvent(this, new FailedUpdateSopEventArgs { File = file, ServerPartitionEntry = ServerPartition, WorkQueueUidEntry = sop, WorkQueueEntry = WorkQueueItem, FileLength = (ulong)new FileInfo(path).Length, FailureMessage = processor.FailureReason });
+					EventManager.FireEvent(this,
+					                       new FailedUpdateSopEventArgs
+						                       {
+							                       File = file,
+							                       ServerPartitionEntry = ServerPartition,
+							                       WorkQueueUidEntry = sop,
+							                       WorkQueueEntry = WorkQueueItem,
+							                       FileLength = (ulong) new FileInfo(path).Length,
+							                       FailureMessage = processor.FailureReason
+						                       });
 					
 					Platform.Log(LogLevel.Error, e, "Unexpected exception when {0}.  Rolling back operation.",
                                  processor.Description);
@@ -381,6 +423,8 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.CompressStudy
 				             Study.StudyInstanceUid, Study.PatientsName, Study.PatientId,
 				             Study.AccessionNumber, ServerPartition.Description, compressSyntax.Name);
 
+				// Save a StudyHistory Record
+				SaveStudyHistory(compressSyntax.UidString);
 
 				if (compressSyntax.LossyCompressed)
 					UpdateStudyStatus(StorageLocation, StudyStatusEnum.OnlineLossy, compressSyntax);
@@ -444,7 +488,9 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.CompressStudy
                 // users will have to restore the study in order to reconcile the images in SIQ.
                 if (CompressTransferSyntax.LossyCompressed && StorageLocation.IsReconcileRequired)
                 {
-                    Platform.Log(LogLevel.Info, "Study {0} cannot be compressed to lossy at this time because of pending reconciliation. Reinserting into FilesystemQueue", StorageLocation.StudyInstanceUid);
+					Platform.Log(LogLevel.Info,
+					             "Study {0} cannot be compressed to lossy at this time because of pending reconciliation. Reinserting into FilesystemQueue",
+					             StorageLocation.StudyInstanceUid);
                     delay = TimeSpan.FromMinutes(60);
                     ReinsertFilesystemQueue(delay);
                     PostProcessing(WorkQueueItem, WorkQueueProcessorStatus.Complete, WorkQueueProcessorDatabaseUpdate.ResetQueueState);
@@ -452,12 +498,32 @@ namespace ClearCanvas.ImageServer.Services.WorkQueue.CompressStudy
                 }
 				return true;
 			}
-        	Platform.Log(LogLevel.Info, "Compression entry for study {0} has existing WorkQueue entry, reinserting into FilesystemQueue", StorageLocation.StudyInstanceUid);
+			Platform.Log(LogLevel.Info,
+			             "Compression entry for study {0} has existing WorkQueue entry, reinserting into FilesystemQueue",
+			             StorageLocation.StudyInstanceUid);
         	delay = TimeSpan.FromMinutes(60);
         	ReinsertFilesystemQueue(delay);
         	PostProcessing(WorkQueueItem, WorkQueueProcessorStatus.Complete, WorkQueueProcessorDatabaseUpdate.ResetQueueState);
         	return false;
         }
 
+		private void SaveStudyHistory(string compressSyntax)
+		{
+			using (
+				IUpdateContext ctx = PersistentStoreRegistry.GetDefaultStore().OpenUpdateContext(UpdateContextSyncMode.Flush))
+			{
+				var history = StudyHistoryHelper.CreateStudyHistoryRecord(ctx, StorageLocation, StorageLocation,
+				                                                          StudyHistoryTypeEnum.StudyCompress, null,
+				                                                          new CompressionStudyHistory
+					                                                          {
+						                                                          TimeStamp = Platform.Time,
+						                                                          FinalTransferSyntaxUid = compressSyntax,
+						                                                          OriginalTransferSyntaxUid =
+							                                                          StorageLocation.TransferSyntaxUid
+					                                                          });
+				if (history != null)
+					ctx.Commit();
+			}
+		}
 	}
 }

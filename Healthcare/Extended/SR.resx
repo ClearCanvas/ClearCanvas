@@ -156,4 +156,19 @@
   <data name="WorklistCategoryProtocoling" xml:space="preserve">
     <value>Protocoling</value>
   </data>
+	<data name="AlertOrderMissingVisit">
+		<value xml:space="preserve">This order is missing a visit</value>
+	</data>
+	<data name="AlertVisitStatusNotActive">
+		<value xml:space="preserve">Visit Status is not active</value>
+	</data>
+	<data name="AlertVisitDateMissing">
+		<value xml:space="preserve">Visit date is missing</value>
+	</data>
+	<data name="AlertVisitDateIsInFuture">
+		<value xml:space="preserve">Visit date is in the future</value>
+	</data>
+	<data name="AlertVisitDateIsInPast">
+		<value xml:space="preserve">Visit date is in the past</value>
+	</data>
 </root>

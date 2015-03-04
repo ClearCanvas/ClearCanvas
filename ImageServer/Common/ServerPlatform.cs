@@ -41,7 +41,7 @@ namespace ClearCanvas.ImageServer.Common
         #region Private Fields
         private static string _version;
         private static readonly object _syncLock = new object();
-        private static DicomAuditSource _auditSource;
+        private static readonly DicomAuditSource  _auditSource = new DicomAuditSource(ProductInformation.Component);
         private static string _hostId;
     	private static string _serverInstanceId;
     	private static string _processorId;
@@ -84,20 +84,13 @@ namespace ClearCanvas.ImageServer.Common
         }
 
         /// <summary>
-        /// A well known AuditSource for ImageServer audit logging.
+        /// A well known AuditSource for ImageServer audit logging that is based on the component name.
         /// </summary>
         public static DicomAuditSource AuditSource
         {
             get
             {
-                lock (_syncLock)
-                {
-                    if (_auditSource == null)
-                    {
-                        _auditSource = new DicomAuditSource("ImageServer");
-                    }
-                    return _auditSource;
-                }
+				return _auditSource;
             }
         }
 

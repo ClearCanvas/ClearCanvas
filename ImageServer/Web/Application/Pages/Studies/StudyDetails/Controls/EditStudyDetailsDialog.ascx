@@ -120,6 +120,7 @@ EnableClientScript="true" runat="server" ValidationGroup="EditStudyValidationGro
                                         <tr>
                                             <td valign="bottom">
                                                 <ccUI:TextBox ID="PatientBirthDate" runat="server" CausesValidation="true" ValidationGroup="EditStudyValidationGroup" CssClass="DialogTextBox" ></ccUI:TextBox>
+                                                <ccUI:CalendarExtender ID="PatientBirthDateCalendarExtender" runat="server" TargetControlID="PatientBirthDate" CssClass="Calendar"></ccUI:CalendarExtender>
                                             </td>
                                             
                                             <td>    
@@ -131,16 +132,6 @@ EnableClientScript="true" runat="server" ValidationGroup="EditStudyValidationGro
                                             </td>
                                             
                                             <td>                  
-                                                <ccValidator:DateValidator runat="server" 
-                                                        ValidationGroup="EditStudyValidationGroup" 
-                                                        ControlToValidate="PatientBirthDate" 
-                                                        InvalidInputIndicatorID="PatientBirthDateHelp"
-                                                        InvalidInputCSS="DialogTextBoxInvalidInput"
-                                                        Text="<%$Resources: InputValidation, InvalidDate %>"
-                                                        IgnoreEmptyValue="true" Display="None" 
-                                                         />
-                                            </td>
-                                            <td>
                                                 <asp:LinkButton ID="ClearPatientBirthDateButton" 
                                                          Text="<%$Resources: Labels, Clear %>" runat="server" 
                                                          CssClass="DialogLinkButton" />                                         
@@ -294,6 +285,7 @@ EnableClientScript="true" runat="server" ValidationGroup="EditStudyValidationGro
                              <ccUI:CalendarExtender ID="StudyDateCalendarExtender" runat="server" TargetControlID="StudyDate"
                                 CssClass="Calendar">
                             </ccUI:CalendarExtender>
+                        
                     </ContentTemplate>
                     <HeaderTemplate>
                         <%= Labels.EditStudyDialog_StudyInformation %>

@@ -7,6 +7,7 @@
 		<script type="text/javascript" src="../js/jsml.js"></script>
 		<script type="text/javascript" src="../js/ui.js"></script>
 		<script type="text/javascript" src="../js/ris.js"></script>
+		<script type="text/javascript" src="../js/SR.js"></script>
 		<script type="text/javascript" src="../js/preview.js"></script>
 		<script type="text/javascript" >
 			var imagePath = "../images";
@@ -16,22 +17,14 @@
 				if(!Ris)
 					return;
 
-				try
+				var worklistItem = Ris.getHealthcareContext();
+				if (worklistItem == null)
 				{
-					var worklistItem = Ris.getHealthcareContext();
-					if (worklistItem == null)
-					{
-						Field.setValue($("myForm"), "");
-						return;
-					}
+					Field.setValue($("myForm"), "");
+					return;
+				}
 
-					Ris.getPatientDataService().getDataAsync(CreateRequest(worklistItem), OnPatientDataLoaded);
-				}
-				catch(e)
-				{
-					var message = "Failed to load preview page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
-					Field.setValue($("myForm"), message);
-				}
+				Ris.getPatientDataService().getDataAsync(CreateRequest(worklistItem), OnPatientDataLoaded);
 			}
 
 			function CreateRequest(worklistItem)
@@ -89,10 +82,10 @@
 					Preview.ProtocolProceduresTable.create($("protocolProceduresSection"), orderDetail.Procedures, orderDetail.Notes);
 
 					var notes = orderDetail.Notes.select(function(note) { return note.Category == "PrelimDiagnosis"; });
-					Preview.OrderNotesTable.create($("prelimDiagnosisNotesSection"), notes, "Preliminary Diagnosis", false);
+					Preview.OrderNotesTable.create($("prelimDiagnosisNotesSection"), notes, SR.OrderNotes.PreliminaryDiagnosis, false);
 
 					notes = orderDetail.Notes.select(function(note) { return note.Category == "General"; });
-					Preview.OrderNotesTable.create($("generalNotesSection"), notes, "Order Notes", true);
+					Preview.OrderNotesTable.create($("generalNotesSection"), notes, SR.OrderNotes.OrderNotes, true);
 				}
 				else
 				{

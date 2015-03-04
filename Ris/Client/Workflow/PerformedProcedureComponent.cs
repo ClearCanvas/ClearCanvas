@@ -363,7 +363,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 			DateTime? endTime = _selectedMpps.StartTime;
 			if (DowntimeRecovery.InDowntimeRecoveryMode)
 			{
-				if (!DateTimeEntryComponent.PromptForTime(this.Host.DesktopWindow, "Completed Time", false, ref endTime))
+				if (!DateTimeEntryComponent.PromptForTime(this.Host.DesktopWindow, SR.TitleCompletedTime, false, ref endTime))
 					return;
 			}
 
@@ -411,7 +411,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 				return;
 
 			// confirm with user that they really want to do this
-			if (this.Host.DesktopWindow.ShowMessageBox("Are you sure you want to discontinue the selected procedure(s)?",
+			if (this.Host.DesktopWindow.ShowMessageBox(SR.MessageConfirmDiscontinueSelectedProcedures,
 				MessageBoxActions.YesNo) == DialogBoxAction.No)
 				return;
 
@@ -419,7 +419,7 @@ namespace ClearCanvas.Ris.Client.Workflow
 			DateTime? endTime = _selectedMpps.StartTime;
 			if (DowntimeRecovery.InDowntimeRecoveryMode)
 			{
-				if (!DateTimeEntryComponent.PromptForTime(this.Host.DesktopWindow, "Discontinued Time", false, ref endTime))
+				if (!DateTimeEntryComponent.PromptForTime(this.Host.DesktopWindow, SR.TitleDiscontinuedTime, false, ref endTime))
 					return;
 			}
 

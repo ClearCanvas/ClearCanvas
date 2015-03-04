@@ -5,6 +5,8 @@ on 8-bit US and RF studies after the study is 1 year old.
 <rule>
   <condition expressionLanguage="dicom">
 	<and>
+		<!-- MR Spectroscopy SOP Class has no pixel data -->
+		<not-equal test="$SopClassUid" refValue="1.2.840.10008.5.1.4.1.1.4.2"/>
 	  <equal test="$BitsAllocated" refValue="8" />
 	  <not-equal test="$PhotometricInterpretation" refValue="PALETTE COLOR" />
 	  <or>

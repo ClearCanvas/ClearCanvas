@@ -167,6 +167,14 @@
     text-decoration: none;
 }
 
+/*===========================
+	Common Styles for tabs
+============================*/
+.StudyDetailsTabContent
+{
+    width: 100%;
+}
+
 /*============================
  * Series Details
  *===========================*/

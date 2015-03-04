@@ -94,11 +94,9 @@ namespace ClearCanvas.Common.Utilities
         private static ulong InternalCopy(DirectoryInfo source, DirectoryInfo target, CopyProcessCallback progressCallback)
         {
             ulong bytesCopied = 0;
-            // Check if the target directory exists, if not, create it.
-            if (Directory.Exists(target.FullName) == false)
-            {
-                Directory.CreateDirectory(target.FullName);
-            }
+
+			// Silently returns if the directory already exists
+            Directory.CreateDirectory(target.FullName);
 
             // Copy each file into it's new directory.
             foreach (FileInfo fi in source.GetFiles())
@@ -127,8 +125,7 @@ namespace ClearCanvas.Common.Utilities
         /// <param name="dir"></param>
         public static void DeleteIfExists(string dir)
         {
-            if (Directory.Exists(dir))
-                DeleteIfExists(dir, false);
+            DeleteIfExists(dir, false);
         }
 
         /// <summary>
@@ -230,17 +227,22 @@ namespace ClearCanvas.Common.Utilities
         /// <param name="deleteParentIfEmpty"></param>
         public static void DeleteIfExists(string dir, bool deleteParentIfEmpty)
         {
-            if (Directory.Exists(dir))
-            {
-                DirectoryInfo parent = Directory.GetParent(dir);
-                Directory.Delete(dir, true);
+	        try
+	        {
 
-                if (deleteParentIfEmpty && parent != null)
-                {
-                    // delete the parent too
-                    DeleteIfEmpty(parent.FullName);
-                }
-            }
+		        DirectoryInfo parent = Directory.GetParent(dir);
+		        Directory.Delete(dir, true);
+
+		        if (deleteParentIfEmpty && parent != null)
+		        {
+			        // delete the parent too
+			        DeleteIfEmpty(parent.FullName);
+		        }
+	        }
+	        catch (DirectoryNotFoundException e)
+	        {
+		        // ignore
+	        }
         }
 
         /// <summary>

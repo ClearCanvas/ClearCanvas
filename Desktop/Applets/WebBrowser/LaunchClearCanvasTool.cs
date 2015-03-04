@@ -22,9 +22,13 @@
 
 #endregion
 
+using System;
+using System.Collections.Generic;
+using System.Text;
 using ClearCanvas.Common;
-using ClearCanvas.Desktop.Actions;
+using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Tools;
+using ClearCanvas.Desktop.Actions;
 
 namespace ClearCanvas.Desktop.Applets.WebBrowser
 {
@@ -32,23 +36,24 @@ namespace ClearCanvas.Desktop.Applets.WebBrowser
 	[Tooltip("activate1", "Launch ClearCanvas")]
 	[IconSet("activate1", "Icons.ClearCanvasToolSmall.png", "Icons.ClearCanvasToolSmall.png", "Icons.ClearCanvasToolSmall.png")]
 	//
-	[ButtonAction("activate2", "webbrowser-toolbar/ClearCanvas on GitHub", "LaunchGitHub")]
-	[Tooltip("activate2", "Launch ClearCanvas on GitHub")]
+	[ButtonAction("activate2", "webbrowser-toolbar/GitHub (ClearCanvas)", "LaunchGitHub")]
+	[Tooltip("activate2", "Launch GitHub (ClearCanvas)")]
 	[IconSet("activate2", "Icons.ClearCanvasToolSmall.png", "Icons.ClearCanvasToolSmall.png", "Icons.ClearCanvasToolSmall.png")]
 	//
 	[ExtensionOf(typeof (WebBrowserToolExtensionPoint))]
 	public class LaunchClearCanvasTool : Tool<IWebBrowserToolContext>
 	{
-		public void LaunchClearCanvas()
+		private void LaunchClearCanvas()
 		{
-			Context.Url = "http://www.clearcanvas.ca";
-			Context.Go();
+			this.Context.Url = "http://www.clearcanvas.ca";
+			this.Context.Go();
 		}
 
-		public void LaunchGitHub()
+        private void LaunchGitHub()
 		{
-			Context.Url = "https://github.com/ClearCanvas";
-			Context.Go();
+            this.Context.Url = "https://github.com/ClearCanvas/ClearCanvas";
+			this.Context.Go();
+		}
 		}
 	}
 }

@@ -78,23 +78,24 @@ namespace ClearCanvas.Dicom.Utilities.Command
 
 		protected override void OnExecute(CommandProcessor theProcessor)
         {
-            try
-            {
-                if (Directory.Exists(_dir))
-                {
-                    if (DeleteOnlyIfEmpty && !DirectoryUtility.IsEmpty(_dir))
-                    {
-                        return;
-                    }
+			try
+			{
+				if (DeleteOnlyIfEmpty && !DirectoryUtility.IsEmpty(_dir))
+				{
+					return;
+				}
 
-                    if (Log)
-                        Platform.Log(LogLevel.Info, "Deleting {0}", _dir);
+				if (Log)
+					Platform.Log(LogLevel.Info, "Deleting {0}", _dir);
 
-                    Directory.Move(_dir, _dir +".deleted");
-                    _sourceDirRenamed = true;
-                }
-                
-            }
+				Directory.Move(_dir, _dir + ".deleted");
+				_sourceDirRenamed = true;
+
+			}
+			catch (DirectoryNotFoundException e)
+			{
+				// ignore this error since we want to delete the directory anyway
+			}
             catch (Exception ex)
             {
                 if (_failIfError)

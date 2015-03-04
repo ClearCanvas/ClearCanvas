@@ -173,6 +173,7 @@
     <File name="Web\App_Themes\Default\images\Indicators\checked.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Indicators\HelpSmall.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Indicators\IdeographicName.gif" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Indicators\loading.gif" checksum="true" />
     <File name="Web\App_Themes\Default\images\Indicators\MenuArrow.gif" checksum="true" />
     <File name="Web\App_Themes\Default\images\Indicators\PhoneticName.gif" checksum="true" />
     <File name="Web\App_Themes\Default\images\Indicators\QueryFeature.png" checksum="true" />

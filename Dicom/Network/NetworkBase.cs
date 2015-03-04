@@ -175,10 +175,7 @@ namespace ClearCanvas.Dicom.Network
 		/// </summary>
     	public bool NetworkActive
     	{
-    		get
-    		{
-    			return _network != null;
-    		}
+			get { return _network != null; }
     	}
 
 	    public bool StreamMessage
@@ -370,16 +367,12 @@ namespace ClearCanvas.Dicom.Network
         /// </summary>
         /// <param name="e"></param>
         /// <param name="closeConnection"></param>
-        protected virtual void OnNetworkError(Exception e, bool closeConnection)
-        {
-        }
+		protected virtual void OnNetworkError(Exception e, bool closeConnection) {}
 
         /// <summary>
         /// Callback called on a timeout.
         /// </summary>
-        protected virtual void OnDimseTimeout()
-        {
-        }
+		protected virtual void OnDimseTimeout() {}
 
         protected virtual void OnReceiveAbort(DicomAbortSource source, DicomAbortReason reason)
         {
@@ -391,9 +384,7 @@ namespace ClearCanvas.Dicom.Network
             throw new Exception("The method or operation is not implemented.");
         }
 
-        protected virtual void OnReceiveAssociateAccept(AssociationParameters association)
-        {
-        }
+		protected virtual void OnReceiveAssociateAccept(AssociationParameters association) {}
 
         protected virtual void OnReceiveAssociateReject(DicomRejectResult result, DicomRejectSource source,
                                                         DicomRejectReason reason)
@@ -411,17 +402,11 @@ namespace ClearCanvas.Dicom.Network
             throw new Exception("The method or operation is not implemented.");
         }
 
-		protected virtual void OnReceiveDimseRequest(byte pcid, DicomMessage msg)
-		{
-		}
+		protected virtual void OnReceiveDimseRequest(byte pcid, DicomMessage msg) {}
 
-		protected virtual void OnReceiveDimseResponse(byte pcid, DicomMessage msg)
-		{
-		}
+		protected virtual void OnReceiveDimseResponse(byte pcid, DicomMessage msg) {}
 
-		protected virtual void OnReceiveDimseCommand(byte pcid, DicomAttributeCollection command)
-		{
-		}
+		protected virtual void OnReceiveDimseCommand(byte pcid, DicomAttributeCollection command) {}
 
 		protected virtual bool OnReceiveFileStream(byte pcid, DicomAttributeCollection command, DicomAttributeCollection dataset, byte[] data, int offset, int count, bool encounteredStopTag, bool isFirst, bool isLast)
 		{
@@ -852,9 +837,7 @@ namespace ClearCanvas.Dicom.Network
         /// </summary>
         protected void SendReleaseResponse()
         {
-            if (State != DicomAssociationState.Sta8_AwaitingAReleaseRPLocalUser)
-            {
-            }
+			if (State != DicomAssociationState.Sta8_AwaitingAReleaseRPLocalUser) {}
 
             var pdu = new AReleaseRP();
 
@@ -1401,8 +1384,10 @@ namespace ClearCanvas.Dicom.Network
 			message.CommandSet[DicomTags.MessageId].SetUInt16(0, messageID);
 			message.CommandSet[DicomTags.CommandField].SetUInt16(0, (ushort)DicomCommandField.NActionRequest);
 
-			//if (message.DataSet != null && !message.DataSet.IsEmpty())
+			if (message.DataSet == null || message.DataSet.IsEmpty())
 			message.CommandSet[DicomTags.DataSetType].SetUInt16(0, 0x101);
+			else
+				message.CommandSet[DicomTags.DataSetType].SetUInt16(0, 0x102);
 
 			SendDimse(presentationID, message.CommandSet, message.DataSet);
 		}
@@ -1947,7 +1932,7 @@ namespace ClearCanvas.Dicom.Network
 
 	    private void SendRawPDU(RawPDU pdu)
         {
-            ResetDimseTimeout();
+			//ResetDimseTimeout();
 
             // If the try/catch is reintroduced here, it must
             // throw an exception, if the exception is just eaten, 
@@ -2153,4 +2138,3 @@ namespace ClearCanvas.Dicom.Network
 		#endregion		
     }
 }
- 

@@ -30,6 +30,7 @@ namespace ClearCanvas.Ris.Shreds.Publication
 {
 	[ExtensionOf(typeof(ShredExtensionPoint))]
 	[ExtensionOf(typeof(ApplicationRootExtensionPoint))]
+	[ShredIsolation(Level = ShredIsolationLevel.None)]
 	public class PublicationShred : QueueProcessorShred, IApplicationRoot
 	{
 		public PublicationShred()

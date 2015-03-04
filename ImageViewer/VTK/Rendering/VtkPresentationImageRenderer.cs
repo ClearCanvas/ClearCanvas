@@ -40,14 +40,12 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 	public class VtkPresentationImageRenderer : RendererBase2<IVtkRenderingSurface, IVtkPresentationImage>
 	{
 		private Pen _pen;
-		private SolidBrush _brush;
-		private FontFactory _fontFactory;
+		private GdiObjectFactory _gdiObjectFactory;
 
 		public VtkPresentationImageRenderer()
 		{
 			_pen = new Pen(Color.White);
-			_brush = new SolidBrush(Color.Black);
-			_fontFactory = new FontFactory();
+            _gdiObjectFactory = new GdiObjectFactory();
 		}
 
 		protected override void Dispose(bool disposing)
@@ -60,16 +58,10 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 					_pen = null;
 				}
 
-				if (_brush != null)
+				if (_gdiObjectFactory != null)
 				{
-					_brush.Dispose();
-					_brush = null;
-				}
-
-				if (_fontFactory != null)
-				{
-					_fontFactory.Dispose();
-					_fontFactory = null;
+					_gdiObjectFactory.Dispose();
+					_gdiObjectFactory = null;
 				}
 			}
 
@@ -238,17 +230,17 @@ namespace ClearCanvas.ImageViewer.Vtk.Rendering
 
 		protected virtual void DrawPointPrimitive(PointPrimitive pointPrimitive)
 		{
-			GdiRenderer.DrawPointPrimitive(Surface.OverlayBuffer, _brush, pointPrimitive, Dpi);
+			GdiRenderer.DrawPointPrimitive(Surface.OverlayBuffer, _gdiObjectFactory, pointPrimitive, Dpi);
 		}
 
 		protected virtual void DrawTextPrimitive(InvariantTextPrimitive textPrimitive)
 		{
-			GdiRenderer.DrawTextPrimitive(Surface.OverlayBuffer, _brush, _fontFactory, textPrimitive, Dpi);
+            GdiRenderer.DrawTextPrimitive(Surface.OverlayBuffer, _gdiObjectFactory, textPrimitive, Dpi);
 		}
 
 		protected override void DrawAnnotationBox(string annotationText, AnnotationBox annotationBox)
 		{
-			GdiRenderer.DrawAnnotationBox(Surface.OverlayBuffer, _brush, _fontFactory, annotationText, annotationBox, Dpi);
+            GdiRenderer.DrawAnnotationBox(Surface.OverlayBuffer, _gdiObjectFactory, annotationText, annotationBox, Dpi);
 		}
 
 		#endregion

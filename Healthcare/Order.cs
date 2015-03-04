@@ -208,7 +208,7 @@ namespace ClearCanvas.Healthcare
 		{
 			if (procedure.Status != ProcedureStatus.SC)
 				throw new WorkflowException("Only Procedures in the SC status may be added to an order.");
-			if(procedure.Order == this)
+			if(Equals(procedure.Order, this))
 				throw new WorkflowException("This procedure is already part of this order.");
 			if (this.IsTerminated)
 				throw new WorkflowException(string.Format("Cannot add procedure to order with status {0}.", _status));
@@ -259,16 +259,16 @@ namespace ClearCanvas.Healthcare
 
 			failureReason = null;
 			if (this.AccessionNumber == destinationOrder.AccessionNumber)
-				failureReason = "Orders with the same accession number cannot be merged.";
+				failureReason = SR.MessageOrderCannotMergeSameAccessionNumber;
 			else if (this.Status != OrderStatus.SC || destinationOrder.Status != OrderStatus.SC)
-				failureReason = "Orders that have already been started cannot be merged.";
-			else if (this.Patient != destinationOrder.Patient)
-				failureReason = "Orders that belong to different patients cannot be merged.";
-			else if (this.OrderingFacility.InformationAuthority != destinationOrder.OrderingFacility.InformationAuthority)
-				failureReason = "Orders with different ordering facilities cannot be merged.";
+				failureReason = SR.MessageOrderCannotMergeOrderAlreadyStarted;
+			else if (!Equals(this.Patient, destinationOrder.Patient))
+				failureReason = SR.MessageOrderCannotMergeDifferentPatientOrders;
+			else if (!Equals(this.OrderingFacility.InformationAuthority, destinationOrder.OrderingFacility.InformationAuthority))
+				failureReason = SR.MessageOrderCannotMergeDifferentOrderingFacilityOrders;
 			else if (CollectionUtils.Contains(this.Procedures, p => p.DowntimeRecoveryMode)
 				|| CollectionUtils.Contains(destinationOrder.Procedures, p => p.DowntimeRecoveryMode))
-				failureReason = "Downtime orders cannot be merged.";
+				failureReason = SR.MessageOrderCannotMergeDowntimeOrders;
 
 			return string.IsNullOrEmpty(failureReason);
 		}
@@ -290,8 +290,9 @@ namespace ClearCanvas.Healthcare
 			// copy all the result recipients to destination
 			foreach (var rr in _resultRecipients)
 			{
+				var rrr = rr;
 				var recipientAlreadyExist = CollectionUtils.Contains(
-					destOrder.ResultRecipients, recipients => recipients.PractitionerContactPoint.Equals(rr.PractitionerContactPoint));
+					destOrder.ResultRecipients, recipients => recipients.PractitionerContactPoint.Equals(rrr.PractitionerContactPoint));
 				if (!recipientAlreadyExist)
 					destOrder.ResultRecipients.Add((ResultRecipient)rr.Clone());
 			}
@@ -354,21 +355,25 @@ namespace ClearCanvas.Healthcare
 		/// <returns></returns>
 		public virtual bool CanUnmerge(OrderCancelInfo cancelInfo, out string failureReason)
 		{
-			var destOrder = _mergeInfo.MergeDestinationOrder;
-			failureReason = null;
-			if (_status != OrderStatus.MG || destOrder == null)
-				failureReason = "Only orders in the MG status can be unmerged.";
-			else if (destOrder.Status != OrderStatus.SC)
-				failureReason = "Cannot unmerge because the merge target order has already been started.";
-			else if(CollectionUtils.Contains(destOrder.Procedures, p => p.Status == ProcedureStatus.CA))
-				failureReason = "Cannot unmerge because the merge target order has cancelled procedures.";
-			else if (cancelInfo.Reason == null)
-				failureReason = "A reason must be provided to unmerge.";
-			else if (CollectionUtils.Contains(this.Procedures, p => p.DowntimeRecoveryMode)
-				|| CollectionUtils.Contains(destOrder.Procedures, p => p.DowntimeRecoveryMode))
-				failureReason = "Downtime orders cannot be unmerged.";
+			// Bug #12488 - unmerging orders as it exists currently will leave ghost procedures around, which can eventually corrupt the order state after repeated merge-unmerge cycles
+			failureReason = "Not Supported";
+			return false;
 
-			return string.IsNullOrEmpty(failureReason);
+			//var destOrder = _mergeInfo.MergeDestinationOrder;
+			//failureReason = null;
+			//if (_status != OrderStatus.MG || destOrder == null)
+			//    failureReason = "Only orders in the MG status can be unmerged.";
+			//else if (destOrder.Status != OrderStatus.SC)
+			//    failureReason = "Cannot unmerge because the merge target order has already been started.";
+			//else if(CollectionUtils.Contains(destOrder.Procedures, p => p.Status == ProcedureStatus.CA))
+			//    failureReason = "Cannot unmerge because the merge target order has cancelled procedures.";
+			//else if (cancelInfo.Reason == null)
+			//    failureReason = "A reason must be provided to unmerge.";
+			//else if (CollectionUtils.Contains(this.Procedures, p => p.DowntimeRecoveryMode)
+			//    || CollectionUtils.Contains(destOrder.Procedures, p => p.DowntimeRecoveryMode))
+			//    failureReason = "Downtime orders cannot be unmerged.";
+
+			//return string.IsNullOrEmpty(failureReason);
 		}
 
 		/// <summary>

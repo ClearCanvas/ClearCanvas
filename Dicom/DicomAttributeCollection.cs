@@ -25,6 +25,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using ClearCanvas.Common;
@@ -43,7 +44,7 @@ namespace ClearCanvas.Dicom
     /// 
     /// </para>
     /// </remarks>
-	public class DicomAttributeCollection : IEnumerable<DicomAttribute>, IDicomAttributeProvider
+	public partial class DicomAttributeCollection : IEnumerable<DicomAttribute>, IDicomAttributeProvider
     {
         #region Member Variables
         private readonly SortedDictionary<uint, DicomAttribute> _attributeList = new SortedDictionary<uint, DicomAttribute>();
@@ -51,9 +52,9 @@ namespace ClearCanvas.Dicom
         private readonly uint _startTag = 0x00000000;
         private readonly uint _endTag = 0xFFFFFFFF;
 
-        private bool _validateVrLengths = DicomSettings.Default.ValidateVrLengths;
-		private bool _validateVrValues = DicomSettings.Default.ValidateVrValues;
-    	private bool _ignoreOutOfRangeTags = DicomSettings.Default.IgnoreOutOfRangeTags;
+        private static readonly bool ValidateVrLengthsDefault = DicomSettings.Default.ValidateVrLengths;
+		private static readonly bool ValidateVrValuesDefault = DicomSettings.Default.ValidateVrValues;
+		private static readonly bool IgnoreOutOfRangeTagsDefault = DicomSettings.Default.IgnoreOutOfRangeTags;
 		#endregion
 
         #region Constructors
@@ -63,6 +64,9 @@ namespace ClearCanvas.Dicom
         /// </summary>
         public DicomAttributeCollection()
         {
+	        ValidateVrLengths = ValidateVrLengthsDefault;
+	        ValidateVrValues = ValidateVrValuesDefault;
+	        IgnoreOutOfRangeTags = IgnoreOutOfRangeTagsDefault;
         }
 
         /// <summary>
@@ -85,6 +89,9 @@ namespace ClearCanvas.Dicom
         {
             _startTag = startTag;
             _endTag = endTag;
+			ValidateVrLengths = ValidateVrLengthsDefault;
+			ValidateVrValues = ValidateVrValuesDefault;
+			IgnoreOutOfRangeTags = IgnoreOutOfRangeTagsDefault;
         }
 
 		/// <summary>
@@ -102,6 +109,10 @@ namespace ClearCanvas.Dicom
 
         internal DicomAttributeCollection(DicomAttributeCollection source, bool copyBinary, bool copyPrivate, bool copyUnknown, uint stopTag)
         {
+			ValidateVrLengths = ValidateVrLengthsDefault;
+			ValidateVrValues = ValidateVrValuesDefault;
+			IgnoreOutOfRangeTags = IgnoreOutOfRangeTagsDefault;
+
         	_startTag = source.StartTagValue;
         	_endTag = source.EndTagValue;
         	_specificCharacterSet = source.SpecificCharacterSet;
@@ -181,23 +192,12 @@ namespace ClearCanvas.Dicom
             get { return Dump(String.Empty, DicomDumpOptions.None); }
         }
 
-		public bool ValidateVrLengths
-		{
-			get { return _validateVrLengths; }
-			set { _validateVrLengths = value; }
-		}
+		public bool ValidateVrLengths { get; set; }
 		
-		public bool ValidateVrValues
-    	{
-			get { return _validateVrValues; }
-			set { _validateVrValues = value; }
-    	}
+		public bool ValidateVrValues { get; set; }
+		
+		public bool IgnoreOutOfRangeTags { get; set; }
 
-		public bool IgnoreOutOfRangeTags
-		{
-			get { return _ignoreOutOfRangeTags; }
-			set { _ignoreOutOfRangeTags = value; }
-		}
         #endregion
 
         #region Public Methods
@@ -287,7 +287,7 @@ namespace ClearCanvas.Dicom
             DicomAttribute attr;
 			if (!_attributeList.TryGetValue(tag, out attr))
 			{
-                if (((tag < _startTag) || (tag > _endTag)) && !_ignoreOutOfRangeTags)
+                if (((tag < _startTag) || (tag > _endTag)) && !IgnoreOutOfRangeTags)
                     throw new DicomException("Tag is out of range for collection: " + tag.ToString("X8"));
 
                 DicomTag dicomTag = DicomTagDictionary.GetDicomTag(tag);
@@ -321,11 +321,11 @@ namespace ClearCanvas.Dicom
             DicomAttribute attr;
 
             if (tag == null)
-                throw new NullReferenceException("Null DicomTa parameter");
+                throw new NullReferenceException("Null DicomTag parameter");
 
 			if (!_attributeList.TryGetValue(tag.TagValue, out attr))
 			{
-				if (((tag.TagValue < _startTag) || (tag.TagValue > _endTag)) && !_ignoreOutOfRangeTags)
+				if (((tag.TagValue < _startTag) || (tag.TagValue > _endTag)) && !IgnoreOutOfRangeTags)
 					throw new DicomException("Tag is out of range for collection: " + tag);
 
 				attr = tag.CreateDicomAttribute();
@@ -392,7 +392,7 @@ namespace ClearCanvas.Dicom
 					attr = dicomTag.CreateDicomAttribute();
 					if ((tag < _startTag) || (tag > _endTag))
 					{
-						if (!_ignoreOutOfRangeTags)
+						if (!IgnoreOutOfRangeTags)
 							throw new DicomException("Tag is out of range for collection: " + tag);
 					}
 					else
@@ -422,7 +422,7 @@ namespace ClearCanvas.Dicom
 					
 					if ((tag < _startTag) || (tag > _endTag))
 					{
-						if (!_ignoreOutOfRangeTags)
+						if (!IgnoreOutOfRangeTags)
 							throw new DicomException("Tag is out of range for collection: " + tag);
 					}
 					else
@@ -460,7 +460,7 @@ namespace ClearCanvas.Dicom
 					}
 					if ((tag.TagValue < _startTag) || (tag.TagValue > _endTag))
 					{
-						if (!_ignoreOutOfRangeTags)
+						if (!IgnoreOutOfRangeTags)
 							throw new DicomException("Tag is out of range for collection: " + tag);
 					}
 					else
@@ -491,7 +491,7 @@ namespace ClearCanvas.Dicom
 				
 					if ((tagValue < _startTag) || (tagValue > _endTag))
 					{
-						if (!_ignoreOutOfRangeTags)
+						if (!IgnoreOutOfRangeTags)
 							throw new DicomException("Tag is out of range for collection: " + tag);
 					}
 					else
@@ -895,7 +895,7 @@ namespace ClearCanvas.Dicom
         	}
         	if (elem != null)
         	{
-        		if (elem.StreamLength == 0 && udzl)
+        		if ((elem.IsNull || elem.IsEmpty) && udzl)
         		{
         			return GetDefaultValue(vtype, deflt);
         		}
@@ -1022,14 +1022,15 @@ namespace ClearCanvas.Dicom
 			// Decided to return a boolean instead so existing code still works.
 			var failureCount = 0; 
 
-            FieldInfo[] fields = obj.GetType().GetFields();
-            foreach (FieldInfo field in fields)
-            {
-                if (field.IsDefined(typeof(DicomFieldAttribute), true))
+            FieldData[] fields;
+            PropertyData[] properties;
+            GetPropertiesAndFields(obj.GetType(), out fields, out properties);
+            foreach (var f in fields)
                 {
+                var field = f.FieldInfo;
+                var dfa = f.DicomFieldAttribute;
                     try
                     {
-                        DicomFieldAttribute dfa = (DicomFieldAttribute)field.GetCustomAttributes(typeof(DicomFieldAttribute), true)[0];
                         if ((dfa.Tag.TagValue >= StartTagValue) && (dfa.Tag.TagValue <= EndTagValue))
                         {
 							DicomAttribute elem;
@@ -1037,7 +1038,7 @@ namespace ClearCanvas.Dicom
                             {
                                 if (dfa.DefaultValue == DicomFieldDefault.None 
 									&& dfa.UseDefaultForZeroLength 
-									&& (elem.StreamLength == 0 ) )
+								&& (elem.IsNull || elem.IsEmpty))
                                 {
                                     // do nothing
                                 }
@@ -1056,22 +1057,19 @@ namespace ClearCanvas.Dicom
 						failureCount++;
                     }
                 }
-            }
 
-            PropertyInfo[] properties = obj.GetType().GetProperties();
-            foreach (PropertyInfo property in properties)
-            {
-                if (property.IsDefined(typeof(DicomFieldAttribute), true))
+            foreach (var p in properties)
                 {
+                var property = p.PropertyInfo;
+                var dfa = p.DicomFieldAttribute;
                     try
                     {
-                        DicomFieldAttribute dfa = (DicomFieldAttribute)property.GetCustomAttributes(typeof(DicomFieldAttribute), true)[0];
                     	DicomAttribute elem;
                         if (TryGetAttribute(dfa.Tag, out elem))
                         {
                             if (dfa.DefaultValue == DicomFieldDefault.None
 								&& dfa.UseDefaultForZeroLength 
-								&& (elem.StreamLength == 0) )
+							&& (elem.IsNull || elem.IsEmpty))
                             {
                                 // do nothing
                             }
@@ -1087,7 +1085,6 @@ namespace ClearCanvas.Dicom
 						failureCount++;
                     }
                 }
-            }
 
         	return failureCount == 0;
         }
@@ -1097,14 +1094,15 @@ namespace ClearCanvas.Dicom
             if (value != null && value != DBNull.Value)
             {
                 Type vtype = value.GetType();
+                DicomSequenceItem sq;
                 if (vtype == this[tag].GetType())
                 {
                     this[tag] = (DicomAttribute)value;
                 }
-                else if (vtype.IsSubclassOf(typeof(DicomSequenceItem)))
+                else if (null != (sq = value as DicomSequenceItem))
                 {
                     DicomAttribute elem = this[tag];
-                    elem.AddSequenceItem((DicomSequenceItem)value);
+                    elem.AddSequenceItem(sq);
                 }
                 else
                 {
@@ -1182,16 +1180,17 @@ namespace ClearCanvas.Dicom
             }
             else
             {
+                DicomAttribute attr;
 				if (createEmpty)
                 {
                     // force the element creation
-                    DicomAttribute attr = this[tag];
+                    attr = this[tag];
 					if (setNullIfEmpty)
 						attr.SetNullValue();
                 }
-                else if (Contains(tag))
+                else if (TryGetAttribute(tag, out attr))
                 {
-                    this[tag].Values = null;
+                    attr.Values = null;
                 }
             }
         }
@@ -1205,28 +1204,23 @@ namespace ClearCanvas.Dicom
         /// <seealso cref="DicomFieldAttribute"/>
         public void SaveDicomFields(object obj)
         {
-            FieldInfo[] fields = obj.GetType().GetFields();
-            foreach (FieldInfo field in fields)
+            FieldData[] fields;
+            PropertyData[] properties;
+            GetPropertiesAndFields(obj.GetType(), out fields, out properties);
+            foreach (var field in fields)
             {
-                if (field.IsDefined(typeof(DicomFieldAttribute), true))
-                {
-                    DicomFieldAttribute dfa = (DicomFieldAttribute)field.GetCustomAttributes(typeof(DicomFieldAttribute), true)[0];
-                    object value = field.GetValue(obj);
+                var dfa = field.DicomFieldAttribute;
+				object value = field.FieldInfo.GetValue(obj);
                     SaveDicomFieldValue(dfa.Tag, value, dfa.CreateEmptyElement, dfa.SetNullValueIfEmpty);
                 }
-            }
 
-            PropertyInfo[] properties = obj.GetType().GetProperties();
-            foreach (PropertyInfo property in properties)
+            foreach (var property in properties)
             {
-                if (property.IsDefined(typeof(DicomFieldAttribute), true))
-                {
-                    DicomFieldAttribute dfa = (DicomFieldAttribute)property.GetCustomAttributes(typeof(DicomFieldAttribute), true)[0];
-                    object value = property.GetValue(obj, null);
+                var dfa = property.DicomFieldAttribute;
+				object value = property.PropertyInfo.GetValue(obj, null);
 					SaveDicomFieldValue(dfa.Tag, value, dfa.CreateEmptyElement, dfa.SetNullValueIfEmpty);
                 }
             }
-        }
         #endregion
 
         #region Dump
@@ -1279,4 +1273,90 @@ namespace ClearCanvas.Dicom
         }
         #endregion
     }
+
+    #region Type caching for Load/Save Dicom Fields
+
+    partial class DicomAttributeCollection
+    {
+        private class FieldData
+        {
+            public FieldData(FieldInfo fieldInfo, DicomFieldAttribute dicomFieldAttribute)
+            {
+                FieldInfo = fieldInfo;
+                DicomFieldAttribute = dicomFieldAttribute;
+            }
+
+            public readonly FieldInfo FieldInfo;
+            public readonly DicomFieldAttribute DicomFieldAttribute;
+        }
+        private class PropertyData
+        {
+            public PropertyData(PropertyInfo propertyInfo, DicomFieldAttribute dicomFieldAttribute)
+            {
+                PropertyInfo = propertyInfo;
+                DicomFieldAttribute = dicomFieldAttribute;
+            }
+
+            public readonly PropertyInfo PropertyInfo;
+            public readonly DicomFieldAttribute DicomFieldAttribute;
+        }
+
+        private class TypeData
+        {
+            public TypeData(Type type, FieldData[] fields, PropertyData[] properties)
+            {
+                Type = type;
+                Fields = fields;
+                Properties = properties;
+            }
+
+            public readonly Type Type;
+            public readonly FieldData[] Fields;
+            public readonly PropertyData[] Properties;
+        }
+
+        private static TypeData _lastTypeData;
+        private static readonly object _typeDataLock = new object();
+        private static readonly Dictionary<Type, TypeData> _typeData = new Dictionary<Type, TypeData>();
+
+        private void GetPropertiesAndFields(Type type, out FieldData[] fields, out PropertyData[] properties)
+        {
+            var last = _lastTypeData;
+            //Faster than looking up in a dictionary, and it'll often be the same.
+            if (last != null && last.Type == type)
+            {
+                fields = last.Fields;
+                properties = last.Properties;
+                return;
+            }
+
+            TypeData typeData;
+            lock (_typeDataLock)
+                _typeData.TryGetValue(type, out typeData);
+
+            if (typeData == null)
+            {
+                typeData = new TypeData(type,
+                    (from field in type.GetFields()
+                     let attributes = field.GetCustomAttributes(typeof(DicomFieldAttribute), true)
+                     where attributes.Length > 0
+                     select new FieldData(field, (DicomFieldAttribute)attributes[0])).ToArray(),
+
+                    (from property in type.GetProperties()
+                     let attributes = property.GetCustomAttributes(typeof(DicomFieldAttribute), true)
+                     where attributes.Length > 0
+                     select new PropertyData(property, (DicomFieldAttribute)attributes[0])).ToArray());
+
+                lock (_typeDataLock)
+                    _typeData[type] = typeData;
+}
+
+            fields = typeData.Fields;
+            properties = typeData.Properties;
+         
+            _lastTypeData = typeData;
+        }
+    }
+
+    #endregion
 }

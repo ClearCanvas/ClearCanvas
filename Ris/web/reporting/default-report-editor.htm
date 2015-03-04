@@ -7,6 +7,7 @@
 	<script type="text/javascript" src="../js/jsml.js"></script>
 	<script type="text/javascript" src="../js/ui.js"></script>
 	<script type="text/javascript" src="../js/ris.js"></script>
+	<script type="text/javascript" src="../js/SR.js"></script>
 	<script type="text/javascript" src="../js/preview.js"></script>
 	<script type="text/javascript" >
 		var report = {};
@@ -17,15 +18,7 @@
 			if(!Ris)
 				return;
 
-			try
-			{
-				loadData();
-			}
-			catch(e)
-			{
-				var message = "Failed to load editor page.  An exception occurred in the script. Error name: " + e.name + ". Error message: " + e.message;
-				Field.setValue($("myForm"), message);
-			}
+			loadData();
 		}
 
 		// this no-arg method must be implemented for the component to save report

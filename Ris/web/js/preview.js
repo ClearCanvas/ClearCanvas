@@ -56,17 +56,17 @@ var Preview = function () {
 
 	var _alerts = 
 		{
-			NoteAlert: { icon: "AlertNote.png", getTooltip: function(name, reasons) { return name + " has high severity notes: " + reasons; } },
-			LanguageAlert: { icon: "AlertNote.png", getTooltip: function(name, reasons) { return name + " speaks: " + reasons; } },
-			ReconciliationAlert: { icon: "AlertReconcile.png", getTooltip: function(name, reasons) { return name + " has unreconciled records"; } },
-			IncompleteDemographicDataAlert: { icon: "AlertIncompleteData.png", getTooltip: function(name, reasons) { return name + " has incomplete demographic data: " + reasons; } },
-			InvalidVisitAlert: { icon: "AlertVisit.png", getTooltip: function(name, reasons) { return "This order has invalid visit: " + reasons; } },
-			PatientAllergyAlert: { icon: "AlertAllergy2.png", getTooltip: function(name, reasons) { return name + " has allergies: " + reasons; } },
+			NoteAlert: { icon: "AlertNote.png", getTooltip: function(name, reasons) { return SR.Alerts.HighSeverityNotes.interp(name, reasons); } },
+			LanguageAlert: { icon: "AlertNote.png", getTooltip: function(name, reasons) { return SR.Alerts.Language.interp(name, reasons); } },
+			ReconciliationAlert: { icon: "AlertReconcile.png", getTooltip: function(name, reasons) { return SR.Alerts.UnreconciledRecords.interp(name,reasons); } },
+			IncompleteDemographicDataAlert: { icon: "AlertIncompleteData.png", getTooltip: function(name, reasons) { return SR.Alerts.IncompleteDemographicData.interp(name, reasons); } },
+			InvalidVisitAlert: { icon: "AlertVisit.png", getTooltip: function(name, reasons) { return SR.Alerts.InvalidVisit.interp(reasons); } },
+			PatientAllergyAlert: { icon: "AlertAllergy2.png", getTooltip: function(name, reasons) { return SR.Alerts.Allergies.interp(name, reasons); } },
 
 			// External Practitioner Related Alerts
-			IncompleteDataAlert: { icon: "AlertIncompleteData.png", getTooltip: function(name, reasons) { return name + " has incomplete data: " + reasons; } },
-			IncompleteContactPointDataAlert: { icon: "AlertNote.png", getTooltip: function(name, reasons) { return "Some contact points have incomplete data: " + reasons; } },
-			PossibleDuplicateAlert: { icon: "AlertReconcile.png", getTooltip: function(name, reasons) { return name + " may have duplicate records"; } }
+			IncompleteDataAlert: { icon: "AlertIncompleteData.png", getTooltip: function(name, reasons) { return SR.Alerts.IncompleteData.interp(name, reasons); } },
+			IncompleteContactPointDataAlert: { icon: "AlertNote.png", getTooltip: function(name, reasons) { return SR.Alerts.IncompleteContactPointData.interp(reasons); } },
+			PossibleDuplicateAlert: { icon: "AlertReconcile.png", getTooltip: function(name, reasons) { return SR.Alerts.PossibleDuplicate.interp(name); } }
 		};
 
 	var _getAlertIcon = function(alertItem)
@@ -112,7 +112,7 @@ var Preview = function () {
 		getPatientAge: function(dateOfBirth, deathIndicator, timeOfDeath)
 		{
 			if (dateOfBirth == null)
-				return "Unknown";
+				return SR.PatientAge.DateOfBirthUnknown;
 				
 			var endDate = (deathIndicator == true ? timeOfDeath : new Date());
 
@@ -138,7 +138,7 @@ var Preview = function () {
 				else if (days < 1)
 					ageString = "0";
 				else if (days <= 31)
-					ageString = days + " days";
+					ageString = SR.PatientAge.Days.interp(days);
 				else
 				{
 					// Calculate the number of month
@@ -156,12 +156,12 @@ var Preview = function () {
 					// special case for exactly 12 month 
 					month += (month == 0 && yearDiff == 0 ? 12 : 0);
 
-					ageString = month + " months";	
+					ageString = SR.PatientAge.Months.interp(month);
 				}
 			}
 
 			if (deathIndicator == true)
-				ageString += " (deceased)";
+				ageString += " " + SR.PatientAge.Deceased;
 				
 			return ageString;
 		},
@@ -226,7 +226,7 @@ var Preview = function () {
 				return null;
 			
 			if (visit.CurrentRoom || visit.CurrentBed)
-				return visit.CurrentLocation.Name + ", " + (visit.CurrentRoom || "Room Not Specified") + (visit.CurrentBed ? "/" + visit.CurrentBed : "");
+				return visit.CurrentLocation.Name + ", " + (visit.CurrentRoom || SR.Visits.RoomNotSpecified) + (visit.CurrentBed ? "/" + visit.CurrentBed : "");
 			else
 				return visit.CurrentLocation.Name;
 		}
@@ -244,9 +244,9 @@ Preview.ProceduresTableHelper = function () {
 			if (scheduledStartTime)
 				formattedText = showDescriptiveTime ? Ris.formatDescriptiveDateTime(scheduledStartTime) : Ris.formatDateTime(scheduledStartTime);
 			else if (schedulingRequestTime)
-				formattedText = "Requested for " + showDescriptiveTime ? Ris.formatDescriptiveDateTime(schedulingRequestTime) : Ris.formatDateTime(schedulingRequestTime);
+				formattedText = SR.Procedures.RequestedFor.interp(showDescriptiveTime ? Ris.formatDescriptiveDateTime(schedulingRequestTime) : Ris.formatDateTime(schedulingRequestTime));
 			else
-				formattedText = "Not scheduled";
+				formattedText = SR.Procedures.NotScheduled;
 
 			if (schedulingCode)
 				formattedText += " (" + schedulingCode.Value + ")";
@@ -266,13 +266,13 @@ Preview.ProceduresTableHelper = function () {
 				return status.Value;  // show status instead of "Unscheduled" for unscheduled procedure that are cancelled
 				
 			if (!scheduledStartTime && !startTime)
-				return "Unscheduled";
+				return SR.Procedures.StatusUnscheduled;
 
 			if (status.Code == 'SC' && checkInTime)
-				return "Checked-In";
+				return SR.Procedures.StatusCheckedIn;
 			
 			if (status.Code == 'IP' && checkOutTime)
-				return "Performed";
+				return SR.Procedures.StatusPerformed;
 				
 			return status.Value; 
 		},
@@ -280,12 +280,12 @@ Preview.ProceduresTableHelper = function () {
 		formatProcedureStartEndTime: function(startTime, checkOutTime)
 		{
 			if (!startTime)
-				return "Not started";
+				return SR.Procedures.NotStarted;
 
 			if (checkOutTime)
-				return "Ended " + Ris.formatDateTime(checkOutTime);
+				return SR.Procedures.EndedAt.interp(Ris.formatDateTime(checkOutTime));
 
-			return "Started " + Ris.formatDateTime(startTime);
+			return SR.Procedures.StartedAt.interp(Ris.formatDateTime(startTime));
 		},
 
 		formatProcedurePerformingStaff: function(procedure)
@@ -471,25 +471,25 @@ Preview.ImagingServiceTable = function () {
 		var htmlTable = Preview.ProceduresTableHelper.addTable(parentElement);
 		htmlTable = Table.createTable(htmlTable, { editInPlace: false, flow: false, addColumnHeadings: true },
 			 [
-				{   label: "Procedure",
+				{   label: SR.ImagingServices.ColumnHeadings.Procedure,
 					cellType: "text",
 					getValue: function(item) { return Ris.formatOrderListItemProcedureName(item); }
 				},
-				{   label: "Scheduled For",
+				{   label: SR.ImagingServices.ColumnHeadings.ScheduledFor,
 					cellType: "text",
 					getValue: function(item) { return Preview.ProceduresTableHelper.formatProcedureSchedule(item.ProcedureScheduledStartTime, item.SchedulingRequestTime, true, item.ProcedureSchedulingCode); },
 					getTooltip: function(item) { return Preview.ProceduresTableHelper.formatProcedureSchedule(item.ProcedureScheduledStartTime, item.SchedulingRequestTime, false, item.ProcedureSchedulingCode); }
 				},
-				{   label: "Status",
+				{   label: SR.ImagingServices.ColumnHeadings.Status,
 					cellType: "text",
 					getValue: function(item) { return Preview.ProceduresTableHelper.formatProcedureStatus(item.ProcedureStatus, item.ProcedureScheduledStartTime, item.ProcedureStartTime, item.ProcedureCheckInTime, item.ProcedureCheckOutTime); }
 				},
-				{   label: "Performing Facility",
+				{   label: SR.ImagingServices.ColumnHeadings.PerformingFacility,
 					cellType: "text",
 					getValue: function(item) { return _formatPerformingFacility(item, 'Name'); },
 					getTooltip: function(item) { return _formatPerformingFacility(item, 'Description'); }
 				},
-				{   label: "Ordering Physician",
+				{   label: SR.ImagingServices.ColumnHeadings.OrderingPhysician,
 					cellType: "link",
 					getValue: function(item)  { return Ris.formatPersonName(item.OrderingPractitioner.Name); },
 					clickLink: function(item) { Ris.openPractitionerDetails(item.OrderingPractitioner); }
@@ -505,16 +505,16 @@ Preview.ImagingServiceTable = function () {
 		{
 			var activeProcedures = _getActiveProcedures(ordersList);
 					
-			_createHelper(parentElement, activeProcedures, "Active Imaging Services");
-			Preview.SectionContainer.create(parentElement, "Active Imaging Services", { collapsible: true, initiallyCollapsed: true });						
+			_createHelper(parentElement, activeProcedures, SR.ImagingServices.ActiveImagingServices);
+			Preview.SectionContainer.create(parentElement, SR.ImagingServices.ActiveImagingServices, { collapsible: true, initiallyCollapsed: true });						
 		},
 		
 		createPast: function(parentElement, ordersList, options)
 		{
 			var pastProcedures = _getNonActiveProcedures(ordersList);
 				
-			_createHelper(parentElement, pastProcedures, "Past Imaging Services");
-			Preview.SectionContainer.create(parentElement, "Past Imaging Services", { collapsible: true, initiallyCollapsed: true });						
+			_createHelper(parentElement, pastProcedures, SR.ImagingServices.PastImagingServices);
+			Preview.SectionContainer.create(parentElement, SR.ImagingServices.PastImagingServices, { collapsible: true, initiallyCollapsed: true });						
 		}
 	};
 }();
@@ -545,30 +545,30 @@ Preview.ProceduresTable = function () {
 			
 			if(options && options.AddSectionHeading)
 			{
-				Preview.ProceduresTableHelper.addHeading(parentElement, 'Procedures');
+				Preview.ProceduresTableHelper.addHeading(parentElement, SR.Procedures.Procedures);
 			}
 
 			var htmlTable = Preview.ProceduresTableHelper.addTable(parentElement);
 			htmlTable = Table.createTable(htmlTable, { editInPlace: false, flow: false, addColumnHeadings: true },
 				 [
-					{   label: "Procedure",
+					{   label: SR.Procedures.ColumnHeadings.Procedure,
 						cellType: "text",
 						getValue: function(item) { return Ris.formatProcedureName(item); }
 					},
-					{   label: "Status",
+					{   label: SR.Procedures.ColumnHeadings.Status,
 						cellType: "text",
 						getValue: function(item) { return Preview.ProceduresTableHelper.formatProcedureStatus(item.Status, item.ScheduledStartTime, item.StartTime, item.CheckInTime, item.CheckOutTime); }
 					},
-					{   label: "Scheduled For",
+					{   label: SR.Procedures.ColumnHeadings.ScheduledFor,
 						cellType: "text",
 						getValue: function(item) { return Preview.ProceduresTableHelper.formatProcedureSchedule(item.ScheduledStartTime, null, true, item.SchedulingCode); },
 						getTooltip: function(item) { return Preview.ProceduresTableHelper.formatProcedureSchedule(item.ScheduledStartTime, null, false, item.SchedulingCode); }
 					},
-					{   label: "Start/End Time",
+					{   label: SR.Procedures.ColumnHeadings.StartEndTime,
 						cellType: "text",
 						getValue: function(item) { return Preview.ProceduresTableHelper.formatProcedureStartEndTime(item.StartTime, item.CheckOutTime); }
 					},
-					{   label: "Performing Staff",
+					{   label: SR.Procedures.ColumnHeadings.PerformingStaff,
 						cellType: "text",
 						getValue: function(item) { return Preview.ProceduresTableHelper.formatProcedurePerformingStaff(item); }
 					}
@@ -577,7 +577,7 @@ Preview.ProceduresTable = function () {
 			htmlTable.rowCycleClassNames = ["row0", "row1"];
 			htmlTable.bindItems(procedures);
 			
-			Preview.SectionContainer.create(parentElement, "Procedures");
+			Preview.SectionContainer.create(parentElement, SR.Procedures.Procedures);
 		}
 	};
 }();
@@ -597,7 +597,7 @@ Preview.ProtocolProceduresTable = function () {
 	var _formatProtocolStatus = function(protocol)
 	{
 		if(!protocol)
-			return "Not Protocolled";
+			return SR.Protocols.NotProtocolled;
 
 		if(protocol.Status.Code == "RJ")
 			return protocol.Status.Value + " - "+ protocol.RejectReason.Value;
@@ -695,23 +695,23 @@ Preview.ProtocolProceduresTable = function () {
 			var htmlTable = Preview.ProceduresTableHelper.addTable(parentElement);
 			htmlTable = Table.createTable(htmlTable, { editInPlace: false, flow: false, addColumnHeadings: true },
 				 [
-					{   label: "Procedure",
+					{   label: SR.Protocols.ColumnHeadings.Procedure,
 						cellType: "text",
 						getValue: function(item) { return item.Procedure; }
 					},
-					{   label: "Status",
+					{   label: SR.Protocols.ColumnHeadings.Status,
 						cellType: "text",
 						getValue: function(item) { return item.Status; }
 					},
-					{   label: "Protocol",
+					{   label: SR.Protocols.ColumnHeadings.Protocol,
 						cellType: "html",
 						getValue: function(item) { return item.Protocol; }
 					},
-					{   label: "Author",
+					{   label: SR.Protocols.ColumnHeadings.Author,
 						cellType: "text",
 						getValue: function(item) { return item.Author; }
 					},
-					{   label: "Urgency",
+					{   label: SR.Protocols.ColumnHeadings.Urgency,
 						cellType: "text",
 						getValue: function(item) { return item.WTIS; }
 					}
@@ -774,26 +774,32 @@ Preview.ReportingProceduresTable = function () {
 		var isAddendum = activeReportingStep && lastCompletedPublicationStep;
 
 		var stepName = lastStep.ProcedureStepName;
-		var addendumPrefix = isAddendum ? "Addendum " : "";
+		var addendumPrefix = isAddendum ? SR.Procedures.AddendumPrefix : "";
 
 		var formattedStatus;
 		switch(lastStep.State.Code)
 		{
-			case "SC": formattedStatus = "Pending " + stepName;
+			case "SC":
+				formattedStatus = SR.Procedures.StatusPending.interp(stepName);
 				break;
-			case "IP": formattedStatus = stepName + " In Progress"; 
+			case "IP":
+				formattedStatus = SR.Procedures.StatusInProgress.interp(stepName); 
 				break;
-			case "SU": formattedStatus = stepName + " Suspended"; break;
-			case "CM": formattedStatus = stepName + " Completed";
+			case "SU":
+				formattedStatus = SR.Procedures.StatusSuspended.interp(stepName);
+				break;
+			case "CM":
+				formattedStatus = SR.Procedures.StatusCompleted.interp(stepName);
 				// Exceptions to formatting
 				if (stepName == "Verification")
-					formattedStatus = "Verified";
+					formattedStatus = SR.Procedures.StatusVerified.interp(stepName);
 				else if (stepName == "Publication")
-					formattedStatus = "Published";
-					
+					formattedStatus = SR.Procedures.StatusPublished.interp(stepName);
 				break;
 				
-			case "DC": formattedStatus = stepName + " Cancelled"; break;
+			case "DC":
+				formattedStatus = SR.Procedures.StatusCancelled.interp(stepName);
+				break;
 			default: break;
 		}
 
@@ -883,31 +889,27 @@ Preview.ReportingProceduresTable = function () {
 			var htmlTable = Preview.ProceduresTableHelper.addTable(parentElement);
 			htmlTable = Table.createTable(htmlTable, { editInPlace: false, flow: false, addColumnHeadings: true },
 				 [
-					// {   label: "Image Availability",
-						// cellType: "html",
-						// getValue: function(item) { return "<img class='alert' src='" + imagePath + "/" + _getImageAvailabilityIcon(item.ImageAvailability) + "' alt='" + item.ImageAvailability.Value + "'/>"; }
-					// },
-					{   label: "Procedure",
+					{   label: SR.Procedures.ColumnHeadings.Procedure,
 						cellType: "text",
 						getValue: function(item) { return item.ProcedureName; }
 					},
-					{   label: "Status",
+					{   label: SR.Procedures.ColumnHeadings.Status,
 						cellType: "text",
 						getValue: function(item) { return item.Status; }
 					},
-					{   label: "Scheduled For",
+					{   label: SR.Procedures.ColumnHeadings.ScheduledFor,
 						cellType: "text",
 						getValue: function(item) { return item.Schedule; }
 					},
-					{   label: "Start/End Time",
+					{   label: SR.Procedures.ColumnHeadings.StartEndTime,
 						cellType: "text",
 						getValue: function(item) { return item.StartEndTime; }
 					},
-					{   label: "Performing Staff",
+					{   label: SR.Procedures.ColumnHeadings.PerformingStaff,
 						cellType: "text",
 						getValue: function(item) { return item.PerformingStaff; }
 					},
-					{   label: "Owner",
+					{   label: SR.Procedures.ColumnHeadings.Owner,
 						cellType: "text",
 						getValue: function(item) { return item.Owner; }
 					}
@@ -916,7 +918,7 @@ Preview.ReportingProceduresTable = function () {
 			htmlTable.rowCycleClassNames = ["row0", "row1"];
 			htmlTable.bindItems(procGroupings);
 			
-			Preview.SectionContainer.create(parentElement, "Procedures");
+			Preview.SectionContainer.create(parentElement, SR.Procedures.Procedures);
 		}
 	};
 }();
@@ -973,11 +975,11 @@ Preview.ReportListTable = function () {
 
 			htmlTable = Table.createTable(htmlTable, { editInPlace: false, flow: false, autoSelectFirstElement: true, addColumnHeadings:true },
 			[
-				{   label: "Procedure",
+				{   label: SR.Reports.ColumnHeadings.Procedure,
 					cellType: "text",
 					getValue: function(item) { return Ris.formatOrderListItemProcedureName(item); }
 				},
-				{   label: "Status",
+				{   label: SR.Reports.ColumnHeadings.Status,
 					cellType: "text",
 					getValue: function(item) { return item.ReportStatus.Value; }
 				}
@@ -993,7 +995,7 @@ Preview.ReportListTable = function () {
 			htmlTable.rowCycleClassNames = ["row0", "row1"];
 			htmlTable.bindItems(reportList);
 			
-			Preview.SectionContainer.create(parentElement, "Reports");
+			Preview.SectionContainer.create(parentElement, SR.Reports.Reports);
 		}
 	};
 }();
@@ -1102,7 +1104,7 @@ Preview.ConversationHistory = function () {
 		var htmlTable = Preview.ProceduresTableHelper.addTableWithClass(parentElement, "NoteEntryTable", noColumnHeadings=true, "ConversationHistoryTable");
 		htmlTable = Table.createTable(htmlTable, { checkBoxes: false, checkBoxesProperties: checkBoxesProperties, editInPlace: false, flow: false, addColumnHeadings: false },
 		[
-			{   label: "Order Note",
+			{   label: SR.OrderNotes.ColumnHeadings.OrderNote,
 				cellType: "html",
 				getValue: function(item) 
 				{
@@ -1191,13 +1193,7 @@ Preview.ReportPreview = function () {
 			return reportJsml || "";
 		}
 
-		// depending on how the report was captured, it may contain an Impression and Finding section (Default RIS report editor)
-		var reportText;
-		if(reportObject.Impression || reportObject.Finding)
-			reportText = "<B>Impression:</B> " + reportObject.Impression + "<br>" + "<B>Finding:</B> " + reportObject.Finding + "<br>";
-		else // or it may simply contain a ReportText section (UHN report editor)
-			reportText = reportObject.ReportText;
-
+		var reportText = reportObject.ReportText;
 		if (!reportText)
 			return "";
 			
@@ -1208,7 +1204,7 @@ Preview.ReportPreview = function () {
 	{
 		var timePropertyMap = {X: 'CancelledTime', D: 'CreationTime', P: 'PreliminaryTime', F: 'CompletedTime'};
 		var timeText = Ris.formatDateTime(report[timePropertyMap[report.Status.Code]]);
-		var warningText = " *** THIS " + (isAddendum ? "ADDENDUM" : "REPORT") + " HAS NOT BEEN FINALIZED ***";
+		var warningText = " " + (isAddendum ? SR.ReportPreview.AddendumNotFinalized : SR.ReportPreview.ReportNotFinalized);
 
 		var statusText = report.Status.Value + " - " + timeText;
 
@@ -1226,16 +1222,16 @@ Preview.ReportPreview = function () {
 		var formattedReport = "<br>";
 		
 		if (reportPart.InterpretedBy)
-			formattedReport += "<br> Interpreted By: " + Ris.formatPersonName(reportPart.InterpretedBy.Name);
+			formattedReport += "<br> " + SR.ReportPreview.InterpretedBy.interp(Ris.formatPersonName(reportPart.InterpretedBy.Name));
 
 		if (reportPart.TranscribedBy)
-			formattedReport += "<br> Transcribed By: " + Ris.formatPersonName(reportPart.TranscribedBy.Name);
+			formattedReport += "<br> " + SR.ReportPreview.TranscribedBy.interp(Ris.formatPersonName(reportPart.TranscribedBy.Name));
 
 		if (reportPart.VerifiedBy)
-			formattedReport += "<br> Verified By: " + Ris.formatPersonName(reportPart.VerifiedBy.Name);
+			formattedReport += "<br> " + SR.ReportPreview.VerifiedBy.interp(Ris.formatPersonName(reportPart.VerifiedBy.Name));
 
 		if (reportPart.Supervisor)
-			formattedReport += "<br> Supervised By: " + Ris.formatPersonName(reportPart.Supervisor.Name);
+			formattedReport += "<br> " + SR.ReportPreview.Supervisor.interp(Ris.formatPersonName(reportPart.Supervisor.Name));
 
 		return formattedReport;
 	}
@@ -1267,7 +1263,7 @@ Preview.ReportPreview = function () {
 					if (parsedReportContent)
 					{
 						formattedReport += "<div class='reportPreview'>";
-						formattedReport += "<b>Addendum " + _formatReportStatus(addendumPart, true) + ": </b><br><br>";
+						formattedReport += "<b>" + SR.ReportPreview.Addendum + " " + _formatReportStatus(addendumPart, true) + "</b><br><br>";
 						formattedReport += parsedReportContent;
 						formattedReport += _formatReportPerformer(addendumPart);
 						formattedReport += "<br><br>";
@@ -1279,7 +1275,7 @@ Preview.ReportPreview = function () {
 			var part0 = report.Parts[0];
 			var reportContent = part0 && part0.ExtendedProperties && part0.ExtendedProperties.ReportContent ? part0.ExtendedProperties.ReportContent : "";
 			formattedReport += "<div class='reportPreview'>";
-			formattedReport += "<b>Report" + _formatReportStatus(part0) + "</b>";
+			formattedReport += "<b>" + SR.ReportPreview.Report + " " + _formatReportStatus(part0) + "</b>";
 			formattedReport += "<br><br>";
 			formattedReport += _parseReportContent(reportContent);
 			formattedReport += _formatReportPerformer(part0);
@@ -1289,7 +1285,7 @@ Preview.ReportPreview = function () {
 			element.innerHTML = formattedReport;
 			
 			if (!options.hideSectionContainer)
-				Preview.SectionContainer.create(element, "Report");
+				Preview.SectionContainer.create(element, SR.ReportPreview.Report);
 		},
 		
 		toggleTranscriptionErrors: function(hasErrors)
@@ -1310,17 +1306,17 @@ Preview.ImagingServiceSection = function () {
 		'<div class="SectionTableContainer">' +
 		'<table width="100%" border="0" cellspacing="5">'+
 		'	<tr>'+
-		'		<td width="120" class="propertyname">Imaging Service</td>'+
+		'		<td width="120" class="propertyname">'+SR.ImagingServices.ImagingService+'</td>'+
 		'		<td colspan="3"><div id="DiagnosticServiceName"/></td>'+
 		'	</tr>'+
 		'	<tr>'+
-		'		<td width="120" class="propertyname">Accession Number</td>'+
+		'		<td width="120" class="propertyname">'+SR.ImagingServices.AccessionNumber+'</td>'+
 		'		<td width="200"><div id="AccessionNumber"/></td>'+
-		'		<td width="120" class="propertyname">Priority</td>'+
+		'		<td width="120" class="propertyname">'+SR.ImagingServices.Priority+'</td>'+
 		'		<td width="200"><div id="OrderPriority"/></td>'+
 		'	</tr>'+
 		'	<tr>'+
-		'		<td width="120" class="propertyname">Ordering Physician</td>'+
+		'		<td width="120" class="propertyname">'+SR.ImagingServices.OrderingPhysician+'</td>'+
 		'		<td width="200">'+
 		'			<div id="OrderingPhysician"></div>'+
 		'			<div id="OrderingPhysicianContactPointDetails" style="{font-size:75%;}">'+
@@ -1330,7 +1326,7 @@ Preview.ImagingServiceSection = function () {
 		'				<div id="OrderingPhysicianEmail"></div>'+
 		'			</div>'+
 		'		</td>'+
-		'		<td width="120" class="propertyname">Performing Facility/Dept.</td>'+
+		'		<td width="120" class="propertyname">'+SR.ImagingServices.PerformingFacilityDept+'</td>'+
 		'		<td width="200"><div id="PerformingFacility"/></td>'+
 		'	</tr>'+
 		// Yen: Removed thess fields, since they aren't needed for the time being.  May need to add them back in future releases. (jr 2012)
@@ -1341,27 +1337,27 @@ Preview.ImagingServiceSection = function () {
 		// '		<td width="200"><div id="LocationRoomBed"/></td>'+
 		// '	</tr>'+
 		'	<tr>'+
-		'		<td width="120" class="propertyname">Indication</td>'+
+		'		<td width="120" class="propertyname">'+SR.ImagingServices.Indication+'</td>'+
 		'		<td colspan="4"><div id="ReasonForStudy"/></td>'+
 		'	</tr>'+
 		'	<tr id="EnteredBySection">'+
-		'		<td width="120" class="propertyname">Entered By</td>'+
+		'		<td width="120" class="propertyname">'+SR.ImagingServices.EnteredBy+'</td>'+
 		'		<td width="200" colspan="3"><div id="EnteredBy"/></td>'+
 		'	</tr>'+
 		'	<tr id="AlertsSection">'+
-		'		<td width="120" class="propertyname">Alerts</td>'+
+		'		<td width="120" class="propertyname">'+SR.ImagingServices.Alerts+'</td>'+
 		'		<td width="200" colspan="3"><div id="Alerts"/></td>'+
 		'	</tr>'+
 		'	<tr id="CancelSection">'+
 		'		<td colspan="4">'+
-		'			<p class="subsectionheading">Order Cancelled</p>'+
+		'			<p class="subsectionheading">'+SR.ImagingServices.OrderCancelled+'</p>'+
 		'			<table width="100%" border="0">'+
 		'				<tr id="CancelledBySection">'+
-		'					<td width="150" class="propertyname">Cancelled By</td>'+
+		'					<td width="150" class="propertyname">'+SR.ImagingServices.CancelledBy+'</td>'+
 		'					<td><div id="CancelledBy"/></td>'+
 		'				</tr>'+
 		'				<tr>'+
-		'					<td width="150" class="propertyname">Cancel Reason</td>'+
+		'					<td width="150" class="propertyname">'+SR.ImagingServices.CancelReason+'</td>'+
 		'					<td><div id="CancelReason"/></td>'+
 		'				</tr>'+
 		'			</table>'+
@@ -1457,14 +1453,14 @@ Preview.ImagingServiceSection = function () {
 				}
 			}
 
-			Preview.SectionContainer.create(element, "Imaging Service");
+			Preview.SectionContainer.create(element, SR.ImagingServices.ImagingService);
 		}
 	};
 
 }();
 
 /*
- *	Create a contrainer for the element with the specified title.
+ *	Create a container for the element with the specified title.
  */
 Preview.SectionContainer = function () {
 
@@ -1652,22 +1648,22 @@ Preview.PatientDemographicsSection = function () {
 	var _html = 
 		'<table border="0" cellspacing="0" cellpadding="0" class="PatientDemographicsTable">'+
 		'	<tr>'+
-		'		<td valign="top" class="DemographicsLabel" nowrap="nowrap">Date of Birth:</td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="dateOfBirth"/></td>'+
-		'		<td valign="top" class="DemographicsLabel" nowrap="nowrap">Age:</td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="age"/></td>'+
+		'		<td valign="top" class="DemographicsLabel" nowrap="nowrap">'+SR.PatientDemographics.DateOfBirth+'</td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="dateOfBirth"/></td>'+
+		'		<td valign="top" class="DemographicsLabel" nowrap="nowrap">'+SR.PatientDemographics.Age+'</td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="age"/></td>'+
 		'   </tr><tr>' +
-		'		<td valign="top" class="DemographicsLabel" nowrap="nowrap">Sex:</td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="sex"/></td>'+
-		'		<td valign="top" class="DemographicsLabel" nowrap="nowrap">Healthcard #: </td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="healthcard"/></td>'+
+		'		<td valign="top" class="DemographicsLabel" nowrap="nowrap">'+SR.PatientDemographics.Sex+'</td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="sex"/></td>'+
+		'		<td valign="top" class="DemographicsLabel" nowrap="nowrap">'+SR.PatientDemographics.Healthcard+'</td><td valign="top" class="DemographicsCell" nowrap="nowrap"><div id="healthcard"/></td>'+
 		'	</tr>'+
 		'	<tr id="BillingInformationRow">'+
-		'		<td class="DemographicsLabel" nowrap="nowrap">Billing Information:</td>'+
+		'		<td class="DemographicsLabel" nowrap="nowrap">'+SR.PatientDemographics.BillingInformation+'</td>'+
 		'		<td colspan="3" class="DemographicsCell"><div id="billingInformation"/></td>'+
 		'	</tr>'+
 		'	<tr id="HomePhoneRow">'+
-		'		<td class="ContactInfoDemographicsLabel" nowrap="nowrap">Home Phone:</td>'+
+		'		<td class="ContactInfoDemographicsLabel" nowrap="nowrap">'+SR.PatientDemographics.HomePhone+'</td>'+
 		'		<td colspan="3" class="ContactInfoDemographicsCell"><div id="currentHomePhone"/></td>'+
 		'	</tr>'+
 		'	<tr id="HomeAddressRow">'+
-		'		<td class="ContactInfoDemographicsLabel" nowrap="nowrap">Home Address:</td>'+
+		'		<td class="ContactInfoDemographicsLabel" nowrap="nowrap">'+SR.PatientDemographics.HomeAddress+'</td>'+
 		'		<td colspan="3" class="ContactInfoDemographicsCell" nowrap="nowrap"><div id="currentHomeAddress"/></td>'+
 		'	</tr>'+
 		'	<tr><td colspan="4"><img src="../images/blank.gif"/></td></tr>'+
@@ -1769,12 +1765,13 @@ Preview.BannerSection = function() {
 Preview.OrderNoteSection = function() {
 	var _formatStaffNameAndRoleAndOnBehalf = function(author, onBehalfOfGroup)
 		{
-			return Ris.formatStaffNameAndRole(author) + ((onBehalfOfGroup != null) ? (" on behalf of " + onBehalfOfGroup.Name) : "");
+      var authorName = Ris.formatStaffNameAndRole(author);
+			return (onBehalfOfGroup != null) ? SR.OrderNotes.OnBehalfOf.interp(authorName, onBehalfOfGroup.Name) : authorName;
 		};
 
 	var _formatAcknowledgedTime = function(acknowledgedTime)
 		{
-			return acknowledgedTime ? (" at " + Ris.formatDateTime(acknowledgedTime)) : "";
+			return acknowledgedTime ? " " + SR.OrderNotes.AcknowledgedAtTime.interp(Ris.formatDateTime(acknowledgedTime)) : "";
 		};
 		
 	var _formatAcknowledged = function(groups, staffs)
@@ -1834,23 +1831,23 @@ Preview.OrderNoteSection = function() {
 			var html = "";
 			html += '<table style="{width:98%; margin-top: 4px;}" border="0" cellspacing="0" cellpadding="0">';
 			html += '	<tr class="orderNoteHeading">';
-			html += '		<td style="{width:100%;}"><span style="{padding-right: 5px;}" class="orderNoteLabel">From:</span>';
+			html += '		<td style="{width:100%;}"><span style="{padding-right: 5px;}" class="orderNoteLabel">'+SR.OrderNotes.From+'</span>';
 			html += '		' + _formatStaffNameAndRoleAndOnBehalf(note.Author, note.OnBehalfOfGroup) + '</td>';
 			//html += '		<td>' + (note.Urgent ? "<img alt='Urgent' src='" + imagePath + "/urgent.gif'/>" : "") + '</td>';
-			html += '		<td style="{width:5em; text-align:right; padding-right: 5px;}">' + (note.Urgent ? '<span class="urgentTextMark">URGENT</span>' : "")  + '</td>';
+			html += '		<td style="{width:5em; text-align:right; padding-right: 5px;}">' + (note.Urgent ? '<span class="urgentTextMark">'+SR.OrderNotes.LabelUrgent+'</span>' : "")  + '</td>';
 			html += '		<td style="{width:9.5em;text-align:right; padding-right: 5px;}" class="orderNoteLabel" NOWRAP title="' +  Ris.formatDateTime(note.PostTime) + '">' + Ris.formatDateTime(note.PostTime) + '</td>';
 			html += '	</tr>';
 			if (acknowledgedGroups.length > 0 || acknowledgedStaffs.length > 0)
 			{
 				html += '	<tr id="acknowledgedRow" class="orderNoteHeading">';
-				html += '		<td colspan="3" NOWRAP valign="top"><span style="{padding-right: 5px;}" class="orderNoteLabel">Acknowledged By:</span>';
+				html += '		<td colspan="3" NOWRAP valign="top"><span style="{padding-right: 5px;}" class="orderNoteLabel">'+SR.OrderNotes.AcknowledgedBy+'</span>';
 				html += '		' + String.replaceLineBreak(_formatAcknowledged(acknowledgedGroups, acknowledgedStaffs)) + '<div id="acknowledged"></td>';
 				html += '	</tr>';
 			}
 			if (notAcknowledgedGroups.length > 0 || notAcknowledgedStaffs.length > 0)
 			{
 				html += '	<tr id="notAcknowledgedRow" class="orderNoteHeading">';
-				html += '		<td valign="top" colspan="3"><span style="{padding-right: 5px;}" class="orderNoteLabel">Waiting For Acknowledgement:</span>';
+				html += '		<td valign="top" colspan="3"><span style="{padding-right: 5px;}" class="orderNoteLabel">'+SR.OrderNotes.WaitingForAcknowledgement+'</span>';
 				html += '		<B>' + String.replaceLineBreak(_formatNotAcknowledged(notAcknowledgedGroups, notAcknowledgedStaffs)) + '</B></td>';
 				html += '	</tr>';
 			}
@@ -1865,7 +1862,7 @@ Preview.OrderNoteSection = function() {
 }();
 
 /*
- *	Create a conversation note that shows author, post date, urgency, receipients and note body.
+ *	Create a conversation note that shows author, post date, urgency, recipients and note body.
  *	Exposes:
  *		create(element, note)
  *			element - parent node for the order note
@@ -1874,12 +1871,13 @@ Preview.OrderNoteSection = function() {
 Preview.ConversationNote = function() {
 	var _formatStaffNameAndRoleAndOnBehalf = function(author, onBehalfOfGroup)
 		{
-			return Ris.formatStaffNameAndRole(author) + ((onBehalfOfGroup != null) ? (" on behalf of " + onBehalfOfGroup.Name) : "");
+      var authorName = Ris.formatStaffNameAndRole(author);
+			return (onBehalfOfGroup != null) ? SR.OrderNotes.OnBehalfOf.interp(authorName, onBehalfOfGroup.Name) : authorName;
 		};
 
 	var _formatAcknowledgedTime = function(acknowledgedTime)
 		{
-			return acknowledgedTime ? (" at " + Ris.formatDateTime(acknowledgedTime)) : "";
+			return acknowledgedTime ? " " + SR.OrderNotes.AcknowledgedAtTime.interp(Ris.formatDateTime(acknowledgedTime)) : "";
 		};
 		
 	var _formatAcknowledged = function(groups, staffs)
@@ -1942,25 +1940,25 @@ Preview.ConversationNote = function() {
 			html += '<tr><td class="ConversationNote_left_upper"></td><td class="ConversationNote_content_upper">';
 			html += '<table width="100%" class="ConversationNoteDetails" border="0" cellspacing="0" cellpadding="0">';
 			html += '	<tr>';
-			html += '		<td><span style="{color: #205F87; font-weight: bold; padding-right: 10px;}">From:</span> ' 
+			html += '		<td><span style="{color: #205F87; font-weight: bold; padding-right: 10px;}">'+SR.OrderNotes.From+'</span> ' 
 				+  _formatStaffNameAndRoleAndOnBehalf(note.Author, note.OnBehalfOfGroup) 
 				//+ '<span style="{padding-left: 20px;}">' 
 				//+ (note.Urgent ? "<img alt='Urgent' src='" + imagePath + "/urgent.gif'/>" : "") 
-				+ (note.Urgent ? '<span class="urgentTextMark" style="{margin-left: 20px;}">URGENT</span>' : "") + "</td>";
+				+ (note.Urgent ? '<span class="urgentTextMark" style="{margin-left: 20px;}">'+SR.OrderNotes.LabelUrgent+'</span>' : "") + "</td>";
 				//+ '</span></td>';
 			html += '		<td style="{padding-right: 10px; text-align:right; color: #205F87; font-weight: bold;}" NOWRAP title="' +  Ris.formatDateTime(note.PostTime) + '">' + Ris.formatDateTime(note.PostTime) + '</td>';
 			html += '	</tr>';
 			if (acknowledgedGroups.length > 0 || acknowledgedStaffs.length > 0) {
 				html += '	<tr id="acknowledgedRow">';
-				html += '		<td colspan="2" NOWRAP valign="top"><span style="{color: #205F87; font-weight: bold; padding-right: 10px;}">Acknowledged By:</span>';
+				html += '		<td colspan="2" NOWRAP valign="top"><span style="{color: #205F87; font-weight: bold; padding-right: 10px;}">'+SR.OrderNotes.AcknowledgedBy+'</span>';
 				html += '		' + String.replaceLineBreak(_formatAcknowledged(acknowledgedGroups, acknowledgedStaffs)) + '<div id="acknowledged"></td>';
 				html += '	</tr>';
 			}
 			if (notAcknowledgedGroups.length > 0 || notAcknowledgedStaffs.length > 0) {
 				html += '	<tr id="notAcknowledgedRow">';
 				html += note.CanAcknowledge
-						? '		<td valign="middle" colspan="2" ><input type="checkbox" id="' + checkBoxId + '"/><span style="{margin-left: 5px; margin-right: 10px;}">Waiting For Acknowledgement:</span>'
-						: '		<td colspan="2" NOWRAP valign="top"><span style="{padding-right: 10px;}">Waiting For Acknowledgement:</span>';
+						? '		<td valign="middle" colspan="2" ><input type="checkbox" id="' + checkBoxId + '"/><span style="{margin-left: 5px; margin-right: 10px;}">'+SR.OrderNotes.WaitingForAcknowledgement+'</span>'
+						: '		<td colspan="2" NOWRAP valign="top"><span style="{padding-right: 10px;}">'+SR.OrderNotes.WaitingForAcknowledgement+'</span>';
 				html += '		' + String.replaceLineBreak(_formatNotAcknowledged(notAcknowledgedGroups, notAcknowledgedStaffs)) + '</td>';
 				html += '	</tr>';
 			}
@@ -1969,11 +1967,10 @@ Preview.ConversationNote = function() {
 			html += '   <tr><td class="ConversationNote_left_lower"></td><td class="ConversationNote_content_lower"><table>'
 			html += '	<tr>';
 			html += '		<td colspan="4" style="{text-align:justify;}"><div class="ConversationNoteMessage">' +  String.replaceLineBreak(note.NoteBody) + '</div></td>';
-			html += '	</tr>';
 			html += '   </table>';
 			html += '</td><td class="ConversationNote_right_lower"></td></tr>';
 			html += '<tr><td class="ConversationNote_bottomleft"></td><td class="ConversationNote_bottom"></td><td class="ConversationNote_bottomright"></td></tr></table>';
-			
+			html += '	</tr>';
 			element.innerHTML = html;
 		}
 	};
@@ -1997,7 +1994,7 @@ Preview.OrderedProceduresTable = function() {
 			var htmlTable = Preview.ProceduresTableHelper.addTable(parentElement, "ProceduresTable");
 			var htmlTable = Table.createTable(htmlTable, { editInPlace: false, flow: false },
 				[
-					{	label: "Procedure",
+					{	label: SR.OrderedProcedures.ColumnHeadings.Procedure,
 						cellType: "html",
 						getValue: function(item) 
 						{
@@ -2010,29 +2007,29 @@ Preview.OrderedProceduresTable = function() {
 							html += "<div class='collapsibleContent'>";
 							html += "<table>";
 							html += "<tr>";
-							html += "	<td width='120' class='propertyname'>Status</td>";
+							html += "	<td width='120' class='propertyname'>"+SR.OrderedProcedures.Status+"</td>";
 							html += "	<td width='200'>" + formattedProcedureStatus + "</td>";
-							html += "	<td width='120' class='propertyname'>Performing Facility</td>";
+							html += "	<td width='120' class='propertyname'>"+SR.OrderedProcedures.PerformingFacility+"</td>";
 							html += "	<td width='200'>" + item.PerformingFacility.Name + "</td>";
 							html += "</tr>";
 							html += "<tr>";
-							html += "	<td width='120' class='propertyname'>Scheduled Start Time</td>";
+							html += "	<td width='120' class='propertyname'>"+SR.OrderedProcedures.ScheduledStartTime+"</td>";
 							html += "	<td width='200'>" + Ris.formatDateTime(item.ScheduledStartTime) + "</td>";
-							html += "	<td width='120' class='propertyname'>Scheduling Code</td>";
+							html += "	<td width='120' class='propertyname'>"+SR.OrderedProcedures.SchedulingCode+"</td>";
 							html += "	<td width='200'>" + Preview.ProceduresTableHelper.formatProcedureSchedulingCode(item.SchedulingCode) + "</td>";
 							html += "</tr>";
 							html += "<tr>";
-							html += "	<td width='120' class='propertyname'>Check-In Time</td>";
+							html += "	<td width='120' class='propertyname'>"+SR.OrderedProcedures.CheckInTime+"</td>";
 							html += "	<td width='200'>" + Ris.formatDateTime(item.CheckInTime) + "</td>";
 							html += "</tr>";
 							html += "<tr>";
-							html += "	<td width='120' class='propertyname'>Performing Start Time</td>";
+							html += "	<td width='120' class='propertyname'>"+SR.OrderedProcedures.PerformingStartTime+"</td>";
 							html += "	<td width='200'>" + Ris.formatDateTime(item.StartTime) + "</td>";
-							html += "	<td width='120' class='propertyname'>Performing End Time</td>";
+							html += "	<td width='120' class='propertyname'>"+SR.OrderedProcedures.PerformingEndTime+"</td>";
 							html += "	<td width='200'>" + Ris.formatDateTime(item.CheckOutTime) + "</td>";
 							html += "</tr>";
 							html += "<tr>";
-							html += "	<td width='120' class='propertyname'>Report Published Time</td>";
+							html += "	<td width='120' class='propertyname'>"+SR.OrderedProcedures.ReportPublishedTime+"</td>";
 							if(item.Status.Code == 'CA' || item.Status.Code == 'DC')
 							{
 								html += "	<td width='200'></td>";
@@ -2043,7 +2040,7 @@ Preview.OrderedProceduresTable = function() {
 							}
 							html += "</tr>";
 							html += "<tr>";
-							html += "	<td width='120' class='propertyname'>Cancelled Time</td>";
+							html += "	<td width='120' class='propertyname'>"+SR.OrderedProcedures.CancelledTime+"</td>";
 							if(item.Status.Code == 'CA' || item.Status.Code == 'DC')
 							{
 								html += "	<td width='200'>" + Ris.formatDateTime(item.EndTime) + "</td>";
@@ -2064,7 +2061,7 @@ Preview.OrderedProceduresTable = function() {
 			htmlTable.errorProvider = errorProvider;   // share errorProvider with the rest of the form
 			htmlTable.bindItems(procedures);
 
-			Preview.SectionContainer.create(parentElement, "Ordered Procedures");
+			Preview.SectionContainer.create(parentElement, SR.OrderedProcedures.OrderedProcedures);
 		}
 	}
 }();
@@ -2078,51 +2075,51 @@ Preview.VisitDetailsSection = function () {
 		'<div class="SectionTableContainer">'+
 		'	<table cellspacing="5">'+
 		'		<tr>'+
-		'			<td width="120" class="propertyname">Visit Number</td>'+
+		'			<td width="120" class="propertyname">'+SR.Visits.VisitNumber+'</td>'+
 		'			<td width="200"><div id="VisitNumber"/></td>'+
-		'			<td width="120" class="propertyname">Facility</td>'+
+		'			<td width="120" class="propertyname">'+SR.Visits.Facility+'</td>'+
 		'			<td width="200"><div id="Facility"/></td>'+
 		'		</tr>'+
 		'		<tr>'+
-		'			<td width="120" class="propertyname">Visit Status</td>'+
+		'			<td width="120" class="propertyname">'+SR.Visits.VisitStatus+'</td>'+
 		'			<td width="200"><div id="VisitStatus"/></td>'+
-		'			<td width="120" class="propertyname">Current Location</td>'+
+		'			<td width="120" class="propertyname">'+SR.Visits.CurrentLocation+'</td>'+
 		'			<td width="200"><div id="CurrentLocation"/></td>'+
 		'		</tr>'+
 		'		<tr>'+
-		'			<td width="120" class="propertyname">Patient Class</td>'+
+		'			<td width="120" class="propertyname">'+SR.Visits.PatientClass+'</td>'+
 		'			<td width="200"><div id="PatientClass"/></td>'+
-		'			<td width="120" class="propertyname">Current Room</td>'+
+		'			<td width="120" class="propertyname">'+SR.Visits.CurrentRoom+'</td>'+
 		'			<td width="200"><div id="CurrentRoom"/></td>'+
 		'		</tr>'+
 		'		<tr>'+
-		'			<td width="120" class="propertyname">Patient Type</td>'+
+		'			<td width="120" class="propertyname">'+SR.Visits.PatientType+'</td>'+
 		'			<td width="200"><div id="PatientType"/></td>'+
-		'			<td width="120" class="propertyname">Current Bed</td>'+
+		'			<td width="120" class="propertyname">'+SR.Visits.CurrentBed+'</td>'+
 		'			<td width="200"><div id="CurrentBed"/></td>'+
 		'		</tr>'+
 		'		<tr>'+
-		'			<td width="120" class="propertyname">Admission Type</td>'+
+		'			<td width="120" class="propertyname">'+SR.Visits.AdmissionType+'</td>'+
 		'			<td width="200"><div id="AdmissionType"/></td>'+
-		'			<td width="120" class="propertyname">Discharge Disposition</td>'+
+		'			<td width="120" class="propertyname">'+SR.Visits.DischargeDisposition+'</td>'+
 		'			<td width="200"><div id="DischargeDisposition"/></td>'+
 		'		</tr>'+
 		'		<tr>'+
-		'			<td width="120" class="propertyname">Admit Date/Time</td>'+
+		'			<td width="120" class="propertyname">'+SR.Visits.AdmitDateTime+'</td>'+
 		'			<td width="200"><div id="AdmitTime"/></td>'+
-		'			<td width="120" class="propertyname">Discharge Date/Time</td>'+
+		'			<td width="120" class="propertyname">'+SR.Visits.DischargeDateTime+'</td>'+
 		'			<td width="200"><div id="DischargeTime"/></td>'+
 		'		</tr>'+
 		'		<tr>'+
-		'			<td width="120" class="propertyname">Pre-Admit Number</td>'+
+		'			<td width="120" class="propertyname">'+SR.Visits.PreAdmitNumber+'</td>'+
 		'			<td><div id="PreAdmitNumber"/></td>'+
 		'		</tr>'+
 		'		<tr>'+
-		'			<td width="120" class="propertyname">VIP?</td>'+
+		'			<td width="120" class="propertyname">'+SR.Visits.VIP+'</td>'+
 		'			<td><div id="VipFlag"/></td>'+
 		'		</tr>'+
 		'		<tr>'+
-		'			<td width="120" class="propertyname">Ambulatory Statuses</td>'+
+		'			<td width="120" class="propertyname">'+SR.Visits.AmbulatoryStatuses+'</td>'+
 		'			<td><div id="AmbulatoryStatuses"/></td>'+
 		'		</tr>'+
 		'	</table>'+
@@ -2168,15 +2165,15 @@ Preview.PhysiciansSection = function () {
 		'<div class="SectionTableContainer">'+
 		'	<table cellspacing="5">'+
 		'		<tr>'+
-		'			<td width="120" class="propertyname">Attending Physician</td>'+
+		'			<td width="120" class="propertyname">'+SR.Physicians.AttendingPhysician+'</td>'+
 		'			<td width="200"><div id="AttendingPhysician"/></td>'+
-		'			<td width="120" class="propertyname">Referring Physician</td>'+
+		'			<td width="120" class="propertyname">'+SR.Physicians.ReferringPhysician+'</td>'+
 		'			<td width="200"><div id="ReferringPhysician"/></td>'+
 		'		</tr>'+
 		'		<tr>'+
-		'			<td width="120" class="propertyname">Consulting Physician</td>'+
+		'			<td width="120" class="propertyname">'+SR.Physicians.ConsultingPhysician+'</td>'+
 		'			<td width="200"><div id="ConsultingPhysician"/></td>'+
-		'			<td width="120" class="propertyname">Admitting Physician</td>'+
+		'			<td width="120" class="propertyname">'+SR.Physicians.AdmittingPhysician+'</td>'+
 		'			<td width="200"><div id="AdmittingPhysician"/></td>'+
 		'		</tr>'+
 		'	</table>'+
@@ -2205,15 +2202,15 @@ Preview.ExternalPractitionerSummary = function() {
 	var _detailsHtml = 
 		'<table cellspacing="5" class="PatientDemographicsTable">'+
 		'	<tr>'+
-		'		<td width="150" class="DemographicsLabel">License Number</td>'+
+		'		<td width="150" class="DemographicsLabel">'+SR.ExternalPractitioners.LicenseNumber+'</td>'+
 		'		<td><div id="LicenseNumber"/></td>'+
-		'		<td width="150" class="DemographicsLabel">Verified Status</td>'+
+		'		<td width="150" class="DemographicsLabel">'+SR.ExternalPractitioners.VerifiedStatus+'</td>'+
 		'		<td><div id="IsVerified"/></td>'+
 		'	</tr>'+
 		'	<tr>'+
-		'		<td width="150" class="DemographicsLabel">Billing Number</td>'+
+		'		<td width="150" class="DemographicsLabel">'+SR.ExternalPractitioners.BillingNumber+'</td>'+
 		'		<td><div id="BillingNumber"/></td>'+
-		'		<td width="150" class="DemographicsLabel">Last Verified at</td>'+
+		'		<td width="150" class="DemographicsLabel">'+SR.ExternalPractitioners.LastVerifiedAt+'</td>'+
 		'		<td><div id="LastVerified"/></td>'+
 		'	</tr>'+
 		'	</table>';
@@ -2234,7 +2231,7 @@ Preview.ExternalPractitionerSummary = function() {
 
 			Field.setValue($("LicenseNumber"), externalPractitionerSummary.LicenseNumber);
 			Field.setValue($("BillingNumber"), externalPractitionerSummary.BillingNumber);
-			Field.setValue($("IsVerified"), externalPractitionerSummary.IsVerified ? "Yes" : "No");
+			Field.setValue($("IsVerified"), externalPractitionerSummary.IsVerified ? SR.ExternalPractitioners.VerifiedYes : SR.ExternalPractitioners.VerifiedNo);
 			Field.setValue($("LastVerified"), Ris.formatDateTime(externalPractitionerSummary.LastVerifiedTime));
 		};
 
@@ -2264,11 +2261,11 @@ Preview.ExternalPractitionerSummary = function() {
 			var htmlTable = Preview.ProceduresTableHelper.addTable(element, "ExtendedPropertiesTable");
 			htmlTable = Table.createTable(htmlTable, { editInPlace: false, flow: false, addColumnHeadings: true },
 				 [
-					{   label: "Name",
+					{   label: SR.ExternalPractitioners.ColumnHeadings.Name,
 						cellType: "text",
 						getValue: function(item) { return item.PropertyName; }
 					},
-					{   label: "Value",
+					{   label: SR.ExternalPractitioners.ColumnHeadings.Value,
 						cellType: "html",
 						getValue: function(item) { return item.PropertyValue; }
 					}
@@ -2277,7 +2274,7 @@ Preview.ExternalPractitionerSummary = function() {
 			htmlTable.rowCycleClassNames = ["row0", "row1"];
 			htmlTable.bindItems(propertyArray);
 			
-			Preview.SectionContainer.create(htmlTable, "Additional Properties");
+			Preview.SectionContainer.create(htmlTable, SR.ExternalPractitioners.AdditionalProperties);
 		}
 
 	var _createContactPointTable = function(element, externalPractitionerSummary)
@@ -2291,19 +2288,19 @@ Preview.ExternalPractitionerSummary = function() {
 			var htmlTable = Table.createTable(htmlTable, { editInPlace: false, flow: false },
 				[
 					{
-						label: "Name",
+						label: SR.ExternalPractitionerContactPoints.ColumnHeadings.Name,
 						cellType: "html",
 						getValue: function(item)
 						{
 							var name;
 							if(item.IsDefaultContactPoint)
-								name = item.Name + " [Default]";
+								name = SR.ExternalPractitionerContactPoints.DefaultContactPoint.interp(item.Name);
 							else
 								name = item.Name;
 							return "<div class='DemographicsLabel'>" + name + "</div>"
 						}
 					},
-					{	label: "Contact Point",
+					{	label: SR.ExternalPractitionerContactPoints.ColumnHeadings.ContactPoint,
 						cellType: "html",
 						getValue: function(item) 
 						{
@@ -2313,25 +2310,25 @@ Preview.ExternalPractitionerSummary = function() {
 							if(item.Description)
 							{
 								html += "<tr>";
-								html += "	<td width='120' class='propertyname'>Description</td>";
+								html += "	<td width='120' class='propertyname'>"+SR.ExternalPractitionerContactPoints.Description+"</td>";
 								html += "	<td >" + item.Description + "</td>";
 								html += "</tr>";
 							}
 							html += "<tr>";
-							html += "	<td width='120' class='propertyname'>Phone Number</td>";
-							html += "	<td>" + (Ris.formatTelephone(item.CurrentPhoneNumber) || "Not entered") + "</td>";
+							html += "	<td width='120' class='propertyname'>"+SR.ExternalPractitionerContactPoints.PhoneNumber+"</td>";
+							html += "	<td>" + (Ris.formatTelephone(item.CurrentPhoneNumber) || SR.ExternalPractitionerContactPoints.NotEntered) + "</td>";
 							html += "</tr>";
 							html += "<tr>";
-							html += "	<td width='120' class='propertyname'>Fax Number</td>";
-							html += "	<td>" + (Ris.formatTelephone(item.CurrentFaxNumber) || "Not entered") + "</td>";
+							html += "	<td width='120' class='propertyname'>"+SR.ExternalPractitionerContactPoints.FaxNumber+"</td>";
+							html += "	<td>" + (Ris.formatTelephone(item.CurrentFaxNumber) || SR.ExternalPractitionerContactPoints.NotEntered) + "</td>";
 							html += "</tr>";
 							html += "<tr>";
-							html += "	<td width='120' class='propertyname'>Address</td>";
-							html += "	<td>" + (Ris.formatAddress(item.CurrentAddress) || "Not entered") + "</td>";
+							html += "	<td width='120' class='propertyname'>"+SR.ExternalPractitionerContactPoints.Address+"</td>";
+							html += "	<td>" + (Ris.formatAddress(item.CurrentAddress) || SR.ExternalPractitionerContactPoints.NotEntered) + "</td>";
 							html += "</tr>";
 							html += "<tr>";
-							html += "	<td width='120' class='propertyname'>Email Address</td>";
-							html += "	<td>" + (item.CurrentEmailAddress && item.CurrentEmailAddress.Address ? item.CurrentEmailAddress.Address : "Not entered") + "</td>";
+							html += "	<td width='120' class='propertyname'>"+SR.ExternalPractitionerContactPoints.EmailAddress+"</td>";
+							html += "	<td>" + (item.CurrentEmailAddress && item.CurrentEmailAddress.Address ? item.CurrentEmailAddress.Address : SR.ExternalPractitionerContactPoints.NotEntered) + "</td>";
 							html += "</tr>";
 
 							html += "</table>";
@@ -2343,7 +2340,7 @@ Preview.ExternalPractitionerSummary = function() {
 			htmlTable.rowCycleClassNames = ["row0", "row1"];
 			htmlTable.bindItems(activeContactPoints);
 
-			Preview.SectionContainer.create(htmlTable, "Contact Points");
+			Preview.SectionContainer.create(htmlTable, SR.ExternalPractitionerContactPoints.ContactPoints);
 		};
 
 	return {
@@ -2401,12 +2398,12 @@ Preview.ResultRecipientsSection = function() {
 		var htmlTable = Preview.ProceduresTableHelper.addTable(parentElement);
 		htmlTable = Table.createTable(htmlTable, { editInPlace: false, flow: false, addColumnHeadings: true },
 		[
-			{   label: "Practitioner",
+			{   label: SR.ResultRecipients.ColumnHeadings.Practitioner,
 				cellType: "link",
 				getValue: function(item) { return Ris.formatPersonName(item.Practitioner.Name); },
 				clickLink: function(item) { Ris.openPractitionerDetails(item.Practitioner); }
 			},
-			{	label: "Contact Point",
+			{	label: SR.ResultRecipients.ColumnHeadings.ContactPoint,
 				cellType: "html",
 				getValue: function(item) 
 				{
@@ -2415,31 +2412,31 @@ Preview.ResultRecipientsSection = function() {
 
 					html += "<table>";
 					html += "<tr>";
-					html += "	<td width='120' class='propertyname'>Name</td>";
+					html += "	<td width='120' class='propertyname'>"+SR.ResultRecipients.Name+"</td>";
 					html += "	<td>" + contactPoint.Name + "</td>";
 					html += "</tr>";
 					if(contactPoint.Description)
 					{
 						html += "<tr>";
-						html += "	<td width='120' class='propertyname'>Description</td>";
+						html += "	<td width='120' class='propertyname'>"+SR.ResultRecipients.Description+"</td>";
 						html += "	<td >" + contactPoint.Description + "</td>";
 						html += "</tr>";
 					}
 					html += "<tr>";
-					html += "	<td width='120' class='propertyname'>Phone Number</td>";
-					html += "	<td>" + (Ris.formatTelephone(contactPoint.CurrentPhoneNumber) || "Not entered") + "</td>";
+					html += "	<td width='120' class='propertyname'>"+SR.ResultRecipients.PhoneNumber+"</td>";
+					html += "	<td>" + (Ris.formatTelephone(contactPoint.CurrentPhoneNumber) || SR.ResultRecipients.NotEntered) + "</td>";
 					html += "</tr>";
 					html += "<tr>";
-					html += "	<td width='120' class='propertyname'>Fax Number</td>";
-					html += "	<td>" + (Ris.formatTelephone(contactPoint.CurrentFaxNumber) || "Not entered") + "</td>";
+					html += "	<td width='120' class='propertyname'>"+SR.ResultRecipients.FaxNumber+"</td>";
+					html += "	<td>" + (Ris.formatTelephone(contactPoint.CurrentFaxNumber) || SR.ResultRecipients.NotEntered) + "</td>";
 					html += "</tr>";
 					html += "<tr>";
-					html += "	<td width='120' class='propertyname'>Address</td>";
-					html += "	<td>" + (Ris.formatAddress(contactPoint.CurrentAddress) || "Not entered") + "</td>";
+					html += "	<td width='120' class='propertyname'>"+SR.ResultRecipients.Address+"</td>";
+					html += "	<td>" + (Ris.formatAddress(contactPoint.CurrentAddress) || SR.ResultRecipients.NotEntered) + "</td>";
 					html += "</tr>";
 					html += "<tr>";
-					html += "	<td width='120' class='propertyname'>Email Address</td>";
-					html += "	<td>" + (contactPoint.CurrentEmailAddress && contactPoint.CurrentEmailAddress.Address ? contactPoint.CurrentEmailAddress.Address : "Not entered") + "</td>";
+					html += "	<td width='120' class='propertyname'>"+SR.ResultRecipients.EmailAddress+"</td>";
+					html += "	<td>" + (contactPoint.CurrentEmailAddress && contactPoint.CurrentEmailAddress.Address ? contactPoint.CurrentEmailAddress.Address : SR.ResultRecipients.NotEntered) + "</td>";
 					html += "</tr>";
 
 					html += "</table>";
@@ -2470,26 +2467,26 @@ Preview.ResultRecipientsSection = function() {
 Preview.WorklistItemsPreview = function () {
 
 	var _worklistPropertiesHtml = 
-		'<p class="sectionheading">Worklist</p>'+
+		'<p class="sectionheading">'+SR.Worklists.Worklist+'</p>'+
 		'<table>'+
 		'	<tr>'+
-		'		<td class="propertyname" width="125">Printed By</td>'+
+		'		<td class="propertyname" width="125">'+SR.Worklists.PrintedBy+'</td>'+
 		'		<td><div id="PrintedBy"/></td>'+
 		'	</tr>'+
 		'	<tr>'+
-		'		<td class="propertyname">Folder System</td>'+
+		'		<td class="propertyname">'+SR.Worklists.FolderSystem+'</td>'+
 		'		<td><div id="FolderSystem"/></td>'+
 		'	</tr>'+
 		'	<tr>'+
-		'		<td class="propertyname">Folder Name</td>'+
+		'		<td class="propertyname">'+SR.Worklists.FolderName+'</td>'+
 		'		<td><div id="FolderName"/></td>'+
 		'	</tr>'+
 		'	<tr>'+
-		'		<td class="propertyname">Description</td>'+
+		'		<td class="propertyname">'+SR.Worklists.Description+'</td>'+
 		'		<td><div id="Description"/></td>'+
 		'	</tr>'+
 		'	<tr>'+
-		'		<td class="propertyname">Showing</td>'+
+		'		<td class="propertyname">'+SR.Worklists.Showing+'</td>'+
 		'		<td><div id="ShowingCount"/></td>'+
 		'	</tr>'+
 		'</table>'+
@@ -2500,9 +2497,9 @@ Preview.WorklistItemsPreview = function () {
 		var laterality = lateralityEnum && lateralityEnum.Code != 'N' ? lateralityEnum.Value : null;
 
 		if (portable && laterality)
-			return procedureName + " (Portable/" + laterality + ")";
+			return procedureName + " (" + SR.Worklists.Portable + "/" + laterality + ")";
 		else if (portable)
-			return procedureName + " (Portable)";
+			return procedureName + " (" + SR.Worklists.Portable + ")";
 		else if (laterality)
 			return procedureName + " (" + laterality + ")";
 
@@ -2535,32 +2532,32 @@ Preview.WorklistItemsPreview = function () {
 		var htmlTable = Preview.ProceduresTableHelper.addTable(worklistItemsSection);
 		htmlTable = Table.createTable(htmlTable, { editInPlace: false, flow: false, addColumnHeadings: true },
 			 [
-				{   label: "Mrn",
+				{   label: SR.Procedures.Mrn,
 					cellType: "text",
 					getValue: function(item) { return Ris.formatMrn(item.Mrn); }
 				},
-				{   label: "Name",
+				{   label: SR.Procedures.Name,
 					cellType: "text",
 					getValue: function(item) { return Ris.formatPersonName(item.PatientName); }
 				},
-				{   label: "Accession #",
+				{   label: SR.Procedures.AccessionNumber,
 					cellType: "text",
 					noWrap: true,
 					getValue: function(item) { return item.AccessionNumber; }
 				},
-				{   label: "Order Priority",
+				{   label: SR.Procedures.OrderPriority,
 					cellType: "text",
 					getValue: function(item) { return item.OrderPriority.Value; }
 				},
-				{   label: "Patient Class",
+				{   label: SR.Procedures.PatientClass,
 					cellType: "text",
 					getValue: function(item) { return item.PatientClass.Value; }
 				},
-				{   label: "Procedure",
+				{   label: SR.Procedures.Procedure,
 					cellType: "text",
 					getValue: function(item) { return _formatProcedure(item.ProcedureName, item.ProcedurePortable, item.ProcedureLaterality); }
 				},
-				{   label: "Time",
+				{   label: SR.Procedures.Time,
 					cellType: "html",
 					noWrap: true,
 					getValue: function(item) { return Ris.formatDate(item.Time) + "<br>" + Ris.formatTime(item.Time); }

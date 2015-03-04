@@ -104,12 +104,14 @@ namespace ClearCanvas.ImageServer.Model.SqlServer.CodeGenerator
         {
             if (comboBoxDatabase.SelectedItem.Equals("ImageServer"))
             {
+	            var curDir = new DirectoryInfo(Environment.CurrentDirectory);
+	            var modelPath = curDir.Parent.Parent.Parent.Parent.FullName;
                 textBoxModelNamespace.Text = "ClearCanvas.ImageServer.Model";
                 textBoxEntityInterfaceNamespace.Text = "ClearCanvas.ImageServer.Model.EntityBrokers";
                 textBoxEntityImplementationNamespace.Text = "ClearCanvas.ImageServer.Model.SqlServer.EntityBrokers";
-                textBoxModelFolder.Text = "d:\\Projects\\ClearCanvas\\ImageServer\\Model";
-                textBoxEntityInterfaceFolder.Text = "d:\\Projects\\ClearCanvas\\ImageServer\\Model\\EntityBrokers";
-                textBoxEntityImplementationFolder.Text = "d:\\Projects\\ClearCanvas\\ImageServer\\Model\\SqlServer\\EntityBrokers";
+	            textBoxModelFolder.Text = modelPath;
+                textBoxEntityInterfaceFolder.Text = Path.Combine(modelPath,"EntityBrokers");
+                textBoxEntityImplementationFolder.Text = Path.Combine(modelPath,@"SqlServer\EntityBrokers");
             }
             if (comboBoxDatabase.SelectedItem.Equals("MigrationTool"))
             {

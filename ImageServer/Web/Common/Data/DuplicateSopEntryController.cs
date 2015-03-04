@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Web;
 using ClearCanvas.Common;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common;
@@ -50,8 +51,8 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
         /// <param name="action"></param>
         public void Process(ServerEntityKey entryKey, ProcessDuplicateAction action)
         {
-            
-            DuplicateSopReceivedQueue entry = DuplicateSopReceivedQueue.Load(HttpContextData.Current.ReadContext, entryKey);
+
+			DuplicateSopReceivedQueue entry = DuplicateSopReceivedQueue.Load(HttpContext.Current.GetSharedPersistentContext(), entryKey);
             Platform.CheckTrue(entry.StudyIntegrityReasonEnum == StudyIntegrityReasonEnum.Duplicate, "Invalid type of entry");
 
             IList<StudyIntegrityQueueUid> uids = LoadDuplicateSopUid(entry);
@@ -126,7 +127,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
         private static IList<StudyIntegrityQueueUid> LoadDuplicateSopUid(DuplicateSopReceivedQueue entry)
         {
             IStudyIntegrityQueueUidEntityBroker broker =
-                HttpContextData.Current.ReadContext.GetBroker<IStudyIntegrityQueueUidEntityBroker>();
+				HttpContext.Current.GetSharedPersistentContext().GetBroker<IStudyIntegrityQueueUidEntityBroker>();
 
             StudyIntegrityQueueUidSelectCriteria criteria = new StudyIntegrityQueueUidSelectCriteria();
             criteria.StudyIntegrityQueueKey.EqualTo(entry.GetKey());

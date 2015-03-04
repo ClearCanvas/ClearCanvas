@@ -93,8 +93,8 @@ namespace ClearCanvas.Ris.Client
 		{
 			public StaffTable()
 			{
-				this.Columns.Add(new TableColumn<StaffSummary, string>("Name", item => PersonNameFormat.Format(item.Name), 1.0f));
-				this.Columns.Add(new TableColumn<StaffSummary, string>("Role", item => item.StaffType.Value, 0.5f));
+				this.Columns.Add(new TableColumn<StaffSummary, string>(SR.ColumnStaffName, item => PersonNameFormat.Format(item.Name), 1.0f));
+				this.Columns.Add(new TableColumn<StaffSummary, string>(SR.ColumnStaffRole, item => item.StaffType.Value, 0.5f));
 			}
 		}
 
@@ -102,8 +102,8 @@ namespace ClearCanvas.Ris.Client
 		{
 			public WorklistTable()
 			{
-				this.Columns.Add(new TableColumn<WorklistSummary, string>("Name", summary => summary.DisplayName, 0.5f));
-				this.Columns.Add(new TableColumn<WorklistSummary, string>("Class",
+				this.Columns.Add(new TableColumn<WorklistSummary, string>(SR.ColumnWorklistName, summary => summary.DisplayName, 0.5f));
+				this.Columns.Add(new TableColumn<WorklistSummary, string>(SR.ColumnClass,
 					summary => string.Concat(summary.ClassCategoryName, " - ", summary.ClassDisplayName),
 					0.5f));
 			}
@@ -179,12 +179,12 @@ namespace ClearCanvas.Ris.Client
 				worklist => worklist.WorklistRef,
 				isWorklistEditorReadOnly);
 
-			this.Pages.Add(new NavigatorPage("Staff Group", _detailsEditor));
-			this.Pages.Add(new NavigatorPage("Staff Group/Members", _staffEditor));
+			this.Pages.Add(new NavigatorPage("NodeStaffGroup", _detailsEditor));
+			this.Pages.Add(new NavigatorPage("NodeStaffGroup/NodeMembers", _staffEditor));
 			this.Pages.Add(new NavigatorPage(
-				isWorklistEditorReadOnly 
-					? "Staff Group/Subscribed Worklists (read only)"
-					: "Staff Group/Subscribed Worklists", 
+				isWorklistEditorReadOnly
+					? "NodeStaffGroup/NodeSubscribedWorklistsReadOnly"
+					: "NodeStaffGroup/NodeSubscribedWorklists", 
 				_worklistEditor));
 
 			// instantiate all extension pages
@@ -243,7 +243,7 @@ namespace ClearCanvas.Ris.Client
 			}
 			catch (Exception e)
 			{
-				ExceptionHandler.Report(e, "Unable to save Staff Group", this.Host.DesktopWindow,
+				ExceptionHandler.Report(e, SR.ErrorUnableToSaveStaffGroup, this.Host.DesktopWindow,
 				                        () => Exit(ApplicationComponentExitCode.Error));
 			}
 		}

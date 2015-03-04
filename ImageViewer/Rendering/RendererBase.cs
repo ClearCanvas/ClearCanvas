@@ -225,28 +225,30 @@ namespace ClearCanvas.ImageViewer.Rendering
 		/// </summary>
 		protected void DrawTextOverlay(IPresentationImage presentationImage)
 		{
-			CodeClock clock = new CodeClock();
+#if DEBUG
+            CodeClock clock = new CodeClock();
 			clock.Start();
-
-			if (presentationImage == null || !(presentationImage is IAnnotationLayoutProvider))
+#endif
+		    var layoutProvider = presentationImage as IAnnotationLayoutProvider;
+			if (layoutProvider == null)
 				return;
 
-			IAnnotationLayout layout = ((IAnnotationLayoutProvider) presentationImage).AnnotationLayout;
+            var layout = layoutProvider.AnnotationLayout;
 			if (layout == null || !layout.Visible)
 				return;
 
 			foreach (AnnotationBox annotationBox in layout.AnnotationBoxes)
 			{
-				if (annotationBox.Visible)
-				{
-					string annotationText = annotationBox.GetAnnotationText(presentationImage);
-					if (!String.IsNullOrEmpty(annotationText))
-						DrawAnnotationBox(annotationText, annotationBox);
-				}
-			}
+			    if (!annotationBox.Visible) continue;
 
+			    string annotationText = annotationBox.GetAnnotationText(presentationImage);
+			    if (!String.IsNullOrEmpty(annotationText))
+			        DrawAnnotationBox(annotationText, annotationBox);
+			}
+#if DEBUG
 			clock.Stop();
 			PerformanceReportBroker.PublishReport(_rendererTypeId, "DrawTextOverlay", clock.Seconds);
+#endif
 		}
 
 		/// <summary>
@@ -308,27 +310,6 @@ namespace ClearCanvas.ImageViewer.Rendering
 		/// Draws an <see cref="AnnotationBox"/>.  Must be overridden and implemented.
 		/// </summary>
 		protected abstract void DrawAnnotationBox(string annotationText, AnnotationBox annotationBox);
-
-		/// <summary>
-		/// Draws an error message in the Scene Graph's client area of the screen.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// This method was deprecated in favour of allowing the render client code to handle errors in
-		/// a manner suitable for the context in which it is called. For example, the view control for an
-		/// <see cref="ITile"/> may wish to display the error message in the tile's client area <i>without
-		/// crashing the control</i>, whereas an image export routine may wish to notify the user via an error
-		/// dialog and have the export output <i>fail to be created</i>. Automated routines (such as unit
-		/// tests) may even wish that the exception bubble all the way to the top for debugging purposes.
-		/// </para>
-		/// <para>
-		/// For these reasons, this method is no longer called by <see cref="RendererBase"/>, although
-		/// individual renderer implementations may still render error messages if, even after consideration
-		/// of the above listed scenarios, it is determined that the exception should be handled internally.
-		/// </para>
-		/// </remarks>
-		[Obsolete("Renderer implementations are no longer responsible for handling render pipeline errors.")]
-		protected virtual void ShowErrorMessage(string message) {}
 
 		#region Disposal
 

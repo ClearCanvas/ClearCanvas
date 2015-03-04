@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Web;
 using ClearCanvas.Common;
 using ClearCanvas.Enterprise.Core;
 using ClearCanvas.ImageServer.Common.Exceptions;
@@ -80,7 +81,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
 			Platform.CheckForNullReference(studyStorageKey, "storageKey");
 
 
-            IStudyIntegrityQueueEntityBroker integrityQueueBroker = HttpContextData.Current.ReadContext.GetBroker<IStudyIntegrityQueueEntityBroker>();
+            IStudyIntegrityQueueEntityBroker integrityQueueBroker = HttpContext.Current.GetSharedPersistentContext().GetBroker<IStudyIntegrityQueueEntityBroker>();
             StudyIntegrityQueueSelectCriteria parms = new StudyIntegrityQueueSelectCriteria();
 
 			parms.StudyStorageKey.EqualTo(studyStorageKey);
@@ -94,7 +95,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
             Platform.CheckForNullReference(studyStorageKey, "storageKey");
 
 
-            IStudyIntegrityQueueEntityBroker integrityQueueBroker = HttpContextData.Current.ReadContext.GetBroker<IStudyIntegrityQueueEntityBroker>();
+            IStudyIntegrityQueueEntityBroker integrityQueueBroker = HttpContext.Current.GetSharedPersistentContext().GetBroker<IStudyIntegrityQueueEntityBroker>();
             StudyIntegrityQueueSelectCriteria parms = new StudyIntegrityQueueSelectCriteria();
 
             parms.StudyStorageKey.EqualTo(studyStorageKey);
@@ -107,7 +108,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
 		/// </summary>
 		public void DeleteStudy(ServerEntityKey studyKey, string reason)
         {
-			StudySummary study = StudySummaryAssembler.CreateStudySummary(HttpContextData.Current.ReadContext, Study.Load(HttpContextData.Current.ReadContext, studyKey));
+			StudySummary study = StudySummaryAssembler.CreateStudySummary(HttpContext.Current.GetSharedPersistentContext(), Study.Load(HttpContext.Current.GetSharedPersistentContext(), studyKey));
             
 			if (study.IsReconcileRequired)
 			{
@@ -407,7 +408,7 @@ namespace ClearCanvas.ImageServer.Web.Common.Data
             Platform.CheckForNullReference(study, "Study");
 
             
-            IQueryStudyStorageLocation select = HttpContextData.Current.ReadContext.GetBroker<IQueryStudyStorageLocation>();
+            IQueryStudyStorageLocation select = HttpContext.Current.GetSharedPersistentContext().GetBroker<IQueryStudyStorageLocation>();
             StudyStorageLocationQueryParameters parms = new StudyStorageLocationQueryParameters
                                                         	{StudyStorageKey = study.StudyStorageKey};
 

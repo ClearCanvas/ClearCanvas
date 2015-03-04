@@ -260,4 +260,31 @@ Note: This change may not take effect immediately.</value>
   <data name="TooltipTerminateSessions" xml:space="preserve">
     <value>Terminate selected session(s)</value>
   </data>
+  <data name="FormatTitleSubtitle">
+    <value xml:space="preserve">{0} - {1}</value>
+  </data>
+  <data name="LabelViewSessions">
+    <value xml:space="preserve">View Sessions</value>
+  </data>
+  <data name="TitleUserSessions">
+    <value xml:space="preserve">User Sessions</value>
+  </data>
+  <data name="FormatMessageResetPassword">
+    <value xml:space="preserve">Reset password for user {0}?</value>
+  </data>
+  <data name="ColumnExpiryTime">
+    <value xml:space="preserve">Expiry Time</value>
+  </data>
+  <data name="ColumnCreationTime">
+    <value xml:space="preserve">Creation Time</value>
+  </data>
+  <data name="ColumnHostname">
+    <value xml:space="preserve">Hostname</value>
+  </data>
+  <data name="ColumnApplication">
+    <value xml:space="preserve">Application</value>
+  </data>
+  <data name="LabelToggleActivation">
+    <value xml:space="preserve">Toggle Activation</value>
+  </data>
 </root>

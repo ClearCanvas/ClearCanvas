@@ -55,7 +55,7 @@ namespace ClearCanvas.Ris.Client.Admin
                     _workspace = ApplicationComponent.LaunchAsWorkspace(
                         this.Context.DesktopWindow,
                         component,
-                        "UI Validation Management");
+                        SR.TitleUiValidationManagement);
                     _workspace.Closed += delegate { _workspace = null; };
 
                 }
@@ -96,9 +96,9 @@ namespace ClearCanvas.Ris.Client.Admin
         public ValidationManagementComponent()
         {
             _applicationComponents = new Table<Type>();
-            _applicationComponents.Columns.Add(new TableColumn<Type, string>("Component",
+            _applicationComponents.Columns.Add(new TableColumn<Type, string>(SR.ColumnComponent,
                 delegate(Type t) { return t.Name; }));
-            _applicationComponents.Columns.Add(new TableColumn<Type, string>("Namespace",
+            _applicationComponents.Columns.Add(new TableColumn<Type, string>(SR.ColumnNamespace,
                 delegate(Type t) { return t.Namespace; }));
         }
 

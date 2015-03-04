@@ -91,16 +91,28 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
               return (ISearchCondition<Int32>)SubCriteria["Revision"];
             } 
         }
+        [EntityFieldDatabaseMappingAttribute(TableName="ExternalRequestQueue", ColumnName="ScheduledTime")]
+        public ISearchCondition<DateTime> ScheduledTime
+        {
+            get
+            {
+              if (!SubCriteria.ContainsKey("ScheduledTime"))
+              {
+                 SubCriteria["ScheduledTime"] = new SearchCondition<DateTime>("ScheduledTime");
+              }
+              return (ISearchCondition<DateTime>)SubCriteria["ScheduledTime"];
+            } 
+        }
         [EntityFieldDatabaseMappingAttribute(TableName="ExternalRequestQueue", ColumnName="DeletionTime")]
-        public ISearchCondition<DateTime> DeletionTime
+        public ISearchCondition<DateTime?> DeletionTime
         {
             get
             {
               if (!SubCriteria.ContainsKey("DeletionTime"))
               {
-                 SubCriteria["DeletionTime"] = new SearchCondition<DateTime>("DeletionTime");
+                 SubCriteria["DeletionTime"] = new SearchCondition<DateTime?>("DeletionTime");
               }
-              return (ISearchCondition<DateTime>)SubCriteria["DeletionTime"];
+              return (ISearchCondition<DateTime?>)SubCriteria["DeletionTime"];
             } 
         }
         [EntityFieldDatabaseMappingAttribute(TableName="ExternalRequestQueue", ColumnName="StateXml")]

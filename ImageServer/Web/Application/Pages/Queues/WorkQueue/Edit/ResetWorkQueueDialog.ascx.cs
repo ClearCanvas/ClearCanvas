@@ -152,7 +152,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.WorkQueue.Edit
                     if (scheduledTime < Platform.Time)
                         scheduledTime = Platform.Time.AddSeconds(WorkQueueSettings.Default.WorkQueueProcessDelaySeconds);
 
-                    DateTime expirationTime = item.ExpirationTime;
+	                DateTime expirationTime = item.ExpirationTime.GetValueOrDefault(Platform.Time.AddSeconds(WorkQueueSettings.Default.WorkQueueExpireDelaySeconds));
                     if (expirationTime < scheduledTime)
                         expirationTime = scheduledTime.AddSeconds(WorkQueueSettings.Default.WorkQueueExpireDelaySeconds);
 

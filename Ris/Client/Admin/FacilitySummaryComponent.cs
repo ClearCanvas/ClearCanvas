@@ -36,7 +36,7 @@ using ClearCanvas.Ris.Application.Common.Admin.FacilityAdmin;
 
 namespace ClearCanvas.Ris.Client.Admin
 {
-	[MenuAction("launch", "global-menus/Admin/Facilities", "Launch")]
+	[MenuAction("launch", "global-menus/MenuAdmin/MenuFacilities", "Launch")]
 	[ActionPermission("launch", Application.Common.AuthorityTokens.Admin.Data.Facility)]
 	[ExtensionOf(typeof(DesktopToolExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]
 	public class FacilitySummaryTool : Tool<IDesktopToolContext>
@@ -156,7 +156,7 @@ namespace ClearCanvas.Ris.Client.Admin
 			var item = CollectionUtils.FirstElement(items);
 			var editor = new FacilityEditorComponent(item.FacilityRef);
 			if (ApplicationComponentExitCode.Accepted == 
-				LaunchAsDialog(this.Host.DesktopWindow, editor, SR.TitleUpdateFacility + " - " + item.Name))
+				LaunchAsDialog(this.Host.DesktopWindow, editor, string.Format(SR.FormatTitleSubtitle, SR.TitleUpdateFacility, item.Name)))
 			{
 				editedItems.Add(editor.FacilitySummary);
 				return true;

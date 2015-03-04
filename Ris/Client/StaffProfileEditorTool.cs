@@ -34,7 +34,7 @@ namespace ClearCanvas.Ris.Client
 	/// <summary>
 	/// Allows a user to edit his own staff profile.
 	/// </summary>
-	[MenuAction("launch", "global-menus/MenuTools/Staff Profile", "Launch")]
+	[MenuAction("launch", "global-menus/MenuTools/MenuUserProfile/MenuStaffProfile", "Launch")]
 	[ActionPermission("launch", ClearCanvas.Ris.Application.Common.AuthorityTokens.Workflow.StaffProfile.View)]
 	[ActionPermission("launch", ClearCanvas.Ris.Application.Common.AuthorityTokens.Workflow.StaffProfile.Update)]
 	[ExtensionOf(typeof(DesktopToolExtensionPoint), FeatureToken = FeatureTokens.RIS.Core)]
@@ -45,7 +45,7 @@ namespace ClearCanvas.Ris.Client
 			if(LoginSession.Current == null)
 			{
 				this.Context.DesktopWindow.ShowMessageBox(
-					"This feature will be available the next time you start the workstation.",
+					SR.MessageFeatureRequiresWorkstationRestart,
 					MessageBoxActions.Ok);
 				return;
 			}
@@ -55,7 +55,7 @@ namespace ClearCanvas.Ris.Client
 				if (LoginSession.Current.Staff == null)
 				{
 					this.Context.DesktopWindow.ShowMessageBox(
-						string.Format("There is no staff profile associated with the user '{0}'", LoginSession.Current.UserName),
+						string.Format(SR.FormatUserHasNoStaffProfile, LoginSession.Current.UserName),
 						MessageBoxActions.Ok);
 					return;
 				}

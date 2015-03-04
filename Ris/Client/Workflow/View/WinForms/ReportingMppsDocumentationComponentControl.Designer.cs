@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ReportingMppsDocumentationComponentControl));
 			this._mppsTableView = new ClearCanvas.Desktop.View.WinForms.TableView();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this._comments = new System.Windows.Forms.RichTextBox();
@@ -39,23 +40,16 @@
 			// 
 			// _mppsTableView
 			// 
-			this._mppsTableView.ColumnHeaderTooltip = null;
-			this._mppsTableView.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._mppsTableView.Location = new System.Drawing.Point(0, 0);
+			resources.ApplyResources(this._mppsTableView, "_mppsTableView");
 			this._mppsTableView.Name = "_mppsTableView";
 			this._mppsTableView.ReadOnly = false;
 			this._mppsTableView.ShowToolbar = false;
-			this._mppsTableView.Size = new System.Drawing.Size(483, 146);
-			this._mppsTableView.SortButtonTooltip = null;
-			this._mppsTableView.TabIndex = 2;
 			this._mppsTableView.TabStop = false;
 			// 
 			// splitContainer1
 			// 
-			this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+			resources.ApplyResources(this.splitContainer1, "splitContainer1");
 			this.splitContainer1.Name = "splitContainer1";
-			this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
 			// 
 			// splitContainer1.Panel1
 			// 
@@ -64,27 +58,19 @@
 			// splitContainer1.Panel2
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this._comments);
-			this.splitContainer1.Size = new System.Drawing.Size(483, 379);
-			this.splitContainer1.SplitterDistance = 146;
-			this.splitContainer1.TabIndex = 3;
 			// 
 			// _comments
 			// 
-			this._comments.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._comments.Location = new System.Drawing.Point(0, 0);
+			resources.ApplyResources(this._comments, "_comments");
 			this._comments.Name = "_comments";
 			this._comments.ReadOnly = true;
-			this._comments.Size = new System.Drawing.Size(483, 229);
-			this._comments.TabIndex = 0;
-			this._comments.Text = "";
 			// 
 			// ReportingMppsDocumentationComponentControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this.splitContainer1);
 			this.Name = "ReportingMppsDocumentationComponentControl";
-			this.Size = new System.Drawing.Size(483, 379);
 			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();

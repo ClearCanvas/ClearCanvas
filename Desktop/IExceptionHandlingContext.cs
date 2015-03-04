@@ -23,34 +23,35 @@
 #endregion
 
 using System;
+using System.ComponentModel;
 using ClearCanvas.Common;
 
 namespace ClearCanvas.Desktop
 {
-    ///<summary>
-    /// Provides contextual information for an <see cref="IExceptionPolicy"/> to handle an <see cref="Exception"/>.
-    ///</summary>
-    public interface IExceptionHandlingContext
-    {
-        ///<summary>
-        /// The <see cref="IDesktopWindow"/> of the component in which the exception has occurred.
-        ///</summary>
-        IDesktopWindow DesktopWindow { get; }
+	///<summary>
+	/// Provides contextual information for an <see cref="IExceptionPolicy"/> to handle an <see cref="Exception"/>.
+	///</summary>
+	public interface IExceptionHandlingContext
+	{
+		///<summary>
+		/// The <see cref="IDesktopWindow"/> of the component in which the exception has occurred.
+		///</summary>
+		IDesktopWindow DesktopWindow { get; }
 
-        ///<summary>
-        /// A contextual user-friendly message provided by the component which should be common for all exceptions.
-        ///</summary>
-        string ContextualMessage { get; }
+		///<summary>
+		/// A contextual user-friendly message provided by the component which should be common for all exceptions.
+		///</summary>
+		string ContextualMessage { get; }
 
-        ///<summary>
-        /// Logs the specified exception.
-        ///</summary>
-        void Log(LogLevel level, Exception e);
+		///<summary>
+		/// Logs the specified exception.
+		///</summary>
+		void Log(LogLevel level, Exception e);
 
-        ///<summary>
-        /// Aborts the exception-causing operation.
-        ///</summary>
-        void Abort();
+		///<summary>
+		/// Aborts the exception-causing operation.
+		///</summary>
+		void Abort();
 
 		///<summary>
 		/// Shows the specified detail message in a message box in the context's <see cref="IDesktopWindow"/>.
@@ -59,17 +60,17 @@ namespace ClearCanvas.Desktop
 		/// Automatically prepends the contextual message supplied by the application component to the detail message.
 		/// </remarks>
 		///<param name="detailMessage">The message to be shown.</param>
-		void ShowMessageBox(string detailMessage);
+		void ShowMessageBox([param : Localizable(true)] string detailMessage);
 
-        ///<summary>
-        /// Shows the specified detail message in a message box in the context's <see cref="IDesktopWindow"/>.
-        ///</summary>
-        /// <remarks>
+		///<summary>
+		/// Shows the specified detail message in a message box in the context's <see cref="IDesktopWindow"/>.
+		///</summary>
+		/// <remarks>
 		/// Optionally prepends the contextual message supplied by the application component to the detail message.
 		/// </remarks>
-        ///<param name="detailMessage">The message to be shown.</param>
+		///<param name="detailMessage">The message to be shown.</param>
 		///<param name="prependContextualMessage">Indicates whether or not to prepend the <see cref="ContextualMessage"/>
 		/// before <paramref name="detailMessage"/>.</param>
-        void ShowMessageBox(string detailMessage, bool prependContextualMessage);
-    }
+		void ShowMessageBox([param : Localizable(true)] string detailMessage, bool prependContextualMessage);
+	}
 }

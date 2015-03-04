@@ -51,6 +51,14 @@ namespace ClearCanvas.ImageServer.TestApp
         {
             InitializeComponent();
 
+        }
+
+	    protected override void OnLoad(EventArgs e)
+	    {
+		    base.OnLoad(e);
+
+			maxStudyDate.Text = DateTime.Today.ToString("yyyyMMdd");
+
             StreamReader re = File.OpenText("LastNames.txt");
             string input = null;
             while ((input = re.ReadLine()) != null)
@@ -73,9 +81,11 @@ namespace ClearCanvas.ImageServer.TestApp
             }
             re.Close();
 
+			LoadDefaultSamples();
             InitNewPatient(); 
-            InitNewStudy();
 
+			var rand = new Random();
+			InitNewStudy(new DateTime(1990, 1, 1).AddDays(rand.Next(0, 5000)));
         }
 
         private void SendRandom_Click(object sender, EventArgs e)
@@ -91,13 +101,9 @@ namespace ClearCanvas.ImageServer.TestApp
                 _seriesMap = new Dictionary<string, string>();
                 _prevSentFiles = new List<DicomFile>();
                 List<StorageScu> scuClients = new List<StorageScu>();
-                for (int i = 0; i < AssociationPerStudy.Value; i++)
-                {
-                    StorageScu scu =
-                        new StorageScu(LocalAE.Text + i, ServerAE.Text, ServerHost.Text, int.Parse(ServerPort.Text));
+				StorageScu scu = new StorageScu(LocalAE.Text, ServerAE.Text, ServerHost.Text, int.Parse(ServerPort.Text));
                     scu.ImageStoreCompleted += new EventHandler<ImageStoreEventArgs>(scu_ImageStoreCompleted);
                     scuClients.Add(scu);
-                }
 
                 int seriesCount = 0;
                 do
@@ -124,27 +130,18 @@ namespace ClearCanvas.ImageServer.TestApp
                         }
 
 
-                        if (ran.Next() % 20 == 0)
+                        if (ran.Next() % 50 == 0)
                             break; // don't use all images
                     }
 
                     seriesCount++;
 
-                } while (ran.Next() % 3 != 0 && seriesCount<MaxSeries.Value);
+                } while (ran.Next() % 5 != 0);
 
                 Log(String.Format("Sending {0} images using {1} client(s)", _prevSentFiles.Count, scuClients.Count));
-                foreach (StorageScu scu in scuClients)
-                {
                     scu.BeginSend(InstanceSent, scu);
-                    Thread.Sleep(ran.Next(300, 1000));
-                }
-
-                foreach (StorageScu scu in scuClients)
-                {
                     scu.Join();
                     scu.Dispose();
-                }
-
                 
         }
 
@@ -246,6 +243,37 @@ namespace ClearCanvas.ImageServer.TestApp
 
         }
 
+	    void LoadDefaultSamples()
+	    {
+			Log(String.Format("Loading Default Samples..."));
+                
+			_seriesToFilesMap = new Dictionary<string, List<string>>();
+
+			string folder = "Samples";
+			FileProcessor.Process(folder, "*.dcm",
+				  delegate(string path)
+				  {
+
+					  DicomFile file = new DicomFile(path);
+					  file.Load(DicomReadOptions.DoNotStorePixelDataInDataSet | DicomReadOptions.Default);
+
+					  string seriesUid =
+						  file.DataSet[DicomTags.SeriesInstanceUid].GetString(0, String.Empty);
+					  if (!_seriesToFilesMap.ContainsKey(seriesUid))
+					  {
+						  _seriesToFilesMap.Add(seriesUid, new List<String>());
+					  }
+            
+					  _seriesToFilesMap[seriesUid].Add(path);
+
+				  },
+				  true);
+
+		    Log(String.Format("Default Samples Loaded"));
+            
+			
+	    }
+
         private void LoadSamples_Click(object sender, EventArgs e)
         {
             // Build the index
@@ -305,20 +333,19 @@ namespace ClearCanvas.ImageServer.TestApp
 
         }
 
-        private void InitNewStudy()
+        private void InitNewStudy(DateTime studyDate)
         {
             Random ran = new Random();
             AccessionNumber.Text = String.Format("{0}{1}",  (char)((int)'A' +  ran.Next(26)), ran.Next(10000, 99999));
             StudyInstanceUid.Text = DicomUid.GenerateUid().UID;
-            StudyDate.Text = ran.Next() % 10 == 0
-                               ? ""
-                               : DateParser.ToDicomString(new DateTime(1990, 1, 1).AddDays(ran.Next(0, 5000)));
+	        StudyDate.Text = DateParser.ToDicomString(studyDate);
 
         }
 
         private void NewStudy_Click(object sender, EventArgs e)
         {
-            InitNewStudy();
+	        var ran = new Random();
+			InitNewStudy(new DateTime(1990, 1, 1).AddDays(ran.Next(0, 5000)));
         }
 
         private bool _autoRunOn = false;
@@ -339,9 +366,8 @@ namespace ClearCanvas.ImageServer.TestApp
             RandomPatient.Enabled = !_autoRunOn;
             NewStudy.Enabled = !_autoRunOn;
             GenerateImages.Enabled = !_autoRunOn;
-            LoadSamples.Enabled = !_autoRunOn;
+            //LoadSamples.Enabled = !_autoRunOn;
             Resend.Enabled = !_autoRunOn;
-            AssociationPerStudy.Enabled = !_autoRunOn;
 
             if (_autoRunOn)
             {
@@ -352,30 +378,22 @@ namespace ClearCanvas.ImageServer.TestApp
                                                  {
                                                      Random rand = new Random();
 
-                                                     if (rand.Next() % 5 == 0)
-                                                         AssociationPerStudy.Value = rand.Next(1, 3);
-                                                     else
-                                                         AssociationPerStudy.Value = 1;
-
                                                      textBox1.BeginInvoke(new LogDelegate(Log), "Sending...");
                                                      
                                                      try
                                                      {
-                                                         if (rand.Next() % 5 == 0)
+	                                                     if (rand.Next(100)>20)
                                                          {
-                                                             ResendImages();
+		                                                     InitNewPatient();
                                                          }
-                                                         else
-                                                         {
-                                                             if (rand.Next() % 3 == 0)
-                                                                 InitNewPatient();
 
-                                                             if (rand.Next() % 3 == 0)
-                                                                 InitNewStudy();
+	                                                     var minDate = DateTime.ParseExact(minStudyDate.Text, "yyyyMMdd", null);
+														 var maxDate = DateTime.ParseExact(maxStudyDate.Text, "yyyyMMdd", null);
+														 var diff = (int)(maxDate - minDate).TotalDays;
+														 InitNewStudy(minDate.AddDays(rand.Next(0, diff)));
 
                                                              SendImages();
                                                          }
-                                                     }
                                                      catch(Exception)
                                                      {
                                                          
@@ -396,6 +414,17 @@ namespace ClearCanvas.ImageServer.TestApp
         {
             ResendImages();
         }
+
+		private void checkableGroupBox1_CheckStateChanged(object sender, EventArgs e)
+		{
+			RandomPatient.Enabled = true;
+			NewStudy.Enabled = true;
+		}
+
+		private void checkableGroupBox2_CheckStateChanged(object sender, EventArgs e)
+		{
+
+		}
 
     }
 

@@ -87,55 +87,59 @@ namespace ClearCanvas.Dicom
                     parameters = DicomCodecRegistry.GetCodecParameters(newTransferSyntax, DataSet);
 
             	DicomAttribute pixelData;
-                if (DataSet.TryGetAttribute(DicomTags.PixelData, out pixelData))
-                {
-                    if (pixelData.IsNull)
-                        throw new DicomCodecException("Sop pixel data has no valid value and cannot be compressed.");
+	            if (DataSet.TryGetAttribute(DicomTags.PixelData, out pixelData))
+	            {
+		            if (pixelData.IsNull)
+			            throw new DicomCodecException("Sop pixel data has no valid value and cannot be compressed.");
 
-                	new OverlayPlaneModuleIod(DataSet).ExtractEmbeddedOverlays();
+		            new OverlayPlaneModuleIod(DataSet).ExtractEmbeddedOverlays();
 
-					var pd = new DicomUncompressedPixelData(DataSet);
-					using (var pixelStream = ((DicomAttributeBinary) pixelData).AsStream())
-					{
-						//Before compression, make the pixel data more "typical", so it's harder to mess up the codecs.
-						//NOTE: Could combine mask and align into one method so we're not iterating twice, but I prefer having the methods separate.
-						if (DicomUncompressedPixelData.RightAlign(pixelStream, pd.BitsAllocated, pd.BitsStored, pd.HighBit))
-						{
-							var newHighBit = (ushort) (pd.HighBit - pd.LowBit);
-							Platform.Log(LogLevel.Debug, "Right aligned pixel data (High Bit: {0}->{1}).", pd.HighBit, newHighBit);
+		            var pd = new DicomUncompressedPixelData(DataSet);
+		            using (var pixelStream = ((DicomAttributeBinary) pixelData).AsStream())
+		            {
+			            //Before compression, make the pixel data more "typical", so it's harder to mess up the codecs.
+			            //NOTE: Could combine mask and align into one method so we're not iterating twice, but I prefer having the methods separate.
+			            if (DicomUncompressedPixelData.RightAlign(pixelStream, pd.BitsAllocated, pd.BitsStored, pd.HighBit))
+			            {
+				            var newHighBit = (ushort) (pd.HighBit - pd.LowBit);
+				            Platform.Log(LogLevel.Debug, "Right aligned pixel data (High Bit: {0}->{1}).", pd.HighBit, newHighBit);
 
-							pd.HighBit = newHighBit; //correct high bit after right-aligning.
-							DataSet[DicomTags.HighBit].SetUInt16(0, newHighBit);
-						}
-						if (DicomUncompressedPixelData.ZeroUnusedBits(pixelStream, pd.BitsAllocated, pd.BitsStored, pd.HighBit))
-						{
-							Platform.Log(LogLevel.Debug, "Zeroed some unused bits before compression.");
-						}
-					}
+				            pd.HighBit = newHighBit; //correct high bit after right-aligning.
+				            DataSet[DicomTags.HighBit].SetUInt16(0, newHighBit);
+			            }
+			            if (DicomUncompressedPixelData.ZeroUnusedBits(pixelStream, pd.BitsAllocated, pd.BitsStored, pd.HighBit))
+			            {
+				            Platform.Log(LogLevel.Debug, "Zeroed some unused bits before compression.");
+			            }
+		            }
 
-                	// Set transfer syntax before compression, the codecs need it.
-					var fragments = new DicomCompressedPixelData(pd) { TransferSyntax = newTransferSyntax };
-                	codec.Encode(pd, fragments, parameters);
-                    fragments.UpdateMessage(this);
+		            // Set transfer syntax before compression, the codecs need it.
+		            var fragments = new DicomCompressedPixelData(pd) {TransferSyntax = newTransferSyntax};
+		            codec.Encode(pd, fragments, parameters);
+		            fragments.UpdateMessage(this);
 
-                    //TODO: should we validate the number of frames in the compressed data?
-                    if (!DataSet.TryGetAttribute(DicomTags.PixelData, out pixelData) || pixelData.IsNull)
-                        throw new DicomCodecException("Sop has no pixel data after compression.");
-                }
-                else
-                {
-                    //A bit cheap, but check for basic image attributes - if any exist
-                    // and are non-empty, there should probably be pixel data too.
+		            //TODO: should we validate the number of frames in the compressed data?
+		            if (!DataSet.TryGetAttribute(DicomTags.PixelData, out pixelData) || pixelData.IsNull)
+			            throw new DicomCodecException("Sop has no pixel data after compression.");
+	            }
+	            else
+	            {
+		            //A bit cheap, but check for basic image attributes - if any exist
+		            // and are non-empty, there should probably be pixel data too.
+		            DicomAttribute spectroscopyData;
+		            if (!DataSet.TryGetAttribute(DicomTags.SpectroscopyData, out spectroscopyData))
+		            {
+			            DicomAttribute attribute;
+			            if (DataSet.TryGetAttribute(DicomTags.Rows, out attribute) && !attribute.IsNull)
+				            throw new DicomCodecException(
+					            "Suspect Sop appears to be an image (Rows is non-empty), but has no pixel data.");
 
-                    DicomAttribute attribute;
-                    if (DataSet.TryGetAttribute(DicomTags.Rows, out attribute) && !attribute.IsNull)
-                        throw new DicomCodecException("Suspect Sop appears to be an image (Rows is non-empty), but has no pixel data.");
-
-                    if (DataSet.TryGetAttribute(DicomTags.Columns, out attribute) && !attribute.IsNull)
-                        throw new DicomCodecException("Suspect Sop appears to be an image (Columns is non-empty), but has no pixel data.");
-
-                    TransferSyntax = newTransferSyntax;
-                }
+			            if (DataSet.TryGetAttribute(DicomTags.Columns, out attribute) && !attribute.IsNull)
+				            throw new DicomCodecException(
+					            "Suspect Sop appears to be an image (Columns is non-empty), but has no pixel data.");
+		            }
+		            TransferSyntax = newTransferSyntax;
+	            }
             }
             else
             {
@@ -175,15 +179,20 @@ namespace ClearCanvas.Dicom
 				}
                 else
                 {
-					//NOTE: doing this for consistency, really.
-					DicomAttribute attribute;
-					if (DataSet.TryGetAttribute(DicomTags.Rows, out attribute) && !attribute.IsNull)
-						throw new DicomCodecException("Suspect Sop appears to be an image (Rows is non-empty), but has no pixel data.");
+					DicomAttribute spectroscopyData;
+	                if (!DataSet.TryGetAttribute(DicomTags.SpectroscopyData, out spectroscopyData))
+	                {
+		                //NOTE: doing this for consistency, really.
+		                DicomAttribute attribute;
+		                if (DataSet.TryGetAttribute(DicomTags.Rows, out attribute) && !attribute.IsNull)
+			                throw new DicomCodecException(
+				                "Suspect Sop appears to be an image (Rows is non-empty), but has no pixel data.");
 
-					if (DataSet.TryGetAttribute(DicomTags.Columns, out attribute) && !attribute.IsNull)
-						throw new DicomCodecException("Suspect Sop appears to be an image (Columns is non-empty), but has no pixel data.");
-					
-					TransferSyntax = TransferSyntax.ExplicitVrLittleEndian;
+		                if (DataSet.TryGetAttribute(DicomTags.Columns, out attribute) && !attribute.IsNull)
+			                throw new DicomCodecException(
+				                "Suspect Sop appears to be an image (Columns is non-empty), but has no pixel data.");
+	                }
+	                TransferSyntax = TransferSyntax.ExplicitVrLittleEndian;
                 }
             }
         }

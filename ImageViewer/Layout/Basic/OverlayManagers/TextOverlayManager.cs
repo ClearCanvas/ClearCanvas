@@ -46,7 +46,7 @@ namespace ClearCanvas.ImageViewer.Layout.Basic.OverlayManagers
 			if (annotationLayoutProvider == null)
 				return;
 
-			foreach (AnnotationBox box in annotationLayoutProvider.AnnotationLayout.AnnotationBoxes)
+			foreach (var box in annotationLayoutProvider.AnnotationLayout.AnnotationBoxes)
 				box.Visible = visible;
 		}
 	}

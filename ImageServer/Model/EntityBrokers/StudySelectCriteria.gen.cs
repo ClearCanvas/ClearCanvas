@@ -103,6 +103,54 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
               return (ISearchCondition<Int32>)SubCriteria["NumberOfStudyRelatedInstances"];
             } 
         }
+        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="QCStatusEnum")]
+        public ISearchCondition<QCStatusEnum> QCStatusEnum
+        {
+            get
+            {
+              if (!SubCriteria.ContainsKey("QCStatusEnum"))
+              {
+                 SubCriteria["QCStatusEnum"] = new SearchCondition<QCStatusEnum>("QCStatusEnum");
+              }
+              return (ISearchCondition<QCStatusEnum>)SubCriteria["QCStatusEnum"];
+            } 
+        }
+        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="QCOutput")]
+        public ISearchCondition<String> QCOutput
+        {
+            get
+            {
+              if (!SubCriteria.ContainsKey("QCOutput"))
+              {
+                 SubCriteria["QCOutput"] = new SearchCondition<String>("QCOutput");
+              }
+              return (ISearchCondition<String>)SubCriteria["QCOutput"];
+            } 
+        }
+        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="QCUpdateTimeUtc")]
+        public ISearchCondition<DateTime?> QCUpdateTimeUtc
+        {
+            get
+            {
+              if (!SubCriteria.ContainsKey("QCUpdateTimeUtc"))
+              {
+                 SubCriteria["QCUpdateTimeUtc"] = new SearchCondition<DateTime?>("QCUpdateTimeUtc");
+              }
+              return (ISearchCondition<DateTime?>)SubCriteria["QCUpdateTimeUtc"];
+            } 
+        }
+        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="OrderGUID")]
+        public ISearchCondition<ServerEntityKey> OrderKey
+        {
+            get
+            {
+              if (!SubCriteria.ContainsKey("OrderKey"))
+              {
+                 SubCriteria["OrderKey"] = new SearchCondition<ServerEntityKey>("OrderKey");
+              }
+              return (ISearchCondition<ServerEntityKey>)SubCriteria["OrderKey"];
+            } 
+        }
         [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="StudySizeInKB")]
         public ISearchCondition<Decimal> StudySizeInKB
         {
@@ -149,18 +197,6 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
                  SubCriteria["QueryXml"] = new SearchCondition<XmlDocument>("QueryXml");
               }
               return (ISearchCondition<XmlDocument>)SubCriteria["QueryXml"];
-            } 
-        }
-        [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="QCOutput")]
-        public ISearchCondition<String> QCOutput
-        {
-            get
-            {
-              if (!SubCriteria.ContainsKey("QCOutput"))
-              {
-                 SubCriteria["QCOutput"] = new SearchCondition<String>("QCOutput");
-              }
-              return (ISearchCondition<String>)SubCriteria["QCOutput"];
             } 
         }
         [EntityFieldDatabaseMappingAttribute(TableName="Study", ColumnName="SpecificCharacterSet")]

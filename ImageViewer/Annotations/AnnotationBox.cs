@@ -25,7 +25,6 @@
 using System;
 using System.Drawing;
 using ClearCanvas.Common;
-using ClearCanvas.ImageViewer.Mathematics;
 using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.ImageViewer.Annotations
@@ -130,7 +129,6 @@ namespace ClearCanvas.ImageViewer.Annotations
 		/// </summary>
 		public AnnotationBox()
 		{
-			this.NormalizedRectangle = new RectangleF();
 		}
 
 		/// <summary>
@@ -367,7 +365,7 @@ namespace ClearCanvas.ImageViewer.Annotations
 		/// however, internally, the value is always set.</remarks>
 		public bool Visible
 		{
-			get { return _alwaysVisible ? true : _visible; }
+			get { return _alwaysVisible || _visible; }
 			set{ _visible = value; }
 		}
 
@@ -385,7 +383,7 @@ namespace ClearCanvas.ImageViewer.Annotations
 		/// </summary>
 		public AnnotationBox Clone()
 		{
-			AnnotationBox clone = new AnnotationBox();
+			var clone = new AnnotationBox();
 			clone._alwaysVisible = this._alwaysVisible; // bool
 			clone._annotationItem = this._annotationItem; // clone copy reference
 			if (this._annotationItemConfigurationOptions != null)

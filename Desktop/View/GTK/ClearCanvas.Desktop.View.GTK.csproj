@@ -20,17 +20,16 @@
         <StartupObject/>
         <FileUpgradeFlags/>
         <UpgradeBackupLocation/>
+        <FileAlignment>512</FileAlignment>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
         <OutputPath>bin\Debug\</OutputPath>
         <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-        <BaseAddress>285212672</BaseAddress>
         <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
         <ConfigurationOverrideFile/>
         <DefineConstants>DEBUG;TRACE;UNIT_TESTS</DefineConstants>
         <DocumentationFile/>
         <DebugSymbols>true</DebugSymbols>
-        <FileAlignment>4096</FileAlignment>
         <NoStdLib>false</NoStdLib>
         <NoWarn/>
         <Optimize>false</Optimize>
@@ -44,13 +43,11 @@
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
         <OutputPath>bin\Release\</OutputPath>
         <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-        <BaseAddress>285212672</BaseAddress>
         <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
         <ConfigurationOverrideFile/>
         <DefineConstants>TRACE</DefineConstants>
         <DocumentationFile/>
         <DebugSymbols>false</DebugSymbols>
-        <FileAlignment>4096</FileAlignment>
         <NoStdLib>false</NoStdLib>
         <NoWarn/>
         <Optimize>true</Optimize>
@@ -65,7 +62,6 @@
         <DebugSymbols>true</DebugSymbols>
         <OutputPath>bin\Debug Mono\</OutputPath>
         <DefineConstants>TRACE;DEBUG;MONO;UNIT_TESTS</DefineConstants>
-        <BaseAddress>285212672</BaseAddress>
         <DebugType>full</DebugType>
         <PlatformTarget>AnyCPU</PlatformTarget>
         <ErrorReport>prompt</ErrorReport>
@@ -73,7 +69,6 @@
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Mono|AnyCPU' ">
         <OutputPath>bin\Release Mono\</OutputPath>
         <DefineConstants>TRACE;MONO</DefineConstants>
-        <BaseAddress>285212672</BaseAddress>
         <Optimize>true</Optimize>
         <DebugType/>
         <PlatformTarget>AnyCPU</PlatformTarget>

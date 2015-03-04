@@ -23,6 +23,8 @@
 #endregion
 
 using System;
+using System.Threading;
+using ClearCanvas.Common;
 using ClearCanvas.Desktop.Validation;
 using ClearCanvas.Desktop.View.WinForms;
 
@@ -42,8 +44,12 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			_component = component;
 
 #if DEBUG
+			// in dev, show script error dialogs and browser context menu
+			_webBrowser.ScriptErrorsSuppressed = false;
 			_webBrowser.IsWebBrowserContextMenuEnabled = true;
 #else
+			// in production, suppress script error dialogs and browser context menu
+			_webBrowser.ScriptErrorsSuppressed = true;
 			_webBrowser.IsWebBrowserContextMenuEnabled = false;
 #endif
 
@@ -128,7 +134,18 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 		{
 			// navigate to the new URI
 			// Bug #2845 even if it is the same URI, we want to navigate rather than refresh, so that scroll position is reset to top
-			_webBrowser.Navigate(_component.HtmlPageUrl);
+
+			try
+			{
+				_webBrowser.Navigate(_component.HtmlPageUrl);
+			}
+			catch (Exception ex)
+			{
+				// Later versions of IE (>= 9 ?) will sometimes throw an exception if we attempt to navigate while it has a dialog up
+				// (e.g. in the event of a script error)
+				// If we don't catch it, the entire workstation crashes.
+				Platform.Log(LogLevel.Error, ex, "An exception was thrown by the WebBrowser control");
+			}
 		}
 
 		private void NavigatingEventHandler(object sender, System.Windows.Forms.WebBrowserNavigatingEventArgs e)

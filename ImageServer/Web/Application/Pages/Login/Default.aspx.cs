@@ -96,6 +96,8 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Login
 
     	protected void Page_Load(object sender, EventArgs e)
         {
+    		if (!Page.IsPostBack)
+    		{
             if (SessionManager.Current != null)
             {
 				// User has logged in from another page.
@@ -132,7 +134,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Login
 
             UserName.Focus();
 
-           
+    		}
         }
 
         protected void LoginClicked(object sender, EventArgs e)
@@ -147,20 +149,12 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Login
             {
                 SessionManager.InitializeSession(UserName.Text, Password.Text, ApplicationName ?? ImageServerConstants.DefaultApplicationName);
 
-				UserAuthenticationAuditHelper audit = new UserAuthenticationAuditHelper(ServerPlatform.AuditSource,
-					EventIdentificationContentsEventOutcomeIndicator.Success, UserAuthenticationEventType.Login);
-				audit.AddUserParticipant(new AuditPersonActiveParticipant(UserName.Text, null, SessionManager.Current.Credentials.DisplayName));
-                ServerAuditHelper.LogAuditMessage(audit);
 			}
             catch (PasswordExpiredException)
             {
                 Platform.Log(LogLevel.Info, "Password for {0} has expired. Requesting new password.",UserName.Text);
                 PasswordExpiredDialog.Show(UserName.Text, Password.Text);
 
-				UserAuthenticationAuditHelper audit = new UserAuthenticationAuditHelper(ServerPlatform.AuditSource,
-					EventIdentificationContentsEventOutcomeIndicator.Success, UserAuthenticationEventType.Login);
-				audit.AddUserParticipant(new AuditPersonActiveParticipant(UserName.Text, null, null));
-                ServerAuditHelper.LogAuditMessage(audit);
 			}
             catch (UserAccessDeniedException ex)
             {
@@ -168,42 +162,23 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Login
                 Platform.Log(LogLevel.Debug, ex, ex.Message);
                 ShowError(ErrorMessages.UserAccessDenied);
                 UserName.Focus();
-
-                UserAuthenticationAuditHelper audit = new UserAuthenticationAuditHelper(ServerPlatform.AuditSource,
-                    EventIdentificationContentsEventOutcomeIndicator.SeriousFailureActionTerminated, UserAuthenticationEventType.Login);
-                audit.AddUserParticipant(new AuditPersonActiveParticipant(UserName.Text, null, null));
-                ServerAuditHelper.LogAuditMessage(audit);
             }
             catch (CommunicationException ex)
             {
                 Platform.Log(LogLevel.Error, ex, "Unable to contact A/A server");
                 ShowError(ErrorMessages.CannotContactEnterpriseServer);
 
-				UserAuthenticationAuditHelper audit = new UserAuthenticationAuditHelper(ServerPlatform.AuditSource,
-					EventIdentificationContentsEventOutcomeIndicator.MajorFailureActionMadeUnavailable, UserAuthenticationEventType.Login);
-				audit.AddUserParticipant(new AuditPersonActiveParticipant(UserName.Text, null, null));
-                ServerAuditHelper.LogAuditMessage(audit);
 			}
             catch (ArgumentException ex)
             {
                 Platform.Log(LogLevel.Warn, ex.Message);
                 Platform.Log(LogLevel.Debug, ex, "Login error:");
                 ShowError(ex.Message);
-
-                UserAuthenticationAuditHelper audit = new UserAuthenticationAuditHelper(ServerPlatform.AuditSource,
-                    EventIdentificationContentsEventOutcomeIndicator.MajorFailureActionMadeUnavailable, UserAuthenticationEventType.Login);
-                audit.AddUserParticipant(new AuditPersonActiveParticipant(UserName.Text, null, null));
-                ServerAuditHelper.LogAuditMessage(audit);
             }
             catch (Exception ex)
             {
                 Platform.Log(LogLevel.Error, ex, "Login error:");
                 ShowError(ex.Message);
-
-				UserAuthenticationAuditHelper audit = new UserAuthenticationAuditHelper(ServerPlatform.AuditSource,
-					EventIdentificationContentsEventOutcomeIndicator.MajorFailureActionMadeUnavailable, UserAuthenticationEventType.Login);
-				audit.AddUserParticipant(new AuditPersonActiveParticipant(UserName.Text, null, null));
-                ServerAuditHelper.LogAuditMessage(audit);
 			}
         }
 

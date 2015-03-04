@@ -23,6 +23,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace ClearCanvas.Desktop
 {
@@ -80,6 +81,7 @@ namespace ClearCanvas.Desktop
 		/// <summary>
 		/// Gets or sets the title of the file dialog.
 		/// </summary>
+		[Localizable(true)]
 		public string Title { get; set; }
 
 		/// <summary>

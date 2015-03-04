@@ -24,54 +24,56 @@
 
 #if UNIT_TESTS
 
-
-using NUnit.Framework;
+using System.Runtime.Serialization;
 using ClearCanvas.ImageViewer.Common.WorkItem;
+using NUnit.Framework;
 
 namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage.Tests
 {
 	[TestFixture]
 	public class SerializationTests
 	{
+		#region WorkItemRequest
+
+		[DataContract(Namespace = ImageViewerWorkItemNamespace.Value)]
 		[WorkItemRequestDataContract("b07a3d7a-2909-4ed1-82ce-8a1ab4f30446")]
-		class TestRequestA : WorkItemRequest
+		private class TestRequestA : WorkItemRequest
 		{
-            public override WorkItemConcurrency ConcurrencyType
-            {
-                get { return WorkItemConcurrency.Exclusive; }
-            }
+			public override WorkItemConcurrency ConcurrencyType
+			{
+				get { return WorkItemConcurrency.Exclusive; }
+			}
 
-		    public override string ActivityDescription
-		    {
-                get { return string.Empty; }
-		    }
+			public override string ActivityDescription
+			{
+				get { return string.Empty; }
+			}
 
-		    public override string ActivityTypeString
-		    {
-		        get { return string.Empty; }
-		    }
+			public override string ActivityTypeString
+			{
+				get { return string.Empty; }
+			}
 		}
 
+		[DataContract(Namespace = ImageViewerWorkItemNamespace.Value)]
 		[WorkItemRequestDataContract("f6c90b95-d631-4b78-b9a1-a786dc23512a")]
-		class TestRequestB : WorkItemRequest
+		private class TestRequestB : WorkItemRequest
 		{
-		    public override WorkItemConcurrency ConcurrencyType
-		    {
-		        get { return WorkItemConcurrency.Exclusive;}
-		    }
+			public override WorkItemConcurrency ConcurrencyType
+			{
+				get { return WorkItemConcurrency.Exclusive; }
+			}
 
-		    public override string ActivityDescription
-		    {
-                get { return string.Empty; }
-            }
+			public override string ActivityDescription
+			{
+				get { return string.Empty; }
+			}
 
-            public override string ActivityTypeString
-            {
-                get { return string.Empty; }
-            }
-        }
-
-
+			public override string ActivityTypeString
+			{
+				get { return string.Empty; }
+			}
+		}
 
 		[Test]
 		public void Test_WorkItemRequest_serialize_null()
@@ -88,6 +90,14 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage.Tests
 		}
 
 		[Test]
+		public void Test_WorkItemRequest_Roundtrip_Null()
+		{
+			var a = Serializer.SerializeWorkItemRequest(null);
+			var b = Serializer.DeserializeWorkItemRequest(a);
+			Assert.IsNull(b);
+		}
+
+		[Test]
 		public void Test_WorkItemRequest_subclass_roundtrip()
 		{
 			var requestA = new TestRequestA();
@@ -97,9 +107,59 @@ namespace ClearCanvas.ImageViewer.StudyManagement.Core.Storage.Tests
 			var b = Serializer.SerializeWorkItemRequest(requestB);
 
 			// ensure that we get instances of the correct sub-classes back, even if we ask for the base-class
-            Assert.IsInstanceOf(typeof(TestRequestA), Serializer.DeserializeWorkItemRequest(a));
-            Assert.IsInstanceOf(typeof(TestRequestB), Serializer.DeserializeWorkItemRequest(b));
+			Assert.IsInstanceOf(typeof (TestRequestA), Serializer.DeserializeWorkItemRequest(a));
+			Assert.IsInstanceOf(typeof (TestRequestB), Serializer.DeserializeWorkItemRequest(b));
 		}
+
+		#endregion
+
+		#region WorkItemProgress
+
+		[DataContract(Namespace = ImageViewerWorkItemNamespace.Value)]
+		[WorkItemProgressDataContract("{A5D1DB11-43EC-45D3-82CF-41597B3A8286}")]
+		private class TestProgressA : WorkItemProgress {}
+
+		[DataContract(Namespace = ImageViewerWorkItemNamespace.Value)]
+		[WorkItemProgressDataContract("{FA5F4689-B8BE-45FA-A67B-A39D82C2C455}")]
+		private class TestProgressB : WorkItemProgress {}
+
+		[Test]
+		public void Test_WorkItemProgress_serialize_null()
+		{
+			var a = Serializer.SerializeWorkItemProgress(null);
+			Assert.IsNull(a);
+		}
+
+		[Test]
+		public void Test_WorkItemProgress_deserialize_null()
+		{
+			var a = Serializer.DeserializeWorkItemProgress(null);
+			Assert.IsNull(a);
+		}
+
+		[Test]
+		public void Test_WorkItemProgress_Roundtrip_Null()
+		{
+			var a = Serializer.SerializeWorkItemProgress(null);
+			var b = Serializer.DeserializeWorkItemProgress(a);
+			Assert.IsNull(b);
+		}
+
+		[Test]
+		public void Test_WorkItemProgress_subclass_roundtrip()
+		{
+			var requestA = new TestProgressA();
+			var requestB = new TestProgressB();
+
+			var a = Serializer.SerializeWorkItemProgress(requestA);
+			var b = Serializer.SerializeWorkItemProgress(requestB);
+
+			// ensure that we get instances of the correct sub-classes back, even if we ask for the base-class
+			Assert.IsInstanceOf(typeof (TestProgressA), Serializer.DeserializeWorkItemProgress(a));
+			Assert.IsInstanceOf(typeof (TestProgressB), Serializer.DeserializeWorkItemProgress(b));
+		}
+
+		#endregion
 	}
 }
 

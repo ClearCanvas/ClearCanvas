@@ -59,6 +59,7 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DiagnosticServiceEditorComponentControl));
 			this._itemSelector = new ClearCanvas.Desktop.View.WinForms.ListItemSelector();
 			this._idBox = new ClearCanvas.Desktop.View.WinForms.TextField();
 			this._nameBox = new ClearCanvas.Desktop.View.WinForms.TextField();
@@ -71,72 +72,50 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			// _itemSelector
 			// 
 			this._itemSelector.AvailableItemsTable = null;
-			this._itemSelector.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._itemSelector.Location = new System.Drawing.Point(3, 16);
+			resources.ApplyResources(this._itemSelector, "_itemSelector");
 			this._itemSelector.Name = "_itemSelector";
 			this._itemSelector.ReadOnly = false;
 			this._itemSelector.SelectedItemsTable = null;
-			this._itemSelector.Size = new System.Drawing.Size(544, 406);
-			this._itemSelector.TabIndex = 0;
 			// 
 			// _idBox
 			// 
-			this._idBox.LabelText = "ID";
-			this._idBox.Location = new System.Drawing.Point(3, 3);
+			resources.ApplyResources(this._idBox, "_idBox");
 			this._idBox.Mask = "";
 			this._idBox.Name = "_idBox";
-			this._idBox.PasswordChar = '\0';
-			this._idBox.Size = new System.Drawing.Size(523, 41);
-			this._idBox.TabIndex = 0;
-			this._idBox.ToolTip = null;
 			this._idBox.Value = null;
 			// 
 			// _nameBox
 			// 
-			this._nameBox.LabelText = "Name";
-			this._nameBox.Location = new System.Drawing.Point(3, 50);
+			resources.ApplyResources(this._nameBox, "_nameBox");
 			this._nameBox.Mask = "";
 			this._nameBox.Name = "_nameBox";
-			this._nameBox.PasswordChar = '\0';
-			this._nameBox.Size = new System.Drawing.Size(523, 41);
-			this._nameBox.TabIndex = 1;
-			this._nameBox.ToolTip = null;
 			this._nameBox.Value = null;
 			// 
 			// _acceptButton
 			// 
-			this._acceptButton.Location = new System.Drawing.Point(390, 527);
+			resources.ApplyResources(this._acceptButton, "_acceptButton");
 			this._acceptButton.Name = "_acceptButton";
-			this._acceptButton.Size = new System.Drawing.Size(75, 23);
-			this._acceptButton.TabIndex = 3;
-			this._acceptButton.Text = "OK";
 			this._acceptButton.UseVisualStyleBackColor = true;
 			this._acceptButton.Click += new System.EventHandler(this._acceptButton_Click);
 			// 
 			// _cancelButton
 			// 
-			this._cancelButton.Location = new System.Drawing.Point(471, 527);
+			resources.ApplyResources(this._cancelButton, "_cancelButton");
 			this._cancelButton.Name = "_cancelButton";
-			this._cancelButton.Size = new System.Drawing.Size(75, 23);
-			this._cancelButton.TabIndex = 4;
-			this._cancelButton.Text = "Cancel";
 			this._cancelButton.UseVisualStyleBackColor = true;
 			this._cancelButton.Click += new System.EventHandler(this._cancelButton_Click);
 			// 
 			// _procedureTypeGroupBox
 			// 
 			this._procedureTypeGroupBox.Controls.Add(this._itemSelector);
-			this._procedureTypeGroupBox.Location = new System.Drawing.Point(3, 97);
+			resources.ApplyResources(this._procedureTypeGroupBox, "_procedureTypeGroupBox");
 			this._procedureTypeGroupBox.Name = "_procedureTypeGroupBox";
-			this._procedureTypeGroupBox.Size = new System.Drawing.Size(550, 425);
-			this._procedureTypeGroupBox.TabIndex = 2;
 			this._procedureTypeGroupBox.TabStop = false;
-			this._procedureTypeGroupBox.Text = "Procedure Types";
 			// 
 			// DiagnosticServiceEditorComponentControl
 			// 
 			this.AcceptButton = this._acceptButton;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this._cancelButton;
 			this.Controls.Add(this._procedureTypeGroupBox);
@@ -145,7 +124,6 @@ namespace ClearCanvas.Ris.Client.View.WinForms
 			this.Controls.Add(this._nameBox);
 			this.Controls.Add(this._idBox);
 			this.Name = "DiagnosticServiceEditorComponentControl";
-			this.Size = new System.Drawing.Size(556, 561);
 			this._procedureTypeGroupBox.ResumeLayout(false);
 			this.ResumeLayout(false);
 

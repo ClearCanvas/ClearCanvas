@@ -28,77 +28,112 @@ using ClearCanvas.Common;
 
 namespace ClearCanvas.ImageViewer.Common.StudyManagement
 {
-    public abstract class StudyStore : IStudyStoreQuery
-    {
-        static StudyStore()
-        {
-            InitializeIsSupported();
-        }
+	public abstract class StudyStore : IStudyStoreQuery
+	{
+		static StudyStore()
+		{
+			InitializeIsSupported();
+		}
 
-        internal static void InitializeIsSupported()
-        {
-            try
-            {
-                var service = Platform.GetService<IStudyStoreQuery>();
-                IsSupported = service != null;
-                var disposable = service as IDisposable;
-                if (disposable != null)
-                    disposable.Dispose();
-            }
-            catch(EndpointNotFoundException)
-            {
-                //This doesn't mean it's not supported, it means it's not running.
-                IsSupported = true;
-            }
-            catch (NotSupportedException)
-            {
-                IsSupported = false;
-                Platform.Log(LogLevel.Debug, "Study Store is not supported.");
-            }
-            catch (UnknownServiceException)
-            {
-                IsSupported = false;
-                Platform.Log(LogLevel.Debug, "Study Store is not supported.");
-            }
-            catch (Exception e)
-            {
-                IsSupported = false;
-                Platform.Log(LogLevel.Debug, e, "Study Store is not supported.");
-            }
-        }
+		internal static void InitializeIsSupported()
+		{
+			try
+			{
+				var service = Platform.GetService<IStudyStoreQuery>();
+				IsSupported = service != null;
+				var disposable = service as IDisposable;
+				if (disposable != null)
+					disposable.Dispose();
+			}
+			catch (EndpointNotFoundException)
+			{
+				//This doesn't mean it's not supported, it means it's not running.
+				IsSupported = true;
+			}
+			catch (NotSupportedException)
+			{
+				IsSupported = false;
+				Platform.Log(LogLevel.Debug, "Study Store is not supported.");
+			}
+			catch (UnknownServiceException)
+			{
+				IsSupported = false;
+				Platform.Log(LogLevel.Debug, "Study Store is not supported.");
+			}
+			catch (Exception e)
+			{
+				IsSupported = false;
+				Platform.Log(LogLevel.Debug, e, "Study Store is not supported.");
+			}
+		}
 
-        public static bool IsSupported { get; private set; }
+		public static bool IsSupported { get; private set; }
 
-        public abstract GetStudyCountResult GetStudyCount(GetStudyCountRequest request);
-        public abstract GetStudyEntriesResult GetStudyEntries(GetStudyEntriesRequest request);
-        public abstract GetSeriesEntriesResult GetSeriesEntries(GetSeriesEntriesRequest request);
-        public abstract GetImageEntriesResult GetImageEntries(GetImageEntriesRequest request);
+		public abstract GetStudyCountResult GetStudyCount(GetStudyCountRequest request);
+		public abstract GetStudyEntriesResult GetStudyEntries(GetStudyEntriesRequest request);
+		public abstract GetSeriesEntriesResult GetSeriesEntries(GetSeriesEntriesRequest request);
+		public abstract GetImageEntriesResult GetImageEntries(GetImageEntriesRequest request);
 
-        public static void UpdateConfiguration(StorageConfiguration configuration)
-        {
-            Platform.GetService<IStorageConfiguration>(
-                s => s.UpdateConfiguration(new UpdateStorageConfigurationRequest
-                                               {
-                                                   Configuration = configuration
-                                               }));
-        }
+		private static readonly object _syncLock = new object();
+		private static StorageConfiguration _storageConfigurationCache;
+		private static long _storageConfigurationCacheTime;
+		private const long _storageConfigurationCacheExpiry = 10000; // really short timeout, we're just mitigating against access in tight loops
 
-        public static StorageConfiguration GetConfiguration()
-        {
-            StorageConfiguration configuration = null;
-            Platform.GetService<IStorageConfiguration>(
-                s => configuration = s.GetConfiguration(new GetStorageConfigurationRequest()).Configuration);
-            return configuration;
-        }
+		public static void UpdateConfiguration(StorageConfiguration configuration)
+		{
+			Platform.GetService<IStorageConfiguration>(s =>
+			                                           	{
+			                                           		s.UpdateConfiguration(new UpdateStorageConfigurationRequest {Configuration = configuration});
+			                                           		lock (_syncLock)
+			                                           		{
+			                                           			// we don't actually just update the cache, because the database is shared and may be updated by other processes
+			                                           			_storageConfigurationCache = null;
+			                                           		}
+			                                           	});
+		}
 
-        public static string FileStoreDirectory
-        {
-            get { return GetConfiguration().FileStoreDirectory; }
-        }
+		public static StorageConfiguration GetConfiguration()
+		{
+			return GetConfiguration(true);
+		}
 
-        public static long? MinimumFreeSpaceBytes
-        {
-            get { return GetConfiguration().MinimumFreeSpaceBytes; }
-        }
-    }
+		public static StorageConfiguration GetConfiguration(bool forceReload)
+		{
+			if (!forceReload)
+			{
+				lock (_syncLock)
+				{
+					if (_storageConfigurationCache != null && _storageConfigurationCacheTime > Environment.TickCount - _storageConfigurationCacheExpiry)
+					{
+						return _storageConfigurationCache.Clone();
+					}
+				}
+			}
+
+			StorageConfiguration configuration = null;
+			Platform.GetService<IStorageConfiguration>(s =>
+			                                           	{
+			                                           		configuration = s.GetConfiguration(new GetStorageConfigurationRequest()).Configuration;
+			                                           		if (configuration != null)
+			                                           		{
+			                                           			lock (_syncLock)
+			                                           			{
+			                                           				_storageConfigurationCache = configuration.Clone();
+			                                           				_storageConfigurationCacheTime = Environment.TickCount;
+			                                           			}
+			                                           		}
+			                                           	});
+			return configuration;
+		}
+
+		public static string FileStoreDirectory
+		{
+			get { return GetConfiguration(false).FileStoreDirectory; }
+		}
+
+		public static long? MinimumFreeSpaceBytes
+		{
+			get { return GetConfiguration(false).MinimumFreeSpaceBytes; }
+		}
+	}
 }

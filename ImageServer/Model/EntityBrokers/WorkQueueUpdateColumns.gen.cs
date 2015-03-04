@@ -76,9 +76,9 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
             set { SubParameters["InsertTime"] = new EntityUpdateColumn<DateTime>("InsertTime", value); }
         }
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="LastUpdatedTime")]
-        public DateTime LastUpdatedTime
+        public DateTime? LastUpdatedTime
         {
-            set { SubParameters["LastUpdatedTime"] = new EntityUpdateColumn<DateTime>("LastUpdatedTime", value); }
+            set { SubParameters["LastUpdatedTime"] = new EntityUpdateColumn<DateTime?>("LastUpdatedTime", value); }
         }
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="FailureDescription")]
         public String FailureDescription
@@ -106,9 +106,9 @@ namespace ClearCanvas.ImageServer.Model.EntityBrokers
             set { SubParameters["GroupID"] = new EntityUpdateColumn<String>("GroupID", value); }
         }
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="ExpirationTime")]
-        public DateTime ExpirationTime
+        public DateTime? ExpirationTime
         {
-            set { SubParameters["ExpirationTime"] = new EntityUpdateColumn<DateTime>("ExpirationTime", value); }
+            set { SubParameters["ExpirationTime"] = new EntityUpdateColumn<DateTime?>("ExpirationTime", value); }
         }
         [EntityFieldDatabaseMappingAttribute(TableName="WorkQueue", ColumnName="DeviceGUID")]
         public ServerEntityKey DeviceKey

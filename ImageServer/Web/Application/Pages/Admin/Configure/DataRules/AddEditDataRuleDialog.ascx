@@ -175,7 +175,7 @@
                         <asp:DropDownList ID="SampleRuleDropDownList" runat="server" CssClass="DialogDropDownList" />
                     </asp:TableCell>
                     <asp:TableCell runat="server" HorizontalAlign="left" Width="100%">
-                        <div class="DialogCheckBoxList">
+                        <div class="DialogCheckBoxList" style="overflow:hidden">
                             <asp:TextBox ID="RuleXmlTextBox" runat="server" EnableViewState="true" Width="100%"
                                Height="100%" TextMode="MultiLine" CssClass="DialogTextBox RuleXmlPanel" BackColor="White"></asp:TextBox>
                         </div>

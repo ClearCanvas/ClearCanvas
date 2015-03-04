@@ -1320,7 +1320,10 @@ namespace ClearCanvas.ImageViewer
 				    || sop.SopClassUid == SopClass.BlendingSoftcopyPresentationStateStorageSopClassUid)
 					continue;
 
-				images.Add(new PlaceholderPresentationImage(sop));
+				var sopClass = SopClass.GetSopClass(sop.SopClassUid);
+				var sopClassDescription = sopClass != null ? sopClass.Name : SR.LabelUnknown;
+				images.Add(new PlaceholderPresentationImage(sop, string.Format(SR.MessageUnsupportedImageType, sopClassDescription)));
+				Platform.Log(LogLevel.Warn, "Unsupported SOP Class \"{0} ({1})\" (SOP Instance {2})", sopClassDescription, sop.SopClassUid, sop.SopInstanceUid);
 			}
 
 			if (images.Count > 0)
@@ -1335,23 +1338,28 @@ namespace ClearCanvas.ImageViewer
 			return new List<IDisplaySet>();
 		}
 
+		internal static IPresentationImage CreatePlaceholderImage(Sop sop, string message)
+		{
+			return new PlaceholderPresentationImage(sop, message);
+		}
+
 		#region PlaceholderPresentationImage Class
 
 		[Cloneable]
 		private sealed class PlaceholderPresentationImage : BasicPresentationImage, ISopProvider
 		{
+			private readonly string _message;
+
 			[CloneIgnore]
 			private ISopReference _sopReference;
 
-			public PlaceholderPresentationImage(Sop sop)
+			public PlaceholderPresentationImage(Sop sop, string message)
 				: base(new GrayscaleImageGraphic(1, 1))
 			{
 				_sopReference = sop.CreateTransientReference();
+				_message = message;
 
-				var sopClass = SopClass.GetSopClass(sop.SopClassUid);
-				var sopClassDescription = sopClass != null ? sopClass.Name : SR.LabelUnknown;
-				CompositeImageGraphic.Graphics.Add(new ErrorMessageGraphic {Text = string.Format(SR.MessageUnsupportedImageType, sopClassDescription), Color = Color.WhiteSmoke});
-				Platform.Log(LogLevel.Warn, "Unsupported SOP Class \"{0} ({1})\" (SOP Instance {2})", sopClassDescription, sop.SopClassUid, sop.SopInstanceUid);
+				CompositeImageGraphic.Graphics.Add(new ErrorMessageGraphic {Text = message, Color = Color.WhiteSmoke});
 			}
 
 			/// <summary>
@@ -1389,7 +1397,7 @@ namespace ClearCanvas.ImageViewer
 
 			public override IPresentationImage CreateFreshCopy()
 			{
-				return new PlaceholderPresentationImage(_sopReference.Sop);
+				return new PlaceholderPresentationImage(_sopReference.Sop, _message);
 			}
 
 			public override Size SceneSize

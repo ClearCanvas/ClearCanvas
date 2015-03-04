@@ -35,14 +35,14 @@ namespace ClearCanvas.Ris.Client.Workflow.Folders
 
 		[ExtensionOf(typeof(ReportingWorkflowFolderExtensionPoint))]
 		[FolderForWorklistClass(WorklistClassNames.ReportingToBeReportedWorklist)]
-		[FolderPath("To be Reported", true)]
+		[FolderPath("FolderToBeReported", true)]
 		[FolderDescription("ReportingToBeReportedFolderDescription")]
 		public class ToBeReportedFolder : ReportingWorkflowFolder
 		{
 		}
 
 		[FolderForWorklistClass(WorklistClassNames.ReportingAssignedWorklist)]
-		[FolderPath("My Items/To be Reported")]
+		[FolderPath("FolderMyItems/FolderToBeReported")]
 		[FolderDescription("ReportingAssignedFolderDescription")]
 		public class AssignedFolder : ReportingWorkflowFolder
 		{
@@ -50,7 +50,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Folders
 
 		[ExtensionOf(typeof(ReportingWorkflowFolderExtensionPoint))]
 		[FolderForWorklistClass(WorklistClassNames.ReportingToBeReviewedReportWorklist)]
-		[FolderPath("To be Reviewed", true)]
+		[FolderPath("FolderToBeReviewed", true)]
 		[FolderDescription("ReportingToBeReviewedFolderDescription")]
 		public class ToBeReviewedFolder : ReportingWorkflowFolder
 		{
@@ -62,42 +62,42 @@ namespace ClearCanvas.Ris.Client.Workflow.Folders
 		}
 
 		[FolderForWorklistClass(WorklistClassNames.ReportingAssignedReviewWorklist)]
-		[FolderPath("My Items/To be Reviewed")]
+		[FolderPath("FolderMyItems/FolderToBeReviewed")]
 		[FolderDescription("ReportingAssignedForReviewFolderDescription")]
 		public class AssignedForReviewFolder : ReportingWorkflowFolder
 		{
 		}
 
 		[FolderForWorklistClass(WorklistClassNames.ReportingDraftWorklist)]
-		[FolderPath("My Items/Draft")]
+		[FolderPath("FolderMyItems/FolderDraft")]
 		[FolderDescription("ReportingDraftFolderDescription")]
 		public class DraftFolder : ReportingWorkflowFolder
 		{
 		}
 
 		[FolderForWorklistClass(WorklistClassNames.ReportingInTranscriptionWorklist)]
-		[FolderPath("My Items/In Transcription")]
+		[FolderPath("FolderMyItems/FolderInTranscription")]
 		[FolderDescription("ReportingInTranscriptionFolderDescription")]
 		public class InTranscriptionFolder : ReportingWorkflowFolder
 		{
 		}
 
 		[FolderForWorklistClass(WorklistClassNames.ReportingReviewTranscriptionWorklist)]
-		[FolderPath("My Items/Review Transcription")]
+		[FolderPath("FolderMyItems/FolderReviewTranscription")]
 		[FolderDescription("ReportingReviewTranscriptionFolderDescription")]
 		public class ReviewTranscriptionFolder : ReportingWorkflowFolder
 		{
 		}
 
 		[FolderForWorklistClass(WorklistClassNames.ReportingAwaitingReviewWorklist)]
-		[FolderPath("My Items/Awaiting Review")]
+		[FolderPath("FolderMyItems/FolderAwaitingReview")]
 		[FolderDescription("ReportingAwaitingReviewFolderDescription")]
 		public class AwaitingReviewFolder : ReportingWorkflowFolder
 		{
 		}
 
 		[FolderForWorklistClass(WorklistClassNames.ReportingVerifiedWorklist)]
-		[FolderPath("My Items/Verified")]
+		[FolderPath("FolderMyItems/FolderVerified")]
 		[FolderDescription("ReportingVerifiedFolderDescription")]
 		public class VerifiedFolder : ReportingWorkflowFolder
 		{
@@ -109,7 +109,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Folders
 
 		[ExtensionOf(typeof(ReportingWorkflowFolderExtensionPoint))]
 		[FolderForWorklistClass(WorklistClassNames.ReportingTrackingActiveWorklist)]
-		[FolderPath("Tracking/Active", true)]
+		[FolderPath("FolderTracking/FolderActive", true)]
 		[FolderDescription("ReportingTrackingActiveFolderDescription")]
 		public class ReportingTrackingActiveFolder : ReportingWorkflowFolder
 		{
@@ -117,7 +117,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Folders
 
 		[ExtensionOf(typeof(ReportingWorkflowFolderExtensionPoint))]
 		[FolderForWorklistClass(WorklistClassNames.ReportingTrackingDraftWorklist)]
-		[FolderPath("Tracking/Draft", true)]
+		[FolderPath("FolderTracking/FolderDraft", true)]
 		[FolderDescription("ReportingTrackingDraftFolderDescription")]
 		public class ReportingTrackingDraftFolder : ReportingWorkflowFolder
 		{
@@ -125,7 +125,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Folders
 
 		[ExtensionOf(typeof(ReportingWorkflowFolderExtensionPoint))]
 		[FolderForWorklistClass(WorklistClassNames.ReportingTrackingPreliminaryWorklist)]
-		[FolderPath("Tracking/Preliminary", true)]
+		[FolderPath("FolderTracking/FolderPreliminary", true)]
 		[FolderDescription("ReportingTrackingPreliminaryFolderDescription")]
 		public class ReportingTrackingPreliminaryFolder : ReportingWorkflowFolder
 		{
@@ -133,7 +133,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Folders
 
 		[ExtensionOf(typeof(ReportingWorkflowFolderExtensionPoint))]
 		[FolderForWorklistClass(WorklistClassNames.ReportingTrackingFinalWorklist)]
-		[FolderPath("Tracking/Finalized", true)]
+		[FolderPath("FolderTracking/FolderFinalized", true)]
 		[FolderDescription("ReportingTrackingFinalFolderDescription")]
 		public class ReportingTrackingFinalFolder : ReportingWorkflowFolder
 		{
@@ -141,7 +141,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Folders
 
 		[ExtensionOf(typeof(ReportingWorkflowFolderExtensionPoint))]
 		[FolderForWorklistClass(WorklistClassNames.ReportingTrackingCorrectedWorklist)]
-		[FolderPath("Tracking/Corrected", true)]
+		[FolderPath("FolderTracking/FolderCorrected", true)]
 		[FolderDescription("ReportingTrackingCorrectedFolderDescription")]
 		public class ReportingTrackingCorrectedFolder : ReportingWorkflowFolder
 		{
@@ -150,7 +150,7 @@ namespace ClearCanvas.Ris.Client.Workflow.Folders
 		#endregion
 
 
-		[FolderPath("Search Results")]
+		[FolderPath("FolderSearchResults")]
 		public class ReportingSearchFolder : WorklistSearchResultsFolder<ReportingWorklistItemSummary, IReportingWorkflowService>
 		{
 			public ReportingSearchFolder()

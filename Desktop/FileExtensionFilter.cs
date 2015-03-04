@@ -22,6 +22,8 @@
 
 #endregion
 
+using System.ComponentModel;
+
 namespace ClearCanvas.Desktop
 {
 	/// <summary>
@@ -53,7 +55,7 @@ namespace ClearCanvas.Desktop
 		/// <summary>
 		/// Initializes a new instance of <see cref="FileExtensionFilter"/>.
 		/// </summary>
-		public FileExtensionFilter(string filter, string description)
+		public FileExtensionFilter(string filter, [param : Localizable(true)] string description)
 		{
 			Filter = filter;
 			Description = description;
@@ -61,6 +63,7 @@ namespace ClearCanvas.Desktop
 
 		public string Filter { get; set; }
 
+		[Localizable(true)]
 		public string Description { get; set; }
 
 		public override string ToString()

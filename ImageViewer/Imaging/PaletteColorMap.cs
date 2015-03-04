@@ -57,14 +57,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 
 		public static PaletteColorMap Create(IDicomAttributeProvider dataSource)
 		{
-			CodeClock clock = new CodeClock();
-			clock.Start();
-
 			PaletteColorLut paletteColorLut = PaletteColorLut.Create(dataSource);
-
-			clock.Stop();
-			PerformanceReportBroker.PublishReport("PaletteColorMap", "Create(IDicomAttributeProvider)", clock.Seconds);
-
 			return new PaletteColorMap(paletteColorLut);
 		}
 	}

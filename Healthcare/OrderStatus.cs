@@ -41,43 +41,43 @@ namespace ClearCanvas.Healthcare {
         /// <summary>
         /// Scheduled
         /// </summary>
-        [EnumValue("Scheduled", Description="In process, scheduled")]
+		[EnumValue("Scheduled", Description = "ScheduledDescription")]
         SC,
  
         /// <summary>
         /// Canceled
         /// </summary>
-        [EnumValue("Canceled", Description="Order was canceled")]
+		[EnumValue("Canceled", Description = "CanceledDescription")]
         CA,
 
         /// <summary>
         /// Completed
         /// </summary>
-        [EnumValue("Completed", Description="Order is completed")]
+		[EnumValue("Completed", Description = "CompletedDescription")]
         CM,
 
         /// <summary>
         /// Discontinued
         /// </summary>
-        [EnumValue("Discontinued", Description="Order was discontinued")]
+		[EnumValue("Discontinued", Description = "DiscontinuedDescription")]
         DC,
 
         /// <summary>
         /// In Progress
         /// </summary>
-        [EnumValue("In Progress", Description="In process, unspecified")]
+		[EnumValue("InProgress", Description = "InProgressDescription")]
         IP,
 
         /// <summary>
         /// Replaced
         /// </summary>
-        [EnumValue("Replaced", Description="Order was replaced")]
+		[EnumValue("Replaced", Description = "ReplacedDescription")]
         RP,
 
 		/// <summary>
 		/// Merged
 		/// </summary>
-		[EnumValue("Merged", Description = "Order was merged into another order")]
+		[EnumValue("Merged", Description = "MergedDescription")]
 		MG,
 	}
 }
