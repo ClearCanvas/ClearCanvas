@@ -24,9 +24,9 @@
 
 namespace ClearCanvas.Common.Caching
 {
-    /// <summary>
-    /// Defines an interfaces to an object that provides a cache implementation.
-    /// </summary>
+	/// <summary>
+	/// Defines an interfaces to an object that provides a cache implementation.
+	/// </summary>
 	public interface ICacheProvider
 	{
 		/// <summary>
@@ -38,9 +38,9 @@ namespace ClearCanvas.Common.Caching
 		/// <summary>
 		/// Creates a cache client for the specified logical cache ID.
 		/// </summary>
-        /// <remarks>
-        /// The implementation of this method *must* be safe for multiple threads making concurrent calls.
-        /// </remarks>
+		/// <remarks>
+		/// The implementation of this method must be safe for multiple threads making concurrent calls.
+		/// </remarks>
 		/// <returns></returns>
 		ICacheClient CreateClient(string cacheID);
 	}

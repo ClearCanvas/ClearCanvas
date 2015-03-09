@@ -50,24 +50,26 @@ namespace ClearCanvas.Common.Serialization
 		{
 			try
 			{
-			    var types = Platform.PluginManager.Plugins.SelectMany(p => p.Assembly.Resolve().GetTypes());
-			    types = types.Concat(typeof (PolymorphicDataContractAttribute).Assembly.GetTypes());
-			    
-				// build the contract maps by finding all types having an attribute
-				// that is a subclass of PolymorphicDataContractAttribute
-				_contractMaps = (from t in types
-								 from a in t.GetCustomAttributes(false)
-								 let pa = a as PolymorphicDataContractAttribute
-								 where (pa != null)
-								 group new { ContractType = t, Attr = pa } by pa.GetType() into g
-								 select new
-											{
-												AttributeType = g.Key,
-												ContractMap = g.ToDictionary(x => x.Attr.ContractId, x => x.ContractType)
-											}
-								)
-					.ToDictionary(entry => entry.AttributeType, entry => entry.ContractMap);
+				var types = Platform.PluginManager.Plugins.SelectMany(p => p.Assembly.Resolve().GetTypes());
+				types = types.Concat(typeof(PolymorphicDataContractAttribute).Assembly.GetTypes());
 
+				// find all types having an attribute that is a subclass of PolymorphicDataContractAttribute,
+				// and group by attribute subclass
+				var subclassGroupings = (from t in types
+										 from a in t.GetCustomAttributes(false)
+										 let pa = a as PolymorphicDataContractAttribute
+										 where (pa != null)
+										 group new { ContractType = t, Attr = pa } by pa.GetType()
+											 into g
+											 select g).ToArray();
+
+				// build a contract map for each attribute subclass
+				_contractMaps = (from g in subclassGroupings
+								 select new
+										 {
+											 AttributeType = g.Key,
+											 ContractMap = BuildContractMap(g.Select(x => Tuple.Create(x.ContractType, x.Attr)))
+										 }).ToDictionary(entry => entry.AttributeType, entry => entry.ContractMap);
 			}
 			catch (Exception e)
 			{
@@ -83,7 +85,7 @@ namespace ClearCanvas.Common.Serialization
 		public static Dictionary<string, Type> GetContractMap(Type polymorphicDataContractAttributeSubclass)
 		{
 			Dictionary<string, Type> contractMap;
-			if(!_contractMaps.TryGetValue(polymorphicDataContractAttributeSubclass, out contractMap))
+			if (!_contractMaps.TryGetValue(polymorphicDataContractAttributeSubclass, out contractMap))
 				throw new InvalidOperationException(string.Format("No contract map found for attribute '{0}'",
 					polymorphicDataContractAttributeSubclass.FullName));
 
@@ -125,6 +127,22 @@ namespace ClearCanvas.Common.Serialization
 				return _guid.ToString("N");
 			}
 		}
+
+		private static Dictionary<string, Type> BuildContractMap(IEnumerable<Tuple<Type, PolymorphicDataContractAttribute>> contractAttrPairs)
+		{
+			var contractMap = new Dictionary<string, Type>();
+			foreach (var contractAttrPair in contractAttrPairs)
+			{
+				var contractType = contractAttrPair.Item1;
+				var attr = contractAttrPair.Item2;
+				if (contractMap.ContainsKey(attr.ContractId))
+					throw new PolymorphicDataContractException(string.Format("Contract ID '{0}' cannot be used more than once.", attr.ContractId), null);
+
+				contractMap.Add(attr.ContractId, contractType);
+			}
+			return contractMap;
+		}
+
 	}
 
 }

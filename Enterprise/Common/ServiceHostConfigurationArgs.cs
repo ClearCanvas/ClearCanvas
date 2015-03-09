@@ -34,7 +34,7 @@ namespace ClearCanvas.Enterprise.Common
 	public struct ServiceHostConfigurationArgs
 	{
 		public ServiceHostConfigurationArgs(Type serviceContract, Uri hostUri, bool authenticated,
-			int maxReceivedMessageSize, CertificateSearchDirective certificateSearchParams)
+			long maxReceivedMessageSize, CertificateSearchDirective certificateSearchParams)
 		{
 			ServiceContract = serviceContract;
 			HostUri = hostUri;
@@ -68,7 +68,7 @@ namespace ClearCanvas.Enterprise.Common
 		/// <summary>
 		/// The maximum allowable size of received messages, in bytes.
 		/// </summary>
-		public int MaxReceivedMessageSize;
+		public long MaxReceivedMessageSize;
 
 		/// <summary>
 		/// The time, in seconds, in which a send operation must complete.

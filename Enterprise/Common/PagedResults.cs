@@ -7,11 +7,11 @@ namespace ClearCanvas.Enterprise.Common
 {
 	public class PagedResults<TItem> : IEnumerable<TItem>
 	{
-		private readonly List<TItem> _items;
+		private readonly IList<TItem> _items;
 		private readonly string _positionToken;
 		private readonly bool _hasNextPage;
 
-		public PagedResults(List<TItem> items, string positionToken, bool hasNextPage)
+		public PagedResults(IList<TItem> items, string positionToken, bool hasNextPage)
 		{
 			_items = items;
 			_positionToken = positionToken;
@@ -35,7 +35,7 @@ namespace ClearCanvas.Enterprise.Common
 
 		public IList<TItem> Items
 		{
-			get { return _items.AsReadOnly(); }
+			get { return _items; }
 		}
 
 		public IEnumerator<TItem> GetEnumerator()

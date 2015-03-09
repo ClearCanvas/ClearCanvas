@@ -17,7 +17,7 @@ namespace ClearCanvas.Dicom.Audit
 		/// </summary>
 		public HealthcareDataAuditHelper(DicomAuditSource auditSource, EventIdentificationContentsEventOutcomeIndicator outcome,
 			EventIdentificationContentsEventActionCode action)
-			: base("HealthcareData")
+			: base("HealthcareDataAccessed")
 		{
 			AuditMessage.EventIdentification = new EventIdentificationContents
 			{
@@ -29,6 +29,7 @@ namespace ClearCanvas.Dicom.Audit
 			};
 
 			InternalAddAuditSource(auditSource);
+			AddUser(new AuditProcessActiveParticipant());
 		}
 
 		/// <summary>
@@ -56,6 +57,15 @@ namespace ClearCanvas.Dicom.Audit
 		/// </summary>
 		/// <param name="o"></param>
 		public void AddHealthcareParticipantObject(HealthcareDataParticipantObject o)
+		{
+			InternalAddParticipantObject(o.ParticipantObjectId, o);
+		}
+
+		/// <summary>
+		/// Add details of a general purpose participant object.
+		/// </summary>
+		/// <param name="o"></param>
+		public void AddGeneralParticipantObject(AuditParticipantObject o)
 		{
 			InternalAddParticipantObject(o.ParticipantObjectId, o);
 		}

@@ -26,7 +26,7 @@ using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.Enterprise.Common.SystemAccounts
 {
-	class SystemAccountCommandLine : CommandLine
+	internal class SystemAccountCommandLine : CommandLine
 	{
 		public SystemAccountCommandLine()
 		{
@@ -65,6 +65,13 @@ namespace ClearCanvas.Enterprise.Common.SystemAccounts
 		/// </summary>
 		[CommandLineParameter("auth", "Specifies the name of the authority group to which the account should be assigned. If not specified, new accounts will be assigned to the 'Service Accounts' group.")]
 		public string AuthorityGroup { get; set; }
+
+		/// <summary>
+		/// Specifies whether the program should reset the account password when updating an existing account.
+		/// If the account exists, this switch is implied when not explicitly specifying the password.
+		/// </summary>
+		[CommandLineParameter("resetpassword", "Specifies that the account password should be reset if updating an existing account.")]
+		public bool ResetPassword { get; set; }
 
 		/// <summary>
 		/// Specifies whether the program should emit informational messages to stdout.

@@ -2,16 +2,11 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build" ToolsVersion="4.0">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F6EAD428-E6CF-4DF6-B2F3-D33D532C5343}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ApplicationIcon />
     <AssemblyKeyContainerName />
     <AssemblyName>ClearCanvas.Common</AssemblyName>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
@@ -19,7 +14,6 @@
     <OutputType>Library</OutputType>
     <RootNamespace>ClearCanvas.Common</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject />
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation />
@@ -43,23 +37,17 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkProfile />
     <FileAlignment>512</FileAlignment>
+    <UseMSBuildEngine>False</UseMSBuildEngine>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
-    <ConfigurationOverrideFile />
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
     <DefineConstants>DEBUG;TRACE;UNIT_TESTS</DefineConstants>
-    <DocumentationFile>
-    </DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
-    <NoStdLib>false</NoStdLib>
-    <NoWarn>
-    </NoWarn>
     <Optimize>false</Optimize>
     <RegisterForComInterop>false</RegisterForComInterop>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningLevel>4</WarningLevel>
     <DebugType>full</DebugType>
     <ErrorReport>prompt</ErrorReport>
@@ -69,19 +57,13 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
-    <ConfigurationOverrideFile />
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
     <DefineConstants>TRACE</DefineConstants>
     <DocumentationFile>ClearCanvas.Common.xml</DocumentationFile>
-    <DebugSymbols>false</DebugSymbols>
-    <NoStdLib>false</NoStdLib>
-    <NoWarn>
-    </NoWarn>
     <Optimize>true</Optimize>
     <RegisterForComInterop>false</RegisterForComInterop>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningLevel>4</WarningLevel>
     <DebugType>none</DebugType>
     <ErrorReport>prompt</ErrorReport>
@@ -98,32 +80,31 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ReferencedAssemblies\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework, Version=2.2.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ReferencedAssemblies\nunit.framework.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.configuration" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="System.Core" />
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\ReferencedAssemblies\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\ReferencedAssemblies\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -139,6 +120,10 @@
     <Compile Include="Authorization\AuthorityTokenAttribute.cs" />
     <Compile Include="Authorization\AuthorityTokenDefinition.cs" />
     <Compile Include="Authorization\IDefineAuthorityGroups.cs" />
+    <Compile Include="Caching\MemoryCacheProvider.cs" />
+    <Compile Include="Caching\Tests\CacheProviderTestsBase.cs" />
+    <Compile Include="Caching\Tests\AspWebCacheProviderTests.cs" />
+    <Compile Include="Caching\Tests\MemoryCacheProviderTests.cs" />
     <Compile Include="ClassNameExtensionFilter.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -153,11 +138,13 @@
     <Compile Include="Configuration\Tests\SettingsGroupTests.cs" />
     <Compile Include="Configuration\Tests\AltAppSettingsFolderTests.cs" />
     <Compile Include="DefaultExtensionFactory.cs" />
+    <Compile Include="EvidenceExtensions.cs" />
     <Compile Include="ExtensionPoint.cs" />
     <Compile Include="IExtensionFactory.cs" />
     <Compile Include="IExtensionPoint.cs" />
     <Compile Include="IMessageBox.cs" />
     <Compile Include="ITimeProvider.cs" />
+    <Compile Include="JetbrainsAnnotations.cs" />
     <Compile Include="LicenseSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -313,9 +300,15 @@
     <Compile Include="Configuration\StandardSettingsProvider.cs" />
     <Compile Include="Utilities\DictionaryEventArgs.cs" />
     <Compile Include="Utilities\ItemEventArgs.cs" />
+    <Compile Include="Utilities\ObjectAccessor.cs" />
     <Compile Include="Utilities\PerformanceReportBroker.cs" />
     <Compile Include="Utilities\CryptoServiceFallbackHelper.cs" />
     <Compile Include="Utilities\MockSettingsStore.cs" />
+    <Compile Include="Utilities\CancellableStream.cs" />
+    <Compile Include="Utilities\WriteProgressStream.cs" />
+    <Compile Include="Utilities\ReadProgressStream.cs" />
+    <Compile Include="Utilities\Tests\ProgressStreamTests.cs" />
+    <Compile Include="Utilities\Tests\ObjectAccessorTests.cs" />
     <Compile Include="Utilities\UrlQueryString.cs" />
     <Compile Include="Utilities\ReadOnlyDictionary.cs" />
     <Compile Include="Utilities\SynchronizedEventHelper.cs" />
@@ -369,8 +362,8 @@
     <Compile Include="Caching\CacheProviderInitializationArgs.cs" />
     <Compile Include="Caching\CachePutOptions.cs" />
     <Compile Include="Caching\CacheRemoveOptions.cs" />
-    <Compile Include="Caching\DefaultCacheClient.cs" />
-    <Compile Include="Caching\DefaultCacheProvider.cs" />
+    <Compile Include="Caching\AspWebCacheClient.cs" />
+    <Compile Include="Caching\AspWebCacheProvider.cs" />
     <Compile Include="Caching\ICacheClient.cs" />
     <Compile Include="Caching\ICacheProvider.cs" />
     <Compile Include="Caching\IDefinesCacheKey.cs" />

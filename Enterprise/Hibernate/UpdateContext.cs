@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Enterprise.Common;
@@ -88,6 +89,15 @@ namespace ClearCanvas.Enterprise.Hibernate
 			get { return _changeSetRecorder; }
 			set { _changeSetRecorder = value; }
 		}
+		
+		/// <summary>
+		/// Gets the set of entities that are affected by this update context, along with the type of change for each entity.
+		/// </summary>
+		/// <remarks>Not supported by this implementation.</remarks>
+		public IDictionary<object, EntityChangeType> GetAffectedEntities()
+		{
+			throw new NotSupportedException();
+		}
 
 		/// <summary>
 		/// Attempts to flush and commit all changes made within this update context to the persistent store.
@@ -108,8 +118,9 @@ namespace ClearCanvas.Enterprise.Hibernate
 				EventsHelper.Fire(PreCommit, this, EventArgs.Empty);
 
 				// publish pre-commit to listeners
+				var changeSetId = Guid.NewGuid().ToString("N");
 				var changeSetPublisher = new EntityChangeSetPublisher();
-				changeSetPublisher.PreCommit(new EntityChangeSetPreCommitArgs(new EntityChangeSet(_interceptor.FullChangeSet), this));
+				changeSetPublisher.PreCommit(new EntityChangeSetPreCommitArgs(changeSetId, new EntityChangeSet(_interceptor.FullChangeSet), this));
 
 				// flush session again, in case pre-commit listeners made modifications to entities in this context
 				FlushAndValidate();
@@ -121,7 +132,7 @@ namespace ClearCanvas.Enterprise.Hibernate
 				CommitTransaction();
 
 				// publish post-commit to listeners
-				changeSetPublisher.PostCommit(new EntityChangeSetPostCommitArgs(new EntityChangeSet(_interceptor.FullChangeSet)));
+				changeSetPublisher.PostCommit(new EntityChangeSetPostCommitArgs(changeSetId, new EntityChangeSet(_interceptor.FullChangeSet)));
 			}
 			catch (Exception e)
 			{

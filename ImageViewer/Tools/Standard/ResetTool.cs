@@ -75,28 +75,11 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		{
 			var transform = ResetImageOperation.GetSpatialTransform(image);
 			if (transform != null)
-			{
-				transform.Scale = 1.0f;
-				transform.TranslationX = 0.0f;
-				transform.TranslationY = 0.0f;
-				transform.FlipY = false;
-				transform.FlipX = false;
-				transform.RotationXY = 0;
-				transform.ScaleToFit = true;
-			}
+				transform.Reset();
 
 			var transform3D = ResetImageOperation.GetSpatialTransform3D(image);
 			if (transform3D != null)
-			{
-				transform3D.Scale = 1.0f;
-				transform3D.TranslationX = 0.0f;
-				transform3D.TranslationY = 0.0f;
-				transform3D.TranslationZ = 0.0f;
-				transform3D.FlipYZ = false;
-				transform3D.FlipXZ = false;
-				transform3D.FlipXY = false;
-				transform3D.Rotation = null;
-			}
+				transform3D.Reset();
 		}
 
 		private class ResetImageOperation : BasicImageOperation

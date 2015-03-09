@@ -50,6 +50,8 @@ namespace ClearCanvas.Dicom
 
         [ThreadStatic]
         private static Last _last;
+		[ThreadStatic]
+		private static Encoding _isomorphicEncoding;
 
         #region IDicomCharacterSetParser Members
 
@@ -173,7 +175,7 @@ namespace ClearCanvas.Dicom
 
         public static string GetIsomorphicString(byte[] rawBytes)
         {
-            return Encoding.GetEncoding(IsomorphicCodePage).GetString(rawBytes);
+			return IsomorphicEncoding.GetString(rawBytes);
         }
 
         public static byte[] GetIsomorphicBytes(string rawBytesEncodedAsString)
@@ -181,8 +183,8 @@ namespace ClearCanvas.Dicom
             // add a null terminator, otherwise we're going to have problems in the unamanged world
             if (rawBytesEncodedAsString == null)
                 return null;
-            else
-            return Encoding.GetEncoding(IsomorphicCodePage).GetBytes(rawBytesEncodedAsString);
+
+			return IsomorphicEncoding.GetBytes(rawBytesEncodedAsString);
         }
 
         public static Encoding GetEncoding(string specificCharacterSet)
@@ -433,7 +435,7 @@ namespace ClearCanvas.Dicom
         {
             byte[] rawBytes;
             Encode(unicodeData, repertoire, out rawBytes);
-            char[] rawCharacters = Encoding.GetEncoding(IsomorphicCodePage).GetChars(rawBytes);
+			char[] rawCharacters = IsomorphicEncoding.GetChars(rawBytes);
             return new string(rawCharacters);
         }
 
@@ -464,7 +466,7 @@ namespace ClearCanvas.Dicom
             // get it back to byte array form using a character set that includes 
             // both GR and GL areas (characters up to \xff in binary value)
             // and it seems Windows-1252 works better than ISO-8859-1
-            byte[] rawBytes = Encoding.GetEncoding(IsomorphicCodePage).GetBytes(rawData);
+			byte[] rawBytes = IsomorphicEncoding.GetBytes(rawData);
             return Decode(rawBytes, repertoire);
         }
 
@@ -568,6 +570,11 @@ namespace ClearCanvas.Dicom
         private static Dictionary<string, CharacterSetInfo> _characterSetInfo;
         private static Dictionary<string, bool> _repertoireAppliesVRDictionary;
         #endregion
+
+	    private static Encoding IsomorphicEncoding
+	    {
+		    get { return _isomorphicEncoding ?? (_isomorphicEncoding = Encoding.GetEncoding(IsomorphicCodePage)); }
+	    }
     }
     
 }

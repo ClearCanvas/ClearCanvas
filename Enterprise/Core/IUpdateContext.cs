@@ -23,6 +23,8 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using ClearCanvas.Enterprise.Common;
 
 namespace ClearCanvas.Enterprise.Core
 {
@@ -40,6 +42,12 @@ namespace ClearCanvas.Enterprise.Core
 		/// Setting this property to null will effectively disable this auditing.
 		/// </remarks>
 		IEntityChangeSetRecorder ChangeSetRecorder { get; set; }
+
+		/// <summary>
+		/// Gets the set of entities that are affected by this update context, along with the type of change for each entity.
+		/// </summary>
+		/// <returns></returns>
+		IDictionary<object, EntityChangeType> GetAffectedEntities();
 
 		/// <summary>
 		/// Attempts to flush and commit all changes made within this update context to the persistent store.

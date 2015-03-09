@@ -233,10 +233,12 @@ namespace ClearCanvas.Common
 				throw new PluginException(SR.ExceptionPluginDirectoryNotFound);
 
 			_plugins.AddRange(_loader.LoadPluginInfo());
-
-			// If no plugins were loaded, nothing else to do
 			if (_plugins.Count == 0)
+			{
+				// If there are no plugins, there's nothing left to do ... but they were still loaded.
+				_pluginsLoaded = true;
 				return;
+			}
 
 			// compile lists of all extension points and extensions
 			var extensions = new List<ExtensionInfo>(_plugins.SelectMany(p => p.Extensions));
@@ -246,11 +248,10 @@ namespace ClearCanvas.Common
 			PluginInfo.DiscoverExtensionPointsAndExtensions(GetType().Assembly, points, extensions);
 
 			// #742: order the extensions according to the XML configuration
-			List<ExtensionInfo> ordered, remainder;
-			ExtensionSettings.Default.OrderExtensions(extensions, out ordered, out remainder);
+			var ordered = ExtensionSettings.Default.OrderExtensions(extensions);
 
-			// create global extension list, with the ordered set appearing first
-			_extensions.AddRange(CollectionUtils.Concat<ExtensionInfo>(ordered, remainder));
+			// create global extension list
+			_extensions.AddRange(ordered);
 
 			// points do not need to be ordered
 			_extensionPoints.AddRange(points);

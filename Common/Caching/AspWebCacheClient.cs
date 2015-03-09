@@ -25,11 +25,14 @@
 namespace ClearCanvas.Common.Caching
 {
 	/// <summary>
-	/// Implementation of <see cref="ICacheClient"/> for <see cref="DefaultCacheProvider"/>.
+	/// Implementation of <see cref="ICacheClient"/> for <see cref="AspWebCacheProvider"/>.
 	/// </summary>
-	internal class DefaultCacheClient : ICacheClient
+	internal class AspWebCacheClient : ICacheClient
 	{
-		private readonly DefaultCacheProvider _provider;
+		private static readonly CacheGetOptions _defaultGetOptions = new CacheGetOptions();
+		private static readonly CacheRemoveOptions _defaultRemoveOptions = new CacheRemoveOptions();
+
+		private readonly AspWebCacheProvider _provider;
 		private readonly string _cacheId;
 
 		/// <summary>
@@ -37,7 +40,7 @@ namespace ClearCanvas.Common.Caching
 		/// </summary>
 		/// <param name="provider"></param>
 		/// <param name="cacheId"></param>
-		internal DefaultCacheClient(DefaultCacheProvider provider, string cacheId)
+		internal AspWebCacheClient(AspWebCacheProvider provider, string cacheId)
 		{
 			_provider = provider;
 			_cacheId = cacheId;
@@ -64,6 +67,11 @@ namespace ClearCanvas.Common.Caching
 			return _provider.Get(_cacheId, key, options);
 		}
 
+		public object Get(string key)
+		{
+			return _provider.Get(_cacheId, key, _defaultGetOptions);
+		}
+
 		/// <summary>
 		/// Puts the specified object into the cache at the specified key,
 		/// using the specified options.
@@ -85,6 +93,11 @@ namespace ClearCanvas.Common.Caching
 		public void Remove(string key, CacheRemoveOptions options)
 		{
 			_provider.Remove(_cacheId, key, options);
+		}
+
+		public void Remove(string key)
+		{
+			_provider.Remove(_cacheId, key, _defaultRemoveOptions);
 		}
 
 		/// <summary>

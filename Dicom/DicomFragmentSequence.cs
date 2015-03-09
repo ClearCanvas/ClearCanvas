@@ -260,7 +260,7 @@ namespace ClearCanvas.Dicom
 
 		public override string ToString()
 		{
-			return Tag + " Copmressed with " + _fragments.Count + " fragments";
+			return Tag + " Compressed with " + _fragments.Count + " fragments";
 		}
 
 		public override bool Equals(object obj)
@@ -282,7 +282,13 @@ namespace ClearCanvas.Dicom
 
 		public override int GetHashCode()
 		{
-			throw new NotImplementedException();
+			return 0;
+		}
+
+		public override long Count
+		{
+			get { return _fragments.Count; }
+			protected set { }
 		}
 
 		public override bool IsNull
@@ -350,15 +356,23 @@ namespace ClearCanvas.Dicom
 			{
 				length += 4; // length
 			}
-			length += 4 + 4; // offset tag
+
+			// write the offset table (item tag is always present, though content may be zero length)
+			length += 4 + 4; // item tag and length
 			if (Flags.IsSet(options, DicomWriteOptions.WriteFragmentOffsetTable) && _table != null)
 				length += (uint) (_table.Count*4);
+
 			foreach (DicomFragment fragment in this._fragments)
 			{
 				length += 4; // item tag
 				length += 4; // fragment length
 				length += fragment.Length;
+
+				// no Item Delimitation Item (fragments are always explicit length)
 			}
+
+			length += 4 + 4; // Sequence Delimitation Item (fragment sequences are always undefined length)
+
 			return length;
 		}
 

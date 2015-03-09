@@ -99,6 +99,11 @@ namespace ClearCanvas.ImageViewer.Graphics3D
 		void Initialize();
 
 		/// <summary>
+		/// Resets all transform parameters to their defaults.
+		/// </summary>
+		void Reset();
+
+		/// <summary>
 		/// Converts a <see cref="Vector3D"/> point from source to destination coordinates.
 		/// </summary>
 		/// <param name="sourcePoint"></param>

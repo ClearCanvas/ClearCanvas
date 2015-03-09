@@ -36,38 +36,80 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 	//JR: made this class public so that Specifications using Jscript.NET can operate on it (JScript.NET can't see members on internal classes)
 	public class SopInstance : ISopInstance
 	{
-		private DicomAttributeCollection _metaInfo;
 		private readonly InstanceXml _xml;
-		private DicomFile _fullHeader;
+		private readonly Series _parentSeries;
+		private readonly IDicomFileLoader _dicomFileLoader;
 		private readonly Dictionary<uint, bool> _sequenceHasExcludedTags;
+		private DicomAttributeCollection _metaInfo;
+		private DicomFile _fullHeader;
 
-		public SopInstance(InstanceXml xml, Series parent)
+
+		internal SopInstance(InstanceXml xml, Series parent, IDicomFileLoader dicomFileLoader)
 		{
 			_xml = xml;
-			ParentSeries = parent;
+			_parentSeries = parent;
+			_dicomFileLoader = dicomFileLoader;
 			_sequenceHasExcludedTags = new Dictionary<uint, bool>();
-
 			_metaInfo = new DicomAttributeCollection();
 			if (xml.TransferSyntax != null)
 			{
-				string transferSyntax = xml.TransferSyntax.UidString;
+				var transferSyntax = xml.TransferSyntax.UidString;
 				if (!String.IsNullOrEmpty(transferSyntax))
 					_metaInfo[DicomTags.TransferSyntaxUid].SetString(0, transferSyntax);
 			}
 
 			if (xml.SopClass != null)
 			{
-				string sopClass = xml.SopClass.Uid;
+				var sopClass = xml.SopClass.Uid;
 				if (!String.IsNullOrEmpty(sopClass))
 					_metaInfo[DicomTags.SopClassUid].SetString(0, sopClass);
 			}
 		}
 
-		internal Series ParentSeries { get; private set; }
+		#region ISopInstanceData Members
 
-		private IDicomFileLoader HeaderProvider
+		public string StudyInstanceUid
 		{
-			get { return ParentSeries.ParentStudy.HeaderProvider; }
+			get { return _parentSeries.StudyInstanceUid; }
+		}
+
+		public string SeriesInstanceUid
+		{
+			get { return _parentSeries.SeriesInstanceUid; }
+		}
+
+		public string SopInstanceUid
+		{
+			get { return _xml.SopInstanceUid; }
+		}
+
+		public string SopClassUid
+		{
+			get { return _xml.SopClass.Uid; }
+		}
+
+		public int InstanceNumber
+		{
+			get { return DataSet[DicomTags.InstanceNumber].GetInt32(0, 0); }
+		}
+
+		#endregion
+
+		#region ISopInstance Members
+
+		ISeries ISopInstance.ParentSeries
+		{
+			get { return _parentSeries; }
+		}
+
+		public SopClass SopClass
+		{
+			get { return SopClass.GetSopClass(_xml.SopClass.Uid); }
+		}
+
+		public StorageInfo StorageInfo
+		{
+			get { return new StorageInfo(_xml.SourceFileName, _xml.FileSize, _xml.TransferSyntax); }
 		}
 
 		public string SourceApplicationEntityTitle
@@ -75,18 +117,54 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 			get { return GetAttribute(DicomTags.SourceApplicationEntityTitle).ToString(); }
 		}
 
-		ISeries ISopInstance.ParentSeries
+		public IReadOnlyDicomAttribute GetAttribute(uint dicomTag)
 		{
-			get { return ParentSeries; }
+			if (!IsStoredTag(dicomTag))
+				LoadFullHeader();
+
+			DicomAttribute attribute;
+			if (MetaInfo.TryGetAttribute(dicomTag, out attribute))
+				return attribute;
+
+			if (_fullHeader != null)
+				return _fullHeader.DataSet[dicomTag];
+
+			return _xml[dicomTag];
 		}
+
+		public IReadOnlyDicomAttribute GetAttribute(DicomTag dicomTag)
+		{
+			return GetAttribute(dicomTag.TagValue);
+		}
+
+		//public DicomFile GetHeader(bool forceComplete)
+		//{
+		//    if (forceComplete)
+		//        LoadFullHeader(); //Make sure the full header's loaded.
+
+		//    //Return a copy of whatever we've got.
+		//    return new DicomFile(null, MetaInfo.Copy(), DataSet.Copy());
+		//}
+
+		//public DicomFile GetCompleteSop()
+		//{
+		//    //Just get the entire thing from the loader.
+		//    var args = new LoadDicomFileArgs(StudyInstanceUid, SeriesInstanceUid, SopInstanceUid, true, true);
+		//    return DicomFileLoader.LoadDicomFile(args);
+		//}
+
+		//public IFramePixelData GetFramePixelData(int frameNumber)
+		//{
+		//    var args = new LoadFramePixelDataArgs(this.StudyInstanceUid, this.SeriesInstanceUid, this.SopInstanceUid, frameNumber);
+		//    return DicomFileLoader.LoadFramePixelData(args);
+		//}
+
+		#endregion
 
 		private bool IsStoredTag(uint tag)
 		{
-			DicomTag dicomTag = DicomTagDictionary.GetDicomTag(tag);
-			if (dicomTag == null)
-				return false;
-
-			return IsStoredTag(dicomTag);
+			var dicomTag = DicomTagDictionary.GetDicomTag(tag);
+			return dicomTag != null && IsStoredTag(dicomTag);
 		}
 
 		private bool IsStoredTag(DicomTag tag)
@@ -121,7 +199,8 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 					return false;
 			}
 
-			bool isBinary = tag.VR == DicomVr.OBvr || tag.VR == DicomVr.OWvr || tag.VR == DicomVr.OFvr;
+			var isBinary = tag.VR == DicomVr.OBvr || tag.VR == DicomVr.OWvr || tag.VR == DicomVr.OFvr;
+
 			//these tags are not usually stored in the xml.
 			if (isBinary || tag.IsPrivate || tag.VR == DicomVr.UNvr)
 				return false;
@@ -135,7 +214,7 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 				return; //We've already got it without the pixel data.
 
 			var args = new LoadDicomFileArgs(this.StudyInstanceUid, this.SeriesInstanceUid, this.SopInstanceUid, true, false);
-			_fullHeader = HeaderProvider.LoadDicomFile(args);
+			_fullHeader = _dicomFileLoader.LoadDicomFile(args);
 			_metaInfo = null;
 		}
 
@@ -148,95 +227,5 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 		{
 			get { return _fullHeader != null ? _fullHeader.DataSet : _xml.Collection; }
 		}
-
-		#region ISopInstanceData Members
-
-		public string StudyInstanceUid
-		{
-			get { return ParentSeries.StudyInstanceUid; }
-		}
-
-		public string SeriesInstanceUid
-		{
-			get { return ParentSeries.SeriesInstanceUid; }
-		}
-
-		public string SopInstanceUid
-		{
-			get { return _xml.SopInstanceUid; }
-		}
-
-		public string SopClassUid
-		{
-			get { return _xml.SopClass.Uid; }
-		}
-
-		public int InstanceNumber
-		{
-			get { return DataSet[DicomTags.InstanceNumber].GetInt32(0, 0); }
-		}
-
-		#endregion
-
-		#region ISopInstance Members
-
-		public SopClass SopClass
-		{
-			get { return SopClass.GetSopClass(_xml.SopClass.Uid); }
-		}
-
-		public DicomAttribute GetAttribute(uint dicomTag)
-		{
-			if (!IsStoredTag(dicomTag))
-				LoadFullHeader();
-
-			DicomAttribute attribute;
-			if (MetaInfo.TryGetAttribute(dicomTag, out attribute))
-				return attribute;
-
-			if (_fullHeader != null)
-				return _fullHeader.DataSet[dicomTag];
-
-			return _xml[dicomTag];
-		}
-
-		public DicomAttribute GetAttribute(DicomTag dicomTag)
-		{
-			if (!IsStoredTag(dicomTag))
-				LoadFullHeader();
-
-			DicomAttribute attribute;
-			if (MetaInfo.TryGetAttribute(dicomTag, out attribute))
-				return attribute;
-
-			if (_fullHeader != null)
-				return _fullHeader.DataSet[dicomTag];
-
-			return _xml[dicomTag];
-		}
-
-		public DicomFile GetHeader(bool forceComplete)
-		{
-			if (forceComplete)
-				LoadFullHeader(); //Make sure the full header's loaded.
-
-			//Return a copy of whatever we've got.
-			return new DicomFile(null, MetaInfo.Copy(), DataSet.Copy());
-		}
-
-		public DicomFile GetCompleteSop()
-		{
-			//Just get the entire thing from the loader.
-			var args = new LoadDicomFileArgs(StudyInstanceUid, SeriesInstanceUid, SopInstanceUid, true, true);
-			return HeaderProvider.LoadDicomFile(args);
-		}
-
-		public IFramePixelData GetFramePixelData(int frameNumber)
-		{
-			var args = new LoadFramePixelDataArgs(this.StudyInstanceUid, this.SeriesInstanceUid, this.SopInstanceUid, frameNumber);
-			return HeaderProvider.LoadFramePixelData(args);
-		}
-
-		#endregion
 	}
 }

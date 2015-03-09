@@ -22,19 +22,25 @@
 
 #endregion
 
+using JetBrains.Annotations;
+
 namespace ClearCanvas.Common.Caching
 {
 	public abstract class CacheOptionsBase
 	{
+		protected CacheOptionsBase()
+		{
+		}
+
 		protected CacheOptionsBase(string region)
 		{
-			Platform.CheckForNullReference(region, "region");
 			Region = region;
 		}
 
 		/// <summary>
-		/// Gets or sets the region
+		/// Gets or sets the region, which may be null to indicate that the default region is to be used.
 		/// </summary>
+		[CanBeNull]
 		public string Region { get; set; }
 	}
 }

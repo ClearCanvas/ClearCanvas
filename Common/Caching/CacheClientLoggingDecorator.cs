@@ -50,6 +50,13 @@ namespace ClearCanvas.Common.Caching
 			return value;
 		}
 
+		public object Get(string key)
+		{
+			object value = _cacheClient.Get(key);
+			LogGet(key, value, null);
+			return value;
+		}
+
 		public void Put(string key, object value, CachePutOptions options)
 		{
 			_cacheClient.Put(key, value, options);
@@ -60,6 +67,12 @@ namespace ClearCanvas.Common.Caching
 		{
 			_cacheClient.Remove(key, options);
 			LogRemove(key, options);
+		}
+
+		public void Remove(string key)
+		{
+			_cacheClient.Remove(key);
+			LogRemove(key, null);
 		}
 
 		public bool RegionExists(string region)
@@ -93,17 +106,17 @@ namespace ClearCanvas.Common.Caching
 		private void LogGet(string key, object value, CacheGetOptions options)
 		{
 			string action = value == null ? "miss" : "hit";
-			LogItem(action, options.Region, key, value);
+			LogItem(action, options != null ? options.Region : null, key, value);
 		}
 
 		private void LogPut(string key, object value, CachePutOptions options)
 		{
-			LogItem("put", options.Region, key, value);
+			LogItem("put", options != null ? options.Region : null, key, value);
 		}
 
 		private void LogRemove(string key, CacheRemoveOptions options)
 		{
-			LogItem("remove", options.Region, key, null);
+			LogItem("remove", options != null ? options.Region : null, key, null);
 		}
 
 		private void LogClearRegion(string region)
@@ -111,7 +124,7 @@ namespace ClearCanvas.Common.Caching
 			Platform.Log(_logLevel,
 			             "Cache (ID = {0}, Region = {1}): cleared region",
 			             _cacheClient.CacheID,
-			             region);
+			             string.IsNullOrEmpty(region) ? "<none>" : region);
 		}
 
 		private void LogClearCache()
@@ -126,7 +139,7 @@ namespace ClearCanvas.Common.Caching
 			Platform.Log(_logLevel,
 				"Cache (ID = {0}, Region = {1}): {2} key = {3}, value = {4}",
 				_cacheClient.CacheID,
-				region,
+				string.IsNullOrEmpty(region) ? "<none>" : region,
 				action,
 				key,
 				value);

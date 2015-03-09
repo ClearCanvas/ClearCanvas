@@ -25,9 +25,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Web;
+using System.Web.Hosting;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -94,7 +97,25 @@ namespace ClearCanvas.Dicom.Audit
 				}
 			}
 		}
+		public static string ClientIpAddress
+		{
+			get
+			{
+				if (HostingEnvironment.IsHosted)
+				{
+					string ipList = HttpContext.Current.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
 
+					if (!string.IsNullOrEmpty(ipList))
+					{
+						return ipList.Split(',')[0];
+					}
+
+					return HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"];
+				}
+
+				return string.Empty;
+			}
+		}
 		public static string ProcessName
 		{
 			get
@@ -114,8 +135,7 @@ namespace ClearCanvas.Dicom.Audit
 			{
 				lock (SyncLock)
 				{
-					if (_processId == null) _processId = Process.GetCurrentProcess().Id.ToString();
-					return _processId;
+					return _processId ?? (_processId = Process.GetCurrentProcess().Id.ToString(CultureInfo.InvariantCulture));
 				}
 			}
 
@@ -281,8 +301,12 @@ namespace ClearCanvas.Dicom.Audit
 			_participantObjectList.Add(key, study);
 		}
 
-		protected void InternalAddActiveParticipant(AuditActiveParticipant participant)
+		protected bool HasParticipantObject(string key)
+		{
+			return _participantObjectList.ContainsKey(key);
+		}
 
+		protected void InternalAddActiveParticipant(AuditActiveParticipant participant)
 		{
 			_participantList.Add(new ActiveParticipantContents(participant));
 		}

@@ -223,6 +223,8 @@ namespace ClearCanvas.Common.Configuration
 		{
 			try
 			{
+                //NOTE: the GetHostEvidence<T> method is not implemented on Mono, and this will throw an exception.
+
 				// if the strong name evidence is available for the appdomain, it would've been used and there wouldn't be an 'alternate'
 				if (appDomainEvidence.GetHostEvidence<StrongName>() != null) return null;
 

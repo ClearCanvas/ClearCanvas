@@ -23,37 +23,33 @@
 #endregion
 
 using System;
-using System.Drawing;
-using System.Diagnostics;
 using ClearCanvas.Common;
-using ClearCanvas.ImageViewer.Imaging;
 using ClearCanvas.Desktop;
-using ClearCanvas.Desktop.Tools;
 using ClearCanvas.Desktop.Actions;
-using ClearCanvas.ImageViewer.InputManagement;
 using ClearCanvas.ImageViewer.BaseTools;
 using ClearCanvas.ImageViewer.Graphics;
+using ClearCanvas.ImageViewer.InputManagement;
 using ClearCanvas.ImageViewer.Tools.Standard.Configuration;
+using JetBrains.Annotations;
 
 namespace ClearCanvas.ImageViewer.Tools.Standard
 {
 	[MenuAction("activate", "imageviewer-contextmenu/MenuPan", "Select", Flags = ClickActionFlags.CheckAction)]
 	[MenuAction("activate", "global-menus/MenuTools/MenuStandard/MenuPan", "Select", Flags = ClickActionFlags.CheckAction)]
 	[ButtonAction("activate", "global-toolbars/ToolbarStandard/ToolbarPan", "Select", Flags = ClickActionFlags.CheckAction, KeyStroke = XKeys.P)]
-    [CheckedStateObserver("activate", "Active", "ActivationChanged")]
+	[CheckedStateObserver("activate", "Active", "ActivationChanged")]
 	[TooltipValueObserver("activate", "Tooltip", "TooltipChanged")]
 	[MouseButtonIconSet("activate", "Icons.PanToolSmall.png", "Icons.PanToolMedium.png", "Icons.PanToolLarge.png")]
 	[GroupHint("activate", "Tools.Image.Manipulation.Pan")]
-
+	//
 	[KeyboardAction("panleft", "imageviewer-keyboard/ToolsStandardPan/PanLeft", "PanLeft", KeyStroke = XKeys.Control | XKeys.Left)]
 	[KeyboardAction("panright", "imageviewer-keyboard/ToolsStandardPan/PanRight", "PanRight", KeyStroke = XKeys.Control | XKeys.Right)]
 	[KeyboardAction("panup", "imageviewer-keyboard/ToolsStandardPan/PanUp", "PanUp", KeyStroke = XKeys.Control | XKeys.Up)]
 	[KeyboardAction("pandown", "imageviewer-keyboard/ToolsStandardPan/PanDown", "PanDown", KeyStroke = XKeys.Control | XKeys.Down)]
-
+	//
 	[MouseToolButton(XMouseButtons.Left, false)]
 	[DefaultMouseToolButton(XMouseButtons.Left, ModifierFlags.Control)]
-    
-	[ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
+	[ExtensionOf(typeof (ImageViewerToolExtensionPoint))]
 	public class PanTool : MouseImageViewerTool
 	{
 		private readonly SpatialTransformImageOperation _operation;
@@ -64,7 +60,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		public PanTool()
 			: base(SR.TooltipPan)
 		{
-			this.CursorToken = new CursorToken("Icons.PanToolSmall.png", this.GetType().Assembly);
+			CursorToken = new CursorToken("Icons.PanToolSmall.png", GetType().Assembly);
 			_operation = new SpatialTransformImageOperation(Apply);
 		}
 
@@ -83,7 +79,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 		private ISpatialTransform GetSelectedImageTransform()
 		{
-			return _operation.GetOriginator(this.SelectedPresentationImage) as ISpatialTransform;
+			return _operation.GetOriginator(SelectedPresentationImage);
 		}
 
 		private bool CanPan()
@@ -96,7 +92,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			if (!CanPan())
 				return;
 
-			_applicator = new ImageOperationApplicator(this.SelectedPresentationImage, _operation);
+			_applicator = new ImageOperationApplicator(SelectedPresentationImage, _operation);
 			IMemorable originator = GetSelectedImageTransform();
 			_memorableCommand = new MemorableUndoableCommand(originator);
 			_memorableCommand.BeginState = originator.CreateMemento();
@@ -109,7 +105,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 			_memorableCommand.EndState = GetSelectedImageTransform().CreateMemento();
 			UndoableCommand applicatorCommand = _toolBehavior.Behavior.SelectedImagePanTool ? null : _applicator.ApplyToLinkedImages();
-			DrawableUndoableCommand historyCommand = new DrawableUndoableCommand(this.SelectedPresentationImage);
+			DrawableUndoableCommand historyCommand = new DrawableUndoableCommand(SelectedPresentationImage);
 
 			if (!_memorableCommand.EndState.Equals(_memorableCommand.BeginState))
 				historyCommand.Enqueue(_memorableCommand);
@@ -119,27 +115,31 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			if (historyCommand.Count > 0)
 			{
 				historyCommand.Name = SR.CommandPan;
-				this.Context.Viewer.CommandHistory.AddCommand(historyCommand);
+				Context.Viewer.CommandHistory.AddCommand(historyCommand);
 			}
 
 			_memorableCommand = null;
 		}
 
+		[UsedImplicitly]
 		private void PanLeft()
 		{
 			IncrementPanWithUndo(-15, 0);
 		}
 
+		[UsedImplicitly]
 		private void PanRight()
 		{
 			IncrementPanWithUndo(15, 0);
 		}
 
+		[UsedImplicitly]
 		private void PanUp()
 		{
 			IncrementPanWithUndo(0, -15);
 		}
 
+		[UsedImplicitly]
 		private void PanDown()
 		{
 			IncrementPanWithUndo(0, 15);
@@ -150,9 +150,9 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			if (!CanPan())
 				return;
 
-			this.CaptureBeginState();
-			this.IncrementPan(xIncrement, yIncrement);
-			this.CaptureEndState();
+			CaptureBeginState();
+			IncrementPan(xIncrement, yIncrement);
+			CaptureEndState();
 		}
 
 		private void IncrementPan(int xIncrement, int yIncrement)
@@ -160,18 +160,11 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 			if (!CanPan())
 				return;
 
-			ISpatialTransform transform = _operation.GetOriginator(this.SelectedPresentationImage);
+			ISpatialTransform transform = _operation.GetOriginator(SelectedPresentationImage);
 
-			// Because the pan increment is in destination coordinates, we have to convert
-			// them to source coordinates, since the transform translation is in source coordinates.
-			// This will allow the pan to work properly irrespective of the zoom, flip and rotation.
-			
-			SizeF sourceIncrement = transform.ConvertToSource(new SizeF(xIncrement, yIncrement));
+			transform.Translate(xIncrement, yIncrement);
 
-			transform.TranslationX += sourceIncrement.Width;
-			transform.TranslationY += sourceIncrement.Height;
-
-			this.SelectedPresentationImage.Draw();
+			SelectedPresentationImage.Draw();
 		}
 
 		public override bool Start(IMouseInformation mouseInformation)
@@ -187,7 +180,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 		{
 			base.Track(mouseInformation);
 
-			this.IncrementPan(base.DeltaX, base.DeltaY);
+			IncrementPan(DeltaX, DeltaY);
 
 			return true;
 		}
@@ -203,14 +196,14 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 		public override void Cancel()
 		{
-			this.CaptureEndState();
+			CaptureEndState();
 		}
 
 		public void Apply(IPresentationImage image)
 		{
-			ISpatialTransform transform = (ISpatialTransform)_operation.GetOriginator(image);
-			transform.TranslationX = this.SelectedSpatialTransformProvider.SpatialTransform.TranslationX;
-			transform.TranslationY = this.SelectedSpatialTransformProvider.SpatialTransform.TranslationY;
+			ISpatialTransform transform = _operation.GetOriginator(image);
+			transform.TranslationX = SelectedSpatialTransformProvider.SpatialTransform.TranslationX;
+			transform.TranslationY = SelectedSpatialTransformProvider.SpatialTransform.TranslationY;
 		}
 	}
 }

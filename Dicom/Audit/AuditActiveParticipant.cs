@@ -24,6 +24,8 @@
 
 using System;
 using System.Text;
+using System.Web;
+using System.Web.Hosting;
 
 namespace ClearCanvas.Dicom.Audit
 {
@@ -226,7 +228,17 @@ namespace ClearCanvas.Dicom.Audit
 			_userName = userName;
 
 			_networkAccessPointType = NetworkAccessPointTypeEnum.IpAddress;
-			_networkAccessPointId = DicomAuditHelper.ProcessIpAddress;
+			_networkAccessPointId = HostingEnvironment.IsHosted ? DicomAuditHelper.ClientIpAddress : DicomAuditHelper.ProcessIpAddress;
+		}
+
+		public AuditPersonActiveParticipant(string userId, string alternateUserId, string userName, string ipAddress)
+		{
+			_userId = userId;
+			_alternateUserId = alternateUserId;
+			_userName = userName;
+
+			_networkAccessPointType = NetworkAccessPointTypeEnum.IpAddress;
+			_networkAccessPointId = ipAddress;
 		}
 	}
 
@@ -238,7 +250,7 @@ namespace ClearCanvas.Dicom.Audit
 		public AuditProcessActiveParticipant(string[] aeTitles)
 		{
 			_userName = DicomAuditHelper.ProcessName;
-			StringBuilder sb = new StringBuilder("AETITLES=");
+			var sb = new StringBuilder("AETITLES=");
 			foreach (string aeTitle in aeTitles)
 			{
 				sb.Append(aeTitle);
@@ -248,6 +260,7 @@ namespace ClearCanvas.Dicom.Audit
 			_alternateUserId = sb.ToString();
 			_networkAccessPointId = DicomAuditHelper.ProcessIpAddress;
 			_networkAccessPointType = NetworkAccessPointTypeEnum.IpAddress;
+			_roleIdCode = RoleIDCode.Application;
 		}
 
 		public AuditProcessActiveParticipant(string aeTitle)
@@ -257,6 +270,20 @@ namespace ClearCanvas.Dicom.Audit
 			_alternateUserId = String.Format("AETITLES={0}", aeTitle);
 			_networkAccessPointId = DicomAuditHelper.ProcessIpAddress;
 			_networkAccessPointType = NetworkAccessPointTypeEnum.IpAddress;
+			_roleIdCode = RoleIDCode.Application;
+		}
+		public AuditProcessActiveParticipant()
+		{
+			_userName = DicomAuditHelper.ProcessName;
+			_userId = DicomAuditHelper.ProcessId;
+			_networkAccessPointId = DicomAuditHelper.ProcessIpAddress;
+			_networkAccessPointType = NetworkAccessPointTypeEnum.IpAddress;
+			_roleIdCode = RoleIDCode.Application;
+		}
+
+		public void SetAlternateUserId(string val)
+		{
+			_alternateUserId = val;
 		}
 	}
 }

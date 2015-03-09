@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -150,7 +151,8 @@ namespace ClearCanvas.Common
 
 		#endregion
 
-		private static readonly Dictionary<string, TypeRef> _interns = new Dictionary<string, TypeRef>(); 
+		private static readonly Dictionary<string, TypeRef> _interns = new Dictionary<string, TypeRef>();
+		private static readonly ConcurrentDictionary<Type, string> _assemblyQualifiedTypeNameCache = new ConcurrentDictionary<Type, string>(); 
 
 		/// <summary>
 		/// Gets a <see cref="TypeRef"/> corresponding to the specified type.
@@ -293,7 +295,8 @@ namespace ClearCanvas.Common
 
 		private static string GetAssemblyQualifiedName(Type type)
 		{
-			return string.Format("{0}, {1}", type.FullName, type.Assembly.GetName().Name);
+			return _assemblyQualifiedTypeNameCache.GetOrAdd(type,
+				t => string.Format("{0}, {1}", t.FullName, t.Assembly.GetName().Name));
 		}
 	}
 

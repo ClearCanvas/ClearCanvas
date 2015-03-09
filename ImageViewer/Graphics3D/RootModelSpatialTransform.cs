@@ -141,6 +141,12 @@ namespace ClearCanvas.ImageViewer.Graphics3D
 			get { return _rootTransform3D.CumulativeScale; }
 		}
 
+		protected override void ResetCore()
+		{
+			base.ResetCore();
+			ScaleToFit = true;
+		}
+
 		protected override void UpdateScaleParameters()
 		{
 			if (OwnerGraphic != null && OwnerGraphic.ParentPresentationImage != null)

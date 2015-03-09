@@ -92,7 +92,7 @@ namespace ClearCanvas.Enterprise.Common
 			string baseUrl,
 			string failoverBaseUrl,
 			string configurationClassName,
-			int maxReceivedMessageSize,
+			long maxReceivedMessageSize,
 			X509CertificateValidationMode certificateValidationMode,
 			X509RevocationMode revocationMode,
 			string credentialsProviderClassName)
@@ -131,7 +131,7 @@ namespace ClearCanvas.Enterprise.Common
 		/// <summary>
 		/// Maximum size in bytes of message received by the service client.
 		/// </summary>
-		public int MaxReceivedMessageSize { get; set; }
+		public long MaxReceivedMessageSize { get; set; }
 
 		/// <summary>
 		/// The time, in seconds, in which a send operation must complete.

@@ -322,16 +322,16 @@ namespace ClearCanvas.ImageViewer.Graphics3D
 		public virtual object CreateMemento()
 		{
 			return new Memento
-			       	{
-			       		FlipXY = FlipXY,
-			       		FlipXZ = FlipXZ,
-			       		FlipYZ = FlipYZ,
-			       		Rotation = Rotation.Clone(),
-			       		Scale = Scale,
-			       		TranslationX = TranslationX,
-			       		TranslationY = TranslationY,
-			       		TranslationZ = TranslationZ
-			       	};
+			       {
+				       FlipXY = FlipXY,
+				       FlipXZ = FlipXZ,
+				       FlipYZ = FlipYZ,
+				       Rotation = Rotation.Clone(),
+				       Scale = Scale,
+				       TranslationX = TranslationX,
+				       TranslationY = TranslationY,
+				       TranslationZ = TranslationZ
+			       };
 		}
 
 		public virtual void SetMemento(object memento)
@@ -424,6 +424,20 @@ namespace ClearCanvas.ImageViewer.Graphics3D
 		/// </summary>
 		public void Initialize()
 		{
+			Reset();
+		}
+
+		public void Reset()
+		{
+			ResetCore();
+			ForceRecalculation();
+		}
+
+		/// <summary>
+		/// Called to reset transform parameters to default values.
+		/// </summary>
+		protected virtual void ResetCore()
+		{
 			Scale = 1.0F;
 			TranslationX = 0.0F;
 			TranslationY = 0.0F;
@@ -432,7 +446,6 @@ namespace ClearCanvas.ImageViewer.Graphics3D
 			FlipYZ = false;
 			FlipXZ = false;
 			FlipXY = false;
-			ForceRecalculation();
 		}
 
 		/// <summary>

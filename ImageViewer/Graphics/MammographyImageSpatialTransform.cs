@@ -24,10 +24,11 @@
 
 using System;
 using System.Drawing;
+using System.Globalization;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom.Iod;
 using ClearCanvas.ImageViewer.Mathematics;
-using Matrix=System.Drawing.Drawing2D.Matrix;
+using Matrix = System.Drawing.Drawing2D.Matrix;
 
 namespace ClearCanvas.ImageViewer.Graphics
 {
@@ -49,6 +50,9 @@ namespace ClearCanvas.ImageViewer.Graphics
 		[CloneIgnore]
 		private readonly Vector3D _imagePosterior;
 
+		private readonly bool _coreFlipX;
+		private readonly int _coreRotation;
+
 		/// <summary>
 		/// Initializes a new instance of <see cref="MammographyImageSpatialTransform"/> with the specified image plane details.
 		/// </summary>
@@ -60,10 +64,8 @@ namespace ClearCanvas.ImageViewer.Graphics
 			Vector3D imagePosterior, imageHead, imageLeft; // patient orientation vectors in image space
 			GetPatientOrientationVectors(patientOrientation, out imageHead, out imageLeft, out imagePosterior);
 
-			// save the posterior vector
-			_imagePosterior = imagePosterior;
-
-			if (imagePosterior != null)
+			// no adjustments if the posterior direction is not represented in the image
+			if ((_imagePosterior = imagePosterior) != null)
 			{
 				Vector3D normativePosterior, normativeHead, normativeLeft; // normative patient orientation vectors in image space
 				GetNormativeOrientationVectors(laterality, out normativeHead, out normativeLeft, out normativePosterior);
@@ -74,17 +76,17 @@ namespace ClearCanvas.ImageViewer.Graphics
 					// check if the order of the patient vectors are flipped according to the normative vectors
 					// we know we need to flip if the direction vector cross products have different signs
 					if (imageHead != null)
-						FlipX = Math.Sign(imagePosterior.Cross(imageHead).Z) != Math.Sign(normativePosterior.Cross(normativeHead).Z);
+						FlipX = _coreFlipX = Math.Sign(imagePosterior.Cross(imageHead).Z) != Math.Sign(normativePosterior.Cross(normativeHead).Z);
 					else if (imageLeft != null)
-						FlipX = Math.Sign(imagePosterior.Cross(imageLeft).Z) != Math.Sign(normativePosterior.Cross(normativeLeft).Z);
+						FlipX = _coreFlipX = Math.Sign(imagePosterior.Cross(imageLeft).Z) != Math.Sign(normativePosterior.Cross(normativeLeft).Z);
 
 					// with flip normalized, just rotate to align the current posterior direction with the normative posterior
-					var currentPosterior = ScreenPosterior;
+					var currentPosterior = GetCurrentPosteriorVector(_imagePosterior, SourceWidth, AdjustedSourceHeight, 0, 1, 1, _coreFlipX, false);
 					var posteriorAngle = Math.Atan2(currentPosterior.Y, currentPosterior.X);
 					var normativeAngle = Math.Atan2(normativePosterior.Y, normativePosterior.X);
 
 					// compute required rotation, rounded to multiples of 90 degrees (PI/2 radians)
-					RotationXY = 90*((int) Math.Round((normativeAngle - posteriorAngle)*2/Math.PI));
+					RotationXY = _coreRotation = 90*((int) Math.Round((normativeAngle - posteriorAngle)*2/Math.PI));
 				}
 			}
 		}
@@ -102,38 +104,18 @@ namespace ClearCanvas.ImageViewer.Graphics
 			_imagePosterior = source._imagePosterior != null ? new Vector3D(source._imagePosterior) : null;
 		}
 
-		/// <summary>
-		/// Gets the patient posterior orientation vector in the screen coordinate space.
-		/// </summary>
-		private Vector3D ScreenPosterior
-		{
-			get
-			{
-				if (_imagePosterior == null)
-					return null;
-
-				// figure out where the posterior direction went
-				using (var transform = new Matrix())
-				{
-					var points = new[] {new PointF(SourceWidth*_imagePosterior.X, AdjustedSourceHeight*_imagePosterior.Y)};
-					transform.Rotate(RotationXY);
-					transform.Scale(ScaleX*(FlipY ? -1 : 1), ScaleY*(FlipX ? -1 : 1));
-					transform.TransformPoints(points);
-					return new Vector3D(points[0].X, points[0].Y, 0);
-				}
-			}
-		}
-
 		protected override void CalculatePreTransform(Matrix cumulativeTransform)
 		{
-			var destPosteriorVector = ScreenPosterior;
-			if (destPosteriorVector != null)
+			if (_imagePosterior != null)
 			{
 				// when the posterior edge of the image can be determined,
 				// apply an offset in addition to user-applied translations
 				// this allows the image to appear initially at (and reset to)
 				// a position where the posterior ("chest wall") is aligned
 				// against an edge of the client rectangle.
+
+				// compute the posterior vector according to the adjusted parameters
+				var destPosteriorVector = GetCurrentPosteriorVector(_imagePosterior, SourceWidth, AdjustedSourceHeight, RotationXY, ScaleX, ScaleY, FlipX, FlipY);
 
 				// check if posterior direction is along client X axis
 				if (Math.Abs(destPosteriorVector.X) > Math.Abs(destPosteriorVector.Y))
@@ -150,6 +132,17 @@ namespace ClearCanvas.ImageViewer.Graphics
 			base.CalculatePreTransform(cumulativeTransform);
 		}
 
+		protected override void ResetCore()
+		{
+			Scale = 1.0f;
+			TranslationX = 0.0f;
+			TranslationY = 0.0f;
+			RotationXY = _coreRotation;
+			FlipY = false;
+			FlipX = _coreFlipX;
+			ScaleToFit = true;
+		}
+
 		/// <summary>
 		/// Gets the effective posterior (or anterior) patient orientation after transforms have been applied.
 		/// </summary>
@@ -157,23 +150,39 @@ namespace ClearCanvas.ImageViewer.Graphics
 		{
 			row = column = string.Empty;
 
-			var screenPosterior = ScreenPosterior;
-			if (screenPosterior == null)
+			if (_imagePosterior == null)
 				return;
 
-			// since we only deal with orthogonal rotations, getting the unit vector and truncating values will effectively remove any floating point error
+			// convert the image posterior vector to screen coordinates to find the screen posterior vector
+			var screenPosterior2D = ConvertToDestination(new SizeF(_imagePosterior.X, _imagePosterior.Y));
+			var screenPosterior = new Vector3D(screenPosterior2D.Width, screenPosterior2D.Height, 0);
+
+			// since we only deal with orthogonal rotations, getting the unit vector and rounding values will effectively remove any floating point error
 			screenPosterior = screenPosterior.Normalize();
-			screenPosterior = new Vector3D((int) screenPosterior.X, (int) screenPosterior.Y, 0);
+			screenPosterior = new Vector3D((int) Math.Round(screenPosterior.X), (int) Math.Round(screenPosterior.Y), 0);
 
 			if (screenPosterior.Y > 0)
-				column = _orientationPosterior.ToString();
+				column = _orientationPosterior.ToString(CultureInfo.InvariantCulture);
 			else if (screenPosterior.Y < 0)
-				column = _orientationAnterior.ToString();
+				column = _orientationAnterior.ToString(CultureInfo.InvariantCulture);
 
 			if (screenPosterior.X > 0)
-				row = _orientationPosterior.ToString();
+				row = _orientationPosterior.ToString(CultureInfo.InvariantCulture);
 			else if (screenPosterior.X < 0)
-				row = _orientationAnterior.ToString();
+				row = _orientationAnterior.ToString(CultureInfo.InvariantCulture);
+		}
+
+		private static Vector3D GetCurrentPosteriorVector(Vector3D imagePosterior, int sourceWidth, float adjustedSourceHeight, int rotation, float scaleX, float scaleY, bool flipX, bool flipY)
+		{
+			// figure out where the posterior direction went
+			using (var transform = new Matrix())
+			{
+				var points = new[] {new PointF(sourceWidth*imagePosterior.X, adjustedSourceHeight*imagePosterior.Y)};
+				transform.Rotate(rotation);
+				transform.Scale(scaleX*(flipY ? -1 : 1), scaleY*(flipX ? -1 : 1));
+				transform.TransformPoints(points);
+				return new Vector3D(points[0].X, points[0].Y, 0);
+			}
 		}
 
 		private static void GetNormativeOrientationVectors(string laterality, out Vector3D headVector, out Vector3D leftVector, out Vector3D posteriorVector)

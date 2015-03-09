@@ -27,6 +27,30 @@ using System.Collections.Generic;
 
 namespace ClearCanvas.Dicom.Iod
 {
+	// TODO (CR Jul 2013): replace the stuff in the viewer with this.
+
+	/// <summary>
+	/// Abstract representation of a study, with child series.
+	/// </summary>
+	public interface IStudy : IStudyData, IPatientData
+	{
+		/// <summary>
+		/// Gets the collection of series in this study.
+		/// </summary>
+		ISeriesCollection Series { get; }
+
+		/// <summary>
+		/// Gets the first SOP instance in this study.
+		/// </summary>
+		ISopInstance FirstSopInstance { get; }
+
+		new DateTime? PatientsBirthDate { get; }
+		new TimeSpan? PatientsBirthTime { get; }
+
+		new DateTime? StudyDate { get; }
+		new TimeSpan? StudyTime { get; }
+	}
+
 	/// <summary>
 	/// Args for loading a <see cref="DicomFile"/> for a particular SOP in a study.
 	/// </summary>
@@ -312,57 +336,5 @@ namespace ClearCanvas.Dicom.Iod
 		}
 
 		#endregion
-	}
-
-	// TODO (CR Jul 2013): replace the stuff in the viewer with this.
-
-	/// <summary>
-	/// Abstract representation of a study, with child series.
-	/// </summary>
-	public interface IStudy : IStudyData, IPatientData
-	{
-		new DateTime? PatientsBirthDate { get; }
-		new TimeSpan? PatientsBirthTime { get; }
-
-		new DateTime? StudyDate { get; }
-		new TimeSpan? StudyTime { get; }
-
-		IList<ISeries> Series { get; }
-	}
-
-	/// <summary>
-	/// Abstract representation of a series with child sops.
-	/// </summary>
-	public interface ISeries : ISeriesData
-	{
-		IStudy ParentStudy { get; }
-		IList<ISopInstance> SopInstances { get; }
-
-		string StationName { get; }
-		string Manufacturer { get; }
-		string ManufacturersModelName { get; }
-
-		string InstitutionName { get; }
-		string InstitutionAddress { get; }
-		string InstitutionalDepartmentName { get; }
-	}
-
-	/// <summary>
-	/// Abstract representation of a sop instance, that provides <see cref="DicomAttribute"/> objects, or can construct and return an entire header.
-	/// </summary>
-	public interface ISopInstance : ISopInstanceData
-	{
-		ISeries ParentSeries { get; }
-
-		SopClass SopClass { get; }
-
-		string SourceApplicationEntityTitle { get; }
-
-		DicomAttribute GetAttribute(uint dicomTag);
-		DicomAttribute GetAttribute(DicomTag dicomTag);
-
-		DicomFile GetCompleteSop();
-		DicomFile GetHeader(bool forceComplete);
-		IFramePixelData GetFramePixelData(int frameNumber);
 	}
 }

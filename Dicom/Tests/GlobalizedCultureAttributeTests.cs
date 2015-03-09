@@ -22,7 +22,7 @@
 
 #endregion
 
-#if UNIT_TESTS
+#if UNIT_TESTS && !__MonoCS__
 
 // ReSharper disable InconsistentNaming
 

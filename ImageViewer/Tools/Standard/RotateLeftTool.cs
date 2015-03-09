@@ -22,6 +22,7 @@
 
 #endregion
 
+using ClearCanvas.Common;
 using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
 using ClearCanvas.ImageViewer.BaseTools;
@@ -37,13 +38,12 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 	[Tooltip("activate", "TooltipRotateLeft")]
 	[IconSet("activate", "Icons.RotateLeftToolSmall.png", "Icons.RotateLeftToolMedium.png", "Icons.RotateLeftToolLarge.png")]
 	[GroupHint("activate", "Tools.Image.Manipulation.Orientation.Rotate.Left")]
-
-    [ClearCanvas.Common.ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
+	[ExtensionOf(typeof (ImageViewerToolExtensionPoint))]
 	public class RotateLeftTool : ImageViewerTool
 	{
 		private readonly SpatialTransformImageOperation _operation;
 		private ToolModalityBehaviorHelper _toolBehavior;
-		
+
 		public RotateLeftTool()
 		{
 			_operation = new SpatialTransformImageOperation(Apply);
@@ -72,8 +72,8 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 
 		public void Apply(IPresentationImage image)
 		{
-			ISpatialTransform transform = (ISpatialTransform)_operation.GetOriginator(image);
-			transform.RotationXY -= 90;
+			ISpatialTransform transform = (ISpatialTransform) _operation.GetOriginator(image);
+			transform.Rotate(-90);
 		}
 	}
 }

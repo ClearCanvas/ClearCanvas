@@ -102,6 +102,7 @@ namespace ClearCanvas.Common.Rest
 								return;
 
 							_responseStream.CopyTo(stream);
+							_responseStream.Close();
 						}
 						_responseStream = null;
 					}
@@ -140,7 +141,7 @@ namespace ClearCanvas.Common.Rest
 							{
 								result = reader.ReadToEnd();
 							}
-
+							_responseStream.Close();
 							_responseStream = null;
 							return result;
 						}
@@ -167,6 +168,7 @@ namespace ClearCanvas.Common.Rest
 					if (_responseStream != null)
 					{
 						_responseStream.Close();
+						_responseStream.Dispose();
 						_responseStream = null;
 					}
 				}
@@ -221,14 +223,53 @@ namespace ClearCanvas.Common.Rest
 			private HttpWebRequest _request;
 			private string _contentString;
 			private Stream _contentStream;
-			private string _contentType;
-			private bool _bufferRequest = true;	// because that is the .net default
+			private long _streamBytesWritten;
 
 			internal Request(RestClient rc, string resource, string args)
 			{
 				_rc = rc;
 				Initialize(resource, args);
 			}
+
+			/// <summary>
+			/// Specifies the KeepAlive value for the web request
+			/// </summary>
+			public bool KeepAlive
+			{
+				set { _request.KeepAlive = value; }
+				get { return _request.KeepAlive; }
+			}
+
+			/// <summary>
+			/// Specifies the ProtocolVersion value for the web request
+			/// </summary>
+			public Version ProtocolVersion
+			{
+				set { _request.ProtocolVersion = value; }
+				get { return _request.ProtocolVersion; }
+			}
+
+			/// <summary>
+			/// Gets the total length of the content to be written, when it's a <see cref="Stream"/>.
+			/// </summary>
+			/// <returns>The length of the content to be written, when it's a <see cref="Stream"/>, otherwise zero.</returns>
+			public long StreamContentLength
+			{
+				get { return _contentStream != null ? _contentStream.Length : 0; }
+			}
+
+			/// <summary>
+			/// Gets the number of bytes written to the content <see cref="Stream"/>.
+			/// </summary>
+			public long StreamBytesWritten
+			{
+				get { return _contentStream != null ? _streamBytesWritten : 0; }
+			}
+
+			/// <summary>
+			/// Fires as underlying <see cref="Stream"/> content is written.
+			/// </summary>
+			public event EventHandler StreamBytesWrittenChanged;
 
 			/// <summary>
 			/// Sends this request using the GET verb and returns the response.
@@ -308,8 +349,9 @@ namespace ClearCanvas.Common.Rest
 					throw new InvalidOperationException("content already specified");
 
 				_contentStream = data;
-				_contentType = contentType;
-				_bufferRequest = buffer;
+				_request.ContentType = contentType;
+				_request.ContentLength = data.Length;
+				_request.AllowWriteStreamBuffering = buffer;
 
 				return this;
 			}
@@ -339,8 +381,9 @@ namespace ClearCanvas.Common.Rest
 				if (data == null)
 					return this;
 				_contentString = data;
-				_contentType = contentType;
-				_bufferRequest = buffer;
+				_request.ContentType = contentType;
+				_request.ContentLength = data.Length;
+				_request.AllowWriteStreamBuffering = buffer;
 
 				return this;
 			}
@@ -360,7 +403,6 @@ namespace ClearCanvas.Common.Rest
 				// initialize the request
 				_request = (HttpWebRequest)WebRequest.Create(url.ToString());
 				_request.Timeout = (int)_rc.Timeout.TotalMilliseconds;
-				_request.AllowWriteStreamBuffering = _bufferRequest;
 
 				if (!string.IsNullOrEmpty(_rc.UserAgent))
 				{
@@ -381,23 +423,26 @@ namespace ClearCanvas.Common.Rest
 			{
 				if (_contentStream != null)
 				{
-					// set content type if specified
-					if(!string.IsNullOrEmpty(_contentType))
-						_request.ContentType = _contentType;
-
 					using (var reqStream = _request.GetRequestStream())
 					{
-						_contentStream.CopyTo(reqStream);
+						//Avoid LOH on Mono, where the threshold is 8000 bytes.
+						var bufferSize = Platform.IsMono ? 7500 : 65535;
+						var buffer = new byte[bufferSize];
+						int bytesRead;
+						while (0 < (bytesRead = _contentStream.Read(buffer, 0, buffer.Length)))
+						{
+							reqStream.Write(buffer, 0, bytesRead);
+							_streamBytesWritten += bytesRead;
+							if (StreamBytesWrittenChanged != null)
+								StreamBytesWrittenChanged(this, EventArgs.Empty);
+						}
+						reqStream.Flush();
 					}
 					return;
 				}
 
 				if (_contentString != null) // empty string (0 bytes) is valid
 				{
-					// set content type if specified
-					if (!string.IsNullOrEmpty(_contentType))
-						_request.ContentType = _contentType;
-
 					using (var reqStream = _request.GetRequestStream())
 					{
 						using (var writer = new StreamWriter(reqStream))

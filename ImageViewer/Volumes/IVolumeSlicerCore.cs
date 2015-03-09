@@ -213,11 +213,14 @@ namespace ClearCanvas.ImageViewer.Volumes
 			if (_coreProviders == null || !_coreProviders.Any())
 			{
 #if UNIT_TESTS
+				// ensures the VTK version is loaded if possible
+				TypeRef.Get("ClearCanvas.ImageViewer.Vtk.VtkVolumeSlicerCoreProvider, ClearCanvas.ImageViewer.VTK").Resolve();
+
 				// ensures that unit tests running under a custom extension factory will always have a slicer implementation where available
 				_coreProviders = Platform.PluginManager.ExtensionPoints
-					.First(e => e.ExtensionPointClass == typeof (VolumeSlicerCoreProviderExtensionPoint))
-					.ListExtensions().Select(x => Activator.CreateInstance(x.ExtensionClass.Resolve()))
-					.Cast<IVolumeSlicerCoreProvider>().ToList();
+				                         .First(e => e.ExtensionPointClass == typeof (VolumeSlicerCoreProviderExtensionPoint))
+				                         .ListExtensions().Select(x => Activator.CreateInstance(x.ExtensionClass.Resolve()))
+				                         .Cast<IVolumeSlicerCoreProvider>().ToList();
 
 				if (_coreProviders == null || !_coreProviders.Any())
 					throw new NotSupportedException("No implementations of IVolumeSlicerCoreProvider were found.");

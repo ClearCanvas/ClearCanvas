@@ -48,14 +48,17 @@ namespace ClearCanvas.Dicom.Audit
 		public DataExportAuditHelper(DicomAuditSource auditSource, EventIdentificationContentsEventOutcomeIndicator outcome, string exportDestination)
 			: base("DataExport")
 		{
-			AuditMessage.EventIdentification = new EventIdentificationContents();
-			AuditMessage.EventIdentification.EventID = EventID.Export;
-			AuditMessage.EventIdentification.EventActionCode = EventIdentificationContentsEventActionCode.E;
-			AuditMessage.EventIdentification.EventActionCodeSpecified = true;
-			AuditMessage.EventIdentification.EventDateTime = Platform.Time.ToUniversalTime();
-			AuditMessage.EventIdentification.EventOutcomeIndicator = outcome;
+			AuditMessage.EventIdentification = new EventIdentificationContents
+				{
+					EventID = EventID.Export,
+					EventActionCode = EventIdentificationContentsEventActionCode.E,
+					EventActionCodeSpecified = true,
+					EventDateTime = Platform.Time.ToUniversalTime(),
+					EventOutcomeIndicator = outcome
+				};
 
 			InternalAddAuditSource(auditSource);
+			AddUserParticipant(new AuditProcessActiveParticipant());
 
 			// Add the Destination
 			_participantList.Add(
@@ -63,13 +66,34 @@ namespace ClearCanvas.Dicom.Audit
 		}
 
 		/// <summary>
+		/// Constructor.
+		/// </summary>
+		/// <param name="auditSource">The source of the audit.</param>
+		/// <param name="outcome">The outcome (success or failure)</param>
+		/// <param name="participant">The active participant in the audit</param>
+		public DataExportAuditHelper(DicomAuditSource auditSource, EventIdentificationContentsEventOutcomeIndicator outcome, AuditActiveParticipant participant)
+			: base("DataExport")
+		{
+			AuditMessage.EventIdentification = new EventIdentificationContents
+				{
+					EventID = EventID.Export,
+					EventActionCode = EventIdentificationContentsEventActionCode.E,
+					EventActionCodeSpecified = true,
+					EventDateTime = Platform.Time.ToUniversalTime(),
+					EventOutcomeIndicator = outcome
+				};
+
+			InternalAddAuditSource(auditSource);
+			AddUserParticipant(new AuditProcessActiveParticipant());
+
+			// Add the Destination
+			_participantList.Add(
+				new ActiveParticipantContents(participant));
+		}
+
+		/// <summary>
 		/// Add an exporter.
 		/// </summary>
-		/// <param name="userId">The identity of the local user or process exporting the data. If both
-		/// are known, then two active participants shall be included (both the
-		/// person and the process).</param>
-		/// <param name="userName">The name of the user</param>
-		/// <param name="userIsRequestor">Flag telling if the exporter is a user (as opposed to a process)</param>
 		public void AddExporter(AuditActiveParticipant participant)
 		{
             participant.RoleIdCode = RoleIDCode.SourceMedia;
@@ -80,7 +104,7 @@ namespace ClearCanvas.Dicom.Audit
 		/// <summary>
 		/// Add details of a Patient.
 		/// </summary>
-		/// <param name="study"></param>
+		/// <param name="patient">The patient in the export.</param>
 		public void AddPatientParticipantObject(AuditPatientParticipantObject patient)
 		{
 			InternalAddParticipantObject(patient.PatientId + patient.PatientsName, patient);
@@ -89,7 +113,7 @@ namespace ClearCanvas.Dicom.Audit
 		/// <summary>
 		/// Add details of a study.
 		/// </summary>
-		/// <param name="study"></param>
+		/// <param name="study">The study in the export.</param>
 		public void AddStudyParticipantObject(AuditStudyParticipantObject study)
 		{
 			InternalAddParticipantObject(study.StudyInstanceUid, study);
@@ -102,6 +126,27 @@ namespace ClearCanvas.Dicom.Audit
 		public void AddStorageInstance(StorageInstance instance)
 		{
 			InternalAddStorageInstance(instance);
+		}
+
+		/// <summary>
+		/// Add details of a general purpose participant object.
+		/// </summary>
+		/// <param name="o"></param>
+		public void AddGeneralParticipantObject(AuditParticipantObject o)
+		{
+			InternalAddParticipantObject(o.ParticipantObjectId, o);
+		}
+
+		/// <summary>
+		/// Add the ID of person or process deidentifing the study.  If both the person
+		/// and process are known, both shall be included.
+		/// </summary>
+		/// <param name="participant">The participant.</param>
+		public void AddUserParticipant(AuditActiveParticipant participant)
+		{
+			participant.UserIsRequestor = true;
+
+			InternalAddActiveParticipant(participant);
 		}
 	}
 }

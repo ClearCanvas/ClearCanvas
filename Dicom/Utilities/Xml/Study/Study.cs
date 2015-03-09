@@ -23,91 +23,127 @@
 #endregion
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ClearCanvas.Dicom.Iod;
 
 namespace ClearCanvas.Dicom.Utilities.Xml.Study
 {
+
 	/// <summary>
 	/// Represents an <see cref="IStudy"/> whose main source of data is a <see cref="StudyXml"/> document.
 	/// </summary>
 	public class Study : IStudy
 	{
-		private readonly StudyXml _xml;
-		private readonly IDicomFileLoader _headerProvider;
-		private IList<ISeries> _series;
+		#region SeriesCollection class
 
-		public Study(StudyXml xml, IDicomFileLoader headerProvider)
+		private class SeriesCollection : ISeriesCollection
 		{
-			_xml = xml;
-			_headerProvider = headerProvider;
-		}
+			private readonly Study _owner;
 
-		internal IDicomFileLoader HeaderProvider
-		{
-			get { return _headerProvider; }
-		}
+			public SeriesCollection(Study owner)
+			{
+				_owner = owner;
+			}
 
-		public ISopInstance FirstSopInstance
-		{
-			get { return Series.First().SopInstances.First(); }
-		}
+			public IEnumerator<ISeries> GetEnumerator()
+			{
+				return Xml.Select(_owner.GetSeries).GetEnumerator();
+			}
 
-		#region Implementation of IStudy
+			IEnumerator IEnumerable.GetEnumerator()
+			{
+				return GetEnumerator();
+			}
 
-		public IList<ISeries> Series
-		{
-			get { return _series ?? (_series = _xml.Select(x => (ISeries) new Series(x, this)).ToList()); }
+			public int Count
+			{
+				get { return Xml.NumberOfStudyRelatedSeries; }
+			}
+
+			public bool Contains(string seriesInstanceUid)
+			{
+				return Xml.Contains(seriesInstanceUid);
+			}
+
+			public ISeries Get(string seriesInstanceUid)
+			{
+				var seriesXml = Xml[seriesInstanceUid];
+				if(seriesXml == null)
+					throw new ArgumentException("Invalid value for series instance UID.");
+
+				return _owner.GetSeries(seriesXml);
+			}
+
+			public ISeries this[string seriesInstanceUid]
+			{
+				get { return Get(seriesInstanceUid); }
+			}
+
+			public bool TryGet(string seriesInstanceUid, out ISeries series)
+			{
+				var seriesXml = Xml[seriesInstanceUid];
+				if(seriesXml != null)
+				{
+					series = _owner.GetSeries(seriesXml);
+					return true;
+				}
+				series = null;
+				return false;
+			}
+
+			private StudyXml Xml
+			{
+				get { return _owner._xml; }
+			}
 		}
 
 		#endregion
 
-		#region IStudyData Members
 
-		public string StudyInstanceUid
+		private readonly string _studyInstanceUid;
+		private readonly StudyXml _xml;
+		private readonly IDicomFileLoader _dicomFileLoader;
+		private readonly ISopInstance _firstSopInstance;
+		private readonly SeriesCollection _seriesCollection;
+
+		public Study(StudyXml xml, IDicomFileLoader dicomFileLoader)
 		{
-			get { return _xml.StudyInstanceUid; }
+			_studyInstanceUid = xml.StudyInstanceUid;
+			_xml = xml;
+			_dicomFileLoader = dicomFileLoader;
+
+			_seriesCollection = new SeriesCollection(this);
+			_firstSopInstance = _seriesCollection.SelectMany(s => s.SopInstances).FirstOrDefault();
 		}
 
-		public string[] SopClassesInStudy
+		public IDicomFileLoader DicomFileLoader
+		{
+			get { return _dicomFileLoader; }
+		}
+
+		#region Implementation of IStudy
+
+		public ISeriesCollection Series
+		{
+			get { return _seriesCollection; }
+		}
+
+		public ISopInstance FirstSopInstance
 		{
 			get
 			{
-				return (from series in Series
-				        from sop in series.SopInstances
-				        select sop.SopClassUid).Distinct().ToArray();
+				if(_firstSopInstance == null)
+					throw new InvalidOperationException("Study contains no SOPs.");
+
+				return _firstSopInstance;
 			}
-		}
-
-		public string[] ModalitiesInStudy
-		{
-			get
-			{
-				var list = Series.Select(s => s.Modality).Distinct().ToList();
-				list.Sort();
-				return list.ToArray();
-			}
-		}
-
-		public string StudyDescription
-		{
-			get { return FirstSopInstance.GetAttribute(DicomTags.StudyDescription).ToString(); }
-		}
-
-		public string StudyId
-		{
-			get { return FirstSopInstance.GetAttribute(DicomTags.StudyId).ToString(); }
 		}
 
 		public DateTime? StudyDate
 		{
 			get { return DateParser.Parse(FirstSopInstance.GetAttribute(DicomTags.StudyDate).ToString()); }
-		}
-
-		string IStudyData.StudyDate
-		{
-			get { return FirstSopInstance.GetAttribute(DicomTags.StudyDate).ToString(); }
 		}
 
 		public TimeSpan? StudyTime
@@ -120,6 +156,45 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 
 				return null;
 			}
+		}
+
+		#endregion
+
+		#region IStudyData Members
+
+		public string StudyInstanceUid
+		{
+			get { return _studyInstanceUid; }
+		}
+
+		public string[] SopClassesInStudy
+		{
+			get
+			{
+				return (from series in _xml
+						from sop in series
+						select sop.SopClass.Uid).Distinct().ToArray();
+			}
+		}
+
+		public string[] ModalitiesInStudy
+		{
+			get { return _xml.Select(series => series.First()[DicomTags.Modality].ToString()).Distinct().OrderBy(s => s).ToArray(); }
+		}
+
+		public string StudyDescription
+		{
+			get { return FirstSopInstance.GetAttribute(DicomTags.StudyDescription).ToString(); }
+		}
+
+		public string StudyId
+		{
+			get { return FirstSopInstance.GetAttribute(DicomTags.StudyId).ToString(); }
+		}
+
+		string IStudyData.StudyDate
+		{
+			get { return FirstSopInstance.GetAttribute(DicomTags.StudyDate).ToString(); }
 		}
 
 		string IStudyData.StudyTime
@@ -144,12 +219,12 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 
 		public int? NumberOfStudyRelatedSeries
 		{
-			get { return Series.Count; }
+			get { return _xml.NumberOfStudyRelatedSeries; }
 		}
 
 		public int? NumberOfStudyRelatedInstances
 		{
-			get { return Series.Sum(s => s.SopInstances.Count); }
+			get { return _xml.NumberOfStudyRelatedInstances; }
 		}
 
 		#endregion
@@ -255,6 +330,11 @@ namespace ClearCanvas.Dicom.Utilities.Xml.Study
 		}
 
 		#endregion
+
+		private Series GetSeries(SeriesXml xml)
+		{
+			return new Series(xml, this, _dicomFileLoader);
+		}
 
 		private string GetSequenceValue(uint sequenceTag, uint itemTag)
 		{
