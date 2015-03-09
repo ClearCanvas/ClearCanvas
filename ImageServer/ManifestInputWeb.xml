@@ -19,10 +19,10 @@
     <File name="Web\bin\App_GlobalResources.compiled" ignore="true"/>
     <File name="Web\bin\Castle.Core.dll" checksum="true" />
     <File name="Web\bin\Castle.DynamicProxy2.dll" checksum="true" />
-    <File name="Web\bin\Iesi.Collections.dll" checksum="true" />
+    <!--<File name="Web\bin\Iesi.Collections.dll" checksum="true" />-->
     <File name="Web\bin\ClearCanvas.Common.dll" checksum="true" />
-    <File name="Web\bin\ClearCanvas.Common.Core.dll" checksum="true" />
     <File name="Web\bin\ClearCanvas.Dicom.dll" checksum="true" />
+    <File name="Web\bin\ClearCanvas.Dicom.Codec.Rle.dll" checksum="true" />
     <File name="Web\bin\ClearCanvas.Enterprise.Common.dll" checksum="true" />
     <File name="Web\bin\ClearCanvas.Enterprise.Core.dll" checksum="true" />
     <File name="Web\bin\ClearCanvas.ImageServer.Common.dll" checksum="true" />
@@ -35,24 +35,22 @@
     <File name="Web\bin\ClearCanvas.ImageServer.Rules.JpegCodec.dll" checksum="true" />
     <File name="Web\bin\ClearCanvas.ImageServer.Rules.RleCodec.dll" checksum="true" />
     <File name="Web\bin\ClearCanvas.ImageServer.Services.Archiving.dll" checksum="true" />
-    <!--<File name="Web\bin\ClearCanvas.ImageServer.Services.Archiving.Hsm.dll" checksum="true" />-->
+    <File name="Web\bin\ClearCanvas.ImageServer.Services.Archiving.Hsm.dll" checksum="true" />
     <File name="Web\bin\ClearCanvas.ImageServer.Services.Common.dll" checksum="true" />
     <File name="Web\bin\ClearCanvas.ImageServer.Services.Dicom.dll" checksum="true" />
     <File name="Web\bin\ClearCanvas.ImageServer.Services.WorkQueue.dll" checksum="true" />
-    <File name="Web\bin\ClearCanvas.ImageServer.Utilities.dll" checksum="true" />
+    <!--<File name="Web\bin\ClearCanvas.ImageServer.Utilities.dll" checksum="true" />-->
     <File name="Web\bin\ClearCanvas.ImageServer.Web.Application.Assembly.dll" checksum="true" />
+    <File name="Web\bin\ClearCanvas.ImageServer.Web.Application.Assembly.dll.config" ignore="true" />
     <File name="Web\bin\ClearCanvas.ImageServer.Web.Application.Assembly.dll.LOCKED" ignore="true"/>
     <File name="Web\bin\ClearCanvas.ImageServer.Web.Application.Deployment.dll" checksum="true" />
     <File name="Web\bin\ClearCanvas.ImageServer.Web.Common.dll" checksum="true" />
-    <File name="Web\bin\ClearCanvas.Jscript.dll" checksum="true" />
+    <!--<File name="Web\bin\ClearCanvas.Jscript.dll" checksum="true" />-->
     <File name="Web\bin\ClearCanvas.Server.ShredHost.dll" checksum="true" />
     <File name="Web\bin\ClearCanvas.Utilities.Manifest.dll" checksum="true" />
     <File name="Web\bin\ClearCanvas.Web.Enterprise.dll" checksum="true" />
-    <!--<File name="Web\bin\Ionic.Zip.dll" checksum="true" />-->
     <File name="Web\bin\log4net.dll" checksum="true" />
     <File name="Web\bin\nunit.framework.dll" checksum="true" />
-    <!--File name="Web\bin\System.Web.Extensions.dll" checksum="true" />
-    <File name="Web\bin\System.Web.Extensions.Design.dll" checksum="true" /-->
     <File name="Web\bin\ar\AjaxControlToolkit.resources.dll" checksum="true" />
     <File name="Web\bin\cs\AjaxControlToolkit.resources.dll" checksum="true" />
     <File name="Web\bin\de\AjaxControlToolkit.resources.dll" checksum="true" />
@@ -86,8 +84,9 @@
     <File name="Web\Controls\ServerPartitionSelector.ascx" />
     <File name="Web\Controls\SessionTimeout.ascx" />
     <File name="Web\Controls\TimedDialog.ascx" />
-	<File name="Web\Controls\UsersGuideLink.ascx" />
-	<File name="Web\Images\favicon.ico" checksum="true" />
+    <File name="Web\Controls\UsersGuideLink.ascx" />
+    <File name="Web\Images\favicon.ico" checksum="true" />
+    <File name="Web\Images\ImageServerLogo.png" checksum="true" />
     <File name="Web\Pages\Admin\Alerts\AlertHoverPopupDetails.ascx" />
     <File name="Web\Pages\Admin\Alerts\StudyAlertContextInfoView.ascx" />
     <File name="Web\Pages\Admin\Alerts\AlertsGridPanel.ascx" />
@@ -155,7 +154,7 @@
     <File name="Web\Pages\Admin\Dashboard\ServerPartitionGridView.ascx" />
     <File name="Web\Pages\Admin\Dashboard\StudiesSummary.ascx" />
     <File name="Web\Pages\Admin\Dashboard\StudyIntegrityQueueSummary.ascx" />
-    <!--File name="Web\Pages\Admin\Dashboard\WorkQueueAlertContextDataView.ascx" /-->
+    <File name="Web\Pages\Admin\Dashboard\WorkQueueAlertContextDataView.ascx" />
     <File name="Web\Pages\Admin\Dashboard\WorkQueueSummary.ascx" />
     <File name="Web\Pages\Admin\UserManagement\UserGroups\AddEditUserGroupsDialog.ascx" />
     <File name="Web\Pages\Admin\UserManagement\UserGroups\Default.aspx" />
@@ -182,14 +181,13 @@
     <File name="Web\Pages\Error\LicenseErrorPage.aspx" />
     <File name="Web\Pages\Error\SoftwareExpiredErrorPage.aspx" />
     <File name="Web\Pages\Error\TimeoutErrorPage.aspx" />
-    <File name="Web\Pages\Error\WebViewerAuthorizationErrorPage.aspx" />
-    <File name="Web\Pages\Error\WebViewerErrorPage.aspx" />
-    <File name="Web\Pages\Error\WebViewerErrorPageMaster.Master" />
-    <File name="Web\Pages\Error\WebViewerTimeoutErrorPage.aspx" />
+    <File name="Web\Pages\Help\About.aspx" />
+    <File name="Web\Pages\Help\Contact.ascx" />
     <File name="Web\Pages\Help\Default.aspx" />
     <File name="Web\Pages\Help\Documentation.aspx" />
     <File name="Web\Pages\Login\ChangePasswordDialog.ascx" />
     <File name="Web\Pages\Login\Default.aspx" />
+    <File name="Web\Pages\Login\Logout.aspx" />
     <File name="Web\Pages\Login\PasswordExpiredDialog.ascx" />
     <File name="Web\Pages\Queues\ArchiveQueue\ArchiveQueueItemList.ascx" />
     <File name="Web\Pages\Queues\ArchiveQueue\Default.aspx" />
@@ -252,7 +250,8 @@
     <File name="Web\Pages\Studies\StudyDetails\Default.aspx" />
     <File name="Web\Pages\Studies\StudyDetails\Controls\AddAuthorityGroupsDialog.ascx" />
     <File name="Web\Pages\Studies\StudyDetails\Controls\ArchivePanel.ascx" />
-    <File name="Web\Pages\Studies\StudyDetails\Controls\DataAccessPanel.ascx" />
+    <File name="Web\Pages\Studies\StudyDetails\Controls\CompressionHistory.ascx" />
+    <!--<File name="Web\Pages\Studies\StudyDetails\Controls\DataAccessPanel.ascx" />-->
     <File name="Web\Pages\Studies\StudyDetails\Controls\DeleteSeriesConfirmDialog.ascx" />
     <File name="Web\Pages\Studies\StudyDetails\Controls\DeleteStudyConfirmDialog.ascx" />
     <File name="Web\Pages\Studies\StudyDetails\Controls\DuplicateProcessChangeLog.ascx" />
@@ -278,40 +277,6 @@
     <File name="Web\Pages\Studies\StudyDetails\Scripts\SeriesGridView.js" />
     <File name="Web\Pages\Studies\StudyDetails\Scripts\StudyDetailsTabs.js" />
     <File name="Web\Pages\Studies\StudyDetails\Scripts\WorkQueueGridView.js" />
-    <File name="Web\Pages\Studies\View\Default.aspx" />
-    <File name="Web\Pages\Studies\View\silverlight.js" />
-    <File name="Web\Pages\Studies\View\SplashScreen\SplashScreen.js" />
-    <File name="Web\Pages\Studies\View\SplashScreen\SplashScreen.xaml" />
-    <File name="Web\Pages\Studies\ViewHtml\Default.aspx" />
-    <File name="Web\Pages\Studies\ViewHtml\EmbeddedDefault.aspx" />
-    <File name="Web\Pages\WebViewer\AutomaticLoginDemo.htm" />
-    <File name="Web\Pages\WebViewer\Default.aspx" />
-    <File name="Web\Pages\WebViewer\GridPager.ascx" />
-    <File name="Web\Pages\WebViewer\jquery-1.4.2.min.js" />
-    <File name="Web\Pages\WebViewer\JQuery.ascx" />
-    <File name="Web\Pages\WebViewer\Launch.aspx" />
-    <File name="Web\Pages\WebViewer\SearchPanel.ascx" />
-    <File name="Web\Pages\WebViewer\SearchPanel.js" />
-    <File name="Web\Pages\WebViewer\SessionTimeout.ascx" />
-    <File name="Web\Pages\WebViewer\silverlight.js" />
-    <File name="Web\Pages\WebViewer\StandaloneDemo.htm" />
-    <File name="Web\Pages\WebViewer\StudyList.aspx" />
-    <File name="Web\Pages\WebViewer\StudyListGridView.ascx" />
-    <File name="Web\Pages\WebViewer\Images\Searching.gif" checksum="true" />
-    <File name="Web\Pages\WebViewer\Images\StudiesPageLogo.png" checksum="false" />
-    <File name="Web\Pages\WebViewer\Images\WebViewerPagerBackground.png" checksum="true" />
-    <File name="Web\Pages\WebViewer\Images\WebViewerPagerFirstDisabled.png" checksum="true" />
-    <File name="Web\Pages\WebViewer\Images\WebViewerPagerFirstEnabled.png" checksum="true" />
-    <File name="Web\Pages\WebViewer\Images\WebViewerPagerLastDisabled.png" checksum="true" />
-    <File name="Web\Pages\WebViewer\Images\WebViewerPagerLastEnabled.png" checksum="true" />
-    <File name="Web\Pages\WebViewer\Images\WebViewerPagerNextDisabled.png" checksum="true" />
-    <File name="Web\Pages\WebViewer\Images\WebViewerPagerNextEnabled.png" checksum="true" />
-    <File name="Web\Pages\WebViewer\Images\WebViewerPagerPreviousDisabled.png" checksum="true" />
-    <File name="Web\Pages\WebViewer\Images\WebViewerPagerPreviousEnabled.png" checksum="true" />
-    <File name="Web\Pages\WebViewer\Images\WebViewerPagerTotalStudiesLeft.png" checksum="true" />
-    <File name="Web\Pages\WebViewer\Images\WebViewerPagerTotalStudiesRight.png" checksum="true" />
-    <File name="Web\Pages\WebViewer\SplashScreen\SplashScreen.js" />
-    <File name="Web\Pages\WebViewer\SplashScreen\SplashScreen.xaml" />
     <File name="Web\Scripts\ClearCanvas.js" />
     <File name="Web\Scripts\date.js" />
     <File name="Web\Scripts\ErrorHandling.js" />
@@ -342,13 +307,10 @@
     <File name="Web\Scripts\jquery\jquery.dropshadow.js" />
     <File name="Web\Scripts\jquery\jquery.maskedinput-1.2.1.js" />
     <File name="Web\Scripts\jquery\jquery.multiselect.js" />
-    <File name="Web\Scripts\jquery\jsizes.js" />
-    <File name="Web\Services\ApplicationService.svc" />
     <File name="Web\Services\FilesystemInfoService.asmx" />
     <File name="Web\Services\ValidationServices.asmx" />
     <File name="Web\Services\webservice.htc" />
-    <File name="Web\Templates" ignore="true"/>
-    <File name="Web\Test\speedtest_small.bin" ignore="true" />
-    <File name="Web\Test\speedtest_tiny.bin" ignore="true" />
+    <File name="Web\Templates\Report\" ignore="true"/>
+    <File name="Web\Test" ignore="true" />
   </Files>
 </ManifestInput>

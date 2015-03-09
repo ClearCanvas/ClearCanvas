@@ -7,7 +7,7 @@
     <File name="ClearCanvas.ImageServer.ShredHostService.exe" checksum="true" />
     <File name="ClearCanvas.ImageServer.ShredHostService.exe.config" config="true" />
     <File name="ClearCanvas.ImageServer.ShredHostService.exe.critical.config" checksum="true" config="true" />
-    <File name="PrivacyNotice.rtf" />
+    
     <File name="Logging.config" ignore="true" />
     <File name="logs\" ignore="true" />
     <File name="manifest\" ignore="true" />
@@ -19,6 +19,7 @@
     <File name="common\log4net.dll" checksum="true" />
     <File name="common\nunit.framework.dll" checksum="true" />
     <File name="plugins\ClearCanvas.Utilities.Manifest.dll" checksum="true" />
+    <File name="plugins\ClearCanvas.JScript.dll" checksum="true" />
   </Files>
 	
 </ManifestInput>

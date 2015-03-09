@@ -22,15 +22,6 @@
 		<TargetPlatform>$(BuildPlatform)</TargetPlatform>
 		<TrunkDirectory>$(ProjectDir)..\..\..</TrunkDirectory>
 	</PropertyGroup>
-	<PropertyGroup>
-		<WebViewerSolutionDir>$(ProjectDir)..\Viewer</WebViewerSolutionDir>
-		<SilverlightBinFolder>$(ProjectDir)ClientBin</SilverlightBinFolder>
-	</PropertyGroup>
-
-	<PropertyGroup>
-		<ImageViewerWebClientSilverlightXAPOutputDir>$(TrunkDirectory)\ImageServer\Web\Client\Silverlight\bin\$(Configuration)</ImageViewerWebClientSilverlightXAPOutputDir>
-	</PropertyGroup>
-
 
 	<Choose>
     <When Condition=" '$(BuildPlatform)' == 'x64' ">
@@ -69,7 +60,7 @@
 	</ItemGroup>
   
   <ItemGroup>
-    <CodecPlugins Condition=" '$(TargetPlatform)' == 'x86' " Include="$(TrunkDirectory)\ReferencedAssemblies\Codecs\$(PlatformSubFolder)\ClearCanvas.Dicom.Codec.Jpeg.dll"/>
+    <CodecPlugins Include="$(TrunkDirectory)\ReferencedAssemblies\Codecs\$(PlatformSubFolder)\ClearCanvas.Dicom.Codec.Jpeg.dll"/>
     <CodecPlugins Include="$(TrunkDirectory)\Dicom\Codec\Rle\bin\$(Configuration)\ClearCanvas.Dicom.Codec.Rle.dll"/>
   </ItemGroup>
 

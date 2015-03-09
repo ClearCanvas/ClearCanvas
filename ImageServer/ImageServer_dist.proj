@@ -47,6 +47,7 @@
   </ItemGroup>
 
   <ItemGroup>
+	<ExecutableAppConfigCreatorSourceFiles Include="$(SolutionDir)\ImageServer_ConnectionString_dist.config" />
 	<ExecutableAppConfigCreatorSourceFiles Include="$(XianTrunkDirectory)\ImageServer\Executable\app.config" />
 	<ExecutableAppConfigCreatorSourceFiles Include="$(XianTrunkDirectory)\Dicom\app.config" />
 	<ExecutableAppConfigCreatorSourceFiles Include="$(XianTrunkDirectory)\ImageServer\Enterprise\SqlServer\app.config" />
@@ -178,8 +179,6 @@
 
     <!-- Copy License.rtf -->
     <Copy SkipUnchangedFiles="true" SourceFiles="@(LicenseFiles)" DestinationFolder="$(DistributionDirectory)" ContinueOnError="true"/>
-
-    <Copy SourceFiles="$(XianTrunkDirectory)\Docs\PrivacyNotice.rtf" DestinationFolder="$(DistributionDirectory)"  />
 
     <MakeDir Directories="$(ManifestDirectory)"/>
   </Target>

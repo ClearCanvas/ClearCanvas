@@ -1,11 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ManifestInput xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.clearcanvas.ca">
   <Files>
-	<File name="Web\App_Themes\Default\Global.skin" />
-	<File name="Web\App_Themes\Default\images\infoSmall.png" checksum="true" />
-	<File name="Web\App_Themes\Default\images\AboutBackground.png" checksum="true" />
+    <File name="Web\App_Themes\Default\Global.skin" />
+    <File name="Web\App_Themes\Default\images\infoSmall.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\AboutBackground.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Background.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\blank.gif" checksum="true" />
+    <File name="Web\App_Themes\Default\images\ImageServerLogo.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\LoginSplash.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Buttons\AddDataAccessDisabled.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Buttons\AddDataAccessEnabled.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Buttons\AddDataAccessHover.png" checksum="true" />
@@ -141,11 +143,8 @@
     <File name="Web\App_Themes\Default\images\Controls\GridView\GridViewPagerTopBackground.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Controls\GridView\GridViewPagerTotalStudiesLeft.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Controls\GridView\GridViewPagerTotalStudiesRight.png" checksum="true" />
-	<File name="Web\App_Themes\Default\images\Controls\GridView\GridViewSelectedBackground.png" checksum="true" />
-	<File name="Web\App_Themes\Default\images\Controls\GridView\WebViewerPagerBackground.png" checksum="true"/>
-	<File name="Web\App_Themes\Default\images\Controls\GridView\WebViewerPagerFirstEnabled.png" checksum="true" />
-    <File name="Web\App_Themes\Default\images\Controls\GridView\WebViewerPagerLastEnabled.png" checksum="true" />
-	<File name="Web\App_Themes\Default\images\Controls\Tabs\TabActiveLeft.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\GridView\GridViewSelectedBackground.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Controls\Tabs\TabActiveLeft.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Controls\Tabs\TabActiveMiddle.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Controls\Tabs\TabActiveRight.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Controls\Tabs\TabHeaderBackgroundTop.png" checksum="true" />
@@ -158,6 +157,7 @@
     <File name="Web\App_Themes\Default\images\Error\ErrorDescriptionBackground.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Error\ErrorMessageBackground.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Error\UserEscapeLinkBackground.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\Header\ClearCanvasLogo.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Header\LocationBackground.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Header\LocationEdge.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Header\MenuBackground.png" checksum="true" />
@@ -173,7 +173,6 @@
     <File name="Web\App_Themes\Default\images\Indicators\checked.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Indicators\HelpSmall.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Indicators\IdeographicName.gif" checksum="true" />
-    <File name="Web\App_Themes\Default\images\Indicators\loading.gif" checksum="true" />
     <File name="Web\App_Themes\Default\images\Indicators\MenuArrow.gif" checksum="true" />
     <File name="Web\App_Themes\Default\images\Indicators\PhoneticName.gif" checksum="true" />
     <File name="Web\App_Themes\Default\images\Indicators\QueryFeature.png" checksum="true" />
@@ -181,7 +180,6 @@
     <File name="Web\App_Themes\Default\images\Indicators\RefreshEnabled.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Indicators\RetrieveFeature.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Indicators\Searching.gif" checksum="true" />
-    <File name="Web\App_Themes\Default\images\Indicators\star.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Indicators\StoreFeature.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Indicators\unchecked.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Indicators\usage.png" checksum="true" />
@@ -201,9 +199,8 @@
     <File name="Web\App_Themes\Default\images\MainContent\SearchDropDownListBackground.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\MainContent\SearchPanelBackground.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\MainContent\SearchTextBoxBackground.png" checksum="true" />
-	<File name="Web\App_Themes\Default\images\MainContent\SelectedPartitionTabBackground.png" checksum="true" />
-	<File name="Web\App_Themes\Default\images\MainContent\ToolbarButtonPanelBackground.png" checksum="true" />
-    <File name="Web\App_Themes\Default\images\MainContent\WebViewerToolbarBackground.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\MainContent\SelectedPartitionTabBackground.png" checksum="true" />
+    <File name="Web\App_Themes\Default\images\MainContent\ToolbarButtonPanelBackground.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Pages\Dashboard\SidebarItemBackground.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Pages\Dashboard\StudiesSummaryTotalBackground.png" checksum="true" />
     <File name="Web\App_Themes\Default\images\Pages\Dashboard\UserOverviewBackground.png" checksum="true" />
@@ -222,8 +219,5 @@
     <File name="Web\App_Themes\Default\StyleSheets\Controls\PartitionTabs.css" />
     <File name="Web\App_Themes\Default\StyleSheets\Controls\ReconcileDialog.css" />
     <File name="Web\App_Themes\Default\StyleSheets\Controls\Tabs.css" />
-	  <File name="Web\App_Themes\Default\WebStation\SplashScreen.xaml" checksum="true"/>
-	  <File name="Web\App_Themes\Default\WebStation\WebstationLogo.png" checksum="true"/>
-
   </Files>
 </ManifestInput>

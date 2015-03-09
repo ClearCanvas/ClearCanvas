@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ManifestInput xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.clearcanvas.ca">
-	<Files>
-		<File name="Web\ClientBin\Silverlight.xap" checksum="true" />
-		<File name="Web\ClientBin\SplashScreen\ClearCanvasWebViewerLogo.png" checksum="false" />
-	</Files>
-</ManifestInput>

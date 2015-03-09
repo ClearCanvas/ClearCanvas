@@ -3,7 +3,7 @@
 	
   <!-- List of files distributed in ImageServerShreds.targets -->
   <Files>
-	  <File name="common\Ionic.Zip.dll" checksum="true" />
+	  <File name="common\ICSharpCode.SharpZipLib.dll" checksum="true" />
 		  
 	  <File name="plugins\ClearCanvas.Dicom.dll" checksum="true" />
 	  <File name="plugins\ClearCanvas.ImageServer.Model.dll" checksum="true" />
@@ -13,12 +13,14 @@
 	  <File name="plugins\ClearCanvas.Enterprise.Core.dll" checksum="true" />
 	  <File name="plugins\ClearCanvas.ImageServer.Common.dll" checksum="true" />
 	  <File name="plugins\ClearCanvas.ImageServer.Core.dll" checksum="true" />
+	  <File name="plugins\ClearCanvas.ImageServer.Core.SharpZipLib.dll" checksum="true" />
 	  <File name="plugins\ClearCanvas.ImageServer.Enterprise.dll" checksum="true" />
 	  <File name="plugins\ClearCanvas.ImageServer.Enterprise.SqlServer.dll" checksum="true" />
 	  <File name="plugins\ClearCanvas.ImageServer.Model.SqlServer.dll" checksum="true" />
 	  <File name="plugins\ClearCanvas.ImageServer.Rules.dll" checksum="true" />
 	  <File name="plugins\ClearCanvas.ImageServer.Rules.JpegCodec.dll" checksum="true" />
 	  <File name="plugins\ClearCanvas.ImageServer.Rules.RleCodec.dll" checksum="true" />
+	  <File name="plugins\ClearCanvas.ImageServer.Services.Common.dll" checksum="true" />
 	  <File name="plugins\ClearCanvas.ImageServer.Services.Archiving.dll" checksum="true" />
 	  <File name="plugins\ClearCanvas.ImageServer.Services.Archiving.Hsm.dll" checksum="true" />
 	  <File name="plugins\ClearCanvas.ImageServer.Services.Dicom.dll" checksum="true" />

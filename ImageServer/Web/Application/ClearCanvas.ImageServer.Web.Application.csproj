@@ -1739,8 +1739,6 @@
     <Content Include="App_Themes\Default\images\Controls\Dialog\DialogTitleBarBG.png" />
     <Content Include="App_Themes\Default\StyleSheets\StudyIntegrityQueue.css" />
     <Content Include="App_Themes\Default\StyleSheets\WorkQueue.css" />
-    <Content Include="ClientBin\SplashScreen\ClearCanvasWebViewerLogo.png">
-    </Content>
     <Content Include="Controls\AlertIndicator.ascx" />
     <Content Include="Controls\ApplicationAlertPanel.ascx" />
     <Content Include="Controls\CheckJavascript.ascx" />
