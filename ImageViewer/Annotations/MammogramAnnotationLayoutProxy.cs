@@ -59,10 +59,18 @@ namespace ClearCanvas.ImageViewer.Annotations
 				foreach (var sourceBox in source._annotationBoxes.Values)
 				{
 					var cloneBox = (AnnotationBox) CloneBuilder.Clone(sourceBox);
+
+					// if the box has an item, use the item's identifier as the key
+					object key = cloneBox;
 					if (cloneBox.AnnotationItem != null)
-						annotationBoxes.Add(cloneBox.AnnotationItem.GetIdentifier(), cloneBox);
-					else
-						annotationBoxes.Add(cloneBox, cloneBox);
+					{
+						key = cloneBox.AnnotationItem.GetIdentifier();
+
+						// if for some reason the key is a duplicate, use the box as the key (but keep it as part of the layout!)
+						if (annotationBoxes.ContainsKey(key))
+							key = cloneBox;
+					}
+					annotationBoxes.Add(key, cloneBox);
 				}
 				_annotationBoxes = annotationBoxes;
 			}

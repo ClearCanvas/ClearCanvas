@@ -99,7 +99,7 @@ namespace ClearCanvas.ImageViewer.Graphics
 		{
 			context.CloneFields(source, this);
 
-			_imagePosterior = new Vector3D(source._imagePosterior);
+			_imagePosterior = source._imagePosterior != null ? new Vector3D(source._imagePosterior) : null;
 		}
 
 		/// <summary>

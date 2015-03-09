@@ -641,8 +641,6 @@ namespace ClearCanvas.Desktop
 
 			                       		_initialized = true;
 
-			                       		PhoneHome.Startup();
-
 			                       		// now that the desktop is fully initialized, take advantage of idle time to 
 			                       		// load any outstanding plugins
 			                       		Platform.PluginManager.EnableBackgroundAssemblyLoading(true);
@@ -717,8 +715,6 @@ namespace ClearCanvas.Desktop
 		{
 			if (IsQuitting)
 				return;
-
-			PhoneHome.ShutDown();
 
 			if (!force)
 			{
