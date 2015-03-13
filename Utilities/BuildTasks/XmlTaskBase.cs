@@ -45,10 +45,10 @@ namespace ClearCanvas.Utilities.BuildTasks
 		}
 
 		/// <summary>
-		/// Gets or sets the path to the XML document file.
+		/// Gets or sets the paths to the XML document file(s).
 		/// </summary>
 		[Required]
-		public string File { get; set; }
+		public ITaskItem[] File { get; set; }
 
 		/// <summary>
 		/// Gets or sets the XPath that refers to the XML nodes on which the operation will be performed.
@@ -118,16 +118,30 @@ namespace ClearCanvas.Utilities.BuildTasks
 				return false;
 			}
 
+			var result = false;
+			if (File != null)
+			{
+				foreach (var file in File)
+				{
+					if (file != null && ExecuteCore(file.GetMetadata("FullPath")))
+						result = true;
+				}
+			}
+			return result;
+		}
+
+		private bool ExecuteCore(string filename)
+		{
 			XmlDocument = new XmlDocument();
 			Modified = false;
 			try
 			{
-				if (!string.IsNullOrEmpty(File) && System.IO.File.Exists(File))
+				if (!string.IsNullOrEmpty(filename) && System.IO.File.Exists(filename))
 				{
 					// load the file
 					try
 					{
-						XmlDocument.Load(File);
+						XmlDocument.Load(filename);
 					}
 					catch (XmlException ex)
 					{
@@ -170,8 +184,8 @@ namespace ClearCanvas.Utilities.BuildTasks
 				if (result && Modified)
 				{
 					// save output if task was successful and changes were made
-					if (!string.IsNullOrEmpty(File))
-						XmlDocument.Save(File);
+					if (!string.IsNullOrEmpty(filename))
+						XmlDocument.Save(filename);
 				}
 				return result;
 			}
@@ -197,7 +211,7 @@ namespace ClearCanvas.Utilities.BuildTasks
 		/// <returns>True if validation succeeded; False otherwise.</returns>
 		protected virtual bool ValidateParameters(out string message)
 		{
-			if (string.IsNullOrEmpty(File))
+			if (File == null || File.Length == 0)
 			{
 				message = "File is a required parameter";
 				return false;
