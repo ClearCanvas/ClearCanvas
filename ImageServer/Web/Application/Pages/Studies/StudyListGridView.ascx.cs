@@ -173,7 +173,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies
 
 		public bool DisplayQCColumn
 		{
-			get { return LicenseInformation.IsFeatureAuthorized("ImageServer.QualityControl"); }
+			get { return !string.IsNullOrEmpty(LicenseInformation.LicenseKey) && LicenseInformation.IsFeatureAuthorized("ImageServer.QualityControl"); }
 		}
 
         #endregion

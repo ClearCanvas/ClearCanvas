@@ -106,7 +106,7 @@ ClearCanvas.ImageServer.Web.Application.Pages.Studies.SearchPanel.prototype =
     // called when user double-clicked on a row in the study list
     _OnStudyListRowDblClicked: function (sender, event) {
         this._updateToolbarButtonStates();
-        this._viewSelectedStudies();
+        this._openSelectedStudies();
     },
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////
