@@ -23,6 +23,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Web;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom;
 using ClearCanvas.ImageServer.Core.Data;
@@ -153,7 +154,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.StudyIntegrityQue
                 details.ConflictingStudyInfo.Series = series;
 
                 var uidBroker =
-                    HttpContextData.Current.ReadContext.GetBroker<IStudyIntegrityQueueUidEntityBroker>();
+					HttpContext.Current.GetSharedPersistentContext().GetBroker<IStudyIntegrityQueueUidEntityBroker>();
                 var criteria = new StudyIntegrityQueueUidSelectCriteria();
                 criteria.StudyIntegrityQueueKey.EqualTo(item.TheStudyIntegrityQueueItem.GetKey());
 

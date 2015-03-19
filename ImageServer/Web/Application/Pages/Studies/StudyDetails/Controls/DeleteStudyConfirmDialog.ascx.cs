@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using ClearCanvas.Common;
@@ -229,7 +230,7 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails.Con
         {
             ReasonListBox.Items.Clear();
 
-            ICannedTextEntityBroker broker = HttpContextData.Current.ReadContext.GetBroker<ICannedTextEntityBroker>();
+			ICannedTextEntityBroker broker = HttpContext.Current.GetSharedPersistentContext().GetBroker<ICannedTextEntityBroker>();
             CannedTextSelectCriteria criteria = new CannedTextSelectCriteria();
             criteria.Category.EqualTo(REASON_CANNEDTEXT_CATEGORY);
             IList<CannedText> list = broker.Find(criteria);

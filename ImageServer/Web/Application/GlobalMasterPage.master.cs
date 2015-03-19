@@ -161,8 +161,8 @@ namespace ClearCanvas.ImageServer.Web.Application
 
         protected void OnMainMenuDataBound(object sender, EventArgs e)
         {
-			// Yes this looks hacky
-			if (!(!string.IsNullOrEmpty(LicenseInformation.LicenseKey) && LicenseInformation.IsFeatureAuthorized("ImageServer.QualityControl")))
+            // Yes this looks hacky
+            // if (!LicenseInformation.IsFeatureAuthorized("ImageServer.QualityControl"))
             {
                 var menuPath = string.Format("{0}/{1}", Titles.Admin, Titles.QCSummaryPageTitle);
                 var menu = MainMenu.FindItem(menuPath);

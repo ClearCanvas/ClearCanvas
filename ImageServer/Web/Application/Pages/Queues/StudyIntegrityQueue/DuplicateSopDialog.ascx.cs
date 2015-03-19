@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using ClearCanvas.ImageServer.Common.Utilities;
@@ -157,14 +158,14 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Queues.StudyIntegrityQue
             ExistingPatientSeriesGridView.DataSource = DuplicateEntryDetails.ExistingStudy.Series;
             ConflictingPatientSeriesGridView.DataSource = DuplicateEntryDetails.ConflictingImageSet.StudyInfo.Series;
             StudyStorage storage =
-                StudyStorage.Load(HttpContextData.Current.ReadContext, StudyIntegrityQueueItem.StudyStorageKey);
+                StudyStorage.Load(HttpContext.Current.GetSharedPersistentContext(), StudyIntegrityQueueItem.StudyStorageKey);
 
             IList<StudyStorageLocation> studyLocations = StudyStorageLocation.FindStorageLocations(storage);
             StudyLocation.Text = studyLocations[0].GetStudyPath();
 
             var entry = new DuplicateSopReceivedQueue(StudyIntegrityQueueItem);
 
-            DuplicateSopLocation.Text = entry.GetFolderPath(HttpContextData.Current.ReadContext);
+			DuplicateSopLocation.Text = entry.GetFolderPath(HttpContext.Current.GetSharedPersistentContext());
 
             ComparisonResultGridView.DataSource = DuplicateEntryDetails.QueueData.ComparisonResults;
             base.DataBind();

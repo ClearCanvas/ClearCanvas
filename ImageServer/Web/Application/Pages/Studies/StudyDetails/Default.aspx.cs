@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Security.Permissions;
+using System.Web;
 using ClearCanvas.Common.Utilities;
 using ClearCanvas.Dicom.Audit;
 using ClearCanvas.ImageServer.Common;
@@ -178,11 +179,11 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Studies.StudyDetails
 			StudySelectCriteria criteria = new StudySelectCriteria();
 			criteria.StudyInstanceUid.EqualTo(_studyInstanceUid);
 			criteria.ServerPartitionKey.EqualTo(Partition.GetKey());
-			Study study = studyAdaptor.GetFirst(HttpContextData.Current.ReadContext, criteria);
+			Study study = studyAdaptor.GetFirst(HttpContext.Current.GetSharedPersistentContext(), criteria);
 
             if (study != null)
             {
-                _study = StudySummaryAssembler.CreateStudySummary(HttpContextData.Current.ReadContext, study);
+				_study = StudySummaryAssembler.CreateStudySummary(HttpContext.Current.GetSharedPersistentContext(), study);
             }
             else
             {
