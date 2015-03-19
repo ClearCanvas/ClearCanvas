@@ -86,7 +86,7 @@
   <tr><td style="padding-top: 1px;">
     <asp:Panel ID="Panel1" runat="server" ScrollBars="Vertical" Height="700" CssClass="AboutPanel" style="padding-top: 5px;">
 <pre>
-<b>ClearCanvas Inc.</b>
+<b>Synaptive Medical</b>
 <%= ProductInformation.License %>
 </pre>
 <p></p>
@@ -1070,12 +1070,13 @@ exception statement from your version.
   <span style="font-weight: bold; "><%=ProductInformation.Component %> v<%=String.IsNullOrEmpty(ServerPlatform.VersionString) ? "Unknown Version" : ServerPlatform.VersionString %></span><br /> 
   <span style="font-weight: bold; "><%=ProductInformation.Edition %> <%=ProductInformation.Release %></span><br /> 
   
-  <div style="font-weight: bold; ">Part of the ClearCanvas RIS/PACS</div>
+  <div style="font-weight: bold; ">Part of the <%=ProductInformation.Product %></div>
   <div style="font-weight:bold; font-size:small; color:Red"><%=ServerPlatform.IsManifestVerified ? "" : Resources.SR.NonStandardInstallation%></div>
 
-<p><b>ClearCanvas Inc.</b><br />
-1920-439 University Ave.<br />
-Toronto, ON M5G 1Y8<br />
+<p><b>Synaptive Medical</b><br />
+MaRS Discovery District<br />
+101 College Street, Suite 200<br />
+Toronto, ON M5G 1L7<br />
 Canada
 </p>
 <p>
@@ -1093,8 +1094,7 @@ Canada
       <%}%>
 </p>
 
-<p style="margin-top:20px; font-weight:bold"><a style="color: #205F87;" href="http://www.clearcanvas.ca" target=_blank>www.clearcanvas.ca</a></p>
-<p style="margin-top:20px; font-weight:bold"><a style="color: #205F87;" href="http://www.youtube.com/ClearCanvas" target=_blank>ClearCanvas YouTube Channel</a></p>
+<p style="margin-top:20px; font-weight:bold"><a style="color: #205F87;" href="http://clearcanvas.github.io" target=_blank>clearcanvas.github.io</a></p>
 
 <% if (!string.IsNullOrEmpty(ClearCanvas.ImageServer.Web.Common.PageSettings.AboutPage.Default.UsersGuideUrl))
    {%>

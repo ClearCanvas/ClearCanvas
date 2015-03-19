@@ -783,7 +783,7 @@ At least one server partition is required. Please add a new server partition.</v
     <value>ClearCanvas Documentation</value>
   </data>
   <data name="CCImageServerUsersGuide" xml:space="preserve">
-    <value>ImageServer User's Guide</value>
+    <value>DICOM Server User's Guide</value>
   </data>
   <data name="AddEditUserGroups_DataAccessChangedDelayWarning" xml:space="preserve">
     <value>Note: This change may not take effect immediately.</value>
