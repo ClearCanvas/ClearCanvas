@@ -1,0 +1,110 @@
+<Project DefaultTargets="Copy Sample Files" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TrunkDirectory>$(SolutionDir)\..</TrunkDirectory>
+    <DistributionDesktopConfig>$(DistributionDirectory)\ClearCanvas.Desktop.Executable.exe.config</DistributionDesktopConfig>
+    <DistributionShredHostConfig>$(DistributionDirectory)\ClearCanvas.Server.ShredHostService.exe.config</DistributionShredHostConfig>
+    <DistributionConsoleConfig>$(DistributionDirectory)\ClearCanvas.Executable.exe.config</DistributionConsoleConfig>
+    <DistributionDesktopCriticalConfig>$(DistributionDirectory)\ClearCanvas.Desktop.Executable.exe.critical.config</DistributionDesktopCriticalConfig>
+    <DistributionShredHostCriticalConfig>$(DistributionDirectory)\ClearCanvas.Server.ShredHostService.exe.critical.config</DistributionShredHostCriticalConfig>
+    <DistributionConsoleCriticalConfig>$(DistributionDirectory)\ClearCanvas.Executable.exe.critical.config</DistributionConsoleCriticalConfig>
+  </PropertyGroup>
+
+  <Choose>
+    <When Condition=" '$(PROCESSOR_ARCHITEW6432)' == 'IA64' Or '$(PROCESSOR_ARCHITEW6432)' == 'AMD64' Or '$(PROCESSOR_ARCHITECTURE)' == 'IA64' Or '$(PROCESSOR_ARCHITECTURE)' == 'AMD64'">
+      <PropertyGroup>
+        <MSBuildBinPath4>$(registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\MSBuild\ToolsVersions\4.0\@MSBuildToolsPath)</MSBuildBinPath4>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <MSBuildBinPath4>$(registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\MSBuild\ToolsVersions\4.0\@MSBuildToolsPath)</MSBuildBinPath4>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <Choose>
+    <When Condition=" '$(ProjectOutDir)' != '$(DistributionDirectory)' ">
+      <PropertyGroup>
+        <IsDistributionBuild>true</IsDistributionBuild>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <IsDistributionBuild>false</IsDistributionBuild>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <Choose>
+    <When Condition=" '$(TargetPlatform)' != 'x86' ">
+      <PropertyGroup>
+        <PlatformSubFolder>$(TargetPlatform)</PlatformSubFolder>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <!-- assumes Win32 -->
+      <PropertyGroup>
+        <PlatformSubFolder></PlatformSubFolder>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <PropertyGroup Condition ="'$(ProjectName)' == 'ClearCanvas.Desktop.Executable'">
+    <DesktopBuild>true</DesktopBuild>
+    <ShredHostBuild>false</ShredHostBuild>
+    <ConsoleBuild>false</ConsoleBuild>
+    <DistributionConfig>$(DistributionDesktopConfig)</DistributionConfig>
+  </PropertyGroup>
+
+  <PropertyGroup Condition ="'$(ProjectName)' == 'ClearCanvas.Server.ShredHostService'">
+    <DesktopBuild>false</DesktopBuild>
+    <ShredHostBuild>true</ShredHostBuild>
+    <ConsoleBuild>false</ConsoleBuild>
+    <DistributionConfig>$(DistributionShredHostConfig)</DistributionConfig>
+  </PropertyGroup>
+
+  <PropertyGroup Condition ="'$(ProjectName)' == 'ClearCanvas.Executable'">
+    <DesktopBuild>false</DesktopBuild>
+    <ShredHostBuild>false</ShredHostBuild>
+    <ConsoleBuild>true</ConsoleBuild>
+    <DistributionConfig>$(DistributionConsoleConfig)</DistributionConfig>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <ImageViewerSampleFiles Include="$(TrunkDirectory)\Desktop\Applets\WebBrowser\bin\$(Configuration)\ClearCanvas.Desktop.Applets.WebBrowser.dll" />
+    <ImageViewerSampleFiles Include="$(TrunkDirectory)\Desktop\Applets\WebBrowser\View\WinForms\bin\$(Configuration)\ClearCanvas.Desktop.Applets.WebBrowser.View.WinForms.dll" />
+    <ImageViewerSampleFiles Include="$(TrunkDirectory)\ImageViewer\Tools\ImageProcessing\RoiAnalysis\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis.dll" />
+    <ImageViewerSampleFiles Include="$(TrunkDirectory)\ImageViewer\Tools\ImageProcessing\RoiAnalysis\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis.View.WinForms.dll" />
+    <ImageViewerSampleFiles Include="$(TrunkDirectory)\ReferencedAssemblies\NPlot.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ImageViewerSampleFiles Include="$(TrunkDirectory)\ImageViewer\Tools\Volume\VTK\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.Volume.VTK.dll" />
+    <ImageViewerSampleFiles Include="$(TrunkDirectory)\ImageViewer\Tools\Volume\VTK\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.Volume.VTK.View.WinForms.dll" />
+    <ImageViewerSampleFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtk*.dll" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetPlatform)' == 'x86'">
+    <!-- TODO: Make a 64-bit ManagedITK build -->
+    <ImageViewerSampleFiles Include="$(TrunkDirectory)\ImageViewer\Tools\ImageProcessing\Filter\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.ImageProcessing.Filter.dll" />
+    <ImageViewerSampleFiles Include="$(TrunkDirectory)\ImageViewer\VtkItkAdapters\bin\$(Configuration)\ClearCanvas.ImageViewer.VtkItkAdapters.dll" />
+    <ImageViewerSampleFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Itk\$(PlatformSubFolder)\ManagedITK.*.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ImageViewerSampleFiles Include="$(TrunkDirectory)\ImageViewer\TestTools\bin\$(Configuration)\ClearCanvas.ImageViewer.TestTools.dll" />
+  </ItemGroup>
+
+  <Target Name="Copy Sample Files">
+
+    <PropertyGroup>
+      <CoreBuildOptions>$(Options)+ExcludeHelpFiles+ExcludeStudyComposer+ExcludeEnterprise</CoreBuildOptions>
+    </PropertyGroup>
+    
+    <MSBuild Projects="$(TrunkDirectory)\ImageViewer\ImageViewer_dist.proj" Properties="SolutionDir=$(SolutionDir);SolutionName=$(SolutionName);TargetPlatform=$(TargetPlatform);Configuration=$(Configuration);ProjectName=$(ProjectName);ProjectOutDir=$(ProjectOutDir);StrongNameKeyFile=$(StrongNameKeyFile);DistributionDirectory=$(DistributionDirectory);CommonDirectory=$(CommonDirectory);PluginsDirectory=$(PluginsDirectory);LogDirectory=$(LogDirectory);Options=$(CoreBuildOptions)" />
+
+    <Copy Condition="$(DesktopBuild)" SourceFiles="@(ImageViewerSampleFiles)" DestinationFolder="$(PluginsDirectory)" />
+
+  </Target>
+
+</Project>
