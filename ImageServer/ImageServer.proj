@@ -21,7 +21,7 @@
   <PropertyGroup>
     <TargetPlatform>$(BuildPlatform)</TargetPlatform>
     <EditionName>Community</EditionName>
-    <BuildSuffix>_$(EditionName)</BuildSuffix>
+    <BuildSuffix></BuildSuffix>
     <BuildOptions></BuildOptions>
     <ReleaseTypeString Condition="'$(ReleaseType)' != 'Official'">$(ReleaseType)</ReleaseTypeString>
   </PropertyGroup>
