@@ -76,8 +76,6 @@ namespace ClearCanvas.ImageServer.TestApp
 
         private void UsageTracking_Click(object sender, EventArgs e)
         {
-            var form = new UsageTrackingForm();
-            form.Show();
         }
 
         private void ProductVerify_Click(object sender, EventArgs e)

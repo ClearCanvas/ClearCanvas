@@ -80,7 +80,6 @@
     <Compile Include="Alert\IAlertServiceExtension.cs" />
     <Compile Include="Authentication\DefaultAuthenticationService.cs" />
     <Compile Include="Misc\ProductVerificationService.cs" />
-    <Compile Include="Misc\UsageTrackingService.cs" />
     <Compile Include="ServiceMount.cs" />
     <Compile Include="Shreds\ManifestCheckingShred.cs" />
     <Compile Include="Shreds\RemoteServicesServer.cs" />
@@ -88,7 +87,6 @@
     <Compile Include="Authentication\SessionTokenManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shreds\StartupShred.cs" />
-    <Compile Include="Shreds\UsageTrackingShred.cs" />
     <Compile Include="SR.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

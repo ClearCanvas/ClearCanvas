@@ -139,6 +139,7 @@ namespace ClearCanvas.ImageServer.TestApp
 			// 
 			// UsageTracking
 			// 
+			this.UsageTracking.Enabled = false;
 			this.UsageTracking.Location = new System.Drawing.Point(28, 312);
 			this.UsageTracking.Name = "UsageTracking";
 			this.UsageTracking.Size = new System.Drawing.Size(183, 52);
