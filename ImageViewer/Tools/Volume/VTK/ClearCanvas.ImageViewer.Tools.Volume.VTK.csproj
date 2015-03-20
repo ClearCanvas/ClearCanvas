@@ -133,10 +133,6 @@
       <Project>{fefd73c5-8541-47d2-bbdb-ff61dea28291}</Project>
       <Name>ClearCanvas.ImageViewer.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\VTK\ClearCanvas.ImageViewer.VTK.csproj">
-      <Project>{14FE088A-252E-4214-94B6-FC9D62C9BF0E}</Project>
-      <Name>ClearCanvas.ImageViewer.VTK</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icons\CreateVolumeToolLarge.png" />

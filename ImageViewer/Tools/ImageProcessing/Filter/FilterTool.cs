@@ -23,7 +23,6 @@
 #endregion
 
 using ClearCanvas.Common;
-using ClearCanvas.Desktop;
 using ClearCanvas.Desktop.Actions;
 using ClearCanvas.ImageViewer.BaseTools;
 
@@ -35,14 +34,12 @@ namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.Filter
 	[DropDownAction("apply", "global-toolbars/ToolbarStandard/ToolbarFilter", "DropDownMenuModel")]
 	[EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
 	[Tooltip("apply", "Filters")]
-	[IconSet("apply", IconScheme.Colour, "Icons.FilterToolSmall.png", "Icons.FilterToolMedium.png", "Icons.FilterToolLarge.png")]
-
-	[ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
+	[IconSet("apply", "Icons.FilterToolSmall.png", "Icons.FilterToolMedium.png", "Icons.FilterToolLarge.png")]
+	//
+	[ExtensionOf(typeof (ImageViewerToolExtensionPoint))]
 	public class FilterTool : ImageViewerTool
-	{ 
-		public FilterTool()
-		{
-		}
+	{
+		public FilterTool() {}
 
 		// We have to provide the dropdown button with the data to populate the dropdown menu.
 		public ActionModelNode DropDownMenuModel

@@ -22,11 +22,7 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 
 namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
@@ -58,14 +54,10 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 
 		private VolumeGraphic _volumeGraphic;
 
-		public TissueSettings()
+		public static string[] Presets
 		{
-		}
-
-		static public string[] Presets
-		{
-			get 
-			{ 
+			get
+			{
 				string[] presets = {"Custom", "Bone", "Blood", "Muscle", "Soft", "Lung"};
 				return presets;
 			}
@@ -95,7 +87,7 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 		public bool SurfaceRenderingSelected
 		{
 			get { return _surfaceRenderingSelected; }
-			set 
+			set
 			{
 				if (_surfaceRenderingSelected != value)
 				{
@@ -112,11 +104,10 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 			}
 		}
 
-
 		public bool VolumeRenderingSelected
 		{
 			get { return _volumeRenderingSelected; }
-			set 
+			set
 			{
 				if (_volumeRenderingSelected != value)
 				{
@@ -189,7 +180,7 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 		public bool WindowEnabled
 		{
 			get { return _windowEnabled; }
-			set 
+			set
 			{
 				if (_windowEnabled != value)
 				{
@@ -300,7 +291,7 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 		public Color MinimumColor
 		{
 			get { return _minimumColor; }
-			set 
+			set
 			{
 				if (_minimumColor != value)
 				{
@@ -410,8 +401,8 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 			if (this.PropertyChanged != null)
 			{
 				this.PropertyChanged(
-				  this,
-				  new PropertyChangedEventArgs(propertyName));
+					this,
+					new PropertyChangedEventArgs(propertyName));
 			}
 		}
 	}

@@ -24,35 +24,40 @@
 
 using System;
 using System.Drawing;
+using System.Linq;
 using ClearCanvas.ImageViewer.Graphics;
 using ClearCanvas.ImageViewer.Rendering;
 using ClearCanvas.ImageViewer.StudyManagement;
-using ClearCanvas.ImageViewer.Vtk;
-using ClearCanvas.ImageViewer.Vtk.Rendering;
 using vtk;
 
 namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 {
-	public class VolumePresentationImage : BasicPresentationImage3D, IAssociatedTissues, IVtkPresentationImage
+	public class VolumePresentationImage : PresentationImage, IAssociatedTissues
 	{
 		#region Private fields
 
 		private IDisplaySet _displaySet;
 		private vtkImageData _vtkImageData;
 		private short _minimumPixelValue;
-		
+
 		#endregion
 
 		public VolumePresentationImage(IDisplaySet displaySet)
-            : base(1,1,1)
 		{
 			_displaySet = displaySet;
 
 			ValidateSliceData();
 		}
 
-
 		#region Public properties
+
+		/// <summary>
+		/// Gets the dimensions of the image.
+		/// </summary>
+		public override Size SceneSize
+		{
+			get { return new Size(Width, Height); }
+		}
 
 		#region IAssociatedTissues Members
 
@@ -65,10 +70,10 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 
 		public override IRenderer ImageRenderer
 		{
-			get 
+			get
 			{
 				if (base.ImageRenderer == null)
-                    base.ImageRenderer = new VtkPresentationImageRenderer();
+					base.ImageRenderer = new VolumePresentationImageRenderer();
 
 				return base.ImageRenderer;
 			}
@@ -76,12 +81,12 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 
 		public vtkImageData VtkImageData
 		{
-			get 
+			get
 			{
 				if (_vtkImageData == null)
 					_vtkImageData = CreateVolumeImageData();
 
-				return _vtkImageData; 
+				return _vtkImageData;
 			}
 		}
 
@@ -107,7 +112,7 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 
 		public int SizeInVoxels
 		{
-			get { return this.Width * this.Height * this.Depth; }
+			get { return this.Width*this.Height*this.Depth; }
 		}
 
 		public double RescaleSlope
@@ -122,7 +127,7 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 
 		#endregion
 
-	    public override IPresentationImage CreateFreshCopy()
+		public override IPresentationImage CreateFreshCopy()
 		{
 			return new VolumePresentationImage(_displaySet);
 		}
@@ -139,12 +144,12 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 
 		private ImageSop GetImageSop()
 		{
-			return (GetDicomPresentationImage() as IImageSopProvider).ImageSop;
+			return ((IImageSopProvider) GetDicomPresentationImage()).ImageSop;
 		}
 
 		private ImageGraphic GetImageGraphic()
 		{
-			return (GetDicomPresentationImage() as IImageGraphicProvider).ImageGraphic;
+			return ((IImageGraphicProvider) GetDicomPresentationImage()).ImageGraphic;
 		}
 
 		private Frame GetFirstFrame()
@@ -165,7 +170,7 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 			imageData.AllocateScalars();
 			imageData.SetScalarTypeToUnsignedShort();
 			imageData.GetPointData().SetScalars(BuildVolumeImageData());
-			
+
 			return imageData;
 		}
 
@@ -177,7 +182,7 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 
 			if (IsDataUnsigned())
 			{
-				foreach (IImageGraphicProvider slice in _displaySet.PresentationImages)
+				foreach (var slice in _displaySet.PresentationImages.OfType<IImageGraphicProvider>())
 				{
 					AddUnsignedSliceToVolume(volumeData, slice, imageIndex);
 					imageIndex++;
@@ -187,7 +192,7 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 			{
 				FindMinimumPixelValue();
 
-				foreach (IImageGraphicProvider slice in _displaySet.PresentationImages)
+				foreach (var slice in _displaySet.PresentationImages.OfType<IImageGraphicProvider>())
 				{
 					AddSignedSliceToVolume(volumeData, slice, imageIndex);
 					imageIndex++;
@@ -196,7 +201,7 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 
 			vtkUnsignedShortArray vtkVolumeData = new vtkUnsignedShortArray();
 			vtkVolumeData.SetArray(volumeData, new VtkIdType(volumeData.Length), 1);
-			
+
 			return vtkVolumeData;
 		}
 
@@ -204,16 +209,16 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 		{
 			_minimumPixelValue = short.MaxValue;
 
-			foreach (IImageGraphicProvider slice in _displaySet.PresentationImages)
+			foreach (var slice in _displaySet.PresentationImages.OfType<IImageGraphicProvider>())
 			{
 				byte[] sliceData = slice.ImageGraphic.PixelData.Raw;
-				int length = sliceData.Length / 2;
+				int length = sliceData.Length/2;
 
-				for (int i = 0; i < length; i+=2)
+				for (int i = 0; i < length; i += 2)
 				{
 					ushort lowbyte = sliceData[i];
 					ushort highbyte = sliceData[i + 1];
-					short pixelValue = (short)((highbyte << 8) | lowbyte);
+					short pixelValue = (short) ((highbyte << 8) | lowbyte);
 
 					if (pixelValue < _minimumPixelValue)
 						_minimumPixelValue = pixelValue;
@@ -224,16 +229,16 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 		private void AddUnsignedSliceToVolume(ushort[] volumeData, IImageGraphicProvider slice, int imageIndex)
 		{
 			byte[] sliceData = slice.ImageGraphic.PixelData.Raw;
-			int start = imageIndex * sliceData.Length / 2;
-			int end = start + sliceData.Length / 2;
+			int start = imageIndex*sliceData.Length/2;
+			int end = start + sliceData.Length/2;
 
 			int j = 0;
 
-			for (int i = start; i < end ; i++)
+			for (int i = start; i < end; i++)
 			{
 				ushort lowbyte = sliceData[j];
 				ushort highbyte = sliceData[j + 1];
-				volumeData[i] = (ushort)((highbyte << 8) | lowbyte);
+				volumeData[i] = (ushort) ((highbyte << 8) | lowbyte);
 				j += 2;
 			}
 		}
@@ -241,8 +246,8 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 		private void AddSignedSliceToVolume(ushort[] volumeData, IImageGraphicProvider slice, int imageIndex)
 		{
 			byte[] sliceData = slice.ImageGraphic.PixelData.Raw;
-			int start = imageIndex * sliceData.Length / 2;
-			int end = start + sliceData.Length / 2;
+			int start = imageIndex*sliceData.Length/2;
+			int end = start + sliceData.Length/2;
 
 			int j = 0;
 
@@ -251,23 +256,21 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 				ushort lowbyte = sliceData[j];
 				ushort highbyte = sliceData[j + 1];
 
-				short val = (short)((highbyte << 8) | lowbyte);
-				volumeData[i] = (ushort)(val - _minimumPixelValue);
+				short val = (short) ((highbyte << 8) | lowbyte);
+				volumeData[i] = (ushort) (val - _minimumPixelValue);
 
 				j += 2;
 			}
 		}
 
-		private void ValidateSliceData()
-		{
-		}
+		private void ValidateSliceData() {}
 
 		private double GetSliceSpacing()
 		{
 			if (_displaySet.PresentationImages.Count > 1)
 			{
-				Frame slice1 = (GetDicomPresentationImage(0) as IImageSopProvider).ImageSop.Frames[1];
-				Frame slice2 = (GetDicomPresentationImage(1) as IImageSopProvider).ImageSop.Frames[1];
+				Frame slice1 = ((IImageSopProvider) GetDicomPresentationImage(0)).ImageSop.Frames[1];
+				Frame slice2 = ((IImageSopProvider) GetDicomPresentationImage(1)).ImageSop.Frames[1];
 				double sliceSpacing = Math.Abs(slice2.ImagePositionPatient.Z - slice1.ImagePositionPatient.Z);
 
 				return sliceSpacing;
@@ -278,12 +281,7 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 			}
 		}
 
-	    protected override IRenderer CreateImageRenderer()
-	    {
-	        return new VtkPresentationImageRenderer();
-	    }
-
-	    protected override void Dispose(bool disposing)
+		protected override void Dispose(bool disposing)
 		{
 			if (disposing && _vtkImageData != null)
 			{
@@ -292,21 +290,5 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 
 			base.Dispose(disposing);
 		}
-
-        private class Scene : VtkSceneGraph<VolumePresentationImage>
-        {
-            public Scene(VolumePresentationImage owner) : base(owner)
-            {
-            }
-
-            public override void InitializeSceneGraph(vtkRenderer vtkRenderer)
-            {
-            }
-        }
-
-	    public VtkSceneGraph CreateSceneGraph()
-	    {
-	        return new Scene(this);
-	    }
 	}
 }

@@ -22,12 +22,11 @@
 
 #endregion
 
-using System;
 using vtk;
 
 namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 {
-	interface IVtkProp
+	internal interface IVtkProp
 	{
 		void ApplySetting(string setting);
 		vtkProp VtkProp { get; }

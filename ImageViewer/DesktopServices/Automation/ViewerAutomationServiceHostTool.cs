@@ -72,7 +72,7 @@ namespace ClearCanvas.ImageViewer.DesktopServices.Automation
 												{
 													using (ViewerAutomationServiceClient client = new ViewerAutomationServiceClient())
 													{
-														client.GetActiveViewers();
+														client.GetViewers(new GetViewersRequest());
 													}
 
 													context.Post(delegate

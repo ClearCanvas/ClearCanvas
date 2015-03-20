@@ -23,12 +23,10 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using vtk;
 using System.ComponentModel;
 using System.Drawing;
 using ClearCanvas.ImageViewer.Graphics;
+using vtk;
 
 namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 {
@@ -44,18 +42,18 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 		private IVtkProp _surfaceProp;
 		private IVtkProp _volumeProp;
 		private RenderingMethod _renderingMethod = RenderingMethod.Surface;
-	
+
 		public VolumeGraphic(TissueSettings tissueSettings)
 		{
 			_tissueSettings = tissueSettings;
 			_tissueSettings.VolumeGraphic = this;
-			_tissueSettings.PropertyChanged += new PropertyChangedEventHandler(OnTissueSettingsChanged);
+			_tissueSettings.PropertyChanged += OnTissueSettingsChanged;
 		}
 
 		public RenderingMethod RenderingMethod
 		{
-			get { return _renderingMethod;}
-			set 
+			get { return _renderingMethod; }
+			set
 			{
 				if (_renderingMethod != value)
 				{
@@ -89,7 +87,7 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 
 		public vtkProp VtkProp
 		{
-			get 
+			get
 			{
 				if (this.RenderingMethod == RenderingMethod.Surface)
 					return this.SurfaceProp.VtkProp;
@@ -130,25 +128,25 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 			vtkImageData imageData = this.ParentVolumePresentationImage.VtkImageData;
 			return imageData;
 		}
-		
+
 		internal double GetWindowLeft()
 		{
-			return GetRescaledLevel() - (double)_tissueSettings.Window / 2;
+			return GetRescaledLevel() - (double) _tissueSettings.Window/2;
 		}
 
 		internal double GetWindowRight()
 		{
-			return GetRescaledLevel() +	(double)_tissueSettings.Window / 2;
+			return GetRescaledLevel() + (double) _tissueSettings.Window/2;
 		}
 
 		internal double GetRescaledLevel()
 		{
-			return (double)_tissueSettings.Level -
-				this.ParentVolumePresentationImage.RescaleIntercept -
-				(double)this.ParentVolumePresentationImage.MinimumPixelValue;
+			return (double) _tissueSettings.Level -
+			       this.ParentVolumePresentationImage.RescaleIntercept -
+			       this.ParentVolumePresentationImage.MinimumPixelValue;
 		}
 
-		void OnTissueSettingsChanged(object sender, PropertyChangedEventArgs e)
+		private void OnTissueSettingsChanged(object sender, PropertyChangedEventArgs e)
 		{
 			if (e.PropertyName == "SurfaceRenderingSelected")
 			{

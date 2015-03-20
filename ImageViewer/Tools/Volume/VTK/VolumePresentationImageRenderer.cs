@@ -23,26 +23,18 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using ClearCanvas.ImageViewer.Rendering;
-using ClearCanvas.Common;
-using vtk;
-using ClearCanvas.ImageViewer.Imaging;
-using ClearCanvas.ImageViewer.Graphics;
 using System.Drawing;
-/*
+using ClearCanvas.Common;
+using ClearCanvas.ImageViewer.Graphics;
+using ClearCanvas.ImageViewer.Rendering;
+using vtk;
+
 namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 {
 	public class VolumePresentationImageRenderer : IRenderer
 	{
-        private VtkPresentationImageRenderer _surface;
+		private VtkRenderingSurface _surface;
 		private vtkRenderer _vtkRenderer;
-
-		public VolumePresentationImageRenderer()
-		{
-
-		}
 
 		public vtkRenderWindowInteractor Interactor
 		{
@@ -51,7 +43,7 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 
 		#region IRenderer Members
 
-		public IRenderingSurface GetRenderingSurface(IntPtr windowID, int width, int height)
+		public IRenderingSurface CreateRenderingSurface(IntPtr windowID, int width, int height, RenderingSurfaceType type)
 		{
 			if (_surface == null)
 				_surface = new VtkRenderingSurface(windowID);
@@ -76,7 +68,7 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 		{
 			if (_vtkRenderer == null)
 			{
-				_vtkRenderer = new vtk.vtkRenderer();
+				_vtkRenderer = new vtkRenderer();
 				_vtkRenderer.SetBackground(0.0f, 0.0f, 0.0f);
 				_surface.RenderWindow.AddRenderer(_vtkRenderer);
 			}
@@ -92,23 +84,13 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 			GraphicCollection layers = volume.TissueLayers;
 			vtkPropCollection props = _vtkRenderer.GetViewProps();
 
-			foreach (VolumeGraphic volumeGraphic in layers)
+			foreach (var graphic in layers)
 			{
+				var volumeGraphic = (VolumeGraphic) graphic;
 				if (props.IsItemPresent(volumeGraphic.VtkProp) == 0)
 					_vtkRenderer.AddViewProp(volumeGraphic.VtkProp);
-
-				//if (volumeLayer.OldVtkProp != null)
-				//{
-
-				//    if (props.IsItemPresent(volumeLayer.OldVtkProp) != 0)
-				//    {
-				//        props.RemoveItem(volumeLayer.OldVtkProp);
-				//        volumeLayer.OldVtkProp = null;
-				//    }
-				//}
 			}
 		}
-
 
 		#region IDisposable Members
 
@@ -141,4 +123,3 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 		}
 	}
 }
-*/

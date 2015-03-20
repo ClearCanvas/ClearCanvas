@@ -22,38 +22,32 @@
 
 #endregion
 
-using System;
-using System.Drawing;
-using System.Diagnostics;
 using ClearCanvas.Common;
-using ClearCanvas.ImageViewer.Imaging;
 using ClearCanvas.Desktop;
-using ClearCanvas.Desktop.Tools;
 using ClearCanvas.Desktop.Actions;
-using ClearCanvas.ImageViewer.Vtk.Rendering;
-using vtk;
-using ClearCanvas.ImageViewer.InputManagement;
 using ClearCanvas.ImageViewer.BaseTools;
-/*
+using ClearCanvas.ImageViewer.InputManagement;
+using vtk;
+
 namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 {
 	[MouseToolButton(XMouseButtons.Right, false)]
 	[MenuAction("activate", "imageviewer-contextmenu/Zoom Volume", "Select", Flags = ClickActionFlags.CheckAction)]
 	[ButtonAction("activate", "global-toolbars/ToolbarsVolume/ZoomVolume", "Select", Flags = ClickActionFlags.CheckAction)]
-    [CheckedStateObserver("activate", "Active", "ActivationChanged")]
-    [Tooltip("activate", "Zoom Volume")]
-	[IconSet("activate", IconScheme.Colour, "Icons.CreateVolumeToolSmall.png", "Icons.CreateVolumeToolLarge.png", "Icons.CreateVolumeToolLarge.png")]
+	[CheckedStateObserver("activate", "Active", "ActivationChanged")]
+	[Tooltip("activate", "Zoom Volume")]
+	[IconSet("activate", "Icons.CreateVolumeToolSmall.png", "Icons.CreateVolumeToolLarge.png", "Icons.CreateVolumeToolLarge.png")]
 	[GroupHint("activate", "Tools.VolumeImage.Manipulation.Zoom")]
-
-	[ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
+	//
+	[ExtensionOf(typeof (ImageViewerToolExtensionPoint))]
 	public class ZoomVolumeTool : MouseImageViewerTool
 	{
 		public ZoomVolumeTool()
-  		{
+		{
 			this.CursorToken = new CursorToken("Icons.CreateVolumeToolSmall.png", this.GetType().Assembly);
 		}
 
-		vtkGenericRenderWindowInteractor GetInteractor(IPresentationImage selectedImage)
+		private vtkGenericRenderWindowInteractor GetInteractor(IPresentationImage selectedImage)
 		{
 			if (selectedImage == null)
 				return null;
@@ -63,7 +57,7 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 			if (image == null)
 				return null;
 
-            VtkPresentationImageRenderer renderer = image.ImageRenderer as VtkPresentationImageRenderer;
+			VolumePresentationImageRenderer renderer = image.ImageRenderer as VolumePresentationImageRenderer;
 
 			if (renderer == null)
 				return null;
@@ -77,7 +71,7 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 
 		public override bool Start(IMouseInformation mouseInformation)
 		{
-		 	base.Start(mouseInformation);
+			base.Start(mouseInformation);
 
 			IPresentationImage selectedImage = this.Context.Viewer.SelectedPresentationImage;
 
@@ -141,4 +135,3 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 		#endregion
 	}
 }
-*/

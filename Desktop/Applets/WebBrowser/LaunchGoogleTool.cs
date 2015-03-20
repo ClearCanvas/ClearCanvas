@@ -22,33 +22,23 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 using ClearCanvas.Common;
-using ClearCanvas.Desktop;
-using ClearCanvas.Desktop.Tools;
 using ClearCanvas.Desktop.Actions;
-
+using ClearCanvas.Desktop.Tools;
 
 namespace ClearCanvas.Desktop.Applets.WebBrowser
 {
 	[ButtonAction("activate", "webbrowser-toolbar/Google", "LaunchGoogle")]
 	[Tooltip("activate", "Launch Google")]
-	[IconSet("activate", IconScheme.Colour, "Icons.GoogleToolSmall.png", "Icons.GoogleToolSmall.png", "Icons.GoogleToolSmall.png")]
-	[ExtensionOf(typeof(WebBrowserToolExtensionPoint))]
+	[IconSet("activate", "Icons.GoogleToolSmall.png", "Icons.GoogleToolSmall.png", "Icons.GoogleToolSmall.png")]
+	//
+	[ExtensionOf(typeof (WebBrowserToolExtensionPoint))]
 	public class LaunchGoogleTool : Tool<IWebBrowserToolContext>
 	{
-		public LaunchGoogleTool()
+		public void LaunchGoogle()
 		{
-
-		}
-
-		private void LaunchGoogle()
-		{
-			this.Context.Url = "http://google.com";
-			this.Context.Go();
+			Context.Url = "http://www.google.com";
+			Context.Go();
 		}
 	}
 }

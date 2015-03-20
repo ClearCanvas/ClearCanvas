@@ -22,14 +22,11 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using vtk;
 
 namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 {
-	class VolumeProp : IVtkProp
+	internal class VolumeProp : IVtkProp
 	{
 		private VolumeGraphic _volumeLayer;
 		private vtkVolume _vtkVolume;
@@ -52,7 +49,7 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 			}
 		}
 
-		private vtkProp CreateVolumeRendering()
+		private void CreateVolumeRendering()
 		{
 			_opacityTransferFunction = new vtkPiecewiseFunction();
 			_opacityTransferFunction.ClampingOff();
@@ -91,8 +88,6 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 			_vtkVolume = new vtkVolume();
 			_vtkVolume.SetMapper(volumeMapper);
 			_vtkVolume.SetProperty(volumeProperty);
-
-			return _vtkVolume;
 		}
 
 		private void SetOpacityTransferFunction()
@@ -100,8 +95,8 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 			_opacityTransferFunction.RemoveAllPoints();
 			_opacityTransferFunction.AddPoint(_volumeLayer.GetWindowLeft(), 0.0);
 			_opacityTransferFunction.AddPoint(
-				_volumeLayer.GetRescaledLevel(), 
-				(double)_volumeLayer.TissueSettings.Opacity);
+				_volumeLayer.GetRescaledLevel(),
+				(double) _volumeLayer.TissueSettings.Opacity);
 			_opacityTransferFunction.AddPoint(_volumeLayer.GetWindowRight(), 0.0);
 		}
 
@@ -109,15 +104,15 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 		{
 			_colorTransferFunction.RemoveAllPoints();
 
-			double R = _volumeLayer.TissueSettings.MinimumColor.R / 255.0f;
-			double G = _volumeLayer.TissueSettings.MinimumColor.G / 255.0f;
-			double B = _volumeLayer.TissueSettings.MinimumColor.B / 255.0f;
+			double R = _volumeLayer.TissueSettings.MinimumColor.R/255.0f;
+			double G = _volumeLayer.TissueSettings.MinimumColor.G/255.0f;
+			double B = _volumeLayer.TissueSettings.MinimumColor.B/255.0f;
 
 			_colorTransferFunction.AddRGBPoint(_volumeLayer.GetWindowLeft(), R, G, B);
 
-			R = _volumeLayer.TissueSettings.MaximumColor.R / 255.0f;
-			G = _volumeLayer.TissueSettings.MaximumColor.G / 255.0f;
-			B = _volumeLayer.TissueSettings.MaximumColor.B / 255.0f;
+			R = _volumeLayer.TissueSettings.MaximumColor.R/255.0f;
+			G = _volumeLayer.TissueSettings.MaximumColor.G/255.0f;
+			B = _volumeLayer.TissueSettings.MaximumColor.B/255.0f;
 
 			_colorTransferFunction.AddRGBPoint(_volumeLayer.GetWindowRight(), R, G, B);
 		}
@@ -140,7 +135,5 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 			}
 			_vtkVolume.Update();
 		}
-
-
 	}
 }

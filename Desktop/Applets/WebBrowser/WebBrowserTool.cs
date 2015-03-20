@@ -23,25 +23,21 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-
 using ClearCanvas.Common;
 using ClearCanvas.Common.Utilities;
-using ClearCanvas.Desktop;
-using ClearCanvas.Desktop.Tools;
 using ClearCanvas.Desktop.Actions;
+using ClearCanvas.Desktop.Tools;
 
 namespace ClearCanvas.Desktop.Applets.WebBrowser
 {
 	[MenuAction("apply", "global-menus/MenuTools/MenuStandard/MenuWebBrowser", "Apply")]
 	[ButtonAction("apply", "global-toolbars/ToolbarStandard/ToolbarWebBrowser", "Apply")]
 	[Tooltip("apply", "TooltipWebBrowser")]
-	[IconSet("apply", IconScheme.Colour, "Icons.WebBrowserToolSmall.png", "Icons.WebBrowserToolMedium.png", "Icons.WebBrowserToolLarge.png")]
+	[IconSet("apply", "Icons.WebBrowserToolSmall.png", "Icons.WebBrowserToolMedium.png", "Icons.WebBrowserToolLarge.png")]
 	[EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
-
-	[ExtensionOf(typeof(ClearCanvas.Desktop.DesktopToolExtensionPoint))]
-	public class WebBrowserTool : Tool<ClearCanvas.Desktop.IDesktopToolContext>
+	//
+	[ExtensionOf(typeof (DesktopToolExtensionPoint))]
+	public class WebBrowserTool : Tool<IDesktopToolContext>
 	{
 		private bool _enabled;
 		private event EventHandler _enabledChanged;

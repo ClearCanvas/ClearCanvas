@@ -22,9 +22,6 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using ClearCanvas.ImageViewer.Graphics;
 
 namespace ClearCanvas.ImageViewer.Tools.Volume.VTK

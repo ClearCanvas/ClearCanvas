@@ -23,14 +23,12 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
-using ClearCanvas.ImageViewer.Rendering;
-using vtk;
 using System.Windows.Forms;
 using ClearCanvas.Common;
-/*
+using ClearCanvas.ImageViewer.Rendering;
+using vtk;
+
 namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 {
 	public class VtkRenderingSurface : IRenderingSurface
@@ -56,7 +54,7 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 		public IntPtr WindowID
 		{
 			get { return _windowID; }
-			set 
+			set
 			{
 				if (_windowID != value)
 				{
@@ -102,7 +100,18 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 			get { return _clipRectangle; }
 			set { _clipRectangle = value; }
 		}
-		
+
+		public RenderingSurfaceType Type
+		{
+			get { return RenderingSurfaceType.Onscreen; }
+		}
+
+		public event EventHandler Invalidated
+		{
+			add { }
+			remove { }
+		}
+
 		#endregion
 
 		public vtkWin32OpenGLRenderWindow RenderWindow
@@ -114,12 +123,12 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 		{
 			get
 			{
-				if(_vtkWin32OpenGLRW == null)
+				if (_vtkWin32OpenGLRW == null)
 					return null;
 
 				vtkRenderWindowInteractor rwi = _vtkWin32OpenGLRW.GetInteractor();
 
-				if (rwi == null) 
+				if (rwi == null)
 					return null;
 
 				return rwi;
@@ -132,12 +141,12 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 
 		private Control HostControl
 		{
-			get 
+			get
 			{
 				if (this.WindowID == IntPtr.Zero)
 					return null;
 				else
-					return Control.FromHandle(this.WindowID); 
+					return Control.FromHandle(this.WindowID);
 			}
 		}
 
@@ -192,7 +201,7 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 
 				this.Interactor.Render();
 			}
-		}	
+		}
 
 		#endregion
 
@@ -202,7 +211,7 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 		{
 			_vtkWin32OpenGLRW = vtkWin32OpenGLRenderWindow.SafeDownCast(win);
 
-			if(_vtkWin32OpenGLRW != null)
+			if (_vtkWin32OpenGLRW != null)
 			{
 				vtkGenericRenderWindowInteractor iren = new vtkGenericRenderWindowInteractor();
 				iren.SetRenderWindow(_vtkWin32OpenGLRW);
@@ -244,4 +253,3 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 		#endregion
 	}
 }
-*/

@@ -23,14 +23,9 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-
 using ClearCanvas.Common;
 using ClearCanvas.Desktop;
-using ClearCanvas.Common.Utilities;
 using ClearCanvas.ImageViewer.Graphics;
-using ClearCanvas.ImageViewer.BaseTools;
 
 namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 {
@@ -38,27 +33,23 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 	/// Extension point for views onto <see cref="VolumeComponent"/>
 	/// </summary>
 	[ExtensionPoint]
-	public class VolumeComponentViewExtensionPoint : ExtensionPoint<IApplicationComponentView>
-	{
-	}
+	public class VolumeComponentViewExtensionPoint : ExtensionPoint<IApplicationComponentView> {}
 
 	/// <summary>
 	/// VolumeComponent class
 	/// </summary>
-	[AssociateView(typeof(VolumeComponentViewExtensionPoint))]
+	[AssociateView(typeof (VolumeComponentViewExtensionPoint))]
 	public class VolumeComponent : ImageViewerToolComponent
 	{
 		/// <summary>
 		/// Constructor
 		/// </summary>
 		public VolumeComponent(IDesktopWindow desktopWindow)
-			: base(desktopWindow)
-		{
-		}
+			: base(desktopWindow) {}
 
 		public bool CreateVolumeEnabled
 		{
-			get 
+			get
 			{
 				if (this.ImageViewer == null)
 				{
@@ -111,22 +102,6 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 			}
 		}
 
-		#region IApplicationComponent methods
-
-		public override void Start()
-		{
-			base.Start();
-		}
-
-		public override void Stop()
-		{
-			// TODO prepare the component to exit the live phase
-			// This is a good place to do any clean up
-			base.Stop();
-		}
-
-		#endregion
-
 		public void CreateVolume()
 		{
 			if (this.ImageViewer == null)
@@ -156,7 +131,7 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 		{
 			if (e.DeactivatedImageViewer != null)
 				e.DeactivatedImageViewer.EventBroker.DisplaySetSelected -= OnDisplaySetSelected;
-			
+
 			if (e.ActivatedImageViewer != null)
 				e.ActivatedImageViewer.EventBroker.DisplaySetSelected += OnDisplaySetSelected;
 
@@ -183,6 +158,5 @@ namespace ClearCanvas.ImageViewer.Tools.Volume.VTK
 			tissue.SelectPreset("Blood");
 			layers.Add(new VolumeGraphic(tissue));
 		}
-
 	}
 }
