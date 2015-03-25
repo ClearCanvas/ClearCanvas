@@ -23,15 +23,15 @@
     font-weight: bold;
     font-family: Sans-Serif;
     font-size: 12px;
-    bottom: 18px;
-    right: 20px;
+    bottom: 50px;
+    right: 5px;
 }
 
 #Copyright
 {
 	position:absolute;
-	right:20px;
-	bottom:5px;	
+	right:53px;
+	bottom:30px;	
 	color:#24402E;
 	font-size:x-small;
 	font-family: Sans-Serif;
@@ -64,6 +64,7 @@
 .LoginButton
 {
     font-size: 12px;
+    width: 125px;
 }
 
 .LoginLabel
@@ -79,7 +80,7 @@
 {
     text-align: right;
     font-family: Arial,sans-serif;
-    font-size: 14px;
+    font-size: xx-small;
     font-weight: bold;
     color: #205F87;
 }

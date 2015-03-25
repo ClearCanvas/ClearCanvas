@@ -121,6 +121,15 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Login {
         protected global::System.Web.UI.WebControls.TextBox UserName;
         
         /// <summary>
+        /// LoginButton control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button LoginButton;
+        
+        /// <summary>
         /// Label3 control.
         /// </summary>
         /// <remarks>
@@ -139,31 +148,13 @@ namespace ClearCanvas.ImageServer.Web.Application.Pages.Login {
         protected global::System.Web.UI.WebControls.TextBox Password;
         
         /// <summary>
-        /// LoginButton control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button LoginButton;
-        
-        /// <summary>
         /// LinkButton1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton LinkButton1;
-        
-        /// <summary>
-        /// Label4 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label4;
+        protected global::System.Web.UI.WebControls.Button LinkButton1;
         
         /// <summary>
         /// ErrorMessagePanel control.
