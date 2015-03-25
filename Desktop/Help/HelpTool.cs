@@ -72,7 +72,8 @@ namespace ClearCanvas.Desktop.Help
 
 		public void ShowLicense()
 		{
-			Execute("EULA.rtf", SR.LicenseNotFound);
+			var licenseFile = File.Exists(System.IO.Path.Combine(Platform.InstallDirectory, "EULA.rtf")) ? "EULA.rtf" : "License.rtf";
+			Execute(licenseFile, SR.LicenseNotFound);
 		}
 
 		public void ShowLogs()
