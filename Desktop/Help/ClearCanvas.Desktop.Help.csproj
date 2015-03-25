@@ -146,7 +146,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SR.resx">
       <SubType>Designer</SubType>
-      <Generator>PublicResXFileCodeGenerator</Generator>
+      <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SR.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>

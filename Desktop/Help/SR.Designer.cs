@@ -142,7 +142,7 @@ namespace ClearCanvas.Desktop.Help {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to www.synaptivemedical.com.
+        ///   Looks up a localized string similar to Website.
         /// </summary>
         internal static string MenuWebsite {
             get {

@@ -62,7 +62,7 @@ namespace ClearCanvas.Desktop.Help
 
 		public void ShowWebsite()
 		{
-			Execute("http://www.synaptivemedical.com", SR.URLNotFound);
+			Execute(HelpSettings.Default.WebsiteUrl, SR.URLNotFound);
 		}
 
 		public void ShowUsersGuide()
@@ -72,8 +72,7 @@ namespace ClearCanvas.Desktop.Help
 
 		public void ShowLicense()
 		{
-			var licenseFile = File.Exists(System.IO.Path.Combine(Platform.InstallDirectory, "EULA.rtf")) ? "EULA.rtf" : "License.rtf";
-			Execute(licenseFile, SR.LicenseNotFound);
+			Execute(HelpSettings.Default.LicenseDocument, SR.LicenseNotFound);
 		}
 
 		public void ShowLogs()

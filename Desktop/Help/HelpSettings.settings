@@ -5,5 +5,11 @@
     <Setting Name="UserGuidePath" Description="Path to user guide" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="WebsiteUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://clearcanvas.github.io</Value>
+    </Setting>
+    <Setting Name="LicenseDocument" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">License.rtf</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
