@@ -37,6 +37,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head runat="server">
 	<meta http-equiv="X-UA-Compatible"  Content = "IE=10"></meta>
+	<link rel="shortcut icon" type="image/ico" runat="server" href="~/Images/favicon.ico" />
 </head>
 <body id="PageBody" class="LoginBody" runat="server">
 	
