@@ -385,7 +385,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ImageServer Dashboard.
+        ///   Looks up a localized string similar to Dashboard.
         /// </summary>
         internal static string Dashboard {
             get {

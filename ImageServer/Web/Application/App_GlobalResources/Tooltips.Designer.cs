@@ -162,7 +162,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This device can send Accept Key/Object Presentation States objects to ImageServer.
+        ///   Looks up a localized string similar to This device can send Accept Key/Object Presentation States objects to the server.
         /// </summary>
         internal static string DeviceFeatures_AcceptKOPRFeature {
             get {
@@ -171,7 +171,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ImageServer can auto-route images to this device.
+        ///   Looks up a localized string similar to the server can auto-route images to this device.
         /// </summary>
         internal static string DeviceFeatures_AutoRoute {
             get {
@@ -180,7 +180,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This device can query ImageServer.
+        ///   Looks up a localized string similar to This device can query the server.
         /// </summary>
         internal static string DeviceFeatures_Query {
             get {
@@ -189,7 +189,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This device can retrieve images from ImageServer.
+        ///   Looks up a localized string similar to This device can retrieve images from the server.
         /// </summary>
         internal static string DeviceFeatures_Retrieve {
             get {
@@ -198,7 +198,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This device can send DICOM images to ImageServer.
+        ///   Looks up a localized string similar to This device can send DICOM images to the server.
         /// </summary>
         internal static string DeviceFeatures_Store {
             get {

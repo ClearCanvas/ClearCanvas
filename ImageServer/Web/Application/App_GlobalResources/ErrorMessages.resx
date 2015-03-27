@@ -138,7 +138,7 @@ Please check the log file or contact the server administrator.</value>
     <value>This alert item is no longer available in the system.</value>
   </data>
   <data name="AuthorizationError" xml:space="preserve">
-    <value>ImageServer Authorization Failed.</value>
+    <value>Authorization Failed.</value>
   </data>
   <data name="CannotContactEnterpriseServer" xml:space="preserve">
     <value>Unable to contact the authentication and authorization server.</value>
@@ -150,7 +150,7 @@ Please check the log file or contact the server administrator.</value>
     <value>Cookies are currently disabled on your browser.</value>
   </data>
   <data name="CookiesAreDisabledLongDescription" xml:space="preserve">
-    <value>ClearCanvas ImageServer requires your browser to accept Cookies.  Please enable Cookies on your browser and click here to try again.</value>
+    <value>This application requires your browser to accept Cookies.  Please enable Cookies on your browser and click here to try again.</value>
   </data>
   <data name="DeleteStudyError" xml:space="preserve">
     <value>Unable to delete the study. See server log for more details.</value>
@@ -171,7 +171,7 @@ Please check the log file or contact the server administrator.</value>
     <value>Validation Error. Please check all tabs for indicated errors and correct before submitting changes.</value>
   </data>
   <data name="ErrorShowStackTraceMessage" xml:space="preserve">
-    <value>To include the ImageServer's error message, click here.</value>
+    <value>To include the error message, click here.</value>
   </data>
   <data name="ExceptionAuthorityGroupIsNotEmpty_MultipleUsers" xml:space="preserve">
     <value>There are currently {1} users belonging to this group.</value>
@@ -180,7 +180,7 @@ Please check the log file or contact the server administrator.</value>
     <value>There is currently one user belonging to this group.</value>
   </data>
   <data name="GeneralErrorMessage" xml:space="preserve">
-    <value>This message is being displayed because the ClearCanvas ImageServer encountered a situation that was unexpected. The resulting error has been recorded for future analysis. 
+    <value>This message is being displayed because the server encountered a situation that was unexpected. The resulting error has been recorded for future analysis. 
 
 If you would like to report the error, please post to one of the forums listed below and provide any information you think will be helpful in handling this situation in the future.</value>
   </data>
@@ -188,7 +188,7 @@ If you would like to report the error, please post to one of the forums listed b
     <value>Javascript is currently disabled on your browser.</value>
   </data>
   <data name="JavascriptIsDisabledLongDescription" xml:space="preserve">
-    <value>ClearCanvas ImageServer requires Javascript in order to run. Please enable Javascript on your browser and click here to try again</value>
+    <value>This application requires Javascript in order to run. Please enable Javascript on your browser and click here to try again</value>
   </data>
   <data name="LicenseError" xml:space="preserve">
     <value>Could not find a valid license</value>
@@ -231,20 +231,20 @@ Please retype your passwords and try again.</value>
     <value>Report is not available at this time because of the following error(s):</value>
   </data>
   <data name="SessionTimedout" xml:space="preserve">
-    <value>ImageServer session timed out.</value>
+    <value>Session timed out.</value>
   </data>
   <data name="SessionTimedoutLongDescription" xml:space="preserve">
-    <value>This message is being displayed because there has been no activity in the past {0} minute(s). For security purposes, your ImageServer session has been closed. Please login again to continue using ClearCanvas ImageServer. </value>
+    <value>This message is being displayed because there has been no activity in the past {0} minute(s). For security purposes, your session has been closed. Please login again to continue using the application. </value>
     <comment>Timeout page when user logged into IS</comment>
   </data>
   <data name="UnexpectedError" xml:space="preserve">
-    <value>Something happened that the ImageServer was unprepared for.</value>
+    <value>Something happened that the server was unprepared for.</value>
   </data>
   <data name="UserAccessDenied" xml:space="preserve">
     <value>Access denied.  The user credentials may be invalid or the account may be disabled.</value>
   </data>
   <data name="WebViewerAuthorizationErrorDescription" xml:space="preserve">
-    <value>This message is being displayed because the ClearCanvas ImageServer encountered an error authorizing user with ID "{0}"</value>
+    <value>This message is being displayed because the server encountered an error authorizing user with ID "{0}"</value>
   </data>
   <data name="WebViewerSessionAlreadyRemoved" xml:space="preserve">
     <value>The requested session has already been removed.  Please try to login again.</value>

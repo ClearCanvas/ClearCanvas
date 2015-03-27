@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Users>
-  <User xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" UserName="admin">
+  <User UserName="admin">
     <IsApproved>true</IsApproved>
     <LastLoginDate>0001-01-01T00:00:00-05:00</LastLoginDate>
     <LastActivityDate>0001-01-01T00:00:00-05:00</LastActivityDate>
-    <Password>123</Password>
+    <Password>clearcanvas</Password>
   </User>
-  <User xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" UserName="test">
-    <IsApproved>true</IsApproved>
+  <User UserName="other_user">
+    <IsApproved>false</IsApproved>
     <LastLoginDate>0001-01-01T00:00:00-05:00</LastLoginDate>
     <LastActivityDate>0001-01-01T00:00:00-05:00</LastActivityDate>
-    <Password>123</Password>
+    <Password>clearcanvas</Password>
   </User>
 </Users>

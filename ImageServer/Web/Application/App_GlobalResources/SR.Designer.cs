@@ -1064,7 +1064,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ImageServer Developers Forum.
+        ///   Looks up a localized string similar to Developers Forum.
         /// </summary>
         internal static string ImageServerDevelopersForum {
             get {
@@ -1073,7 +1073,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ImageServer Users Forum.
+        ///   Looks up a localized string similar to Users Forum.
         /// </summary>
         internal static string ImageServerUsersForum {
             get {
@@ -2405,7 +2405,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your password has expired, or this is your first login to the ImageServer. Please enter a new password below..
+        ///   Looks up a localized string similar to Your password has expired, or this is your first login to the server. Please enter a new password below..
         /// </summary>
         internal static string YourPasswordHasExpired {
             get {

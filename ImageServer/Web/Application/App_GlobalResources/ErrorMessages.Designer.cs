@@ -117,7 +117,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ImageServer Authorization Failed..
+        ///   Looks up a localized string similar to Authorization Failed..
         /// </summary>
         internal static string AuthorizationError {
             get {
@@ -153,7 +153,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ClearCanvas ImageServer requires your browser to accept Cookies.  Please enable Cookies on your browser and click here to try again..
+        ///   Looks up a localized string similar to This application requires your browser to accept Cookies.  Please enable Cookies on your browser and click here to try again..
         /// </summary>
         internal static string CookiesAreDisabledLongDescription {
             get {
@@ -216,7 +216,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to To include the ImageServer&apos;s error message, click here..
+        ///   Looks up a localized string similar to To include the error message, click here..
         /// </summary>
         internal static string ErrorShowStackTraceMessage {
             get {
@@ -243,7 +243,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This message is being displayed because the ClearCanvas ImageServer encountered a situation that was unexpected. The resulting error has been recorded for future analysis. 
+        ///   Looks up a localized string similar to This message is being displayed because the server encountered a situation that was unexpected. The resulting error has been recorded for future analysis. 
         ///
         ///If you would like to report the error, please post to one of the forums listed below and provide any information you think will be helpful in handling this situation in the future..
         /// </summary>
@@ -263,7 +263,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ClearCanvas ImageServer requires Javascript in order to run. Please enable Javascript on your browser and click here to try again.
+        ///   Looks up a localized string similar to This application requires Javascript in order to run. Please enable Javascript on your browser and click here to try again.
         /// </summary>
         internal static string JavascriptIsDisabledLongDescription {
             get {
@@ -390,7 +390,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ImageServer session timed out..
+        ///   Looks up a localized string similar to Session timed out..
         /// </summary>
         internal static string SessionTimedout {
             get {
@@ -399,7 +399,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This message is being displayed because there has been no activity in the past {0} minute(s). For security purposes, your ImageServer session has been closed. Please login again to continue using ClearCanvas ImageServer. .
+        ///   Looks up a localized string similar to This message is being displayed because there has been no activity in the past {0} minute(s). For security purposes, your session has been closed. Please login again to continue using the application. .
         /// </summary>
         internal static string SessionTimedoutLongDescription {
             get {
@@ -408,7 +408,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Something happened that the ImageServer was unprepared for..
+        ///   Looks up a localized string similar to Something happened that the server was unprepared for..
         /// </summary>
         internal static string UnexpectedError {
             get {
@@ -426,7 +426,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This message is being displayed because the ClearCanvas ImageServer encountered an error authorizing user with ID &quot;{0}&quot;.
+        ///   Looks up a localized string similar to This message is being displayed because the server encountered an error authorizing user with ID &quot;{0}&quot;.
         /// </summary>
         internal static string WebViewerAuthorizationErrorDescription {
             get {

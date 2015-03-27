@@ -307,7 +307,7 @@
     <value>Delete Series Confirmation</value>
   </data>
   <data name="Dashboard" xml:space="preserve">
-    <value>ImageServer Dashboard</value>
+    <value>Dashboard</value>
   </data>
   <data name="DashboardTitle" xml:space="preserve">
     <value>Dashboard | {0}</value>

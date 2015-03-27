@@ -141,19 +141,19 @@ Low Watermark  : {2}%</value>
     <value>A unique folder name to store images within for the partition. A folder with this name will be created in each filesystem.</value>
   </data>
   <data name="DeviceFeatures_AcceptKOPRFeature" xml:space="preserve">
-    <value>This device can send Accept Key/Object Presentation States objects to ImageServer</value>
+    <value>This device can send Accept Key/Object Presentation States objects to the server</value>
   </data>
   <data name="DeviceFeatures_AutoRoute" xml:space="preserve">
-    <value>ImageServer can auto-route images to this device</value>
+    <value>the server can auto-route images to this device</value>
   </data>
   <data name="DeviceFeatures_Query" xml:space="preserve">
-    <value>This device can query ImageServer</value>
+    <value>This device can query the server</value>
   </data>
   <data name="DeviceFeatures_Retrieve" xml:space="preserve">
-    <value>This device can retrieve images from ImageServer</value>
+    <value>This device can retrieve images from the server</value>
   </data>
   <data name="DeviceFeatures_Store" xml:space="preserve">
-    <value>This device can send DICOM images to ImageServer</value>
+    <value>This device can send DICOM images to the server</value>
   </data>
   <data name="SearchByAccessionNumber" xml:space="preserve">
     <value>Search the list by Accession Number</value>

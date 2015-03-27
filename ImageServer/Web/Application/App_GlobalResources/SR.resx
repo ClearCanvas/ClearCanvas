@@ -737,13 +737,13 @@ At least one server partition is required. Please add a new server partition.</v
     <value>For further assistance, try the following &lt;a href="{0}" target="_blank"&gt;link&lt;/a&gt;.</value>
   </data>
   <data name="ImageServerDevelopersForum" xml:space="preserve">
-    <value>ImageServer Developers Forum</value>
+    <value>Developers Forum</value>
   </data>
   <data name="ImageServerUsersForum" xml:space="preserve">
-    <value>ImageServer Users Forum</value>
+    <value>Users Forum</value>
   </data>
   <data name="YourPasswordHasExpired" xml:space="preserve">
-    <value>Your password has expired, or this is your first login to the ImageServer. Please enter a new password below.</value>
+    <value>Your password has expired, or this is your first login to the server. Please enter a new password below.</value>
   </data>
   <data name="WebViewerMutipleMatchingStudiesFound" xml:space="preserve">
     <value>Multiple matching studies have been found. Please select a study to view.</value>
