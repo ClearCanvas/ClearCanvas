@@ -171,7 +171,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to the server can auto-route images to this device.
+        ///   Looks up a localized string similar to The server can auto-route images to this device.
         /// </summary>
         internal static string DeviceFeatures_AutoRoute {
             get {

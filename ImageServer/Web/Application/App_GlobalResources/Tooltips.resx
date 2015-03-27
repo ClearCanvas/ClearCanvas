@@ -144,7 +144,7 @@ Low Watermark  : {2}%</value>
     <value>This device can send Accept Key/Object Presentation States objects to the server</value>
   </data>
   <data name="DeviceFeatures_AutoRoute" xml:space="preserve">
-    <value>the server can auto-route images to this device</value>
+    <value>The server can auto-route images to this device</value>
   </data>
   <data name="DeviceFeatures_Query" xml:space="preserve">
     <value>This device can query the server</value>

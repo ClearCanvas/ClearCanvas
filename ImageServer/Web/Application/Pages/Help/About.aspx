@@ -86,7 +86,7 @@
   <tr><td style="padding-top: 1px;">
     <asp:Panel ID="Panel1" runat="server" ScrollBars="Vertical" Height="700" CssClass="AboutPanel" style="padding-top: 5px;">
 <pre>
-<b>Synaptive Medical</b>
+<b><%= ProductInformation.Name%></b>
 <%= ProductInformation.License %>
 </pre>
 <p></p>
@@ -1073,12 +1073,6 @@ exception statement from your version.
   <div style="font-weight: bold; ">Part of the <%=ProductInformation.Product %></div>
   <div style="font-weight:bold; font-size:small; color:Red"><%=ServerPlatform.IsManifestVerified ? "" : Resources.SR.NonStandardInstallation%></div>
 
-<p><b>Synaptive Medical</b><br />
-MaRS Discovery District<br />
-101 College Street, Suite 200<br />
-Toronto, ON M5G 1L7<br />
-Canada
-</p>
 <p>
   <span style="color: #999999; font-size: 12px; font-weight: bold;"><%=ProductInformation.Copyright%></span><br />  
 </p>
