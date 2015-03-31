@@ -49,6 +49,7 @@ ImageViewer/ClearCanvas.ImageViewer.xml
 Dicom/ClearCanvas.Dicom.sdf
 ImageViewer/Core/Functions/ViewerCoreFunctions.sdf
 ImageViewer/Core/Functions/ViewerCoreFunctions.opensdf
+ImageViewer/Rendering/BilinearInterpolation/BilinearInterpolation.sdf
 
 # Viewer local datastore files
 dicom_datastore/*.sdf

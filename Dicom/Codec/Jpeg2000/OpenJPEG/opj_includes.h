@@ -89,8 +89,8 @@ Most compilers implement their own version of this keyword ...
 	#endif
 #endif
 
-/* MSVC does not have lrintf */
-#ifdef _MSC_VER
+/* MSVC 2012 and earlier do not have lrintf */
+#if defined(_MSC_VER) && _MSC_VER < 1800
 #ifdef _M_X64
 #include <emmintrin.h>
 static INLINE long lrintf(float f) {

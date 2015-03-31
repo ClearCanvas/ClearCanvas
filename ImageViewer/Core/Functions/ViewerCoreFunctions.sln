@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ClearCanvas.ImageViewer.Core.Functions", "ClearCanvas.ImageViewer.Core.Functions.vcxproj", "{09E61E38-E145-4FA6-979C-45E58DD0FE47}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ViewerCoreFunctions", "NativeImplementation\ViewerCoreFunctions.vcxproj", "{3841DFF8-8689-43D9-9CC0-DDA9B59EC461}"
