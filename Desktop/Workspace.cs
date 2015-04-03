@@ -171,8 +171,7 @@ namespace ClearCanvas.Desktop
 		/// </summary>
 		protected override bool PrepareClose(CloseReason reason)
 		{
-			if (!base.PrepareClose(reason))
-				return false;
+			base.PrepareClose(reason);
 
 			// attempt to close any open dialogs first 
 			// process in reverse order, so that the last opened is closed first
