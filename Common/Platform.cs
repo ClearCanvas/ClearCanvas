@@ -28,6 +28,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using ClearCanvas.Common.log4net;
 using ClearCanvas.Common.Utilities;
 using JetBrains.Annotations;
 using log4net;
@@ -369,7 +370,30 @@ namespace ClearCanvas.Common
 					lock (_syncRoot)
 					{
 						if (_logDirectory == null)
-							_logDirectory = Path.Combine(InstallDirectory, _logSubFolder);
+						{
+							string logFilename = null;
+							foreach (var appender in LogManager.GetRepository().GetAppenders())
+							{
+								var fileAppender = appender as FileAppender;
+								if (fileAppender != null)
+								{
+									logFilename = fileAppender.File;
+									break;
+								}
+
+								var fileAppender2 = appender as global::log4net.Appender.FileAppender;
+								if (fileAppender2 != null)
+								{
+									logFilename = fileAppender2.File;
+									break;
+								}
+							}
+
+							if (!string.IsNullOrWhiteSpace(logFilename))
+								_logDirectory = Path.GetDirectoryName(logFilename);
+							else
+								_logDirectory = Path.Combine(InstallDirectory, _logSubFolder);
+						}
 					}
 				}
 
