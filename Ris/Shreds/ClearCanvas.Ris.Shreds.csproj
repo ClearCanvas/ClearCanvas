@@ -114,8 +114,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SR.resx</DependentUpon>
     </Compile>
-    <Compile Include="UsageTracking\UsageTrackingService.cs" />
-    <Compile Include="UsageTracking\UsageTrackingShred.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="SR.resx">
