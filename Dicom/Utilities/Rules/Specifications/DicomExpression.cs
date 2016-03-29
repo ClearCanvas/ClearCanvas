@@ -114,8 +114,8 @@ namespace ClearCanvas.Dicom.Utilities.Rules.Specifications
 			if (Text.StartsWith("$"))
 			{
 				var msg = arg as DicomMessageBase;
-				var collection = arg as DicomAttributeCollection;
-				if (collection == null && msg == null)
+				var attributeProvider = arg as IDicomAttributeProvider;
+				if (attributeProvider == null && msg == null)
 					return null;
 
 				var tagArray = Text.Split(new[] {'/'});
@@ -129,16 +129,16 @@ namespace ClearCanvas.Dicom.Utilities.Rules.Specifications
 				if (msg != null)
 				{
 					if (msg.DataSet.Contains(t))
-						collection = msg.DataSet;
+						attributeProvider = msg.DataSet;
 					else if (msg.MetaInfo.Contains(t))
-						collection = msg.MetaInfo;
+						attributeProvider = msg.MetaInfo;
 				}
-				if (collection == null)
+				if (attributeProvider == null)
 					return null;
 
 				var attributeList = new List<DicomAttribute>();
 
-				ScanCollection(collection, tagArray, 0, attributeList);
+				ScanCollection(attributeProvider, tagArray, 0, attributeList);
 
 				if (attributeList.Count == 0)
 					return null;
@@ -168,7 +168,7 @@ namespace ClearCanvas.Dicom.Utilities.Rules.Specifications
 			return Text;
 		}
 
-		private void ScanCollection(DicomAttributeCollection collection, string[] tagArray, int startIndex, List<DicomAttribute> attributeList)
+		private void ScanCollection(IDicomAttributeProvider attributeProvider, string[] tagArray, int startIndex, List<DicomAttribute> attributeList)
 		{
 			if (startIndex >= tagArray.Length)
 				return;
@@ -180,7 +180,7 @@ namespace ClearCanvas.Dicom.Utilities.Rules.Specifications
 			}
 
 			DicomAttribute attrib;
-			if (collection.TryGetAttribute(tag, out attrib))
+			if (attributeProvider.TryGetAttribute(tag, out attrib))
 			{
 				if (attrib.Tag.VR.Equals(DicomVr.SQvr))
 				{
