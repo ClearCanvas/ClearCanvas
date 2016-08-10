@@ -729,7 +729,7 @@ namespace ClearCanvas.Dicom.IO
 											if (Flags.IsSet(options, DicomReadOptions.KeepGroupLengths))
 												ds[LastTagRead] = elem;
 										}
-										else
+										else if (ds != null)
 											ds[LastTagRead] = elem;
 
 										if (rec.Curlen != _undefinedLength)
