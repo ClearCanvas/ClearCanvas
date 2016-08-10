@@ -762,7 +762,7 @@ namespace ClearCanvas.Dicom.IO
 											if (Flags.IsSet(options, DicomReadOptions.KeepGroupLengths))
 												Dataset[LastTagRead] = elem;
 										}
-										else if (ds != null)
+										else
 											Dataset[LastTagRead] = elem;
 									}
 								}
