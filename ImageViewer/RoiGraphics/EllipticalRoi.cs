@@ -180,11 +180,41 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 			}
 		}
 
-		#endregion
+        /// <summary>
+		/// Gets the minimum of the values over the <see cref="Roi"/>.
+		/// </summary>
+        public double Min
+        {
+            get
+            {
+                if (_statistics == null)
+                {
+                    _statistics = RoiStatistics.Calculate(this);
+                }
+                return _statistics.Min;
+            }
+        }
 
-		#region IRoiAreaProvider Members
+        /// <summary>
+		/// Gets the maximum of the values over the <see cref="Roi"/>.
+		/// </summary>
+        public double Max
+        {
+            get
+            {
+                if (_statistics == null)
+                {
+                    _statistics = RoiStatistics.Calculate(this);
+                }
+                return _statistics.Max;
+            }
+        }
 
-		private double? _area;
+        #endregion
+
+        #region IRoiAreaProvider Members
+
+        private double? _area;
 
 		/// <summary>
 		/// Gets the area of the region of interest in the units of area as specified by <see cref="IRoiAreaProvider.Units"/>.
@@ -210,6 +240,8 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 			}
 		}
 
-		#endregion
-	}
+       
+
+        #endregion
+    }
 }
