@@ -101,15 +101,17 @@ namespace ClearCanvas.ImageViewer.RoiGraphics.Analyzers
 
 					meanValue = string.Format(displayFormat, mean);
 					stdDevValue = string.Format(displayFormat, stdDev);
+					minValue = string.Format(displayFormat, min);
+					maxValue = string.Format(displayFormat, max);
 
 					result.Add(new SingleValueRoiAnalyzerResult("Mean", units, mean,
 					                                            String.Format(SR.FormatMean, meanValue)));
 					result.Add(new SingleValueRoiAnalyzerResult("StdDev", units, stdDevValue,
 					                                            String.Format(SR.FormatStdDev, stdDevValue)));
                     result.Add(new SingleValueRoiAnalyzerResult("Min", units, min,
-                                                                String.Format(SR.FormatMin, min)));
+                                                                String.Format(SR.FormatMin, minValue)));
                     result.Add(new SingleValueRoiAnalyzerResult("Max", units, max,
-                                                                String.Format(SR.FormatMax, max)));
+                                                                String.Format(SR.FormatMax, maxValue)));
                 }
 			}
 			else
