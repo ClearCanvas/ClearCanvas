@@ -219,6 +219,7 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 
 		private void ToggleSynchronize()
 		{
+            Platform.Log(LogLevel.Debug, "SynchronizeToggle() .. SynchronizeActive is " + SynchronizeActive.ToString());
 			SynchronizeActive = !SynchronizeActive;
 			if (SynchronizeActive)
 			{
@@ -317,27 +318,33 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 		{
 			DicomImagePlane closestImagePlane = null;
 			float distanceToClosestImagePlane = float.MaxValue;
-
+            Platform.Log(LogLevel.Debug, "GetClosestParallelImagePlan()..");
 			foreach (DicomImagePlane targetImagePlane in targetImagePlanes)
 			{
+               
 				if (targetImagePlane.IsParallelTo(referenceImagePlane, SynchronizationToolSettingsHelper.Default.ParallelPlanesToleranceAngleRadians))
 				{
-					bool sameFrameOfReference = referenceImagePlane.IsInSameFrameOfReference(targetImagePlane);
+                    Platform.Log(LogLevel.Debug, "TargetImagePlane IS parallel");
+                    bool sameFrameOfReference = referenceImagePlane.IsInSameFrameOfReference(targetImagePlane);
 					if (this.StudiesLinked || sameFrameOfReference)
 					{
 						Vector3D calibratedOffset = _frameOfReferenceCalibrator.GetOffset(referenceImagePlane, targetImagePlane) ?? Vector3D.Null;
-
+                        
 						Vector3D distanceToImagePlane = referenceImagePlane.PositionPatientCenterOfImage + calibratedOffset - targetImagePlane.PositionPatientCenterOfImage;
-
-						float absoluteDistanceToImagePlane = Math.Abs(distanceToImagePlane.Magnitude);
-
-						if (absoluteDistanceToImagePlane < distanceToClosestImagePlane)
+                        
+                        float absoluteDistanceToImagePlane = Math.Abs(distanceToImagePlane.Magnitude);
+                        Platform.Log(LogLevel.Debug, "targetImagePlane " + targetImagePlane.FrameNumber.ToString() + " CalibratedOffset = " + calibratedOffset.Magnitude.ToString() + " absoluteDistanceToImagePlane = " + absoluteDistanceToImagePlane);
+                        if (absoluteDistanceToImagePlane < distanceToClosestImagePlane)
 						{
 							distanceToClosestImagePlane = absoluteDistanceToImagePlane;
 							closestImagePlane = targetImagePlane;
 						}
 					}
 				}
+                else
+                {
+                    Platform.Log(LogLevel.Debug, "TargetImagePlane is not parallel");
+                }
 			}
 
 			return closestImagePlane;
@@ -354,6 +361,7 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 
 		private void SynchronizeImageBox(IImageBox referenceImageBox, IImageBox targetImageBox)
 		{
+            Platform.Log(LogLevel.Debug, "SynchronizeImageBox() " + targetImageBox.TopLeftPresentationImage.ParentDisplaySet.Description);
 			if (referenceImageBox.TopLeftPresentationImage == null)
 				return;
 
@@ -368,7 +376,7 @@ namespace ClearCanvas.ImageViewer.Tools.Synchronization
 			DicomImagePlane targetImagePlane = GetClosestParallelImagePlane(referenceImagePlane, targetImagePlanes);
 			if (targetImagePlane == null)
 				return;
-
+            
 			int lastIndex = targetImageBox.TopLeftPresentationImageIndex;
 			targetImageBox.TopLeftPresentationImage = targetImagePlane.SourceImage;
 

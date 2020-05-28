@@ -58,6 +58,7 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			switch (modality)
 			{
 				case @"PT":
+				case @"NM":
 					// use Units (0054,1001) if specified
 					var units = GetAttributeStringValue(dicomAttributeProvider, DicomTags.Units);
 					if (!string.IsNullOrEmpty(units))
@@ -65,6 +66,8 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 
 					// otherwise use Rescale Type (0028,1054) - if empty, return unspecified
 					return !string.IsNullOrEmpty(rescaleType) ? ParseRescaleType(rescaleType) : Unspecified;
+				
+				
 				case @"CT":
 					// use Rescale Type (0028,1054) - if empty, assume HU (see DICOM PS3.3)
 					return !string.IsNullOrEmpty(rescaleType) ? ParseRescaleType(rescaleType) : HounsfieldUnits;
