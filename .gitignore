@@ -62,3 +62,10 @@ ImageServer/Web/Application/Pages/Help/UsersGuide/*
 
 # Files for Github integration
 ReferencedAssemblies
+/ImageServer/.vs/config
+/ImageViewer/Core/Functions/.vs/ViewerCoreFunctions/v16/Server/sqlite3/storage.ide
+/ImageViewer/Core/Functions/.vs/ViewerCoreFunctions/v16/Server/sqlite3/db.lock
+/ImageViewer/.vs/ImageViewer/v16/Server/sqlite3
+/ImageViewer/Core/Functions/.vs/ViewerCoreFunctions/v16/Solution.VC.db
+/ImageViewer/Core/Functions/.vs/ViewerCoreFunctions/v16/Browse.VC.db
+/ImageViewer/Core/Functions/.vs/ViewerCoreFunctions/v16
