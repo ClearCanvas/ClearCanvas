@@ -783,4 +783,7 @@ Alternately, the study can be brought back online by a PACS administrator.</valu
   <data name="FormatMin" xml:space="preserve">
     <value>Min: {0}</value>
   </data>
+  <data name="FormatTotal" xml:space="preserve">
+    <value>Total: {0}</value>
+  </data>
 </root>

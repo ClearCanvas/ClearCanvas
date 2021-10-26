@@ -237,8 +237,46 @@
     <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkVolumeRenderingDotNet.dll" />
     <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkWidgets.dll" />
     <MprPluginFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Vtk\$(PlatformSubFolder)\vtkWidgetsDotNet.dll" />
+
+  
   </ItemGroup>
 
+  <ItemGroup>
+    <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Itk\ManagedITK.Calculators.dll"/>
+    <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Itk\ManagedITK.CastFilters.dll"/>
+    <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Itk\ManagedITK.Common.dll"/>
+    <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Itk\ManagedITK.ComposeFilters.dll"/>
+    <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Itk\ManagedITK.DistanceMaps.dll"/>
+    <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Itk\ManagedITK.EdgeFilters.dll"/>
+    <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Itk\ManagedITK.GradientFilters.dll"/>
+    <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Itk\ManagedITK.IntensityFilters.dll"/>
+    <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Itk\ManagedITK.Interpolators.dll"/>
+    <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Itk\ManagedITK.IO.dll"/>
+    <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Itk\ManagedITK.Iterators.dll"/>
+    <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Itk\ManagedITK.LevelSetFilters.dll"/>
+    <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Itk\ManagedITK.MorphologicalFilters.dll"/>
+    <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Itk\ManagedITK.NoiseFilters.dll"/>
+    <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Itk\ManagedITK.Optimizers.dll"/>
+    <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Itk\ManagedITK.Paths.dll"/>
+    <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Itk\ManagedITK.PixelMathFilters.dll"/>
+    <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Itk\ManagedITK.ProjectionFilters.dll"/>
+    <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Itk\ManagedITK.Registration.dll"/>
+    <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Itk\ManagedITK.ResizeFilters.dll"/>
+    <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Itk\ManagedITK.SpatialObjects.dll"/>
+    <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Itk\ManagedITK.Statistics.dll"/>
+    <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Itk\ManagedITK.ThresholdFilters.dll"/>
+    <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Itk\ManagedITK.Topology.dll"/>
+    <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Itk\ManagedITK.Transforms.dll"/>
+    <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Itk\ManagedITK.VTK.dll"/>
+    <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\SimpleITK\SimpleITKCSharpManaged.dll"/>
+    <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\SimpleITK\SimpleITKCSharpNative.dll"/>
+    <ItkFiles Include="$(TrunkDirectory)\ImageViewer\VtkItkAdapters\bin\$(Configuration)\ClearCanvas.ImageViewer.VtkItkAdapters.dll"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <NPlotFiles Include="$(TrunkDirectory)\ReferencedAssemblies\NPlot.dll"/>
+  </ItemGroup>
+  
   <ItemGroup>
     <FusionPluginFiles Include="$(TrunkDirectory)\ImageViewer\AdvancedImaging\Fusion\bin\$(Configuration)\ClearCanvas.ImageViewer.AdvancedImaging.Fusion.dll" />
   </ItemGroup>
@@ -277,12 +315,21 @@
     <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Configuration\bin\$(Configuration)\ClearCanvas.ImageViewer.Configuration.dll" />
     <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Configuration\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Configuration.View.WinForms.dll" />
 
+    <!-- Image Processing-->
+    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\ImageProcessing\bin\$(Configuration)\ClearCanvas.ImageViewer.ImageProcessing.dll" />
+    
     <!-- Tools -->
     <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\Measurement\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.Measurement.dll" />
     <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\Measurement\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.Measurement.View.WinForms.dll" />
     <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\Standard\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.Standard.dll" />
     <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\Standard\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.Standard.View.WinForms.dll" />
-
+    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\MedicalPhysics\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.MedicalPhysics.dll" />
+    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\MedicalPhysics\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.MedicalPhysics.View.WinForms.dll" />
+    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\ImageProcessing\Filter\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.ImageProcessing.Filter.dll" />
+    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\ImageProcessing\RoiAnalysis\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis.dll" />
+    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\ImageProcessing\RoiAnalysis\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis.View.WinForms.dll" />
+    <!--<PluginFiles Include="$(TrunkDirectory)\ImageViewer\TestTools\bin\$(Configuration)\ClearCanvas.ImageViewer.TestTools.dll" />
+    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\TestTools\View\bin\$(Configuration)\ClearCanvas.ImageViewer.TestTools.View.WinForms.dll" />-->
     <!-- Layout -->
     <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Layout\Basic\bin\$(Configuration)\ClearCanvas.ImageViewer.Layout.Basic.dll" />
     <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Layout\Basic\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Layout.Basic.View.WinForms.dll" />
@@ -376,6 +423,12 @@
   <Target Name="Copy Mpr Files">
     <Copy SourceFiles="@(MprPluginFiles)" DestinationFolder="$(PluginsDirectory)" />
   </Target>
+  <Target Name="Copy Itk Files">
+    <Copy SourceFiles="@(ItkFiles)" DestinationFolder="$(PluginsDirectory)"/>
+  </Target>
+  <Target Name="Copy NPlot Files">
+    <Copy SourceFiles="@(NPlotFiles)" DestinationFolder="$(PluginsDirectory)"/>
+  </Target>
   <Target Name="Copy Fusion Files">
     <Copy SourceFiles="@(FusionPluginFiles)" DestinationFolder="$(PluginsDirectory)" />
   </Target>
@@ -425,6 +478,12 @@
     <RegexIsMatch Pattern="ExcludeMpr" Input="$(OptionsFlags)" >
       <Output TaskParameter="IsMatch" PropertyName="ExcludeMpr" />
     </RegexIsMatch>
+    <RegexIsMatch Pattern="ExcludeItk" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeItk" />
+    </RegexIsMatch>
+    <RegexIsMatch Pattern="ExcludeNPlot" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeNPlot" />
+    </RegexIsMatch>
     <RegexIsMatch Pattern="ExcludeFusion" Input="$(OptionsFlags)" >
       <Output TaskParameter="IsMatch" PropertyName="ExcludeFusion" />
     </RegexIsMatch>
@@ -443,10 +502,12 @@
     <CallTarget Condition="!$(ExcludeDicomRemote)" Targets="Copy Dicom Remote Client Files" />
     <CallTarget Condition="!$(ExcludeStreaming)" Targets="Copy Streaming Client Files" />
     <CallTarget Condition="!$(ExcludeMpr)" Targets="Copy Mpr Files" />
+    <CallTarget Condition="!$(ExcludeItk)" Targets="Copy Itk Files" />
+    <CallTarget Condition="!$(ExcludeNPlot)" Targets="Copy NPlot Files" />
     <CallTarget Condition="!$(ExcludeFusion)" Targets="Copy Fusion Files" />
     <CallTarget Condition="!$(ExcludeDatabase)" Targets="Copy Local Store Client Files" />
     <CallTarget Condition="!$(ExcludeSynchronizationTools)" Targets="Copy Synchronization Plugin" />
-    <CallTarget Condition="$(IncludeTestTools)" Targets="Copy Test Tool Files" />
+    <CallTarget Condition="!$(IncludeTestTools)" Targets="Copy Test Tool Files" />
 
   </Target>
 

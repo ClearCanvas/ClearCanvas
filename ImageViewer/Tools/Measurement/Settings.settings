@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="AutoNameMeasurements" Description="Specifies whether or not to automatically name measurements/ROIs and put the name in the text callout." Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

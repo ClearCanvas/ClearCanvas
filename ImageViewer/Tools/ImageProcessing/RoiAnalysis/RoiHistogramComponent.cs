@@ -26,17 +26,35 @@ using System;
 using System.Collections.Generic;
 using ClearCanvas.Common;
 using ClearCanvas.Desktop;
+using ClearCanvas.Desktop.Actions;
+using ClearCanvas.Desktop.Tables;
+using ClearCanvas.Desktop.Tools;
 using ClearCanvas.ImageViewer.BaseTools;
 using ClearCanvas.ImageViewer.Imaging;
+using ClearCanvas.ImageViewer.Graphics;
 using ClearCanvas.ImageViewer.RoiGraphics;
+using ClearCanvas.Common.Utilities;
 
 namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis
 {
+	[ExtensionPoint()]
+	public class RoiHistogramToolExtensionPoint : ExtensionPoint<ITool>
+    {
+
+    }
+
 	/// <summary>
 	/// Extension point for views onto <see cref="RoiHistogramComponent"/>
 	/// </summary>
 	[ExtensionPoint]
 	public class RoiHistogramComponentViewExtensionPoint : ExtensionPoint<IApplicationComponentView> {}
+
+	public interface IRoiHistogramToolContext : IToolContext
+    {
+		Roi Roi { get; }
+
+		RoiHistogramComponent Component { get; }
+    }
 
 	/// <summary>
 	/// RoiHistogramComponent class
@@ -44,20 +62,129 @@ namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis
 	[AssociateView(typeof (RoiHistogramComponentViewExtensionPoint))]
 	public class RoiHistogramComponent : RoiAnalysisComponent
 	{
-		private int _minBin = -200;
+		private int _minBin = 0;
 		private int _maxBin = 1000;
 		private int _numBins = 100;
 		private int[] _binLabels;
 		private int[] _bins;
 		private bool _autoscale;
+		private ToolSet _toolSet;
+        private ActionModelRoot _toolbarModel;
+        private Table<RoiInfoItem> _roiInfoItems;
+		protected List<RoiGraphic> _roiGraphics;
+		protected RoiGraphic _selectedRoiGraphic;
+		private class RoiHistogramToolContext : ToolContext, IRoiHistogramToolContext
+        {
+			private readonly RoiHistogramComponent _component;
 
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		public RoiHistogramComponent(IImageViewerToolContext imageViewerToolContext)
-			: base(imageViewerToolContext) {}
+			public RoiHistogramToolContext(RoiHistogramComponent component)
+            {
+				Platform.CheckForNullReference(component, "component");
+				_component = component;
+			}
 
-		public int MinBin
+			public Roi Roi
+            {
+                get { return _component.GetRoi(); }
+            }
+
+			public RoiHistogramComponent Component
+            {
+                get { return _component; }
+            }
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public RoiHistogramComponent(IImageViewerToolContext imageViewerToolContext)
+			: base(imageViewerToolContext) 
+		{
+			_roiGraphics = new List<RoiGraphic>();
+		
+			
+			_roiInfoItems = new Table<RoiInfoItem>();
+			var setValueDelegate = new TableColumn<RoiInfoItem, string>.SetColumnValueDelegate<RoiInfoItem, string>((d, value) =>
+			{
+				d.SetValue(value);
+			});
+			_roiInfoItems.Columns.Add(new TableColumn<RoiInfoItem, string>("Data", delegate(RoiInfoItem i) { return i.Name; }));
+			_roiInfoItems.Columns.Add(new TableColumn<RoiInfoItem, string>("Value", delegate (RoiInfoItem i) { return i.ValueAsString; },setValueDelegate));
+		}
+
+		public ActionModelRoot ToolbarModel
+        {
+            get { return _toolbarModel; }
+        }
+
+        public override void Start()
+        {
+			
+            base.Start();
+			_toolSet = new ToolSet(new RoiHistogramToolExtensionPoint(), new RoiHistogramToolContext(this));
+			_toolbarModel = ActionModelRoot.CreateModel(this.GetType().FullName, "roihistogram-toolbar", _toolSet.Actions);
+			foreach(var r in (new RoiInfoItemExtensionPoint().CreateExtensions()))
+            {
+				if(r is IRoiInfoItem)
+                {
+					_roiInfoItems.Items.Add(r as IRoiInfoItem);
+                }
+            }
+			GetRoiGraphics();
+			_selectedRoiGraphic =  GetSelectedRoi();
+			UpdateComponent();
+        }
+
+		public List<RoiGraphic> RoiGraphics
+        {
+            get { return _roiGraphics; }
+        }
+
+		public RoiGraphic SelectedRoiGraphic
+        {
+            get
+            {
+				return _selectedRoiGraphic;
+            }
+            set
+            {
+				_selectedRoiGraphic = value;
+				ImageViewer.SelectedPresentationImage.SelectedGraphic = _selectedRoiGraphic;                
+                UpdateComponent();
+				OnAllPropertiesChanged();
+				
+            }
+        }
+
+		public void UpdateComponent()
+        {
+						
+			foreach(var r in _roiInfoItems.Items)
+            {
+				var roi = GetRoi();
+                try
+                {
+					r.SetRoi(roi);
+					r.SetComponent(this);
+				}
+				catch(Exception setRoiException)
+                {
+					Platform.Log(LogLevel.Error, "Unable to Set Roi " + r.Name +": " + setRoiException.Message);
+                }
+                try
+                {
+					r.ComputeValue();
+				}
+				catch(Exception ex)
+                {
+					Platform.Log(LogLevel.Error, "Unable to compute roi info item " + r.Name +": " + ex.Message);
+				}
+				
+            }
+			NotifyPropertyChanged("RoiInfoItems");
+        }
+
+        public int MinBin
 		{
 			get { return _minBin; }
 			set
@@ -111,6 +238,11 @@ namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis
 			get { return _bins; }
 		}
 
+		public Table<RoiInfoItem> RoiInfoItems 
+		{ 
+			get { return _roiInfoItems; } 
+		}
+
 		public bool ComputeHistogram()
 		{
 			Roi roi = GetRoi();
@@ -124,7 +256,35 @@ namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis
 			return false;
 		}
 
-		private bool ComputeHistogram(Roi roi)
+		#region event
+		/// <summary>
+		/// Fires when an ROI is added to the <see cref="ImageViewer"/>
+		/// </summary>
+		public event EventHandler RoiAdded;
+
+		private void OnRoiAdded()
+        {
+			EventsHelper.Fire(RoiAdded, this, new EventArgs());
+		}
+
+		/// <summary>
+		/// Is thrown when any Roi has a change of name
+		/// </summary>
+		public event EventHandler RoiNameChanged;
+
+
+
+		private void OnRoiNameChanged()
+        {
+			EventsHelper.Fire(RoiNameChanged, this, new EventArgs());
+			UpdateComponent();
+			//RoiNameChanged?.Invoke(this, new EventArgs());
+        }
+        #endregion
+
+        #region private
+
+        private bool ComputeHistogram(Roi roi)
 		{
 			// For now, only allow ROIs of grayscale images
 			GrayscalePixelData pixelData = roi.PixelData as GrayscalePixelData;
@@ -179,5 +339,83 @@ namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis
 		{
 			return GetRoi() != null;
 		}
-	}
+
+        protected override void OnGraphicSelectionChanged(object sender, Graphics.GraphicSelectionChangedEventArgs e)
+        {
+            
+			if(e.SelectedGraphic is RoiGraphic)
+            {
+                if (!RoiGraphics.Contains(e.SelectedGraphic as RoiGraphic))
+                {
+					RoiGraphics.Add(e.SelectedGraphic as RoiGraphic);
+					(e.SelectedGraphic as RoiGraphic).NameChanged += Roi_NameChanged;					
+					SelectedRoiGraphic = (e.SelectedGraphic as RoiGraphic);
+					OnRoiAdded();
+				}
+				SelectedRoiGraphic = e.SelectedGraphic as RoiGraphic;
+            }
+			base.OnGraphicSelectionChanged(sender, e);
+		}
+
+		/// <summary>
+		/// Gets the ROIGraphics in the current presentation image only
+		/// </summary>
+		/// <remarks>
+		/// This method was supposed to query every RoiGraphic on every PrsentationImage in the viewer but for some reason
+		/// it will only ever pick up the RoiGraphics on the current PresentationImage.
+		/// </remarks>
+        private void GetRoiGraphics()
+        {
+            if (ImageViewer.SelectedPresentationImage is GrayscalePresentationImage)
+            {
+                var gray = ImageViewer.SelectedPresentationImage as GrayscalePresentationImage;
+                if (gray != null)
+                {
+					
+					var y = GetRoiGraphics(gray.SceneGraph);
+                    _roiGraphics.AddRange(y);
+                }
+            }
+        }		
+
+		/// <summary>
+		/// Recursively scours a <see cref="CompositeGraphic"/> for any <see cref="RoiGraphic"/>s and returns them in a list
+ 		/// </summary>
+		/// <param name="compositeGraphic"></param>
+		/// <returns></returns>
+		private List<RoiGraphic> GetRoiGraphics(Graphics.CompositeGraphic compositeGraphic)
+        {			
+			if (compositeGraphic.Graphics is null)
+            {				
+				return new List<RoiGraphic>();
+			}				
+			if(compositeGraphic.Graphics.Count == 0)
+            {				
+				return new List<RoiGraphic>();
+			}			
+            else
+            {
+				var result = new List<RoiGraphic>();				
+				foreach (var g in compositeGraphic.Graphics)
+                {					
+					if (g is RoiGraphic)
+					{						
+						result.Add(g as RoiGraphic);
+                        (g as RoiGraphic).NameChanged += Roi_NameChanged;
+                    }
+					else if(g is Graphics.CompositeGraphic)
+                    {						
+						result.AddRange(GetRoiGraphics(g as Graphics.CompositeGraphic));
+					}					
+                }			
+				return result;
+            }
+        }
+
+        private void Roi_NameChanged(object sender, EventArgs e)
+        {
+			OnRoiNameChanged();
+        }
+        #endregion
+    }
 }

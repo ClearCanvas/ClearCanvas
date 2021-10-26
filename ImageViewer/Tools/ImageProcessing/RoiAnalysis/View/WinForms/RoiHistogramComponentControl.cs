@@ -76,33 +76,73 @@ namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis.View.WinForm
 
 			Refresh(null, EventArgs.Empty);
 			_component.AllPropertiesChanged += new EventHandler(Refresh);
+			_component.RoiAdded += _component_RoiAdded;
+			_component.RoiNameChanged += _component_RoiNameChanged;
+
+			_roiInfoTable.Table = _component.RoiInfoItems;
+			_roiInfoTable.ToolbarModel = _component.ToolbarModel;		
+
+			roiGraphicCombo.DataSource = _component.RoiGraphics;			
+			roiGraphicCombo.DataBindings.Add("Value", _bindingSource, "SelectedRoiGraphic", true, DataSourceUpdateMode.OnPropertyChanged);			
+            
+
+			
 		}
 
-		private void Refresh(object sender, EventArgs e)
-		{
-			_plotSurface.Clear();
-			_plotSurface.BackColor = Color.Black;
+        private void _component_RoiNameChanged(object sender, EventArgs e)
+        {
+			
+			setComboValues();
+			//Refresh();
+		}
 
+        private void _component_RoiAdded(object sender, EventArgs e)
+        {		
+			setComboValues();
+		}
+
+		private void setComboValues()
+        {
+			var blah = roiGraphicCombo.DataSource;
+			roiGraphicCombo.DataSource = null;
+			roiGraphicCombo.DataSource = blah;
+			roiGraphicCombo.DisplayMember = "Name";
+			//roiGraphicCombo.Value = _component.SelectedRoiGraphic;
+			//roiGraphicCombo.Refresh();
+
+		}
+        private void Refresh(object sender, EventArgs e)
+		{
+			_roiInfoTable.Refresh();
+
+			_plotSurface.Clear();
+			_plotSurface.BackColor = Color.White;			
+			
+			
+			
 			if (!_component.ComputeHistogram())
 			{
 				_plotSurface.Refresh();
 				return;
 			}
-
+			
 			HistogramPlot histogram = new HistogramPlot();
 			histogram.AbscissaData = _component.BinLabels;
 			histogram.OrdinateData = _component.Bins;
 			histogram.Center = false;
 			histogram.BaseWidth = 1.0f;
 			histogram.Filled = true;
-			histogram.Pen = new Pen(Application.CurrentUITheme.Colors.StandardColorBase);
-			histogram.RectangleBrush = new RectangleBrushes.Solid(Application.CurrentUITheme.Colors.StandardColorBase);
-
+			histogram.Pen = new Pen(Color.Gray);
+			histogram.RectangleBrush = new RectangleBrushes.Solid(Color.Gray);
+			
 			_plotSurface.Add(histogram);
-			_plotSurface.PlotBackColor = Color.Black;
-			_plotSurface.XAxis1.Color = Color.White;
-			_plotSurface.YAxis1.Color = Color.White;
+			_plotSurface.PlotBackColor = Color.White;
+			_plotSurface.XAxis1.Color = Color.Black;
+			_plotSurface.YAxis1.Color = Color.Black;
 			_plotSurface.Refresh();
+			
+		
+
 		}
 	}
 }

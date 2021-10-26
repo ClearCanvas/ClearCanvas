@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using ClearCanvas.ImageViewer.BaseTools;
 using ClearCanvas.ImageViewer.Graphics;
 using ClearCanvas.ImageViewer.RoiGraphics;
@@ -33,10 +34,12 @@ namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis
 	{
 		private bool _enabled = false;
 		private RoiAnalysisComponentContainer _container;
+		
 
 		protected RoiAnalysisComponent(IImageViewerToolContext imageViewerToolContext)
 			: base(imageViewerToolContext.DesktopWindow)
 		{
+			
 		}
 
 		public bool Enabled
@@ -57,13 +60,19 @@ namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis
 
 		public override void Start()
 		{
+			
 			// If there's an ROI selected already when 
 			WatchRoiGraphic(GetSelectedRoi());
-
+            
 			base.Start();
 		}
 
-		public override void Stop()
+        private void EventBroker_GraphicSelectionChanged(object sender, GraphicSelectionChangedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Stop()
 		{
 			// TODO prepare the component to exit the live phase
 			// This is a good place to do any clean up
@@ -91,11 +100,11 @@ namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis
 
 		protected void OnAllPropertiesChanged()
 		{
-			if (CanAnalyzeSelectedRoi())
-			{
-				if (this.Container != null)
-					this.Container.SelectedComponent = this;
-			}
+			//if (CanAnalyzeSelectedRoi())
+			//{
+			//	if (this.Container != null)
+			//		this.Container.SelectedComponent = this;
+			//}
 
 			base.NotifyAllPropertiesChanged();
 		}
@@ -116,8 +125,9 @@ namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis
 			OnAllPropertiesChanged();
 		}
 
-		private void OnGraphicSelectionChanged(object sender, GraphicSelectionChangedEventArgs e)
+		protected virtual void OnGraphicSelectionChanged(object sender, GraphicSelectionChangedEventArgs e)
 		{
+
 			RoiGraphic deselectedGraphic = e.DeselectedGraphic as RoiGraphic;
 			RoiGraphic selectedGraphic = e.SelectedGraphic as RoiGraphic;
 
@@ -137,9 +147,13 @@ namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis
 		{
 			if (roiGraphic != null)
 				roiGraphic.RoiChanged += OnRoiChanged;
+
+            
 		}
 
-		private void OnRoiChanged(object sender, EventArgs e)
+       
+
+        private void OnRoiChanged(object sender, EventArgs e)
 		{
 			OnAllPropertiesChanged();
 		}

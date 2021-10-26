@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31702.278
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8F43070C-E31A-4CEC-92AD-F2AA0B65475B}"
 	ProjectSection(SolutionItems) = preProject
@@ -228,8 +228,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearCanvas.ImageViewer.VTK", "..\ImageViewer\VTK\ClearCanvas.ImageViewer.VTK.csproj", "{14FE088A-252E-4214-94B6-FC9D62C9BF0E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{3286021C-472A-4E23-916F-12968B390C37}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nick.ClearCanvas.ColorMaps", "..\..\..\..\Documents\Visual Studio 2013\Projects\ClearCanvas-13.0\Nick.ClearCanvas.ColorMaps\Nick.ClearCanvas.ColorMaps.csproj", "{EAEA337B-2427-480F-B76E-78FAA6463FA4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -469,10 +467,6 @@ Global
 		{14FE088A-252E-4214-94B6-FC9D62C9BF0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14FE088A-252E-4214-94B6-FC9D62C9BF0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14FE088A-252E-4214-94B6-FC9D62C9BF0E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EAEA337B-2427-480F-B76E-78FAA6463FA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EAEA337B-2427-480F-B76E-78FAA6463FA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EAEA337B-2427-480F-B76E-78FAA6463FA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EAEA337B-2427-480F-B76E-78FAA6463FA4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -536,10 +530,10 @@ Global
 		{624BC225-49A8-4E92-942D-CDC976292EB9} = {8F42CFF3-A672-427F-B727-FE3B8948822E}
 		{AB89527E-B1B6-49A4-B3A0-D07948FC23E0} = {03A72338-B6AB-4BD4-9BF9-58033CF28B20}
 		{14FE088A-252E-4214-94B6-FC9D62C9BF0E} = {321D399D-B5D9-4AE3-8934-EB4C51BDF304}
-		{EAEA337B-2427-480F-B76E-78FAA6463FA4} = {3286021C-472A-4E23-916F-12968B390C37}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		VisualSVNWorkingCopyRoot = ..
+		SolutionGuid = {6DD6899A-585A-4663-B796-02E9A1622306}
 	EndGlobalSection
 	GlobalSection(TextTemplating) = postSolution
 		TextTemplating = 1

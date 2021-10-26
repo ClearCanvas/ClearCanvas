@@ -67,6 +67,8 @@ namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis.View.WinForm
             this.label2 = new System.Windows.Forms.Label();
             this._numBinsUpDown = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
+            this._roiInfoTable = new ClearCanvas.Desktop.View.WinForms.TableView();
+            this.roiGraphicCombo = new ClearCanvas.Desktop.View.WinForms.ComboBoxField();
             ((System.ComponentModel.ISupportInitialize)(this._minUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._maxUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._numBinsUpDown)).BeginInit();
@@ -80,11 +82,11 @@ namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis.View.WinForm
             this._plotSurface.DateTimeToolTip = false;
             this._plotSurface.Legend = null;
             this._plotSurface.LegendZOrder = -1;
-            this._plotSurface.Location = new System.Drawing.Point(16, 16);
+            this._plotSurface.Location = new System.Drawing.Point(4, 62);
             this._plotSurface.Name = "_plotSurface";
             this._plotSurface.RightMenu = null;
             this._plotSurface.ShowCoordinates = true;
-            this._plotSurface.Size = new System.Drawing.Size(354, 260);
+            this._plotSurface.Size = new System.Drawing.Size(421, 214);
             this._plotSurface.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
             this._plotSurface.TabIndex = 0;
             this._plotSurface.Text = "plotSurface2D1";
@@ -98,7 +100,7 @@ namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis.View.WinForm
             // _autoScaleCheckBox
             // 
             this._autoScaleCheckBox.AutoSize = true;
-            this._autoScaleCheckBox.Location = new System.Drawing.Point(221, 310);
+            this._autoScaleCheckBox.Location = new System.Drawing.Point(274, 314);
             this._autoScaleCheckBox.Name = "_autoScaleCheckBox";
             this._autoScaleCheckBox.Size = new System.Drawing.Size(73, 17);
             this._autoScaleCheckBox.TabIndex = 1;
@@ -139,7 +141,7 @@ namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis.View.WinForm
             // 
             // _numBinsUpDown
             // 
-            this._numBinsUpDown.Location = new System.Drawing.Point(16, 367);
+            this._numBinsUpDown.Location = new System.Drawing.Point(178, 314);
             this._numBinsUpDown.Name = "_numBinsUpDown";
             this._numBinsUpDown.Size = new System.Drawing.Size(58, 20);
             this._numBinsUpDown.TabIndex = 6;
@@ -147,17 +149,47 @@ namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis.View.WinForm
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(13, 347);
+            this.label3.Location = new System.Drawing.Point(175, 291);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(27, 13);
             this.label3.TabIndex = 7;
             this.label3.Text = "Bins";
+            // 
+            // _roiInfoTable
+            // 
+            this._roiInfoTable.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this._roiInfoTable.AutoSize = true;
+            this._roiInfoTable.ColumnHeaderTooltip = null;
+            this._roiInfoTable.FilterLabelVisible = true;
+            this._roiInfoTable.FilterTextBoxVisible = true;
+            this._roiInfoTable.Location = new System.Drawing.Point(3, 340);
+            this._roiInfoTable.Name = "_roiInfoTable";
+            this._roiInfoTable.ReadOnly = false;
+            this._roiInfoTable.Size = new System.Drawing.Size(433, 518);
+            this._roiInfoTable.SortButtonTooltip = null;
+            this._roiInfoTable.TabIndex = 9;
+            // 
+            // roiGraphicCombo
+            // 
+            this.roiGraphicCombo.DataSource = null;
+            this.roiGraphicCombo.DisplayMember = "Name";
+            this.roiGraphicCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.roiGraphicCombo.LabelText = "Roi Selection";
+            this.roiGraphicCombo.Location = new System.Drawing.Point(4, 16);
+            this.roiGraphicCombo.Margin = new System.Windows.Forms.Padding(2);
+            this.roiGraphicCombo.Name = "roiGraphicCombo";
+            this.roiGraphicCombo.Size = new System.Drawing.Size(150, 41);
+            this.roiGraphicCombo.TabIndex = 10;
+            this.roiGraphicCombo.Value = null;
             // 
             // RoiHistogramComponentControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.Controls.Add(this.roiGraphicCombo);
+            this.Controls.Add(this._roiInfoTable);
             this.Controls.Add(this.label3);
             this.Controls.Add(this._numBinsUpDown);
             this.Controls.Add(this.label2);
@@ -167,7 +199,7 @@ namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis.View.WinForm
             this.Controls.Add(this._autoScaleCheckBox);
             this.Controls.Add(this._plotSurface);
             this.Name = "RoiHistogramComponentControl";
-            this.Size = new System.Drawing.Size(386, 488);
+            this.Size = new System.Drawing.Size(461, 861);
             ((System.ComponentModel.ISupportInitialize)(this._minUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this._maxUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this._numBinsUpDown)).EndInit();
@@ -186,5 +218,7 @@ namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis.View.WinForm
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.NumericUpDown _numBinsUpDown;
 		private System.Windows.Forms.Label label3;
+        private Desktop.View.WinForms.TableView _roiInfoTable;
+        private Desktop.View.WinForms.ComboBoxField roiGraphicCombo;
     }
 }

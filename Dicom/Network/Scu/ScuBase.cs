@@ -517,7 +517,7 @@ namespace ClearCanvas.Dicom.Network.Scu
 				_dicomClient.Dispose();
 				_dicomClient = null;
 			}
-			catch (Exception) {}
+			catch (Exception ex) { ex = null; }
 		}
 
 		#endregion

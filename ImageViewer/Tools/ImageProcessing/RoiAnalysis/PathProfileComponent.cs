@@ -151,6 +151,8 @@ namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis
 			return GetSelectedPolyline() == null ? false : true;
 		}
 
+
+
 		private IPointsGraphic GetSelectedPolyline()
 		{
 			RoiGraphic graphic = GetSelectedRoi();

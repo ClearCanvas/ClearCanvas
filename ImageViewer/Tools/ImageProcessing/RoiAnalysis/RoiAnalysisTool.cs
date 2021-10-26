@@ -33,7 +33,7 @@ namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis
 	/// This tool runs an instance of <see cref="LayoutComponent"/> in a shelf, and coordinates
 	/// it so that it reflects the state of the active workspace.
 	/// </summary>
-	[MenuAction("show", "global-menus/MenuTools/MenuStandard/MenuRoiAnalysis", "Show")]
+	[MenuAction("show", "global-menus/MenuTools/MenuMeasurement/MenuRoiAnalysis", "Show")]
 	[ButtonAction("show", "global-toolbars/ToolbarStandard/ToolbarRoiAnalysis", "Show")]
 	[IconSet("show", "Icons.RoiHistogramToolSmall.png", "Icons.RoiHistogramToolMedium.png", "Icons.RoiHistogramToolLarge.png")]
 	[Tooltip("show", "TooltipRoiAnalysis")]

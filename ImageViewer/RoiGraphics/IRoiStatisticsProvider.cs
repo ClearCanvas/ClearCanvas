@@ -67,6 +67,14 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		/// All stored pixel values are passed through the modality LUT function if it exists before any computation takes place.
 		/// </remarks>
         double Max { get; }
+
+		/// <summary>
+		/// Gets the sum of the values over the <see cref="Roi"/>
+		/// </summary>
+		/// <remarks>
+		/// All stored pixel values are passed through the modality LUT function if it exists before any computation takes place.
+		/// </remarks>
+		double Total { get; }
 	}
 
 	internal class RoiStatistics
@@ -76,19 +84,21 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 		public readonly bool Valid;
         public readonly double Min;
         public readonly double Max;
+		public readonly double Total;
 
         private RoiStatistics()
 		{
 			this.Valid = false;
 		}
 
-		private RoiStatistics(double mean, double stddev, double min, double max)
+		private RoiStatistics(double mean, double stddev, double min, double max, double total)
 		{
 			this.Valid = true;
 			this.Mean = mean;
 			this.StandardDeviation = stddev;
             this.Min = min;
             this.Max = max;
+			this.Total = total;
 		}
 
 		private delegate bool IsPointInRoiDelegate(int x, int y);
@@ -123,7 +133,13 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
                 roi.ModalityLut,
                 roi.Contains);
 
-            return new RoiStatistics(mean, stdDev,min,max);
+			double total = CalculateTotal(
+				roi.BoundingBox,
+				(GrayscalePixelData)roi.PixelData,
+				roi.ModalityLut,
+				roi.Contains);
+
+            return new RoiStatistics(mean, stdDev,min,max, total);
 		}
 
 		private static double CalculateMean
@@ -277,5 +293,41 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 
             return max;
         }
-    }
+
+		private static double CalculateTotal
+			(
+		   RectangleF roiBoundingBox,
+		   GrayscalePixelData pixelData,
+		   IModalityLut modalityLut,
+		   IsPointInRoiDelegate isPointInRoi
+           )
+        {
+			double sum = 0;
+			var boundingBox = RectangleUtilities.RoundInflate(RectangleUtilities.ConvertToPositiveRectangle(roiBoundingBox));
+			pixelData.ForEachPixel(
+				boundingBox.Left,
+				boundingBox.Top,
+				boundingBox.Right,
+				boundingBox.Bottom,
+				delegate (int i, int x, int y, int pixelIndex)
+				{
+					if (isPointInRoi(x, y))
+					{
+						
+						// Make sure we run the raw pixel through the modality LUT
+						// when doing the calculation. Note that the modality LUT
+						// can be something other than a rescale intercept, so we can't
+						// just run the mean through the LUT.
+						int storedValue = pixelData.GetPixel(pixelIndex);
+						double realValue = modalityLut != null ? modalityLut[storedValue] : storedValue;
+						sum = sum + realValue;
+					}
+				});
+
+			
+
+			return sum;
+		}
+
+	}
 }

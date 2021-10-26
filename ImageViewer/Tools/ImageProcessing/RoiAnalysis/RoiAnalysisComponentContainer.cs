@@ -57,6 +57,7 @@ namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis
 			base.Start();
 
 			((RoiHistogramComponent)_roiHistogramPage.Component).Initialize();
+			
 			((PathProfileComponent)_pathProfilePage.Component).Initialize();
 		}
 

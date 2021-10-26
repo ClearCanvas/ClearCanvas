@@ -210,11 +210,25 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
             }
         }
 
-        #endregion
+		/// <summary>
+		/// Gets the total of the values over the <see cref="Roi"/>.
+		/// </summary>
+		public double Total
+		{
+			get
+			{
+				if (_statistics == null)
+				{
+					_statistics = RoiStatistics.Calculate(this);
+				}
+				return _statistics.Total;
+			}
+		}
+		#endregion
 
-        #region IRoiAreaProvider Members
+		#region IRoiAreaProvider Members
 
-        private double? _area;
+		private double? _area;
 
 		/// <summary>
 		/// Gets the area of the region of interest in the units of area as specified by <see cref="IRoiAreaProvider.Units"/>.

@@ -52,6 +52,46 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;UNIT_TESTS</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;UNIT_TESTS</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework, Version=2.2.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -64,18 +104,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Histogram.cs" />
+    <Compile Include="IRoiInfoItem.cs" />
     <Compile Include="PathProfileComponent.cs" />
     <Compile Include="RoiAnalysisComponent.cs" />
     <Compile Include="RoiAnalysisComponentContainer.cs" />
     <Compile Include="RoiHistogramComponent.cs" />
     <Compile Include="RoiAnalysisTool.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RoiInfoItem.cs" />
     <Compile Include="SR.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>SR.resx</DependentUpon>
     </Compile>
     <Compile Include="Tests\HistogramTest.cs" />
+    <Compile Include="Tools\ExportRoiInfoTool.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="SR.resx">
@@ -92,6 +135,10 @@
     <ProjectReference Include="..\..\..\..\Desktop\ClearCanvas.Desktop.csproj">
       <Project>{26E9A01A-64B5-42C5-8252-FBB30DF9CEC7}</Project>
       <Name>ClearCanvas.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Dicom\ClearCanvas.Dicom.csproj">
+      <Project>{ad9ece2b-8268-4115-8dc8-860fbd011fff}</Project>
+      <Name>ClearCanvas.Dicom</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\ClearCanvas.ImageViewer.csproj">
       <Project>{85100D3E-471C-47C9-9687-ABF25F617ED7}</Project>
