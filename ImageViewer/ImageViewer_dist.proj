@@ -268,8 +268,8 @@
     <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Itk\ManagedITK.Topology.dll"/>
     <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Itk\ManagedITK.Transforms.dll"/>
     <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\Itk\ManagedITK.VTK.dll"/>
-    <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\SimpleITK\SimpleITKCSharpManaged.dll"/>
-    <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\SimpleITK\SimpleITKCSharpNative.dll"/>
+    <!--<ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\SimpleITK\SimpleITKCSharpManaged.dll"/>
+    <ItkFiles Include="$(TrunkDirectory)\ReferencedAssemblies\SimpleITK\SimpleITKCSharpNative.dll"/>-->
     <ItkFiles Include="$(TrunkDirectory)\ImageViewer\VtkItkAdapters\bin\$(Configuration)\ClearCanvas.ImageViewer.VtkItkAdapters.dll"/>
   </ItemGroup>
 
@@ -316,7 +316,7 @@
     <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Configuration\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Configuration.View.WinForms.dll" />
 
     <!-- Image Processing-->
-    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\ImageProcessing\bin\$(Configuration)\ClearCanvas.ImageViewer.ImageProcessing.dll" />
+    <!--<PluginFiles Include="$(TrunkDirectory)\ImageViewer\ImageProcessing\bin\$(Configuration)\ClearCanvas.ImageViewer.ImageProcessing.dll" />-->
     
     <!-- Tools -->
     <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\Measurement\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.Measurement.dll" />
@@ -325,7 +325,7 @@
     <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\Standard\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.Standard.View.WinForms.dll" />
     <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\MedicalPhysics\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.MedicalPhysics.dll" />
     <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\MedicalPhysics\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.MedicalPhysics.View.WinForms.dll" />
-    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\ImageProcessing\Filter\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.ImageProcessing.Filter.dll" />
+    <!--<PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\ImageProcessing\Filter\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.ImageProcessing.Filter.dll" />-->
     <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\ImageProcessing\RoiAnalysis\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis.dll" />
     <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\ImageProcessing\RoiAnalysis\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis.View.WinForms.dll" />
     <!--<PluginFiles Include="$(TrunkDirectory)\ImageViewer\TestTools\bin\$(Configuration)\ClearCanvas.ImageViewer.TestTools.dll" />
@@ -423,9 +423,9 @@
   <Target Name="Copy Mpr Files">
     <Copy SourceFiles="@(MprPluginFiles)" DestinationFolder="$(PluginsDirectory)" />
   </Target>
-  <Target Name="Copy Itk Files">
+  <!--<Target Name="Copy Itk Files">
     <Copy SourceFiles="@(ItkFiles)" DestinationFolder="$(PluginsDirectory)"/>
-  </Target>
+  </Target>-->
   <Target Name="Copy NPlot Files">
     <Copy SourceFiles="@(NPlotFiles)" DestinationFolder="$(PluginsDirectory)"/>
   </Target>
@@ -502,7 +502,7 @@
     <CallTarget Condition="!$(ExcludeDicomRemote)" Targets="Copy Dicom Remote Client Files" />
     <CallTarget Condition="!$(ExcludeStreaming)" Targets="Copy Streaming Client Files" />
     <CallTarget Condition="!$(ExcludeMpr)" Targets="Copy Mpr Files" />
-    <CallTarget Condition="!$(ExcludeItk)" Targets="Copy Itk Files" />
+    <!--<CallTarget Condition="!$(ExcludeItk)" Targets="Copy Itk Files" />-->
     <CallTarget Condition="!$(ExcludeNPlot)" Targets="Copy NPlot Files" />
     <CallTarget Condition="!$(ExcludeFusion)" Targets="Copy Fusion Files" />
     <CallTarget Condition="!$(ExcludeDatabase)" Targets="Copy Local Store Client Files" />
