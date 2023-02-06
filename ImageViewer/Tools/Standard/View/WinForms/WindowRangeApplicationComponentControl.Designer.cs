@@ -33,20 +33,22 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.View.WinForms
             this.MaxLabel = new System.Windows.Forms.Label();
             this._plotSurface = new NPlot.Windows.PlotSurface2D();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this._histBins = new System.Windows.Forms.NumericUpDown();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this._histMax = new System.Windows.Forms.NumericUpDown();
+            this._histMin = new System.Windows.Forms.NumericUpDown();
             this._maxTracker = new System.Windows.Forms.TrackBar();
             this._minTracker = new System.Windows.Forms.TrackBar();
-            this._histMin = new System.Windows.Forms.NumericUpDown();
-            this._histMax = new System.Windows.Forms.NumericUpDown();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this._histBins = new System.Windows.Forms.NumericUpDown();
-            this.label3 = new System.Windows.Forms.Label();
+            this.WindowMinLabel = new System.Windows.Forms.Label();
+            this.WindowMaxLabel = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this._histBins)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this._histMax)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this._histMin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._maxTracker)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._minTracker)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this._histMin)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this._histMax)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this._histBins)).BeginInit();
             this.SuspendLayout();
             // 
             // MinLabel
@@ -103,65 +105,10 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.View.WinForms
             this.groupBox1.Controls.Add(this._plotSurface);
             this.groupBox1.Location = new System.Drawing.Point(13, 135);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(376, 253);
+            this.groupBox1.Size = new System.Drawing.Size(376, 168);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Histogram";
-            // 
-            // _maxTracker
-            // 
-            this._maxTracker.Location = new System.Drawing.Point(89, 84);
-            this._maxTracker.Name = "_maxTracker";
-            this._maxTracker.Size = new System.Drawing.Size(282, 45);
-            this._maxTracker.TabIndex = 11;
-            this._maxTracker.TickStyle = System.Windows.Forms.TickStyle.None;
-            // 
-            // _minTracker
-            // 
-            this._minTracker.Location = new System.Drawing.Point(89, 23);
-            this._minTracker.Name = "_minTracker";
-            this._minTracker.Size = new System.Drawing.Size(282, 45);
-            this._minTracker.TabIndex = 12;
-            this._minTracker.TickStyle = System.Windows.Forms.TickStyle.None;
-            // 
-            // _histMin
-            // 
-            this._histMin.Location = new System.Drawing.Point(45, 169);
-            this._histMin.Name = "_histMin";
-            this._histMin.Size = new System.Drawing.Size(89, 20);
-            this._histMin.TabIndex = 10;
-            // 
-            // _histMax
-            // 
-            this._histMax.Location = new System.Drawing.Point(201, 169);
-            this._histMax.Name = "_histMax";
-            this._histMax.Size = new System.Drawing.Size(89, 20);
-            this._histMax.TabIndex = 11;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(15, 171);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(24, 13);
-            this.label1.TabIndex = 12;
-            this.label1.Text = "Min";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(168, 171);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(27, 13);
-            this.label2.TabIndex = 13;
-            this.label2.Text = "Max";
-            // 
-            // _histBins
-            // 
-            this._histBins.Location = new System.Drawing.Point(48, 211);
-            this._histBins.Name = "_histBins";
-            this._histBins.Size = new System.Drawing.Size(86, 20);
-            this._histBins.TabIndex = 14;
             // 
             // label3
             // 
@@ -171,11 +118,94 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.View.WinForms
             this.label3.Size = new System.Drawing.Size(27, 13);
             this.label3.TabIndex = 15;
             this.label3.Text = "Bins";
+            this.label3.Visible = false;
+            // 
+            // _histBins
+            // 
+            this._histBins.Location = new System.Drawing.Point(48, 211);
+            this._histBins.Name = "_histBins";
+            this._histBins.Size = new System.Drawing.Size(86, 20);
+            this._histBins.TabIndex = 14;
+            this._histBins.Visible = false;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(168, 171);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(27, 13);
+            this.label2.TabIndex = 13;
+            this.label2.Text = "Max";
+            this.label2.Visible = false;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(15, 171);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(24, 13);
+            this.label1.TabIndex = 12;
+            this.label1.Text = "Min";
+            this.label1.Visible = false;
+            // 
+            // _histMax
+            // 
+            this._histMax.Location = new System.Drawing.Point(201, 169);
+            this._histMax.Name = "_histMax";
+            this._histMax.Size = new System.Drawing.Size(89, 20);
+            this._histMax.TabIndex = 11;
+            this._histMax.Visible = false;
+            // 
+            // _histMin
+            // 
+            this._histMin.Location = new System.Drawing.Point(45, 169);
+            this._histMin.Name = "_histMin";
+            this._histMin.Size = new System.Drawing.Size(89, 20);
+            this._histMin.TabIndex = 10;
+            this._histMin.Visible = false;
+            // 
+            // _maxTracker
+            // 
+            this._maxTracker.Location = new System.Drawing.Point(118, 84);
+            this._maxTracker.Name = "_maxTracker";
+            this._maxTracker.Size = new System.Drawing.Size(253, 45);
+            this._maxTracker.TabIndex = 11;
+            this._maxTracker.TickStyle = System.Windows.Forms.TickStyle.None;
+            // 
+            // _minTracker
+            // 
+            this._minTracker.Location = new System.Drawing.Point(118, 23);
+            this._minTracker.Name = "_minTracker";
+            this._minTracker.Size = new System.Drawing.Size(253, 45);
+            this._minTracker.TabIndex = 12;
+            this._minTracker.TickStyle = System.Windows.Forms.TickStyle.None;
+            // 
+            // WindowMinLabel
+            // 
+            this.WindowMinLabel.AutoSize = true;
+            this.WindowMinLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.WindowMinLabel.Location = new System.Drawing.Point(74, 23);
+            this.WindowMinLabel.Name = "WindowMinLabel";
+            this.WindowMinLabel.Size = new System.Drawing.Size(22, 16);
+            this.WindowMinLabel.TabIndex = 13;
+            this.WindowMinLabel.Text = "(0)";
+            // 
+            // WindowMaxLabel
+            // 
+            this.WindowMaxLabel.AutoSize = true;
+            this.WindowMaxLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.WindowMaxLabel.Location = new System.Drawing.Point(74, 85);
+            this.WindowMaxLabel.Name = "WindowMaxLabel";
+            this.WindowMaxLabel.Size = new System.Drawing.Size(36, 16);
+            this.WindowMaxLabel.TabIndex = 14;
+            this.WindowMaxLabel.Text = "(100)";
             // 
             // WindowRangeApplicationComponentControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.WindowMaxLabel);
+            this.Controls.Add(this.WindowMinLabel);
             this.Controls.Add(this._minTracker);
             this.Controls.Add(this._maxTracker);
             this.Controls.Add(this.groupBox1);
@@ -186,11 +216,11 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.View.WinForms
             this.Load += new System.EventHandler(this.WindowRangeApplicationComponentControl_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this._histBins)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this._histMax)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this._histMin)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this._maxTracker)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this._minTracker)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this._histMin)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this._histMax)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this._histBins)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -209,5 +239,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.View.WinForms
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown _histMax;
         private System.Windows.Forms.NumericUpDown _histMin;
+        private System.Windows.Forms.Label WindowMinLabel;
+        private System.Windows.Forms.Label WindowMaxLabel;
     }
 }

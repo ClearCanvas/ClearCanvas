@@ -96,6 +96,7 @@ namespace ClearCanvas.ImageViewer.Tools.MedicalPhysics
 
             _isotopes.Add(new Isotope("Cobalt", "Co", new TimeSpan(271, 17, 45, 0), false, 57));
             _isotopes.Add(new Isotope("Caesium", "Cs", new TimeSpan(10979,4,48,0), false, 137));
+            _isotopes.Add(new Isotope("Technetium", "Tc", new TimeSpan(6, 0, 0), true, 99));
             
         }
         #endregion

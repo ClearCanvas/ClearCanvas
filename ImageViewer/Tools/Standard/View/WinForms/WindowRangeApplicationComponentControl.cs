@@ -33,6 +33,8 @@ namespace ClearCanvas.ImageViewer.Tools.Standard.View.WinForms
             _histMin.DataBindings.Add(new Binding("Value", source, "HistogramMin", true, DataSourceUpdateMode.OnPropertyChanged));
             _histMax.DataBindings.Add(new Binding("Value", source, "HistogramMax", true, DataSourceUpdateMode.OnPropertyChanged));
             _histBins.DataBindings.Add(new Binding("Value", source, "NumBins", true, DataSourceUpdateMode.OnPropertyChanged));
+            WindowMinLabel.DataBindings.Add(new Binding("Text",source,"WindowMin",true, DataSourceUpdateMode.OnPropertyChanged,0));
+            WindowMaxLabel.DataBindings.Add(new Binding("Text",source,"WindowMax",true, DataSourceUpdateMode.OnPropertyChanged,0));
             RefreshPlot();
            
         }
