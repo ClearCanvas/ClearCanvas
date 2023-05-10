@@ -325,6 +325,8 @@
     <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\Standard\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.Standard.View.WinForms.dll" />
     <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\MedicalPhysics\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.MedicalPhysics.dll" />
     <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\MedicalPhysics\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.MedicalPhysics.View.WinForms.dll" />
+	<PluginFiles Include="$(TrunkDirectory)\ImageViewer\StructuredReportViewer\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.StructuredReportViewer.dll" />
+	<PluginFiles Include="$(TrunkDirectory)\ImageViewer\StructuredReportViewer\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.StructuredReportViewer.View.WinForms.dll" />
     <!--<PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\ImageProcessing\Filter\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.ImageProcessing.Filter.dll" />-->
     <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\ImageProcessing\RoiAnalysis\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis.dll" />
     <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\ImageProcessing\RoiAnalysis\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis.View.WinForms.dll" />

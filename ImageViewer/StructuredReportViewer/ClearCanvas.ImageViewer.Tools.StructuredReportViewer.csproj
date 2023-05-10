@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{87A64ADD-9723-42EA-AAED-953F0AE68B23}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClearCanvas.ImageViewer.Tools.StructuredReportViewer</RootNamespace>
+    <AssemblyName>ClearCanvas.ImageViewer.Tools.StructuredReportViewer</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="SR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="StructuredReportViewerComponent.cs" />
+    <Compile Include="StructuredReportViewerTool.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\ClearCanvas.Common.csproj">
+      <Project>{f6ead428-e6cf-4df6-b2f3-d33d532c5343}</Project>
+      <Name>ClearCanvas.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Desktop\ClearCanvas.Desktop.csproj">
+      <Project>{26e9a01a-64b5-42c5-8252-fbb30df9cec7}</Project>
+      <Name>ClearCanvas.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Dicom\ClearCanvas.Dicom.csproj">
+      <Project>{ad9ece2b-8268-4115-8dc8-860fbd011fff}</Project>
+      <Name>ClearCanvas.Dicom</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ClearCanvas.ImageViewer.csproj">
+      <Project>{85100d3e-471c-47c9-9687-abf25f617ed7}</Project>
+      <Name>ClearCanvas.ImageViewer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\ClearCanvas.ImageViewer.Common.csproj">
+      <Project>{fefd73c5-8541-47d2-bbdb-ff61dea28291}</Project>
+      <Name>ClearCanvas.ImageViewer.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Configuration\ClearCanvas.ImageViewer.Configuration.csproj">
+      <Project>{89df567b-a0d1-456a-a28f-043fd57d7f9a}</Project>
+      <Name>ClearCanvas.ImageViewer.Configuration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Explorer\Dicom\ClearCanvas.ImageViewer.Explorer.Dicom.csproj">
+      <Project>{14111ec7-c62e-4483-8573-7c04986d048f}</Project>
+      <Name>ClearCanvas.ImageViewer.Explorer.Dicom</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StudyLoaders\Local\ClearCanvas.ImageViewer.StudyLoaders.Local.csproj">
+      <Project>{db155c43-8966-4ab5-ae4f-40489fa33aba}</Project>
+      <Name>ClearCanvas.ImageViewer.StudyLoaders.Local</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StudyManagement\Core\ClearCanvas.ImageViewer.StudyManagement.Core.csproj">
+      <Project>{624bc225-49a8-4e92-942d-cdc976292eb9}</Project>
+      <Name>ClearCanvas.ImageViewer.StudyManagement.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SR.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\StructuredReportViewerToolLarge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\StructuredReportViewerMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\StructuredReportViewerToolSmall.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
