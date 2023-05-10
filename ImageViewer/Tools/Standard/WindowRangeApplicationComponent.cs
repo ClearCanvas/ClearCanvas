@@ -50,6 +50,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
             _operation = new VoiLutImageOperation(SetWindow);
             _referenceImageBox = ImageViewer.SelectedImageBox;
 
+            //move this to start?
             if (ImageViewer.SelectedPresentationImage is IVoiLutProvider)
             {
                 _voiLutProvider = ImageViewer.SelectedPresentationImage as IVoiLutProvider;
@@ -215,6 +216,12 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
         public override void Start()
         {
             base.Start();
+            if (ImageViewer.SelectedPresentationImage is IVoiLutProvider)
+            {
+                _voiLutProvider = ImageViewer.SelectedPresentationImage as IVoiLutProvider;
+                GetCurentWindowValues(true);
+                GetMinMaxValues();
+            }
         }
 
         public override void Stop()
@@ -281,15 +288,22 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
                 _bins = histogram.Bins;
                 _binLabels = histogram.BinLabels;
             }
-           
+
 
             //NotifyPropertyChanged("MinBin");
             //NotifyPropertyChanged("MaxBin");
             //NotifyPropertyChanged("NumBins");
 
             //this.Enabled = true;
+            NotifyPropertyChanged(nameof(HistogramMax));
+            NotifyPropertyChanged(nameof(HistogramMin));
+            NotifyPropertyChanged(nameof(NumBins));
             return true;
         }
+
+        /// <summary>
+        /// sets the window min/max values based on the current window centre/width
+        /// </summary>
         private void SetMinMax()
         {
             _windowMin = _windowCenter - (_windowWidth / 2);
@@ -297,6 +311,9 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
             Notify();
         }
 
+        /// <summary>
+        /// Sets the window width and centre fields from the current min max fields
+        /// </summary>
         private void SetCentreWidth()
         {
             _windowWidth = Math.Round((_windowMax - _windowMin));
@@ -358,6 +375,11 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
         {
             return _voiLutProvider.VoiLutManager;
         }
+
+        /// <summary>
+        /// Updates the <see cref="MaxPixelValue"/> and <see cref="MinPixelValue"/>
+        /// which will causes the sliders to adjust their min max
+        /// </summary>
         private void GetMinMaxValues()
         {
             var dicomGray = ImageViewer.SelectedPresentationImage as DicomGrayscalePresentationImage;
@@ -382,6 +404,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
                 NotifyPropertyChanged("NumBins");
             }
         }
+
         private void GetCurentWindowValues(bool initial)
         {
             if (CanWindowLevel())
@@ -404,7 +427,9 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
                 _windowMin = 0;
                 _minPixelValue = 0;
                 _maxPixelValue = 0;
+                Notify();
             }
+            
         }
 
         private void Notify()
@@ -413,7 +438,10 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
             NotifyPropertyChanged("WindowCentre");
             NotifyPropertyChanged("WindowMin");
             NotifyPropertyChanged("WindowMax");
-            
+          
+            NotifyPropertyChanged("MinPixelValue");
+            NotifyPropertyChanged("MaxPixelValue");
+
         }
         #endregion
 
@@ -428,6 +456,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
                 _voiLutProvider = null;
                 WindowCenter = 0;
                 WindowWidth = 0;
+                PresentationImageChanged?.Invoke(this, new EventArgs());
                 return;
             }
 
@@ -436,6 +465,7 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
            if(ImageViewer.SelectedImageBox != _referenceImageBox)
             {
                 GetMinMaxValues();
+                PresentationImageChanged?.Invoke(this, new EventArgs());
             }
             if (oldImage != e.SelectedPresentationImage)
             {

@@ -1,40 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Font Name="Tahoma" Size="8.4" />
   <Class Name="ClearCanvas.Common.Platform" Collapsed="true">
     <Position X="2.5" Y="1" Width="1.5" />
     <TypeIdentifier>
+      <HashCode>ADgRBDMASIIAAEAIBpBAg4AQQIiIgEoiAoAAAgIyiUo=</HashCode>
       <FileName>Platform.cs</FileName>
-      <HashCode>ABgRBBMASIAAAEAAAABAgQAQEAgIgAgiAoAAAgASoUg=</HashCode>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="PluginManager" />
     </ShowAsAssociation>
-    <NestedTypes>
-      <Delegate Name="ClearCanvas.Common.Platform.WithServiceDelegate&lt;T&gt;" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>Platform.cs</NewMemberFileName>
-        </TypeIdentifier>
-      </Delegate>
-    </NestedTypes>
   </Class>
   <Class Name="ClearCanvas.Common.PluginManager" Collapsed="true">
     <Position X="6" Y="1" Width="1.5" />
-    <TypeIdentifier>
-      <FileName>PluginManager.cs</FileName>
-      <HashCode>EAAAAAAAAIDCAAAAAAAAAAAEFAAYAAAAAgggEAQAAAA=</HashCode>
-    </TypeIdentifier>
-    <ShowAsCollectionAssociation>
-      <Property Name="Plugins" />
-      <Property Name="Extensions" />
-      <Property Name="ExtensionPoints" />
-    </ShowAsCollectionAssociation>
     <AssociationLine Name="Extensions" Type="ClearCanvas.Common.ExtensionInfo" FixedFromPoint="true" FixedToPoint="true">
       <Path>
         <Point X="7.25" Y="1.514" />
-        <Point X="7.25" Y="3.375" />
-        <Point X="9.875" Y="3.375" />
-        <Point X="9.875" Y="3.75" />
+        <Point X="7.25" Y="1.764" />
+        <Point X="7.75" Y="1.764" />
+        <Point X="7.75" Y="1.375" />
+        <Point X="11.875" Y="1.375" />
+        <Point X="11.875" Y="1.75" />
       </Path>
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="1.591" Y="0.533" />
@@ -51,32 +36,34 @@
         <Position X="0.113" Y="1.169" />
       </MemberNameLabel>
     </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AQIAAAAAAKDAAAAAAAAAgAAAVAAIAgAAQgogAAAAAAA=</HashCode>
+      <FileName>PluginManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Plugins" />
+      <Property Name="Extensions" />
+      <Property Name="ExtensionPoints" />
+    </ShowAsCollectionAssociation>
   </Class>
   <Class Name="ClearCanvas.Common.PluginInfo">
-    <Position X="8.75" Y="0.75" Width="1.5" />
-    <TypeIdentifier>
-      <FileName>PluginInfo.cs</FileName>
-      <HashCode>AAAAIAAAEAAgAAAEAAAAAASABAAIBIAAAAygAAAAAAA=</HashCode>
-    </TypeIdentifier>
+    <Position X="8" Y="3.75" Width="1.5" />
     <Members>
       <Field Name="_assembly" Hidden="true" />
       <Field Name="_description" Hidden="true" />
       <Field Name="_extensionPoints" Hidden="true" />
       <Field Name="_extensions" Hidden="true" />
       <Field Name="_name" Hidden="true" />
-      <Method Name="DiscoverExtensionPoints" Hidden="true" />
-      <Method Name="DiscoverExtensions" Hidden="true" />
       <Method Name="PluginInfo" Hidden="true" />
-      <Method Name="ValidateExtensionPointClass" Hidden="true" />
     </Members>
+    <TypeIdentifier>
+      <HashCode>EAAAIAggEAAgAAAEAAAAAAQABAAIAICAAAigAAEEAAA=</HashCode>
+      <FileName>PluginInfo.cs</FileName>
+    </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="ClearCanvas.Common.ExtensionInfo">
-    <Position X="8.75" Y="3.75" Width="1.5" />
-    <TypeIdentifier>
-      <FileName>ExtensionInfo.cs</FileName>
-      <HashCode>AAAAIAQAIAAgAAAkAAAAAAQAAAAAAAAAAICAAAAAAAA=</HashCode>
-    </TypeIdentifier>
+    <Position X="10.75" Y="1.75" Width="1.5" />
     <Members>
       <Field Name="_description" Hidden="true" />
       <Field Name="_extensionClass" Hidden="true" />
@@ -84,14 +71,14 @@
       <Field Name="_pointExtended" Hidden="true" />
       <Method Name="ExtensionInfo" Hidden="true" />
     </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAIAQAIAQgAIAkAAAAAAQAAAgAIAAQAICAAAAAAAA=</HashCode>
+      <FileName>ExtensionInfo.cs</FileName>
+    </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="ClearCanvas.Common.ExtensionPointInfo">
     <Position X="4.75" Y="3.75" Width="1.75" />
-    <TypeIdentifier>
-      <FileName>ExtensionPointInfo.cs</FileName>
-      <HashCode>AAAAIAAAAAAgCgAEAAAAAAQAAAAAAAAAAACgAAAAAAE=</HashCode>
-    </TypeIdentifier>
     <Members>
       <Field Name="_description" Hidden="true" />
       <Field Name="_extensionInterface" Hidden="true" />
@@ -99,6 +86,11 @@
       <Field Name="_name" Hidden="true" />
       <Method Name="ExtensionPointInfo" Hidden="true" />
     </Members>
+    <TypeIdentifier>
+      <HashCode>AAABIAAAAAAgCgBEAAAAAAQAAAAAAAAAAACgAAAAAAA=</HashCode>
+      <FileName>ExtensionPointInfo.cs</FileName>
+    </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
+  <Font Name="Tahoma" Size="8.4" />
 </ClassDiagram>

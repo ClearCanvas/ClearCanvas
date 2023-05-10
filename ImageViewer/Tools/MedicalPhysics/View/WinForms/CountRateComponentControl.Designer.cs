@@ -45,6 +45,8 @@ namespace ClearCanvas.ImageViewer.Tools.MedicalPhysics.View.WinForms
             this._referenceDateBox = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this._sensitivityBox = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this._acquisitionDateBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // TitleLabel
@@ -144,16 +146,17 @@ namespace ClearCanvas.ImageViewer.Tools.MedicalPhysics.View.WinForms
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(16, 360);
+            this.label2.Location = new System.Drawing.Point(16, 396);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(103, 17);
+            this.label2.Size = new System.Drawing.Size(140, 17);
             this.label2.TabIndex = 10;
-            this.label2.Text = "Current Activity";
+            this.label2.Text = "Activity at Acquisition";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // _currentActivityBox
             // 
             this._currentActivityBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this._currentActivityBox.Location = new System.Drawing.Point(190, 357);
+            this._currentActivityBox.Location = new System.Drawing.Point(190, 391);
             this._currentActivityBox.Name = "_currentActivityBox";
             this._currentActivityBox.Size = new System.Drawing.Size(131, 22);
             this._currentActivityBox.TabIndex = 11;
@@ -164,7 +167,7 @@ namespace ClearCanvas.ImageViewer.Tools.MedicalPhysics.View.WinForms
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(16, 316);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(103, 16);
+            this.label3.Size = new System.Drawing.Size(102, 16);
             this.label3.TabIndex = 12;
             this.label3.Text = "Reference Date";
             // 
@@ -180,24 +183,45 @@ namespace ClearCanvas.ImageViewer.Tools.MedicalPhysics.View.WinForms
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(16, 403);
+            this.label4.Location = new System.Drawing.Point(16, 434);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(68, 16);
+            this.label4.Size = new System.Drawing.Size(67, 16);
             this.label4.TabIndex = 14;
             this.label4.Text = "Sensitivity";
             // 
             // _sensitivityBox
             // 
             this._sensitivityBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this._sensitivityBox.Location = new System.Drawing.Point(190, 403);
+            this._sensitivityBox.Location = new System.Drawing.Point(190, 434);
             this._sensitivityBox.Name = "_sensitivityBox";
             this._sensitivityBox.Size = new System.Drawing.Size(131, 22);
             this._sensitivityBox.TabIndex = 16;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(16, 359);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(104, 16);
+            this.label5.TabIndex = 17;
+            this.label5.Text = "Acquisition Date";
+            this.label5.Click += new System.EventHandler(this.label5_Click);
+            // 
+            // _acquisitionDateBox
+            // 
+            this._acquisitionDateBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._acquisitionDateBox.Location = new System.Drawing.Point(190, 356);
+            this._acquisitionDateBox.Name = "_acquisitionDateBox";
+            this._acquisitionDateBox.Size = new System.Drawing.Size(131, 22);
+            this._acquisitionDateBox.TabIndex = 18;
             // 
             // CountRateComponentControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this._acquisitionDateBox);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this._sensitivityBox);
             this.Controls.Add(this.label4);
             this.Controls.Add(this._referenceDateBox);
@@ -239,5 +263,7 @@ namespace ClearCanvas.ImageViewer.Tools.MedicalPhysics.View.WinForms
         private System.Windows.Forms.TextBox _referenceDateBox;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox _sensitivityBox;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox _acquisitionDateBox;
     }
 }

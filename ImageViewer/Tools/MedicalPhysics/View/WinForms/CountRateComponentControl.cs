@@ -25,9 +25,20 @@ namespace ClearCanvas.ImageViewer.Tools.MedicalPhysics.View.WinForms
             _currentActivityBox.DataBindings.Add("Text", _component, "SourceCurrentActivity", true, DataSourceUpdateMode.OnPropertyChanged, null, "0 MBq");
             _referenceDateBox.DataBindings.Add("Text", _component, "SourceReferenceDate", true, DataSourceUpdateMode.OnPropertyChanged, null, "MMMMM d, yyyy");
             _sensitivityBox.DataBindings.Add("Text", _component, "Sensitivity", true, DataSourceUpdateMode.OnPropertyChanged, null, "0.0 cps/MBq");
+            _acquisitionDateBox.DataBindings.Add("Text", _component, "ImageAcquisitionDate", true, DataSourceUpdateMode.OnPropertyChanged, null, "MMMMM d, yyyy");
         }
 
         private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label5_Click(object sender, EventArgs e)
         {
 
         }

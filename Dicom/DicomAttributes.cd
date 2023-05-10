@@ -1,0 +1,243 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ClearCanvas.Dicom.DicomAttribute" Collapsed="true">
+    <Position X="18.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABBCAEAAwsAhAoQEglABzT5BokBEEKR4LQkiWCAgBjc=</HashCode>
+      <FileName>DicomAttribute.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeBinary" Collapsed="true">
+    <Position X="18.25" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DicomAttributeBinary.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeBinary&lt;T&gt;" Collapsed="true">
+    <Position X="24.5" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BBBQgECAAAAABgAFiEQACCQAgAAAAJBIAQAgAAAEADQ=</HashCode>
+      <FileName>DicomAttributeBinary.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeAT" Collapsed="true">
+    <Position X="19.75" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABASAAAAAAABAgQEAAAAgQAAokBAEABgAAECCAAABgM=</HashCode>
+      <FileName>DicomAttributeBinary.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeFD" Collapsed="true">
+    <Position X="28.75" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAAAAAAAAoAogAAAAAAKAAAAAAAAAA=</HashCode>
+      <FileName>DicomAttributeBinary.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeFL" Collapsed="true">
+    <Position X="6.25" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAAAAAAAAoAogAAAAAAKAAAAAAAAAA=</HashCode>
+      <FileName>DicomAttributeBinary.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeOB" Collapsed="true">
+    <Position X="13" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAAgAAAAAAAggAAAIAAAAAAAAAEAAA=</HashCode>
+      <FileName>DicomAttributeBinary.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeOD" Collapsed="true">
+    <Position X="22" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAEAAAAAAAAggAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>DicomAttributeBinary.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeOF" Collapsed="true">
+    <Position X="31" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAEAAAAAAAAggAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>DicomAttributeBinary.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeOL" Collapsed="true">
+    <Position X="8.5" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAEAAAAAAAAggAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>DicomAttributeBinary.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeOW" Collapsed="true">
+    <Position X="15.25" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAEgAAAAAAAggAAAIAAAAAAAAAEAAA=</HashCode>
+      <FileName>DicomAttributeBinary.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeSL" Collapsed="true">
+    <Position X="24.25" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAASAAAAAAABAgQAAAAAgQAAokBAEAAgAAECCAAABgM=</HashCode>
+      <FileName>DicomAttributeBinary.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeSS" Collapsed="true">
+    <Position X="33.25" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAASAAAAAAABAgQAAAAAgQAAokBAEAAgAAECCAAABgM=</HashCode>
+      <FileName>DicomAttributeBinary.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeUL" Collapsed="true">
+    <Position X="10.75" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAASAAAAAAABAgQAAAAAgQAAokBAEAAgAAECCAAABgM=</HashCode>
+      <FileName>DicomAttributeBinary.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeUN" Collapsed="true">
+    <Position X="17.5" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAEAAAAAAAAggAAAABAAAAAAAAEAAA=</HashCode>
+      <FileName>DicomAttributeBinary.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeUS" Collapsed="true">
+    <Position X="26.5" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAASAAAAAAABAgQAAAAAgQAAokBAEAAgAAECCAAABgM=</HashCode>
+      <FileName>DicomAttributeBinary.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeMultiValueText" Collapsed="true">
+    <Position X="18.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABBAEEAAAAAAAAAEiEAACCQAAgAAAIBIAQAgAAAAADA=</HashCode>
+      <FileName>DicomAttributeMultiValueText.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeAE" Collapsed="true">
+    <Position X="12.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DicomAttributeMultiValueText.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeAS" Collapsed="true">
+    <Position X="19.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DicomAttributeMultiValueText.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeCS" Collapsed="true">
+    <Position X="26.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DicomAttributeMultiValueText.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeDA" Collapsed="true">
+    <Position X="6" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAEAAAAAAAAAAAAAAAABAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DicomAttributeMultiValueText.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeDS" Collapsed="true">
+    <Position X="15" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACEAAAAAABBgQAAAQAgQoAokBAEAAgKAEiCAAABgM=</HashCode>
+      <FileName>DicomAttributeMultiValueText.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeDT" Collapsed="true">
+    <Position X="21.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAEAAAAAAAgAAAAAAAABAAAgAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>DicomAttributeMultiValueText.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeIS" Collapsed="true">
+    <Position X="28.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACEAAAAAABBgQAAAAAgQAAokBAEAAgAAEiCAAABgM=</HashCode>
+      <FileName>DicomAttributeMultiValueText.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeLO" Collapsed="true">
+    <Position X="8.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DicomAttributeMultiValueText.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributePN" Collapsed="true">
+    <Position X="17.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DicomAttributeMultiValueText.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeSH" Collapsed="true">
+    <Position X="24" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DicomAttributeMultiValueText.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeTM" Collapsed="true">
+    <Position X="30.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAEAAAAAAAAAAAAAAAABAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DicomAttributeMultiValueText.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeUI" Collapsed="true">
+    <Position X="10.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAAAAAABAABAAgAAAABAAAAAAAAAAAA=</HashCode>
+      <FileName>DicomAttributeMultiValueText.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeSQ" Collapsed="true">
+    <Position X="22.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAEAAAIAAAAAEiAAAiCAAAgAAAIBIAAAgAIAgADQ=</HashCode>
+      <FileName>DicomAttributeSQ.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeSingleValueText" Collapsed="true">
+    <Position X="13.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABBAAEAAAAAAAAAEgEAACCAAAgAAAIBIAAAgAAAAADA=</HashCode>
+      <FileName>DicomAttributeSingleValueText.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeLT" Collapsed="true">
+    <Position X="13.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DicomAttributeSingleValueText.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeST" Collapsed="true">
+    <Position X="16" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DicomAttributeSingleValueText.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClearCanvas.Dicom.DicomAttributeUT" Collapsed="true">
+    <Position X="10.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DicomAttributeSingleValueText.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

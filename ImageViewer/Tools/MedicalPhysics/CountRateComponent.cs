@@ -35,6 +35,7 @@ namespace ClearCanvas.ImageViewer.Tools.MedicalPhysics
         private string _sourceSerialNumber;
         private Isotope _isotope;
         private DateTime _sourceReferenceDate;
+        private DateTime _acquisitionDate;
         private double _referenceActivity;
         private double _sourceCurrentActivity;
         private double _sensitivity;
@@ -106,6 +107,14 @@ namespace ClearCanvas.ImageViewer.Tools.MedicalPhysics
         }
 
         /// <summary>
+        /// The date time at which the image was acquired.
+        /// </summary>
+        public DateTime ImageAcquisitionDate
+        {
+            get { return _acquisitionDate; }
+        }
+
+        /// <summary>
         /// The reference activity in the source
         /// </summary>
         public double SourceReferenceActivity
@@ -168,10 +177,14 @@ namespace ClearCanvas.ImageViewer.Tools.MedicalPhysics
                         _acquisitionDuration = dur.GetInt32(0, 1);
 
                     }
-                    //if(dicomImage.ImageSop.TryGetAttribute(DicomTags.CountsAccumulated,out DicomAttribute cnts))
-                    //{
-                    //    _totalCounts = cnts.GetInt32(0, 1);
-                    //}
+                    if (dicomImage.ImageSop.TryGetAttribute(DicomTags.AcquisitionDate, out DicomAttribute acqDate))
+                    {
+                        _acquisitionDate = acqDate.GetDateTime(0, new DateTime(2022,07,01));
+                        _sourceCurrentActivity = SourceIsotope.GetActivity(_referenceActivity, _sourceReferenceDate, _acquisitionDate);
+                        NotifyPropertyChanged("SourceCurrentActivity");
+                        
+                        
+                    }
                     var pixelData = dicomImage.ImageGraphic.PixelData;
                     var modalityLut = dicomImage.ModalityLut;
                     _totalCounts = 0;
@@ -186,6 +199,7 @@ namespace ClearCanvas.ImageViewer.Tools.MedicalPhysics
                     NotifyPropertyChanged("AcquisitionDuration");
                     NotifyPropertyChanged("TotalCounts");
                     NotifyPropertyChanged("CountRate");
+                  
                     _sensitivity = (_countRate*1000.0) / _sourceCurrentActivity;
                     NotifyPropertyChanged("Sensitivity");
                 }
