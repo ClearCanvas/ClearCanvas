@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -33,13 +34,27 @@ namespace ClearCanvas.ImageViewer.Tools.StructuredReportViewer.View.WinForms
             StudyLabel.DataBindings.Add("Text", _component, "Study", false, DataSourceUpdateMode.Never, "Unknown");
             AccessionNumberLabel.DataBindings.Add("Text", _component, "AccessionNumber", false, DataSourceUpdateMode.Never, "Unknown");
             ReferrerLabel.DataBindings.Add("Text", _component, "Referrer", false, DataSourceUpdateMode.Never, "Unknown");
-
+            resizeTreeView();
+            MasterLayoutPanel.SizeChanged += MasterLayoutPanel_SizeChanged;
             for(int i = 0; i < component.ContentSequnce.Count; i++)
             {
                 DicomSequenceItem q = component.ContentSequnce[i];
+                ContentTreeView.Nodes.Add(ConvertSequenceItemRecursive(q));
                 
-                ContentPanel.Controls.Add(ConvertSequenceItem(q,i+1,0));
+                //ContentPanel.Controls.Add(ConvertSequenceItem(q,i+1,0));
             }
+        }
+        private void resizeTreeView()
+        {
+            ContentTreeView.Height = ContentTreeView.Parent.Height - (LabelTitle.Height + LabelTitle.Margin.Top + LabelTitle.Margin.Bottom
+                + ReportDateLabel.Height + ReportDateLabel.Margin.Top + ReportDateLabel.Margin.Bottom
+                + tableLayoutPanel1.Height + tableLayoutPanel1.Margin.Top + tableLayoutPanel1.Margin.Bottom
+                + 6);
+            
+        }
+        private void MasterLayoutPanel_SizeChanged(object sender, EventArgs e)
+        {
+            resizeTreeView();
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -62,6 +77,113 @@ namespace ClearCanvas.ImageViewer.Tools.StructuredReportViewer.View.WinForms
 
         }
 
+        private TreeNode ConvertSequenceItemRecursive(DicomSequenceItem item)
+        {
+            TreeNode tn = new TreeNode();
+            tn.ExpandAll();
+            string nodeText = "";
+            if (item.TryGetAttribute(DicomTags.ConceptNameCodeSequence, out var codeSequence))
+            {
+                var conceptNameCodeSequenceItem = (codeSequence as DicomAttributeSQ)[0];
+                if (conceptNameCodeSequenceItem.TryGetAttribute(DicomTags.CodeMeaning, out DicomAttribute att))
+                {
+                   nodeText = att.ToString() +" :   ";
+                }
+            }
+            if(item.TryGetAttribute(DicomTags.ValueType, out var type))
+            {
+                switch (type.ToString())
+                {
+                    case "TEXT":
+                        if (item.TryGetAttribute(DicomTags.TextValue, out var textValue))
+                        {
+                            nodeText = nodeText + textValue;                            
+                        }
+                        break;
+                    case "NUM":
+                        if (item.TryGetAttribute(DicomTags.MeasuredValueSequence, out var numericSequence))
+                        {
+                            var measurement = (numericSequence as DicomAttributeSQ)[0];
+                            if (measurement is null)
+                                break;
+                            if (measurement.TryGetAttribute(DicomTags.NumericValue, out var numericValue))
+                            {
+                                nodeText = nodeText + numericValue.ToString();
+                                if (measurement.TryGetAttribute(DicomTags.MeasurementUnitsCodeSequence, out var measurementUnitsCodeSequence))
+                                {                                   
+                                    if ((measurementUnitsCodeSequence as DicomAttributeSQ)[0].TryGetAttribute(DicomTags.CodeMeaning, out var codeMeaning))
+                                    {
+                                        nodeText = nodeText + " " + codeMeaning.ToString();                                       
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    case "DATE":
+                    case "TIME":                        
+                    case "DATETIME":
+                        if (item.TryGetAttribute(DicomTags.Datetime, out var dateTimeValue))
+                        {
+                            if (dateTimeValue.TryGetDateTime(0, out var dateTime))
+                            {
+                                nodeText += dateTime.ToString();                                
+                            }
+                        }
+                        break;
+                    case "UIDREF":
+                        if (item.TryGetAttribute(DicomTags.Uid, out var uid))
+                        {
+                            nodeText = nodeText + uid.ToString();                           
+                                                    }
+                        break;
+                    case "PNAME":
+                        if (item.TryGetAttribute(DicomTags.PersonName, out var pName))
+                        {
+                            var name = pName as DicomAttributePN;
+                            nodeText = nodeText + name.ToString();
+                                                    }
+                        break;
+                    case "COMPOSITE":
+                    case "IMAGE":
+                    case "WAVEFORM":
+                    case "SCOORD":
+                    case "SCOORD3D":
+                    case "TCOORD":                        
+                    case "CONTAINER":
+                        break;
+                    //break;
+                    case "CODE":
+
+                        if (item.TryGetAttribute(DicomTags.ConceptCodeSequence, out var codeConcept))
+                        {
+                            var conceptCodeSequenceItem = (codeConcept as DicomAttributeSQ)[0];
+                            if (conceptCodeSequenceItem.TryGetAttribute(DicomTags.CodeMeaning, out DicomAttribute att))
+                            {
+                                nodeText += att.ToString();
+                                
+                            }
+                        }
+                        break;
+                    //break;
+                    default:
+                        break;
+                }
+            }
+            if (item.TryGetAttribute(DicomTags.ContentSequence, out var contentSequence))
+            {
+               
+                var seq = contentSequence as DicomAttributeSQ;
+                for (int j = 0; j < seq.Count; j++)
+                {
+                    tn.Nodes.Add(ConvertSequenceItemRecursive(seq[j]));
+
+                    
+                }
+                
+            }
+            tn.Text = nodeText;
+            return tn;
+        }
         private Control ConvertSequenceItem(DicomSequenceItem item, int counter, int indentLevel)
         {
             if (item.TryGetAttribute(DicomTags.ValueType, out var type))

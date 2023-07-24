@@ -107,7 +107,7 @@
       <HintPath>..\..\..\..\..\ReferencedAssemblies\DotNetMagic2005.DLL</HintPath>
     </Reference>
     <Reference Include="NPlot">
-      <HintPath>..\..\..\..\..\..\..\ReferencedAssemblies\NPlot.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\ReferencedAssemblies\NPlot.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">

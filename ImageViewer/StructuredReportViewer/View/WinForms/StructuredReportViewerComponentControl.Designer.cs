@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.FlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.MasterLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.LabelTitle = new System.Windows.Forms.Label();
             this.ReportDateLabel = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -66,8 +66,8 @@
             this.LabelVerificationFlag = new System.Windows.Forms.Label();
             this.VerificationFlagLabel = new System.Windows.Forms.Label();
             this.LabelHorizontalLine = new System.Windows.Forms.Label();
-            this.ContentPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.FlowLayoutPanel.SuspendLayout();
+            this.ContentTreeView = new System.Windows.Forms.TreeView();
+            this.MasterLayoutPanel.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
@@ -81,24 +81,24 @@
             this.flowLayoutPanel10.SuspendLayout();
             this.SuspendLayout();
             // 
-            // FlowLayoutPanel
+            // MasterLayoutPanel
             // 
-            this.FlowLayoutPanel.AutoScroll = true;
-            this.FlowLayoutPanel.AutoSize = true;
-            this.FlowLayoutPanel.BackColor = System.Drawing.Color.White;
-            this.FlowLayoutPanel.Controls.Add(this.LabelTitle);
-            this.FlowLayoutPanel.Controls.Add(this.ReportDateLabel);
-            this.FlowLayoutPanel.Controls.Add(this.tableLayoutPanel1);
-            this.FlowLayoutPanel.Controls.Add(this.LabelHorizontalLine);
-            this.FlowLayoutPanel.Controls.Add(this.ContentPanel);
-            this.FlowLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.FlowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.FlowLayoutPanel.Location = new System.Drawing.Point(0, 0);
-            this.FlowLayoutPanel.Name = "FlowLayoutPanel";
-            this.FlowLayoutPanel.Size = new System.Drawing.Size(899, 791);
-            this.FlowLayoutPanel.TabIndex = 0;
-            this.FlowLayoutPanel.WrapContents = false;
-            this.FlowLayoutPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.FlowLayoutPanel_Paint);
+            this.MasterLayoutPanel.AutoScroll = true;
+            this.MasterLayoutPanel.AutoSize = true;
+            this.MasterLayoutPanel.BackColor = System.Drawing.Color.White;
+            this.MasterLayoutPanel.Controls.Add(this.LabelTitle);
+            this.MasterLayoutPanel.Controls.Add(this.ReportDateLabel);
+            this.MasterLayoutPanel.Controls.Add(this.tableLayoutPanel1);
+            this.MasterLayoutPanel.Controls.Add(this.LabelHorizontalLine);
+            this.MasterLayoutPanel.Controls.Add(this.ContentTreeView);
+            this.MasterLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.MasterLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.MasterLayoutPanel.Location = new System.Drawing.Point(0, 0);
+            this.MasterLayoutPanel.Name = "MasterLayoutPanel";
+            this.MasterLayoutPanel.Size = new System.Drawing.Size(899, 791);
+            this.MasterLayoutPanel.TabIndex = 0;
+            this.MasterLayoutPanel.WrapContents = false;
+            this.MasterLayoutPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.FlowLayoutPanel_Paint);
             // 
             // LabelTitle
             // 
@@ -443,7 +443,7 @@
             this.LabelStatus.Location = new System.Drawing.Point(598, 0);
             this.LabelStatus.Margin = new System.Windows.Forms.Padding(6, 0, 3, 0);
             this.LabelStatus.Name = "LabelStatus";
-            this.LabelStatus.Size = new System.Drawing.Size(288, 30);
+            this.LabelStatus.Size = new System.Drawing.Size(289, 30);
             this.LabelStatus.TabIndex = 10;
             this.LabelStatus.Text = "Status";
             this.LabelStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -455,7 +455,7 @@
             this.flowLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel9.Location = new System.Drawing.Point(595, 33);
             this.flowLayoutPanel9.Name = "flowLayoutPanel9";
-            this.flowLayoutPanel9.Size = new System.Drawing.Size(291, 19);
+            this.flowLayoutPanel9.Size = new System.Drawing.Size(292, 19);
             this.flowLayoutPanel9.TabIndex = 11;
             // 
             // LabelCompletionflag
@@ -485,7 +485,7 @@
             this.flowLayoutPanel10.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel10.Location = new System.Drawing.Point(595, 58);
             this.flowLayoutPanel10.Name = "flowLayoutPanel10";
-            this.flowLayoutPanel10.Size = new System.Drawing.Size(291, 19);
+            this.flowLayoutPanel10.Size = new System.Drawing.Size(292, 19);
             this.flowLayoutPanel10.TabIndex = 12;
             // 
             // LabelVerificationFlag
@@ -516,29 +516,25 @@
             this.LabelHorizontalLine.Size = new System.Drawing.Size(887, 2);
             this.LabelHorizontalLine.TabIndex = 3;
             // 
-            // ContentPanel
+            // ContentTreeView
             // 
-            this.ContentPanel.AutoSize = true;
-            this.ContentPanel.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ContentPanel.CausesValidation = false;
-            this.ContentPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ContentPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.ContentPanel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ContentPanel.Location = new System.Drawing.Point(3, 190);
-            this.ContentPanel.Name = "ContentPanel";
-            this.ContentPanel.Size = new System.Drawing.Size(889, 0);
-            this.ContentPanel.TabIndex = 4;
-            this.ContentPanel.WrapContents = false;
+            this.ContentTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ContentTreeView.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ContentTreeView.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.ContentTreeView.Location = new System.Drawing.Point(3, 190);
+            this.ContentTreeView.Name = "ContentTreeView";
+            this.ContentTreeView.Size = new System.Drawing.Size(889, 598);
+            this.ContentTreeView.TabIndex = 5;
             // 
             // StructuredReportViewerComponentControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.FlowLayoutPanel);
+            this.Controls.Add(this.MasterLayoutPanel);
             this.Name = "StructuredReportViewerComponentControl";
             this.Size = new System.Drawing.Size(899, 791);
-            this.FlowLayoutPanel.ResumeLayout(false);
-            this.FlowLayoutPanel.PerformLayout();
+            this.MasterLayoutPanel.ResumeLayout(false);
+            this.MasterLayoutPanel.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
@@ -568,7 +564,7 @@
 
         #endregion
 
-        private System.Windows.Forms.FlowLayoutPanel FlowLayoutPanel;
+        private System.Windows.Forms.FlowLayoutPanel MasterLayoutPanel;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Label LabelPatientName;
         private System.Windows.Forms.Label LabelTitle;
@@ -606,6 +602,6 @@
         private System.Windows.Forms.Label VerificationFlagLabel;
         private System.Windows.Forms.Label AccessionNumberLabel;
         private System.Windows.Forms.Label ReferrerLabel;
-        private System.Windows.Forms.FlowLayoutPanel ContentPanel;
+        private System.Windows.Forms.TreeView ContentTreeView;
     }
 }

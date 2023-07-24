@@ -49,6 +49,18 @@ namespace ClearCanvas.ImageViewer.Tools.StructuredReportViewer
             }
         }
 
+        public string ProtocolName
+        {
+            get
+            {
+                if(_attributeCollection.TryGetAttribute(DicomTags.ProtocolName, out var protocolName))
+                {
+                    return protocolName;
+                }
+                return string.Empty;
+            }
+        }
+
         public string PatientName
         {
             get

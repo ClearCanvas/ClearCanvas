@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="GammaCameraSourceSerialNumber" Type="System.String" Scope="User">
-      <Value Profile="(Default)">BM01L2020345101</Value>
+      <Value Profile="(Default)">BM01L2022349202</Value>
     </Setting>
     <Setting Name="GammaCameraSourceActivity" Type="System.Single" Scope="User">
       <Value Profile="(Default)">740</Value>
@@ -12,7 +12,7 @@
       <Value Profile="(Default)">Cobalt-57</Value>
     </Setting>
     <Setting Name="GammaCameraSourceRerefenceDate" Type="System.DateTime" Scope="User">
-      <Value Profile="(Default)">2021-01-09</Value>
+      <Value Profile="(Default)">2023-01-14</Value>
     </Setting>
   </Settings>
 </SettingsFile>

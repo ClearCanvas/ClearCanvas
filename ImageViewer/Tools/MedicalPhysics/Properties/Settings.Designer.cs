@@ -12,7 +12,7 @@ namespace ClearCanvas.ImageViewer.Tools.MedicalPhysics.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.4.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.6.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -25,7 +25,7 @@ namespace ClearCanvas.ImageViewer.Tools.MedicalPhysics.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("BM01L2020345101")]
+        [global::System.Configuration.DefaultSettingValueAttribute("BM01L2022349202")]
         public string GammaCameraSourceSerialNumber {
             get {
                 return ((string)(this["GammaCameraSourceSerialNumber"]));
@@ -61,7 +61,7 @@ namespace ClearCanvas.ImageViewer.Tools.MedicalPhysics.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2021-01-09")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2023-01-14")]
         public global::System.DateTime GammaCameraSourceRerefenceDate {
             get {
                 return ((global::System.DateTime)(this["GammaCameraSourceRerefenceDate"]));
