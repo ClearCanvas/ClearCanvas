@@ -113,9 +113,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DicomSendConfigurationComponentControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="DicomSendConfigurationComponentControl.cs" />
     <Compile Include="DicomSendConfigurationComponentControl.Designer.cs">
       <DependentUpon>DicomSendConfigurationComponentControl.cs</DependentUpon>
     </Compile>

@@ -82,6 +82,8 @@ namespace ClearCanvas.ImageViewer.Tools.StructuredReportViewer.View.WinForms
             TreeNode tn = new TreeNode();
             tn.ExpandAll();
             string nodeText = "";
+            if (item is null)
+                return tn;
             if (item.TryGetAttribute(DicomTags.ConceptNameCodeSequence, out var codeSequence))
             {
                 var conceptNameCodeSequenceItem = (codeSequence as DicomAttributeSQ)[0];
@@ -175,7 +177,15 @@ namespace ClearCanvas.ImageViewer.Tools.StructuredReportViewer.View.WinForms
                 var seq = contentSequence as DicomAttributeSQ;
                 for (int j = 0; j < seq.Count; j++)
                 {
-                    tn.Nodes.Add(ConvertSequenceItemRecursive(seq[j]));
+                    if (seq[j] is null)
+                    {
+                        tn.Nodes.Add(new TreeNode(""));
+                    }
+                    else
+                    {
+                        tn.Nodes.Add(ConvertSequenceItemRecursive(seq[j]));
+                    }
+                    
 
                     
                 }
