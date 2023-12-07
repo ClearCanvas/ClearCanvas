@@ -98,7 +98,7 @@ namespace ClearCanvas.ImageViewer.Tools.StructuredReportViewer
         {
             UpdateEnabled();
         }
-
+        
         private void UpdateEnabled()
         {
             Enabled = Context.SelectedSeries.Count > 0
@@ -108,7 +108,15 @@ namespace ClearCanvas.ImageViewer.Tools.StructuredReportViewer
         }
         private void Workspace_Closed(object sender, ClosedEventArgs e)
         {
-            _workspace.Closed -= Workspace_Closed;
+            try
+            {
+                if(_workspace != null)
+                        _workspace.Closed -= Workspace_Closed;
+            }
+            catch(Exception ex)
+            {
+                Platform.Log(LogLevel.Warn, "Error when closing Strucured reportviewer tool: " + ex.Message);
+            }
             _workspace = null;
         }
         private void Shelf_Closed(object sender, ClosedEventArgs e)

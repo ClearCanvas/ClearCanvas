@@ -153,8 +153,6 @@ namespace ClearCanvas.ImageViewer.Tools.MedicalPhysics
         }
         #endregion
 
-
-
         #region private
 
         private void UpdateData(IPresentationImage presentationImage)

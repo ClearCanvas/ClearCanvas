@@ -12,7 +12,7 @@ namespace ClearCanvas.ImageViewer.Services {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.4.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.8.0.0")]
     internal sealed partial class ServiceControlSettings : global::System.Configuration.ApplicationSettingsBase {
         
         private static ServiceControlSettings defaultInstance = ((ServiceControlSettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new ServiceControlSettings())));
@@ -39,7 +39,7 @@ namespace ClearCanvas.ImageViewer.Services {
         [global::System.Configuration.SettingsDescriptionAttribute("The name of the workstation service, as it would appear in the Service Control Ma" +
             "nager.")]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("ClearCanvas Workstation Shred Host Service")]
+        [global::System.Configuration.DefaultSettingValueAttribute("ClearCanvas Workstation ShredHost Service")]
         public string ServiceName {
             get {
                 return ((string)(this["ServiceName"]));

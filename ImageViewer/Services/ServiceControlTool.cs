@@ -36,17 +36,17 @@ namespace ClearCanvas.ImageViewer.Services
     [MenuAction("start", "global-menus/MenuTools/MenuService/MenuStart", "StartService")]
 	[EnabledStateObserver("start", "StartEnabled", "EnabledChanged")]
 	[IconSet("start", "Icons.StartServiceToolSmall.png", "Icons.StartServiceToolMedium.png", "Icons.StartServiceToolLarge.png")]
-	[ViewerActionPermission("start", ImageViewer.AuthorityTokens.Administration.Services)]
+	//[ViewerActionPermission("start", ImageViewer.AuthorityTokens.Administration.Services)]
 
     [MenuAction("stop", "global-menus/MenuTools/MenuService/MenuStop", "StopService")]
 	[EnabledStateObserver("stop", "StopEnabled", "EnabledChanged")]
 	[IconSet("stop", "Icons.StopServiceToolSmall.png", "Icons.StopServiceToolMedium.png", "Icons.StopServiceToolLarge.png")]
-	[ViewerActionPermission("stop", ImageViewer.AuthorityTokens.Administration.Services)]
+	//[ViewerActionPermission("stop", ImageViewer.AuthorityTokens.Administration.Services)]
 
     [MenuAction("restart", "global-menus/MenuTools/MenuService/MenuRestart", "RestartService")]
 	[EnabledStateObserver("restart", "StopEnabled", "EnabledChanged")]
 	[IconSet("restart", "Icons.RestartServiceToolSmall.png", "Icons.RestartServiceToolMedium.png", "Icons.RestartServiceToolLarge.png")]
-	[ViewerActionPermission("restart", ImageViewer.AuthorityTokens.Administration.Services)]
+	//[ViewerActionPermission("restart", ImageViewer.AuthorityTokens.Administration.Services)]
 
 	[ExtensionOf(typeof(DesktopToolExtensionPoint))]
 	internal class ServiceControlTool : Tool<IDesktopToolContext>

@@ -44,6 +44,8 @@ aspnetdb_log.ldf
 ClearCanvas.Common.xml
 ClearCanvas.Desktop.xml
 ImageViewer/ClearCanvas.ImageViewer.xml
+# Visual Studio 2015/2017 cache/options directory
+.vs/
 
 # Viewer local datastore files
 dicom_datastore/*.sdf

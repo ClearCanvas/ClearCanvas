@@ -17,12 +17,12 @@ namespace ClearCanvas.ImageViewer.Tools.MedicalPhysics
 
     {
 
-        [MenuAction("apply", "global-menus/MenuTools/Medical Physics/Daily QC", "Apply")]       
-        [Tooltip("apply", "TooltipMyImageViewerTool")]
-        [IconSet("apply", IconScheme.Colour, "Icons.MyToolSmall.png", "Icons.MyToolMedium.png", "Icons.MyToolLarge.png")]
-        [EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
-        // ... (other action attributes here)
-        [ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
+        //[MenuAction("apply", "global-menus/MenuTools/Medical Physics/Daily QC", "Apply")]       
+        //[Tooltip("apply", "TooltipMyImageViewerTool")]
+        //[IconSet("apply", IconScheme.Colour, "Icons.MyToolSmall.png", "Icons.MyToolMedium.png", "Icons.MyToolLarge.png")]
+        //[EnabledStateObserver("apply", "Enabled", "EnabledChanged")]
+        //// ... (other action attributes here)
+        //[ExtensionOf(typeof(ImageViewerToolExtensionPoint))]
         public class CountRateTool : ImageViewerTool
         {
             private IShelf _shelf;

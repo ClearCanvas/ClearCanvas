@@ -76,6 +76,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -83,9 +84,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigPageProvider.cs" />
     <Compile Include="CountRateComponent.cs" />
     <Compile Include="CountRateTool.cs" />
     <Compile Include="Isotopes.cs" />
+    <Compile Include="MedicalPhysicsConfigComponent.cs" />
+    <Compile Include="NMDailyQCComponent.cs" />
+    <Compile Include="NMDailyQCTool.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -93,6 +98,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
+    <Compile Include="WeeklyCTComponent.cs" />
+    <Compile Include="WeeklyCTTool.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\ClearCanvas.Common.csproj">
@@ -110,6 +117,26 @@
     <ProjectReference Include="..\..\ClearCanvas.ImageViewer.csproj">
       <Project>{85100d3e-471c-47c9-9687-abf25f617ed7}</Project>
       <Name>ClearCanvas.ImageViewer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\ClearCanvas.ImageViewer.Common.csproj">
+      <Project>{fefd73c5-8541-47d2-bbdb-ff61dea28291}</Project>
+      <Name>ClearCanvas.ImageViewer.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Configuration\ClearCanvas.ImageViewer.Configuration.csproj">
+      <Project>{89df567b-a0d1-456a-a28f-043fd57d7f9a}</Project>
+      <Name>ClearCanvas.ImageViewer.Configuration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Explorer\Dicom\ClearCanvas.ImageViewer.Explorer.Dicom.csproj">
+      <Project>{14111ec7-c62e-4483-8573-7c04986d048f}</Project>
+      <Name>ClearCanvas.ImageViewer.Explorer.Dicom</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Layout\Basic\ClearCanvas.ImageViewer.Layout.Basic.csproj">
+      <Project>{ea38c1f1-c4bd-4ed7-9b60-c95df22d6a72}</Project>
+      <Name>ClearCanvas.ImageViewer.Layout.Basic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Measurement\ClearCanvas.ImageViewer.Tools.Measurement.csproj">
+      <Project>{76e7a94e-5dcb-4b12-8d9e-7bd5084ce073}</Project>
+      <Name>ClearCanvas.ImageViewer.Tools.Measurement</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
