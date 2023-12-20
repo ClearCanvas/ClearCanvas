@@ -59,32 +59,32 @@ namespace ClearCanvas.Desktop.View.WinForms
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TabComponentContainerControl));
-			this._tabControl = new Crownwood.DotNetMagic.Controls.TabControl();
-			this.SuspendLayout();
-			// 
-			// _tabControl
-			// 
-			resources.ApplyResources(this._tabControl, "_tabControl");
-			this._tabControl.IDE2005Style = Crownwood.DotNetMagic.Controls.IDE2005Style.StandardDark;
-			this._tabControl.MaximumHeaderWidth = 256;
-			this._tabControl.Name = "_tabControl";
-			this._tabControl.OfficeDockSides = false;
-			this._tabControl.OfficeExtraTabInset = 3;
-			this._tabControl.OfficeStyle = Crownwood.DotNetMagic.Controls.OfficeStyle.SoftWhite;
-			this._tabControl.PositionTop = true;
-			this._tabControl.ShowDropSelect = false;
-			this._tabControl.Style = Crownwood.DotNetMagic.Common.VisualStyle.IDE2005;
-			this._tabControl.TextTips = true;
-			// 
-			// TabComponentContainerControl
-			// 
-			resources.ApplyResources(this, "$this");
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.BackColor = System.Drawing.SystemColors.Control;
-			this.Controls.Add(this._tabControl);
-			this.Name = "TabComponentContainerControl";
-			this.ResumeLayout(false);
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TabComponentContainerControl));
+            this._tabControl = new Crownwood.DotNetMagic.Controls.TabControl();
+            this.SuspendLayout();
+            // 
+            // _tabControl
+            // 
+            resources.ApplyResources(this._tabControl, "_tabControl");
+            this._tabControl.IDE2005Style = Crownwood.DotNetMagic.Controls.IDE2005Style.StandardDark;
+            this._tabControl.MaximumHeaderWidth = 256;
+            this._tabControl.Name = "_tabControl";
+            this._tabControl.OfficeDockSides = false;
+            this._tabControl.OfficeExtraTabInset = 3;
+            this._tabControl.OfficeStyle = Crownwood.DotNetMagic.Controls.OfficeStyle.SoftWhite;
+            this._tabControl.PositionTop = true;
+            this._tabControl.ShowDropSelect = false;
+            this._tabControl.Style = Crownwood.DotNetMagic.Common.VisualStyle.IDE2005;
+            this._tabControl.TextTips = true;
+            // 
+            // TabComponentContainerControl
+            // 
+            resources.ApplyResources(this, "$this");
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Control;
+            this.Controls.Add(this._tabControl);
+            this.Name = "TabComponentContainerControl";
+            this.ResumeLayout(false);
 
 		}
 

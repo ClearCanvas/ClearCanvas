@@ -70,7 +70,7 @@ namespace ClearCanvas.ImageViewer.TestTools
 
 				StudyLoaderExtensionPoint xp = new StudyLoaderExtensionPoint();
 				IStudyLoader loader = (IStudyLoader)CollectionUtils.SelectFirst(xp.CreateExtensions(),
-					delegate(object extension) { return ((IStudyLoader) extension).Name == "DICOM_LOCAL";});
+					delegate(object extension) { return ((IStudyLoader) extension).Name == "CC_STREAMING"; });
 
 				var selected = base.Context.SelectedStudy;
 
@@ -80,8 +80,10 @@ namespace ClearCanvas.ImageViewer.TestTools
 				
 				while (null != (sop = loader.LoadNextSop()))
 				{
-					xml.AddFile(((ILocalSopDataSource) sop.DataSource).File);
-				}
+					//xml.AddFile(((IStreamingSopDataSource) sop.DataSource).File);
+					//(IStreamingSopDataSource)sop.DataSource.
+
+                }
 
 				StudyXmlOutputSettings settings = new StudyXmlOutputSettings();
 				settings.IncludePrivateValues = StudyXmlTagInclusion.IgnoreTag;

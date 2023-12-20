@@ -281,11 +281,7 @@
     <FusionPluginFiles Include="$(TrunkDirectory)\ImageViewer\AdvancedImaging\Fusion\bin\$(Configuration)\ClearCanvas.ImageViewer.AdvancedImaging.Fusion.dll" />
   </ItemGroup>
 
-  <ItemGroup>
-    <TestToolPluginFiles Include="$(TrunkDirectory)\ImageViewer\TestTools\bin\$(Configuration)\ClearCanvas.ImageViewer.TestTools.dll" />
-    <TestToolPluginFiles Include="$(TrunkDirectory)\ImageViewer\TestTools\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.TestTools.View.WinForms.dll" />
-    <TestToolCommonFiles Include="$(TrunkDirectory)\ReferencedAssemblies\NPlot.dll" />
-  </ItemGroup>
+
 
   <ItemGroup Condition="$(DesktopBuild)">
     <SynchronizationPluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\Synchronization\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.Synchronization.dll" />
@@ -325,15 +321,13 @@
     <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\Standard\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.Standard.View.WinForms.dll" />
     <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\MedicalPhysics\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.MedicalPhysics.dll" />
     <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\MedicalPhysics\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.MedicalPhysics.View.WinForms.dll" />
-	  <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\Export\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.Export.dll" />
-	<PluginFiles Include="$(TrunkDirectory)\ImageViewer\StructuredReportViewer\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.StructuredReportViewer.dll" />
-	  
-	  <PluginFiles Include="$(TrunkDirectory)\ImageViewer\StructuredReportViewer\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.StructuredReportViewer.View.WinForms.dll" />
-    <!--<PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\ImageProcessing\Filter\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.ImageProcessing.Filter.dll" />-->
-    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\ImageProcessing\RoiAnalysis\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis.dll" />
-    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\ImageProcessing\RoiAnalysis\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.ImageProcessing.RoiAnalysis.View.WinForms.dll" />
-    <!--<PluginFiles Include="$(TrunkDirectory)\ImageViewer\TestTools\bin\$(Configuration)\ClearCanvas.ImageViewer.TestTools.dll" />
-    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\TestTools\View\bin\$(Configuration)\ClearCanvas.ImageViewer.TestTools.View.WinForms.dll" />-->
+	<PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\Export\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.Export.dll" />
+	<PluginFiles Include="$(TrunkDirectory)\ImageViewer\StructuredReportViewer\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.StructuredReportViewer.dll" />	  
+	<PluginFiles Include="$(TrunkDirectory)\ImageViewer\StructuredReportViewer\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.StructuredReportViewer.View.WinForms.dll" />
+    
+    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\Measurement\RoiAnalysis\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.Measurement.RoiAnalysis.dll" />
+    <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Tools\Measurement\RoiAnalysis\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Tools.Measurement.RoiAnalysis.View.WinForms.dll" />
+    
     <!-- Layout -->
     <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Layout\Basic\bin\$(Configuration)\ClearCanvas.ImageViewer.Layout.Basic.dll" />
     <PluginFiles Include="$(TrunkDirectory)\ImageViewer\Layout\Basic\View\WinForms\bin\$(Configuration)\ClearCanvas.ImageViewer.Layout.Basic.View.WinForms.dll" />
@@ -436,10 +430,10 @@
   <Target Name="Copy Fusion Files">
     <Copy SourceFiles="@(FusionPluginFiles)" DestinationFolder="$(PluginsDirectory)" />
   </Target>
-  <Target Name="Copy Test Tool Files">
+  <!--<Target Name="Copy Test Tool Files">
     <Copy SourceFiles="@(TestToolPluginFiles)" DestinationFolder="$(PluginsDirectory)" />
     <Copy SourceFiles="@(TestToolCommonFiles)" DestinationFolder="$(CommonDirectory)" />
-  </Target>
+  </Target>-->
 
   <Target Name="Copy Optional Viewer Plugins" Condition="$(DesktopBuild)">
 
@@ -491,9 +485,7 @@
     <RegexIsMatch Pattern="ExcludeFusion" Input="$(OptionsFlags)" >
       <Output TaskParameter="IsMatch" PropertyName="ExcludeFusion" />
     </RegexIsMatch>
-    <RegexIsMatch Pattern="IncludeTestTools" Input="$(OptionsFlags)" >
-      <Output TaskParameter="IsMatch" PropertyName="IncludeTestTools" />
-    </RegexIsMatch>
+
 
     <CallTarget Condition="!$(ExcludeStudyBrowser)" Targets="Copy Study Browser" />
     <CallTarget Condition="!$(ExcludeDesktopServices)" Targets="Copy Desktop Services" />
@@ -511,7 +503,7 @@
     <CallTarget Condition="!$(ExcludeFusion)" Targets="Copy Fusion Files" />
     <CallTarget Condition="!$(ExcludeDatabase)" Targets="Copy Local Store Client Files" />
     <CallTarget Condition="!$(ExcludeSynchronizationTools)" Targets="Copy Synchronization Plugin" />
-    <CallTarget Condition="!$(IncludeTestTools)" Targets="Copy Test Tool Files" />
+   
 
   </Target>
 

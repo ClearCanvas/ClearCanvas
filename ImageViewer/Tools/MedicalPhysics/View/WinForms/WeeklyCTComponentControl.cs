@@ -17,11 +17,15 @@ namespace ClearCanvas.ImageViewer.Tools.MedicalPhysics.View.WinForms
         {
             InitializeComponent();
             _component = component;
-            HighContrastTextBox.DataBindings.Add("Text", _component, "HighContrastResolution", true, DataSourceUpdateMode.OnPropertyChanged,0,"#.0 HU");
-            ContrastScaleTextBox.DataBindings.Add("Text", _component, "ContrastScale", true, DataSourceUpdateMode.OnPropertyChanged, 0, "#.0 HU");
-            WaterValueTextBox.DataBindings.Add("Text", _component, "WaterValue", true, DataSourceUpdateMode.OnPropertyChanged, 0, "0.0 HU");
+            HighContrastTextField.DataBindings.Add("Value", _component, "HighContrastResolution", true, DataSourceUpdateMode.OnPropertyChanged,0,"#.0 HU");
+            
+            ContrastScaleTextField.DataBindings.Add("Value", _component, "ContrastScale", true, DataSourceUpdateMode.OnPropertyChanged, 0, "#.0 HU");
+            WaterValueTextField.DataBindings.Add("Value", _component, "WaterValue", true, DataSourceUpdateMode.OnPropertyChanged, 0, "0.0 HU");
         }
 
-        
+        private void textField1_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
