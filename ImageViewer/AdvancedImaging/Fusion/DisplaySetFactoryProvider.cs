@@ -32,7 +32,7 @@ namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 {
 	//TODO (CR Sept 2010): for as often as we make these providers return more than one object,
 	//we should just make the objects themselves the extensions.
-	[ExtensionOf(typeof (DisplaySetFactoryProviderExtensionPoint))]
+	[ExtensionOf(typeof (DisplaySetFactoryProviderExtensionPoint),Enabled =false)]
 	public class DisplaySetFactoryProvider : IDisplaySetFactoryProvider
 	{
 		public DisplaySetFactoryProvider()

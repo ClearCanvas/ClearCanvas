@@ -76,6 +76,9 @@ namespace ClearCanvas.ImageViewer.RoiGraphics.Analyzers
 
 			var meanValue = SR.StringNotApplicable;
 			var stdDevValue = SR.StringNotApplicable;
+            var minValue = SR.StringNotApplicable;
+            var maxValue = SR.StringNotApplicable;
+			var totalValue = SR.StringNotApplicable;
 
 			if (isGrayscale && roi.ContainsPixelData)
 			{
@@ -84,28 +87,46 @@ namespace ClearCanvas.ImageViewer.RoiGraphics.Analyzers
 					meanValue = stdDevValue = SR.StringNoValue;
 					result.Add(new RoiAnalyzerResultNoValue("Mean", String.Format(SR.FormatMean, meanValue)));
 					result.Add(new RoiAnalyzerResultNoValue("StdDev", String.Format(SR.FormatStdDev, stdDevValue)));
-				}
+                    result.Add(new RoiAnalyzerResultNoValue("Min", String.Format(SR.FormatMin, minValue)));
+                    result.Add(new RoiAnalyzerResultNoValue("Max", String.Format(SR.FormatMax, maxValue)));
+					//result.Add(new RoiAnalyzerResultNoValue("Total", String.Format(SR.FormatTotal, totalValue)));
+                }
 				else
 				{
 					double mean = statisticsProvider.Mean;
 					double stdDev = statisticsProvider.StandardDeviation;
+                    double min = statisticsProvider.Min;
+                    double max = statisticsProvider.Max;
+					double total = statisticsProvider.Total;
 
 					var units = roi.ModalityLutUnits.Label;
 					var displayFormat = @"{0:" + (roi.SubnormalModalityLut ? @"G3" : @"F1") + "}" + (!string.IsNullOrEmpty(units) ? ' ' + units : string.Empty);
 
 					meanValue = string.Format(displayFormat, mean);
 					stdDevValue = string.Format(displayFormat, stdDev);
+					minValue = string.Format(displayFormat, min);
+					maxValue = string.Format(displayFormat, max);
+					totalValue = string.Format(displayFormat, total);
 
 					result.Add(new SingleValueRoiAnalyzerResult("Mean", units, mean,
 					                                            String.Format(SR.FormatMean, meanValue)));
 					result.Add(new SingleValueRoiAnalyzerResult("StdDev", units, stdDevValue,
 					                                            String.Format(SR.FormatStdDev, stdDevValue)));
+                    result.Add(new SingleValueRoiAnalyzerResult("Min", units, min,
+                                                                String.Format(SR.FormatMin, minValue)));
+                    result.Add(new SingleValueRoiAnalyzerResult("Max", units, max,
+                                                                String.Format(SR.FormatMax, maxValue)));
+					//result.Add(new SingleValueRoiAnalyzerResult("Total", units, total,
+																//String.Format(SR.FormatTotal, totalValue)));
 				}
 			}
 			else
 			{
 				result.Add(new RoiAnalyzerResultNoValue("Mean", String.Format(SR.FormatMean, meanValue)));
 				result.Add(new RoiAnalyzerResultNoValue("StdDev", String.Format(SR.FormatStdDev, stdDevValue)));
+                result.Add(new RoiAnalyzerResultNoValue("Min", String.Format(SR.FormatMin, minValue)));
+                result.Add(new RoiAnalyzerResultNoValue("Max", String.Format(SR.FormatMax, maxValue)));
+				//result.Add(new RoiAnalyzerResultNoValue("Total", String.Format(SR.FormatTotal, totalValue)));
 			}
 
 			return result;

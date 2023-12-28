@@ -6,7 +6,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="ServiceName" Description="The name of the workstation service, as it would appear in the Service Control Manager." Type="System.String" Scope="Application">
-      <Value Profile="(Default)">ClearCanvas Workstation Shred Host Service</Value>
+      <Value Profile="(Default)">ClearCanvas Workstation ShredHost Service</Value>
     </Setting>
   </Settings>
 </SettingsFile>

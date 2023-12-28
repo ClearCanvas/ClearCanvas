@@ -42,7 +42,7 @@ namespace ClearCanvas.ImageViewer.Explorer.Dicom
 	[Tooltip("activate", "TooltipRetrieveStudy")]
 	[IconSet("activate", "Icons.RetrieveStudyToolSmall.png", "Icons.RetrieveStudyToolSmall.png", "Icons.RetrieveStudyToolSmall.png")]
 	[ViewerActionPermission("activate", AuthorityTokens.Study.Retrieve)]
-	[ExtensionOf(typeof (StudyBrowserToolExtensionPoint))]
+	[ExtensionOf(typeof (StudyBrowserToolExtensionPoint),Enabled =false)]
 	public class RetrieveStudyTool : StudyBrowserTool
 	{
 		public override void Initialize()

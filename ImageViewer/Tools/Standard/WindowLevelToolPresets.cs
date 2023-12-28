@@ -91,6 +91,10 @@ namespace ClearCanvas.ImageViewer.Tools.Standard
 					dummy.Label = SR.LabelNone;
 					root.InsertAction(dummy);
 				}
+
+				ClickAction myAction = new ClickAction("actionID", new ActionPath("windowlevel-dropdown/ActionPath", _resolver), ClickActionFlags.CheckAction, _resolver);
+				myAction.Label = "Manual Control";
+				root.InsertAction(myAction);
 				return root;
 			}
 		}

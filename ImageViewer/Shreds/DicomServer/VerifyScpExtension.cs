@@ -42,7 +42,7 @@ namespace ClearCanvas.ImageViewer.Shreds.DicomServer
 		{
 		    var sop = new SupportedSop
 		                  {
-		                      SopClass = SopClass.VerificationSopClass
+		                      SopClass = SopClass.Verification
 		                  };
 		    sop.SyntaxList.Add(TransferSyntax.ExplicitVrLittleEndian);
 			sop.SyntaxList.Add(TransferSyntax.ImplicitVrLittleEndian);

@@ -25,9 +25,11 @@
 using System.Drawing;
 using ClearCanvas.Dicom.Iod;
 using ClearCanvas.ImageViewer.Imaging;
+using ClearCanvas.Common;
 
 namespace ClearCanvas.ImageViewer.AdvancedImaging.Fusion
 {
+	[ExtensionOf(typeof(ColorMapFactoryExtensionPoint))]
 	public class HotIronColorMapFactory : IColorMapFactory
 	{
 		public static readonly string ColorMapName = "HOT_IRON";

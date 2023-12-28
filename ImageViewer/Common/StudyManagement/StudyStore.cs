@@ -40,7 +40,9 @@ namespace ClearCanvas.ImageViewer.Common.StudyManagement
 			try
 			{
 				var service = Platform.GetService<IStudyStoreQuery>();
-				IsSupported = service != null;
+				/* Comment the line below so that the local server will not appear*/
+				//IsSupported = service != null;
+				IsSupported = false;
 				var disposable = service as IDisposable;
 				if (disposable != null)
 					disposable.Dispose();

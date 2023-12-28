@@ -786,4 +786,13 @@ Please check the log for more details.</value>
   <data name="Message3DOnly" xml:space="preserve">
     <value>3D Only</value>
   </data>
+  <data name="MenuWindowRange" xml:space="preserve">
+    <value>Window Range</value>
+  </data>
+  <data name="TitleWindowRange" xml:space="preserve">
+    <value>Window Range</value>
+  </data>
+  <data name="ToolbarWindowRange" xml:space="preserve">
+    <value>Window Range</value>
+  </data>
 </root>

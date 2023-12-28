@@ -32,6 +32,7 @@ using itk;
 using FilterType = itk.itkSmoothingRecursiveGaussianImageFilter;
 using intensityFilterType = itk.itkRescaleIntensityImageFilter;
 
+
 namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.Filter
 {
 	[MenuAction("apply", "global-menus/MenuTools/MenuFilter/MenuSmoothingRecursiveGaussian", "Apply")]
@@ -58,7 +59,7 @@ namespace ClearCanvas.ImageViewer.Tools.ImageProcessing.Filter
 
 			if (!(image is GrayscaleImageGraphic))
 				return;
-
+           
             itkImageBase input = ItkHelper.CreateItkImage(image as GrayscaleImageGraphic);
             itkImageBase output = itkImage.New(input);
             ItkHelper.CopyToItkImage(image as GrayscaleImageGraphic, input);

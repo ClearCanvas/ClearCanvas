@@ -180,6 +180,50 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 			}
 		}
 
+        /// <summary>
+		/// Gets the minimum of the values over the <see cref="Roi"/>.
+		/// </summary>
+        public double Min
+        {
+            get
+            {
+                if (_statistics == null)
+                {
+                    _statistics = RoiStatistics.Calculate(this);
+                }
+                return _statistics.Min;
+            }
+        }
+
+        /// <summary>
+		/// Gets the maximum of the values over the <see cref="Roi"/>.
+		/// </summary>
+        public double Max
+        {
+            get
+            {
+                if (_statistics == null)
+                {
+                    _statistics = RoiStatistics.Calculate(this);
+                }
+                return _statistics.Max;
+            }
+        }
+
+		/// <summary>
+		/// Gets the total of the values over the <see cref="Roi"/>.
+		/// </summary>
+		public double Total
+		{
+			get
+			{
+				if (_statistics == null)
+				{
+					_statistics = RoiStatistics.Calculate(this);
+				}
+				return _statistics.Total;
+			}
+		}
 		#endregion
 
 		#region IRoiAreaProvider Members
@@ -210,6 +254,8 @@ namespace ClearCanvas.ImageViewer.RoiGraphics
 			}
 		}
 
-		#endregion
-	}
+       
+
+        #endregion
+    }
 }

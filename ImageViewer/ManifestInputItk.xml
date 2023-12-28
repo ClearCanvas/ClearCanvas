@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ManifestInput xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.clearcanvas.ca">
+  <Files>
+    <File name="plugins\ManagedITK.Calculators.dll" checksum="true" />
+    <File name="plugins\ManagedITK.CastFilters.dll" checksum="true" />
+    <File name="plugins\ManagedITK.Common.dll" checksum="true" />
+    <File name="plugins\ManagedITK.ComposeFilters.dll" checksum="true" />
+    <File name="plugins\ManagedITK.DistanceMaps.dll" checksum="true" />
+    <File name="plugins\ManagedITK.EdgeFilters.dll" checksum="true" />
+    <File name="plugins\ManagedITK.GradientFilters.dll" checksum="true" />
+    <File name="plugins\ManagedITK.IntensityFilters.dll" checksum="true" />
+    <File name="plugins\ManagedITK.Interpolators.dll" checksum="true" />
+    <File name="plugins\ManagedITK.IO.dll" checksum="true" />
+    <File name="plugins\ManagedITK.Iterators.dll" checksum="true" />
+    <File name="plugins\ManagedITK.LevelSetFilters.dll" checksum="true" />
+    <File name="plugins\ManagedITK.MorphologicalFilters.dll" checksum="true" />
+    <File name="plugins\ManagedITK.NoiseFilters.dll" checksum="true" />
+    <File name="plugins\ManagedITK.Optimizers.dll" checksum="true" />
+    <File name="plugins\ManagedITK.Paths.dll" checksum="true" />
+    <File name="plugins\ManagedITK.PixelMathFilters.dll" checksum="true" />
+    <File name="plugins\ManagedITK.ProjectionFilters.dll" checksum="true" />
+    <File name="plugins\ManagedITK.Registration.dll" checksum="true" />
+    <File name="plugins\ManagedITK.ResizeFilters.dll" checksum="true" />
+    <File name="plugins\ManagedITK.SpatialObjects.dll" checksum="true" />
+    <File name="plugins\ManagedITK.Statistics.dll" checksum="true" />
+    <File name="plugins\ManagedITK.ThresholdFilters.dll" checksum="true" />
+    <File name="plugins\ManagedITK.Topology.dll" checksum="true" />
+    <File name="plugins\ManagedITK.Transforms.dll" checksum="true" />
+    <File name="plugins\ManagedITK.VTK.dll" checksum="true" />
+  </Files>
+</ManifestInput>

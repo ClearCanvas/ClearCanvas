@@ -534,10 +534,29 @@ namespace ClearCanvas.ImageViewer.StudyManagement
 			    if (value != null)
 			        return value;
 
-			    DicomAttribute attribute;
-			    var imageOrientationPatient = _parentImageSop.TryGetFrameAttribute(_frameNumber, DicomTags.ImageOrientationPatient, out attribute) ? attribute.ToString() : String.Empty;
-			    _cache.ImagePlane.ImageOrientationPatient = value = ImageOrientationPatient.FromString(imageOrientationPatient) ?? ImageOrientationPatient.Empty;
-			    return value;
+                if(ImageType.Contains("RECON TOMO"))
+                {
+                                        
+                      DicomAttribute attribute;
+                     var imageOrientationPatient = _parentImageSop.TryGetFrameAttribute(_frameNumber, DicomTags.DetectorInformationSequence, out attribute) ? attribute.ToString() : String.Empty;
+                        if (attribute is DicomAttributeSQ)
+                        {
+                            DicomAttribute daDS = (attribute as DicomAttributeSQ).GetSequenceItem(0).GetAttribute(DicomTags.ImageOrientationPatient);
+                            _cache.ImagePlane.ImageOrientationPatient = value = ImageOrientationPatient.FromString(daDS.ToString());
+                           
+                        return value;
+                        }
+                    
+                    
+                    return value;
+                }
+                else
+                {
+                    DicomAttribute attribute;
+                    var imageOrientationPatient = _parentImageSop.TryGetFrameAttribute(_frameNumber, DicomTags.ImageOrientationPatient, out attribute) ? attribute.ToString() : String.Empty;
+                    _cache.ImagePlane.ImageOrientationPatient = value = ImageOrientationPatient.FromString(imageOrientationPatient) ?? ImageOrientationPatient.Empty;                 
+                    return value;
+                }
 			}
 		}
 
@@ -555,11 +574,41 @@ namespace ClearCanvas.ImageViewer.StudyManagement
                 var value = _cache.ImagePlane.ImagePositionPatient;
 			    if (value != null)
 			        return value;
-
-			    DicomAttribute attribute;
-                var imagePositionPatient = _parentImageSop.TryGetFrameAttribute(_frameNumber, DicomTags.ImagePositionPatient, out attribute) ? attribute.ToString() : String.Empty;
-                _cache.ImagePlane.ImagePositionPatient = value = ImagePositionPatient.FromString(imagePositionPatient) ?? new ImagePositionPatient(0, 0, 0);
-			    return value;
+                if (ImageType.Contains("RECON TOMO"))
+                {                   
+                    DicomAttribute attribute;
+                    var imagePositionPatient = _parentImageSop.TryGetFrameAttribute(_frameNumber, DicomTags.DetectorInformationSequence, out attribute) ? attribute.ToString() : String.Empty;
+                    if (attribute is DicomAttributeSQ)
+                    {
+                        DicomAttribute daDS = (attribute as DicomAttributeSQ).GetSequenceItem(0).GetAttribute(DicomTags.ImagePositionPatient);
+                        DicomAttribute dat;
+                        if(_parentImageSop.TryGetAttribute(DicomTags.SpacingBetweenSlices,out dat))
+                        {
+                           
+                            string tmp = daDS.ToString();
+                            string[] tmpArr = tmp.Split('\\');
+                            float currentSliceLocation = dat.GetFloat32(0, 0f) * _frameNumber + Convert.ToSingle(tmpArr[2]);
+                            string result = tmpArr[0] + "\\" + tmpArr[1] + "\\" + currentSliceLocation.ToString(); 
+                            _cache.ImagePlane.ImagePositionPatient = value = ImagePositionPatient.FromString(result) ?? new ImagePositionPatient(0, 0, 0);
+                            return value;
+                        }
+                        else
+                        {
+                            _cache.ImagePlane.ImagePositionPatient = value = ImagePositionPatient.FromString(daDS.ToString()) ?? new ImagePositionPatient(0, 0, 0);
+                            return value;
+                        }
+                    }
+                    return value;
+                }
+                else
+                {
+                    DicomAttribute attribute;
+                    var imagePositionPatient = _parentImageSop.TryGetFrameAttribute(_frameNumber, DicomTags.ImagePositionPatient, out attribute) ? attribute.ToString() : String.Empty;
+                    _cache.ImagePlane.ImagePositionPatient = value = ImagePositionPatient.FromString(imagePositionPatient) ?? new ImagePositionPatient(0, 0, 0);
+                    
+                    return value;
+                }
+                
 			}
 		}
 

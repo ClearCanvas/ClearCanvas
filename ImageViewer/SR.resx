@@ -777,4 +777,13 @@ Alternately, the study can be brought back online by a PACS administrator.</valu
   <data name="MessageKeyObjectDeserializeFailure" xml:space="preserve">
     <value>An error has occurred while deserializing the key object selection document.</value>
   </data>
+  <data name="FormatMax" xml:space="preserve">
+    <value>Max: {0}</value>
+  </data>
+  <data name="FormatMin" xml:space="preserve">
+    <value>Min: {0}</value>
+  </data>
+  <data name="FormatTotal" xml:space="preserve">
+    <value>Total: {0}</value>
+  </data>
 </root>

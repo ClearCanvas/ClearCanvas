@@ -110,7 +110,12 @@
       <Output TaskParameter="Include" ItemName="ManifestFiles" />
     </CreateItem>
   </Target>
-  
+
+  <Target Name="ItkFiles" >
+    <CreateItem Include="$(TrunkDirectory)\ImageViewer\ManifestInputItk.xml">
+      <Output TaskParameter="Include" ItemName="ManifestFiles" />
+    </CreateItem>
+  </Target>
   <Target Name ="Create Manifests" >
 
     <RegexIsMatch Pattern="ExcludeExplorer" Input="$(OptionsFlags)" >
@@ -167,6 +172,11 @@
       <Output TaskParameter="IsMatch" PropertyName="ExcludeMpr" />
     </RegexIsMatch>
     <CallTarget Targets="Mpr" Condition ="!$(ExcludeMpr)"/>
+    
+     <RegexIsMatch Pattern="ExcludeItk" Input="$(OptionsFlags)" >
+      <Output TaskParameter="IsMatch" PropertyName="ExcludeItk" />
+    </RegexIsMatch>
+    <CallTarget Targets="Itk" Condition ="!$(ExcludeMpr)"/>
     
     <RegexIsMatch Pattern="ExcludeFusion" Input="$(OptionsFlags)" >
       <Output TaskParameter="IsMatch" PropertyName="ExcludeFusion" />

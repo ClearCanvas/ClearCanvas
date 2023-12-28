@@ -514,10 +514,14 @@ namespace ClearCanvas.Dicom.Network.Scu
 		{
 			try
 			{
-				_dicomClient.Dispose();
-				_dicomClient = null;
+				if(_dicomClient != null)
+				{
+                    _dicomClient.Dispose();
+                    _dicomClient = null;
+                }
+				
 			}
-			catch (Exception) {}
+			catch (Exception ex) { ex = null; }
 		}
 
 		#endregion

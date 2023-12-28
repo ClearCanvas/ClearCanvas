@@ -51,6 +51,7 @@ namespace ClearCanvas.ImageViewer.Imaging
 		private int _highBit;
 		private int _absoluteMinPixelValue;
 		private int _absoluteMaxPixelValue;
+		private double[] _pixelValues;
 
 		#endregion
 
@@ -320,6 +321,11 @@ namespace ClearCanvas.ImageViewer.Imaging
 			Trace.WriteLine(String.Format("Min/Max pixel value calculation took {0:F3} seconds (rows = {1}, columns = {2})", clock.Seconds, _rows, _columns));
 #endif
 		}
+
+		//unsafe public void GetPixelValues(out double[] pixelvalues)
+  //      {
+		//	if()
+  //      }
 
 		#endregion
 

@@ -225,4 +225,7 @@
   <data name="TooltipShowAngles" xml:space="preserve">
     <value>Show Angles</value>
   </data>
+  <data name="MenuMeasurementsList" xml:space="preserve">
+    <value>Measurements List</value>
+  </data>
 </root>

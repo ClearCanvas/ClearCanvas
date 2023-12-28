@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0BF15157-2038-4E5B-B3BC-A8D75616BA63}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClearCanvas.ImageViewer.Tools.MedicalPhysics.View.WinForms</RootNamespace>
+    <AssemblyName>ClearCanvas.ImageViewer.Tools.MedicalPhysics.View.WinForms</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ClearCanvas.Desktop.ExtensionBrowser.View.WinForms">
+      <HintPath>..\..\..\..\..\Desktop\ExtensionBrowser\View\WinForms\obj\Debug\ClearCanvas.Desktop.ExtensionBrowser.View.WinForms.dll</HintPath>
+    </Reference>
+    <Reference Include="ClearCanvas.ImageViewer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\bin\Debug\ClearCanvas.ImageViewer.dll</HintPath>
+    </Reference>
+    <Reference Include="ClearCanvas.ImageViewer.Layout.Basic, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Layout\Basic\bin\Debug\ClearCanvas.ImageViewer.Layout.Basic.dll</HintPath>
+    </Reference>
+    <Reference Include="ClearCanvas.ImageViewer.Layout.Basic.View.WinForms">
+      <HintPath>..\..\..\..\Layout\Basic\View\WinForms\obj\Debug\ClearCanvas.ImageViewer.Layout.Basic.View.WinForms.dll</HintPath>
+    </Reference>
+    <Reference Include="ClearCanvas.ImageViewer.View.WinForms">
+      <HintPath>..\..\..\..\View\WinForms\obj\Debug\ClearCanvas.ImageViewer.View.WinForms.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CountRateComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CountRateComponentControl.Designer.cs">
+      <DependentUpon>CountRateComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CountRateComponentView.cs" />
+    <Compile Include="MedicalPhysicsConfigComponentView.cs" />
+    <Compile Include="MedicalPhysicsConfigControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MedicalPhysicsConfigControl.Designer.cs">
+      <DependentUpon>MedicalPhysicsConfigControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NMDailyQCView.cs" />
+    <Compile Include="NMDailyQCControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="NMDailyQCControl.Designer.cs">
+      <DependentUpon>NMDailyQCControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WeeklyCTComponentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WeeklyCTComponentControl.Designer.cs">
+      <DependentUpon>WeeklyCTComponentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WeeklyCTComponentView.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Common\ClearCanvas.Common.csproj">
+      <Project>{f6ead428-e6cf-4df6-b2f3-d33d532c5343}</Project>
+      <Name>ClearCanvas.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Controls\WinForms\ClearCanvas.Controls.WinForms.csproj">
+      <Project>{a5b36f78-7ca7-4c46-abd7-e8df1517b64c}</Project>
+      <Name>ClearCanvas.Controls.WinForms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Desktop\ClearCanvas.Desktop.csproj">
+      <Project>{26e9a01a-64b5-42c5-8252-fbb30df9cec7}</Project>
+      <Name>ClearCanvas.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Desktop\View\WinForms\ClearCanvas.Desktop.View.WinForms.csproj">
+      <Project>{bb434ec3-a580-4744-a635-a2b4029c66de}</Project>
+      <Name>ClearCanvas.Desktop.View.WinForms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ClearCanvas.ImageViewer.Tools.MedicalPhysics.csproj">
+      <Project>{1f0dc071-85bf-410d-b35c-612d8a9f43cf}</Project>
+      <Name>ClearCanvas.ImageViewer.Tools.MedicalPhysics</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CountRateComponentControl.resx">
+      <DependentUpon>CountRateComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MedicalPhysicsConfigControl.resx">
+      <DependentUpon>MedicalPhysicsConfigControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NMDailyQCControl.resx">
+      <DependentUpon>NMDailyQCControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WeeklyCTComponentControl.resx">
+      <DependentUpon>WeeklyCTComponentControl.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
