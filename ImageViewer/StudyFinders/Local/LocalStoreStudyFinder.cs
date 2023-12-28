@@ -62,7 +62,7 @@ namespace ClearCanvas.ImageViewer.StudyFinders.Local
 
     //TODO (Marmot):Move once IStudyFinder gets moved to Common.
 
-    [ExtensionOf(typeof(StudyFinderExtensionPoint))]
+    [ExtensionOf(typeof(StudyFinderExtensionPoint),Enabled =false)]
     public class LocalStoreStudyFinder : StudyFinder
     {
         public LocalStoreStudyFinder()
